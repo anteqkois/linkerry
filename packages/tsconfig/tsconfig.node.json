@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "sourceMap": true,
+    "module": "Node16",
+    // additional added by me (anteq)
+    "target": "ES2021",
+    "lib": ["ES2021"]
+  }
+}

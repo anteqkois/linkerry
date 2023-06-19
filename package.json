@@ -1,18 +1,40 @@
 {
+  "name": "automated-trading-system",
+  "author": "Antoni Kois",
+  "license": "ISC",
   "private": true,
+  "packageManager": "pnpm@7.15.0",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev start:dev --no-cache --force",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "commit": "cz"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.32.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint-config-next": "workspace:*",
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@7.15.0",
-  "name": "automated-trading-system"
+  "dependencies": {
+    "prettier": "^2.8.8"
+  },
+  "keywords": [
+    "ai",
+    "cryptocurrency",
+    "crypto",
+    "vector-database",
+    "openai",
+    "trading",
+    "trader",
+    "trading-bot"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
