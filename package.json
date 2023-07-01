@@ -6,7 +6,8 @@
   "packageManager": "pnpm@7.15.0",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev start:dev --no-cache --force",
+    "dev": "turbo run dev --no-cache --force",
+    "dev(wait)": "turbo run dev start:dev --no-cache --force",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "commit": "cz"

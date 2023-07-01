@@ -1,23 +1,28 @@
-## Start
+# Start
 
-# Install globally cx
+1. [Install pnpm package manager](https://pnpm.io/installation)
+2. Install globally cx
+
 ```sh
 pnpm add -g commitizen
 ```
 
-## usefull commends (pnpm)
-
-# Install package for app
+# Usefull commends
+### pnpm
+Install package for app
 ```sh
 pnpm add <package> --filter <workspace>
 ```
 
-# Uninstall package for app
+Uninstall package for app
 ```sh
 pnpm uninstall <package> --filter <workspace>
 ```
 
-# Upgrade a package in a workspace
+Upgrade a package in a workspace
 ```sh
 pnpm update <package> --filter <workspace>
+```
+### Manage repo
+Create commit
 ```
