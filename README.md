@@ -23,6 +23,11 @@ Upgrade a package in a workspace
 ```sh
 pnpm update <package> --filter <workspace>
 ```
+
+Use internal package - it's simple, add in package json, for example:
+```json
+ "tsconfig": "workspace:*"
+```
 ### Manage repo
 Create commit
 ```
