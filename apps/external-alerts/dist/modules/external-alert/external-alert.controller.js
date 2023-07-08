@@ -14,8 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExternalAlertController = void 0;
 const common_1 = require("@nestjs/common");
+const create_external_alert_trading_view_dto_1 = require("./dto/create-external-alert-trading-view.dto");
 const external_alert_service_1 = require("./external-alert.service");
-const create_external_alert_dto_1 = require("./dto/create-external-alert.dto");
 let ExternalAlertController = exports.ExternalAlertController = class ExternalAlertController {
     constructor(externalAlertService) {
         this.externalAlertService = externalAlertService;
@@ -28,7 +28,7 @@ __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_external_alert_dto_1.CreateExternalAlertDto]),
+    __metadata("design:paramtypes", [create_external_alert_trading_view_dto_1.CreateExternalAlertDto]),
     __metadata("design:returntype", void 0)
 ], ExternalAlertController.prototype, "create", null);
 exports.ExternalAlertController = ExternalAlertController = __decorate([

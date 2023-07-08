@@ -12,17 +12,21 @@ const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const external_alert_module_1 = require("./modules/external-alert/external-alert.module");
-const kafka_producer_provider_1 = require("./common/kafka/kafka-producer.provider");
+const kafka_module_1 = require("./common/kafka/kafka.module");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            config_1.ConfigModule.forRoot({ envFilePath: '.env', }),
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+                envFilePath: ['.env'],
+            }),
             external_alert_module_1.ExternalAlertModule,
+            kafka_module_1.KafkaModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, kafka_producer_provider_1.KafkaProducerProvider],
+        providers: [app_service_1.AppService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

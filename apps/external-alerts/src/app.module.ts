@@ -5,15 +5,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ExternalAlertModule } from './modules/external-alert/external-alert.module';
 import { KafkaModule } from './common/kafka/kafka.module';
-import { KafkaProducerProvider } from './common/kafka/kafka-producer.provider';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env', }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env'],
+    }),
     ExternalAlertModule,
-    // KafkaModule,
+    KafkaModule,
   ],
   controllers: [AppController],
-  providers: [AppService, KafkaProducerProvider],
+  providers: [AppService],
 })
 export class AppModule { }

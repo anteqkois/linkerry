@@ -10,14 +10,14 @@ exports.ExternalAlertModule = void 0;
 const common_1 = require("@nestjs/common");
 const external_alert_service_1 = require("./external-alert.service");
 const external_alert_controller_1 = require("./external-alert.controller");
-const kafka_producer_provider_1 = require("../../common/kafka/kafka-producer.provider");
-const config_1 = require("@nestjs/config");
+const kafka_module_1 = require("../../common/kafka/kafka.module");
 let ExternalAlertModule = exports.ExternalAlertModule = class ExternalAlertModule {
 };
 exports.ExternalAlertModule = ExternalAlertModule = __decorate([
     (0, common_1.Module)({
+        imports: [kafka_module_1.KafkaModule],
         controllers: [external_alert_controller_1.ExternalAlertController],
-        providers: [external_alert_service_1.ExternalAlertService, kafka_producer_provider_1.KafkaProducerProvider, config_1.ConfigService]
+        providers: [external_alert_service_1.ExternalAlertService]
     })
 ], ExternalAlertModule);
 //# sourceMappingURL=external-alert.module.js.map

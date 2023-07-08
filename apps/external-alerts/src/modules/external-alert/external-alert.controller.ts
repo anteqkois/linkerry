@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { CreateExternalAlertDto } from './dto/create-external-alert-trading-view.dto';
 import { ExternalAlertService } from './external-alert.service';
-import { CreateExternalAlertDto } from './dto/create-external-alert.dto';
-import { UpdateExternalAlertDto } from './dto/update-external-alert.dto';
 
 @Controller('external-alert')
 export class ExternalAlertController {
@@ -11,14 +10,4 @@ export class ExternalAlertController {
   create(@Body() createExternalAlertDto: CreateExternalAlertDto) {
     return this.externalAlertService.processAlert(createExternalAlertDto);
   }
-
-  // @Get()
-  // findAll() {
-  //   return this.externalAlertService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.externalAlertService.findOne(+id);
-  // }
 }

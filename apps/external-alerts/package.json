@@ -27,6 +27,7 @@
     "@nestjs/microservices": "^10.0.5",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-fastify": "^10.0.5",
+    "class-validator": "^0.14.0",
     "kafkajs": "^2.2.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"

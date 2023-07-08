@@ -15,25 +15,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConditionController = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
-const condition_service_1 = require("./condition.service");
-const create_condition_dto_1 = require("./dto/create-condition.dto");
+const condition_consumer_1 = require("./condition.consumer");
 let ConditionController = exports.ConditionController = class ConditionController {
     constructor(conditionService) {
         this.conditionService = conditionService;
     }
-    create(createConditionDto) {
-        return this.conditionService.processTriggered(createConditionDto);
+    readMessage(message, context) {
+        const originalMessage = context.getMessage();
+        const response = `Receiving a new message from topic: condition.triggered: ` +
+            JSON.stringify(originalMessage.value);
+        console.log(response);
+        return response;
     }
 };
 __decorate([
-    (0, microservices_1.MessagePattern)('createCondition'),
+    (0, microservices_1.MessagePattern)('condition.triggered'),
     __param(0, (0, microservices_1.Payload)()),
+    __param(1, (0, microservices_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_condition_dto_1.CreateConditionDto]),
+    __metadata("design:paramtypes", [Object, microservices_1.KafkaContext]),
     __metadata("design:returntype", void 0)
-], ConditionController.prototype, "create", null);
+], ConditionController.prototype, "readMessage", null);
 exports.ConditionController = ConditionController = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [condition_service_1.ConditionService])
+    __metadata("design:paramtypes", [condition_consumer_1.ConditionConsumer])
 ], ConditionController);
 //# sourceMappingURL=condition.controller.js.map

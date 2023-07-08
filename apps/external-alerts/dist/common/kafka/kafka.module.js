@@ -8,12 +8,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KafkaModule = void 0;
 const common_1 = require("@nestjs/common");
-const kafka_service_1 = require("./kafka.service");
+const microservices_1 = require("@nestjs/microservices");
 let KafkaModule = exports.KafkaModule = class KafkaModule {
 };
 exports.KafkaModule = KafkaModule = __decorate([
     (0, common_1.Module)({
-        providers: [kafka_service_1.KafkaService]
+        imports: [
+            microservices_1.ClientsModule.register([
+                {
+                    name: 'CONDITION-PRODUCER',
+                    transport: microservices_1.Transport.KAFKA,
+                    options: {
+                        client: {
+                            clientId: 'external-alerts-0',
+                            brokers: ['localhost:29092'],
+                        },
+                        consumer: {
+                            groupId: 'condition',
+                        },
+                    },
+                },
+            ]),
+        ],
+        exports: [microservices_1.ClientsModule],
     })
 ], KafkaModule);
 //# sourceMappingURL=kafka.module.js.map

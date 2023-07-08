@@ -14,8 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExternalAlertService = void 0;
 const common_1 = require("@nestjs/common");
-const microservices_1 = require("@nestjs/microservices");
 const config_1 = require("@nestjs/config");
+const microservices_1 = require("@nestjs/microservices");
 let ExternalAlertService = exports.ExternalAlertService = class ExternalAlertService {
     constructor(client, configService) {
         this.client = client;
@@ -24,7 +24,8 @@ let ExternalAlertService = exports.ExternalAlertService = class ExternalAlertSer
     }
     async processAlert(createExternalAlertDto) {
         console.log(createExternalAlertDto);
-        return 'Evenet Created';
+        await this.client.emit(this.topic, JSON.stringify(createExternalAlertDto));
+        return { message: 'Event created' };
     }
 };
 exports.ExternalAlertService = ExternalAlertService = __decorate([

@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateExternalAlertDto,  } from './dto/create-external-alert.dto';
-import { UpdateExternalAlertDto } from './dto/update-external-alert.dto';
-import { ClientKafka } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { ClientKafka } from '@nestjs/microservices';
+import { CreateExternalAlertDto, } from './dto/create-external-alert-trading-view.dto';
 
 @Injectable()
 export class ExternalAlertService {
@@ -14,8 +13,8 @@ export class ExternalAlertService {
 
   async processAlert(createExternalAlertDto: CreateExternalAlertDto) {
     console.log(createExternalAlertDto);
-    // await this.client.emit(this.topic, JSON.stringify(createExternalAlertDto))
+    await this.client.emit(this.topic, JSON.stringify(createExternalAlertDto))
 
-    return 'Evenet Created';
+    return { message: 'Event created' };
   }
 }

@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ExternalAlertService } from './external-alert.service';
 import { ExternalAlertController } from './external-alert.controller';
-import { KafkaProducerProvider } from '../../common/kafka/kafka-producer.provider';
 import { ConfigService } from '@nestjs/config';
+import { KafkaModule } from '../../common/kafka/kafka.module';
 
 @Module({
+  imports: [KafkaModule],
   controllers: [ExternalAlertController],
-  providers: [ExternalAlertService, KafkaProducerProvider, ConfigService]
+  providers: [ExternalAlertService]
 })
 export class ExternalAlertModule { }

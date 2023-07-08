@@ -6,14 +6,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConditionService = void 0;
+exports.KafkaService = void 0;
 const common_1 = require("@nestjs/common");
-let ConditionService = exports.ConditionService = class ConditionService {
-    processTriggered(createConditionDto) {
-        return 'This action adds a new condition';
-    }
+let KafkaService = exports.KafkaService = class KafkaService {
 };
-exports.ConditionService = ConditionService = __decorate([
+exports.KafkaService = KafkaService = __decorate([
     (0, common_1.Injectable)()
-], ConditionService);
-//# sourceMappingURL=condition.service.js.map
+], KafkaService);
+//# sourceMappingURL=kafka.service.js.map

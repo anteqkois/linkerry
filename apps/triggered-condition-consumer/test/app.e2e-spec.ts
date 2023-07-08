@@ -19,6 +19,5 @@ describe('AppController (e2e)', () => {
     return supertest(app.getHttpServer())
       .get('/')
       .expect(200)
-      // .expect('Hello World!');
   });
 });

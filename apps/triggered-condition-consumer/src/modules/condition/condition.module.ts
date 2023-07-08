@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ConditionService } from './condition.service';
+import { KafkaModule } from '../../common/kafka/kafka.module';
+import { ConditionConsumer } from './condition.consumer';
 import { ConditionController } from './condition.controller';
 
 @Module({
+  imports: [
+    ConditionModule,
+    KafkaModule
+  ],
   controllers: [ConditionController],
-  providers: [ConditionService]
+  providers: [ConditionConsumer]
 })
-export class ConditionModule {}
+export class ConditionModule { }
