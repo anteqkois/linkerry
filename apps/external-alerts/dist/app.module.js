@@ -23,7 +23,7 @@ exports.AppModule = AppModule = __decorate([
                     transport: microservices_1.Transport.KAFKA,
                     options: {
                         client: {
-                            clientId: 'external-alerts-consumer-0',
+                            clientId: 'external-alerts-0',
                             brokers: ['localhost:29092'],
                         },
                         consumer: {

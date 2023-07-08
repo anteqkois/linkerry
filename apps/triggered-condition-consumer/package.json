@@ -1,5 +1,5 @@
 {
-  "name": "external-alerts-consumer",
+  "name": "triggered-condition-consumer",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -23,6 +23,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/microservices": "^10.0.5",
     "@nestjs/platform-express": "^9.0.0",
     "kafkajs": "^2.2.4",
@@ -32,7 +33,7 @@
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
-    "@nestjs/testing": "^9.4.3",
+    "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "29.5.1",
     "@types/node": "18.16.12",

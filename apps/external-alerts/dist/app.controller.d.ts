@@ -1,7 +1,7 @@
-import { AppService } from './app.service';
-import { ClientKafka } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { ClientKafka } from '@nestjs/microservices';
 import { ObservableInput } from 'rxjs';
+import { AppService } from '../src/app.service';
 export declare class AppController {
     private readonly appService;
     private configService;
