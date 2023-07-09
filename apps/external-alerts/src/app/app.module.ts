@@ -1,9 +1,9 @@
+import { KafkaModule } from '@market-connector/core';
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
 import { ExternalAlertModule } from './modules/external-alert/external-alert.module';
-import { KafkaModule } from './common/kafka/kafka.module';
 
 @Module({
   imports: [
@@ -11,7 +11,15 @@ import { KafkaModule } from './common/kafka/kafka.module';
       isGlobal: true,
     }),
     ExternalAlertModule,
-    KafkaModule.register({ clientId: 'external-alerts-0' }),
+    KafkaModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        clientId: 'external-alerts-0',
+        brokerUrl: configService.get('KAFKA_CONDITION_BROKER_URL'),
+        groupId: configService.get('KAFKA_CONDITION_GROUP_ID'),
+      }),
+    }),
+
   ],
   controllers: [AppController],
   providers: [AppService],

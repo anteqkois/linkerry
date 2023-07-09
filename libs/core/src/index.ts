@@ -1,3 +1,4 @@
 export * from './lib/core.module';
-export * from './lib/modules/condition/dto/create-condition.event.dto';
-export * from './lib/modules/events/dto/create-event.dto';
+export * from './lib/condition/dto/create-condition.event.dto';
+export * from './lib/events/dto/create-event.dto';
+export * from './lib/kafka/kafka.module';
