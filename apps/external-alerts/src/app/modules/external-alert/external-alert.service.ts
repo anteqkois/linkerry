@@ -14,8 +14,6 @@ export class ExternalAlertService {
   }
 
   async processAlert(createExternalAlertDto: CreateExternalAlertTradinViewDto) {
-    console.log(createExternalAlertDto);
-
     const event: CreateConditionEventDto = {
       event_id: `${ createExternalAlertDto.ticker }_${ crypto.randomUUID({ disableEntropyCache: false }) }`,
       object: EventObjectType.CONDITION,
@@ -27,7 +25,7 @@ export class ExternalAlertService {
       }
     }
 
-    await this.client.emit(this.topic, JSON.stringify(event))
+    this.client.emit(this.topic, JSON.stringify(event))
 
     return { message: 'Event created', data: event };
   }

@@ -10,7 +10,6 @@ import { ExternalAlertModule } from './modules/external-alert/external-alert.mod
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ExternalAlertModule,
     KafkaModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -19,7 +18,7 @@ import { ExternalAlertModule } from './modules/external-alert/external-alert.mod
         groupId: configService.get('KAFKA_CONDITION_GROUP_ID'),
       }),
     }),
-
+    ExternalAlertModule,
   ],
   controllers: [AppController],
   providers: [AppService],

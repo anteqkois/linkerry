@@ -6,8 +6,8 @@ import { ExternalAlertService } from './external-alert.service';
 export class ExternalAlertController {
   constructor(private readonly externalAlertService: ExternalAlertService) {}
 
-  @Post()
   // Create universal dto, and decide based on path key from where alerts come
+  @Post()
   create(@Body() createExternalAlertDto: CreateExternalAlertTradinViewDto) {
     return this.externalAlertService.processAlert(createExternalAlertDto);
   }

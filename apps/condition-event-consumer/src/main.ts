@@ -11,7 +11,7 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: {
-          brokers: ['localhost:29092'],
+          brokers: [process.env.KAFKA_CONDITION_BROKER_URL],
         },
       },
     },
