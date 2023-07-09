@@ -9,12 +9,11 @@ import { KafkaModule } from './common/kafka/kafka.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // envFilePath: ['.env'],
     }),
     ExternalAlertModule,
-    KafkaModule,
+    KafkaModule.register({ clientId: 'external-alerts-0' }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
