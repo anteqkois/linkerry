@@ -11,9 +11,7 @@ export class ConditionConsumer {
     this.topic = this.configService.get<string>('KAFKA_CONDITION_TOPIC_NAME')
   }
 
-  @EventPattern('condition.triggered')
   processTriggered(createConditionDto: CreateConditionDto) {
-    console.log({ receive: createConditionDto });
-    return 'This action adds a new condition';
+    
   }
 }

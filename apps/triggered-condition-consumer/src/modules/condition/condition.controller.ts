@@ -8,16 +8,7 @@ export class ConditionController {
   constructor(private readonly conditionService: ConditionConsumer) { }
 
   @MessagePattern('condition.triggered')
-  readMessage(@Payload() message: any, @Ctx() context: KafkaContext) {
-    const originalMessage = context.getMessage();
-    const response =
-      `Receiving a new message from topic: condition.triggered: ` +
-      JSON.stringify(originalMessage.value);
-    console.log(response);
-    return response;
+  handleTriggered(@Payload() message: any, @Ctx() context: KafkaContext) {
+    this.conditionService.processTriggered(JSON.stringify(context.getMessage()))
   }
-  // @MessagePattern('createCondition')
-  // create(@Payload() createConditionDto: CreateConditionDto) {
-  //   return this.conditionService.processTriggered(createConditionDto);
-  // }
 }
