@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AlertLinkModule } from './modules/alert-link/alert-link.module';
 import { AlertModule } from './modules/alert/alert.module';
+import { MongodbModule } from './common/mongodb/mongodb.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AlertModule } from './modules/alert/alert.module';
         groupId: configService.get('KAFKA_CONDITION_GROUP_ID'),
       }),
     }),
+    MongodbModule,
     AlertModule,
     AlertLinkModule,
   ],
