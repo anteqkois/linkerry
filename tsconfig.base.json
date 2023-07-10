@@ -19,9 +19,5 @@
     }
   },
   "exclude": ["node_modules", "tmp"],
-  "include": [
-    "**/*.ts",
-    "./libs/*/src/**/*",
-    "./apps/*/src/**/*"
-  ]
+  "include": ["**/*.ts", "./libs/*/src/**/*", "./apps/*/src/**/*"]
 }

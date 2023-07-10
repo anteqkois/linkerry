@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsObject, IsString } from "class-validator";
 
 export enum EventObjectType {
   CONDITION = 'condition',
@@ -13,4 +13,8 @@ export class CreateEventDto {
   @IsString()
   @IsEnum(EventObjectType)
   readonly object: EventObjectType;
+
+  @IsString()
+  @IsObject()
+  readonly data: {};
 }

@@ -1,7 +1,7 @@
-import { IsBoolean, IsEnum, IsMongoId, IsNotEmpty, IsString } from "class-validator";
-import { AlertProvidersType } from '@market-connector/core'
+import { AlertProvidersType } from '@market-connector/core';
+import { IsBoolean, IsEnum, IsMongoId, IsNotEmpty } from "class-validator";
 
-export class CreateAlertLinkDto {
+export class CreateAlertDto {
   // @IsString()
   // @IsNotEmpty()
   // link: string
@@ -18,10 +18,10 @@ export class CreateAlertLinkDto {
   @IsNotEmpty()
   readonly provider: AlertProvidersType
 
-  // Crete tisker module
-  @IsString()
-  @IsNotEmpty()
-  readonly ticker: string
+  // // Crete tisker module
+  // @IsString()
+  // @IsNotEmpty()
+  // readonly ticker: string
 
   @IsMongoId()
   @IsNotEmpty()

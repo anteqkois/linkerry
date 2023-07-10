@@ -3,9 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AlertLinkModule } from './modules/alert-link/alert-link.module';
-import { AlertModule } from './modules/alert/alert.module';
 import { MongodbModule } from './common/mongodb/mongodb.module';
+import { ExternalAlertModule } from './modules/external-alert/external-alert.module';
 
 @Module({
   imports: [
@@ -21,8 +20,7 @@ import { MongodbModule } from './common/mongodb/mongodb.module';
       }),
     }),
     MongodbModule,
-    AlertModule,
-    AlertLinkModule,
+    ExternalAlertModule,
   ],
   controllers: [AppController],
   providers: [AppService],

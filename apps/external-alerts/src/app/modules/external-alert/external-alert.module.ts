@@ -1,8 +1,8 @@
 import { KafkaModule } from '@market-connector/core';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AlertController } from './alert.controller';
-import { AlertService } from './alert.service';
+import { ExternalAlertController } from './external-alert.controller';
+import { ExternalAlertService } from './external-alert.service';
 
 @Module({
   imports: [KafkaModule.registerAsync({
@@ -14,7 +14,7 @@ import { AlertService } from './alert.service';
     }),
   }),
   ],
-  controllers: [AlertController],
-  providers: [AlertService]
+  controllers: [ExternalAlertController],
+  providers: [ExternalAlertService]
 })
-export class AlertModule { }
+export class ExternalAlertModule { }
