@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
-import { AppModule } from './app/app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -11,7 +11,7 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: {
-          brokers: [process.env.KAFKA_CONDITION_BROKER_URL],
+          brokers: [process.env.KAFKA_BROKER_URL],
         },
       },
     },
