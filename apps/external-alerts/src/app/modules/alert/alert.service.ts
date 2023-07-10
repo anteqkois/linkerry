@@ -15,13 +15,11 @@ export class AlertService {
 
   async processAlert(creatAlertDto: CreateAlertTradinViewDto) {
     const event: CreateConditionEventDto = {
-      event_id: `${ creatAlertDto.ticker }_${ crypto.randomUUID({ disableEntropyCache: false }) }`,
+      event_id: `${creatAlertDto.alertId}_${ crypto.randomUUID({ disableEntropyCache: false }) }`,
       object: EventObjectType.CONDITION,
       data: {
         type: ConditionTypeType.ALERT,
-        ticker: creatAlertDto.ticker,
-        operator: ConditionOperatorType.CROSSING_UP,
-        value: creatAlertDto.price
+        value: "1"
       }
     }
 

@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 describe('GET /api', () => {
-  it('should return a message', async () => {
+  it('healtCheck', async () => {
     const res = await axios.get(`/api`);
 
     expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Hello API' });
+    expect(new Date(res.data).getDay()).toEqual(new Date().getDay());
   });
 });

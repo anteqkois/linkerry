@@ -4,9 +4,9 @@ import { CreateEventDto } from "../../event/dto/create-event.dto";
 import { ConditionOperatorType, ConditionTypeType } from "../types";
 
 export class ConditionEventDataDto {
-  @IsString()
-  @IsNotEmpty()
-  readonly ticker: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // readonly ticker: string;
 
   @IsString()
   @IsEnum(ConditionTypeType)
@@ -16,9 +16,9 @@ export class ConditionEventDataDto {
   @IsNotEmpty()
   readonly value: string;
 
-  @IsString()
-  @IsEnum(ConditionOperatorType)
-  readonly operator: ConditionOperatorType;
+  // @IsString()
+  // @IsEnum(ConditionOperatorType)
+  // readonly operator: ConditionOperatorType;
 
 }
 
