@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
-import { ConditionOperatorType, ConditionTypeType } from "../types";
-import { BaseEvent } from "../../event/entities/base.event";
+import { BaseEvent } from "../../events/entities/base.event";
+import { ConditionTypeType } from "../types";
 
 export class ConditionEventData {
   @IsString()
