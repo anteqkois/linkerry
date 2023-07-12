@@ -1,5 +1,5 @@
 import { AlertProvidersType } from '@market-connector/core';
-import { IsBoolean, IsEnum, IsMongoId, IsNotEmpty } from "class-validator";
+import { IsBoolean, IsEnum, IsMongoId, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateAlertDto {
   // @IsString()
@@ -23,9 +23,10 @@ export class CreateAlertDto {
   // @IsNotEmpty()
   // readonly ticker: string
 
+  @IsOptional()
   @IsMongoId()
   @IsNotEmpty()
-  readonly condition: string
+  readonly condition?: string
 
   @IsBoolean()
   @IsNotEmpty()

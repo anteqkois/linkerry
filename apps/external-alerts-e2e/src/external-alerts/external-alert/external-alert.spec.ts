@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {ConditionOperatorType, ConditionTypeType, EventObjectType} from '@market-connector/core'
+import { ConditionTypeType, EventObjectType} from '@market-connector/core'
 
 describe('POST /alert', () => {
   it('should process alert', async () => {
