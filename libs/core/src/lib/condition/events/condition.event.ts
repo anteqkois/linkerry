@@ -1,9 +1,9 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
-import { CreateEventDto } from "../../event/dto/create-event.dto";
 import { ConditionOperatorType, ConditionTypeType } from "../types";
+import { BaseEvent } from "../../event/entities/base.event";
 
-export class ConditionEventDataDto {
+export class ConditionEventData {
   @IsString()
   @IsEnum(ConditionTypeType)
   readonly type: ConditionTypeType;
@@ -13,9 +13,8 @@ export class ConditionEventDataDto {
   readonly value: string;
 }
 
-export class CreateConditionEventDto extends CreateEventDto {
-  // @ValidateNested()
-  // @Type(() => ConditionEventDataDto)
-  // override readonly data: ConditionEventDataDto;
+export class ConditionEvent extends BaseEvent {
+  @ValidateNested()
+  @Type(() => ConditionEventData)
+  readonly data: ConditionEventData;
 }
-

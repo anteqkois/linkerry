@@ -1,1 +1,2 @@
-export * from './dto/create-event.dto'
+export * from './entities/base.event'
+export * from './types'
