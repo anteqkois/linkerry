@@ -1,6 +1,5 @@
 import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { ConditionOperatorType, ConditionTypeType } from "../types";
-import { IndicatorType } from "../../indicator/types";
+import { ConditionOperatorType, ConditionTypeType, IndicatorType } from '@market-connector/core'
 
 export class CreateConditionDto {
   @IsString()

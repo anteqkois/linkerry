@@ -1,9 +1,10 @@
 # MarketConnector
 
 # Development Rules
-- All models should be in @core lib, to be sherabled beetwen apps
-- All model schema also should be in @core lib
+- all models should be in @core lib, to be sherabled beetwen apps
+- all model schema also should be in @core lib
 - only unsherable service should be in apps
+- prefer storing date as a unix timestamp to have better backend, calculation performance 
 
 # NX monorepo disclaimer
 
