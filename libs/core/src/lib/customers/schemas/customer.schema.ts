@@ -5,10 +5,10 @@ import { CustomerRoleTypes } from '../types';
 
 export type CustomerDocument = HydratedDocument<Customer>;
 
-@Schema({ timestamps: true, })
+@Schema({ timestamps: true, autoIndex: true })
 export class Customer {
-  @Prop({ required: true, type: String, unique: true })
-  name: string;
+  @Prop({ required: true, type: String, unique: true, index: true })
+  name!: string;
 
   @Prop({ type: [{ type: String, enum: CustomerRoleTypes, default: CustomerRoleTypes.CUSTOMER }] })
   roles: CustomerRoleTypes[];
@@ -23,7 +23,7 @@ export class Customer {
   telegramBotConnected: boolean;
 
   @Prop({ required: true, type: String, unique: true })
-  email: String;
+  email!: string;
 
   @Prop({ required: false, type: Date })
   emailVerifiedAtDate: Date;
@@ -37,8 +37,8 @@ export class Customer {
   @Prop({ required: false, type: Date })
   trialStartedAtDate: Date;
 
-  @Prop({ required: true, type: String })
-  deletedAtDate: string;
+  @Prop({ required: false, type: Date })
+  deletedAtDate: Date;
 
   @Prop({ required: false, type: String, unique: true })
   cryptoWallet: string;

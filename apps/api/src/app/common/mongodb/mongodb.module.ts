@@ -14,7 +14,10 @@ import { MongooseModule } from '@nestjs/mongoose';
                 const database = configService.get<string>('MONGO_DATABASE');
                 const protocol = configService.get<string>('MONGO_PROTOCOL');
                 const uri = `${protocol}://${ username }:${ password }@${host}${ port ? (':' + port) : '' }${database ? ('/' + database) : ''}`;
-                return { uri }
+                return {
+                  uri,
+                  autoIndex: true,
+                }
             },
             inject: [ConfigService],
         })
