@@ -1,20 +1,10 @@
 import { CreateCustomerDto, Customer, CustomerRoleTypes, LanguageType } from '@market-connector/core'
 import axios from 'axios'
+import { testUser } from '../support/test-veriables'
 
 describe('POST /api/customers', () => {
   it('can create customer', async () => {
-    const input: CreateCustomerDto = {
-      consents: {
-        test1: true,
-        test2: true,
-      },
-      email: 'anteq@gmail.com',
-      language: LanguageType.pl,
-      name: 'anteq',
-      password: 'antekkoisA',
-    }
-
-    const res = await axios.post<Customer>(`/customers`, input)
+    const res = await axios.post<Customer>(`/customers`, testUser)
 
     expect(res.status).toBe(201)
     expect(res.data.roles).toEqual([CustomerRoleTypes.CUSTOMER])

@@ -1,5 +1,5 @@
-import { AlertProvidersType } from '@market-connector/core';
 import { IsBoolean, IsEnum, IsMongoId, IsNotEmpty, IsOptional } from "class-validator";
+import { AlertProvidersType } from "../types";
 
 export class CreateAlertDto {
   // @IsString()

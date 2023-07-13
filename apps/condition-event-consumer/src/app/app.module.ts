@@ -20,7 +20,7 @@ import { ConditionsModule } from './modules/conditions/conditions.module';
     }),
     ConditionsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ],
   providers: [AppService],
 })
 export class AppModule { }
