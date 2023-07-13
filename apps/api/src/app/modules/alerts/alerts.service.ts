@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAlertDto } from './dto/create-alert.dto';
 
 @Injectable()
-export class AlertService {
+export class AlertsService {
 
   createAlert(createAlertDto: CreateAlertDto) {
 

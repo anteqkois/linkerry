@@ -1,4 +1,4 @@
-import { ConditionTypeType, CreateConditionEventDto, EventObjectType } from '@market-connector/core';
+import { ConditionTypeType, ConditionEvent, EventObjectType } from '@market-connector/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import { CreateExternalAlertTradinViewDto, } from './dto/create-external-alert.dto';
 
 @Injectable()
-export class ExternalAlertService {
+export class ExternalAlertsService {
   private topic: string
 
   constructor(@Inject('CONDITION-PRODUCER') private readonly client: ClientKafka, private configService: ConfigService) {
@@ -14,7 +14,7 @@ export class ExternalAlertService {
   }
 
   async processAlert(creatAlertDto: CreateExternalAlertTradinViewDto) {
-    const event: CreateConditionEventDto = {
+    const event: ConditionEvent = {
       event_id: `${creatAlertDto.alertId}_${ crypto.randomUUID({ disableEntropyCache: false }) }`,
       object: EventObjectType.CONDITION,
       data: {

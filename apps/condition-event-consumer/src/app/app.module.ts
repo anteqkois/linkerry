@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConditionModule } from './modules/condition/condition.module';
+import { ConditionsModule } from './modules/conditions/conditions.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { ConditionModule } from './modules/condition/condition.module';
         groupId: configService.get('KAFKA_CONDITION_GROUP_ID'),
       }),
     }),
-    ConditionModule,
+    ConditionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

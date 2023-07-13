@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { AlertModule } from './modules/alert/alert.module';
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { MongodbModule } from './common/mongodb';
-import { CondictionModule } from './modules/condiction/condiction.module';
+import { AlertsModule } from './modules/alerts/alerts.module';
+import { CondictionsModule } from './modules/condictions/condictions.module';
+import { CustomersModule } from '@market-connector/core';
 
 @Module({
-  imports: [AlertModule, MongodbModule, CondictionModule],
+  imports: [AlertsModule, MongodbModule, CondictionsModule, CustomersModule],
   controllers: [AppController],
   providers: [AppService],
 })

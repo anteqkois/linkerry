@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { AlertProvidersType } from '@market-connector/core'
 
-describe('POST /api/alert', () => {
+describe('POST /api/alerts', () => {
   it('should create alert', async () => {
     const input = {
       provider: AlertProvidersType.TRADING_VIEW,
@@ -9,7 +9,7 @@ describe('POST /api/alert', () => {
       testMode: true,
     }
 
-    const res = await axios.post(`/alert`, input)
+    const res = await axios.post(`/alerts`, input)
 
     expect(res.status).toBe(201)
     // expect(res.data).toEqual({ message: 'Hello API' })

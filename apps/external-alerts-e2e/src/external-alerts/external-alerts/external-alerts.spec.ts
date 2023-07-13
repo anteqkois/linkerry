@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { ConditionTypeType, EventObjectType} from '@market-connector/core'
 
-describe('POST /alert', () => {
+describe('POST /external-alerts', () => {
   it('should process alert', async () => {
     const input = {
       alertId: 'randomAlertId'
     }
 
-    const res = await axios.post(`/api/alert`, input);
+    const res = await axios.post(`/api/external-alerts`, input);
     expect(res.status).toBe(201);
     expect(res.data.message).toEqual('Event created');
     expect(res.data.data).toMatchObject({

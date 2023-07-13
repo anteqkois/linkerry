@@ -1,15 +1,15 @@
+import { ConditionEvent } from '@market-connector/core';
 import { Controller, ValidationPipe } from '@nestjs/common';
-import { ConditionConsumer } from './condition.consumer';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ConditionEvent } from '@market-connector/core'
+import { ConditionsConsumer } from './conditions.consumer';
 
 @Controller()
-export class ConditionController {
-  constructor(private readonly conditionConsumer: ConditionConsumer) { }
+export class ConditionsController {
+  constructor(private readonly conditionsConsumer: ConditionsConsumer) { }
 
   @EventPattern('condition.triggered')
   handleTriggeredCondition(@Payload(ValidationPipe) data: ConditionEvent) {
     console.log(data);
-    this.conditionConsumer.processTriggered(data)
+    this.conditionsConsumer.processTriggered(data)
   }
 }

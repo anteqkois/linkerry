@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(),);
   app.setGlobalPrefix(globalPrefix);
 
-  const port = process.env.PORT || 3002;
+  const port = process.env.PORT_EXTERNAL_ALERTS || 3002;
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,

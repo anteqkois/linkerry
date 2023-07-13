@@ -1,14 +1,14 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CreateExternalAlertTradinViewDto } from './dto/create-external-alert.dto';
-import { ExternalAlertService } from './external-alert.service';
+import { ExternalAlertsService } from './external-alerts.service';
 
-@Controller('external-alert')
-export class ExternalAlertController {
-  constructor(private readonly alertService: ExternalAlertService) {}
+@Controller('external-alerts')
+export class ExternalAlertsController {
+  constructor(private readonly externalAlertsService: ExternalAlertsService) {}
 
   // Create universal dto, and decide based on path key from where alerts come
   @Post()
   create(@Body() externalAlertDto: CreateExternalAlertTradinViewDto) {
-    return this.alertService.processAlert(externalAlertDto);
+    return this.externalAlertsService.processAlert(externalAlertDto);
   }
 }

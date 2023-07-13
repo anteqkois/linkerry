@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongodbModule } from './common/mongodb/mongodb.module';
-import { ExternalAlertModule } from './modules/external-alert/external-alert.module';
+import { ExternalAlertsModule } from './modules/external-alerts/external-alerts.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { ExternalAlertModule } from './modules/external-alert/external-alert.mod
       }),
     }),
     MongodbModule,
-    ExternalAlertModule,
+    ExternalAlertsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

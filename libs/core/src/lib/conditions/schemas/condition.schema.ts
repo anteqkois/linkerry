@@ -4,7 +4,7 @@ import { ConditionOperatorType, ConditionTypeType } from '../types';
 
 export type ConditionDocument = HydratedDocument<Condition>;
 
-@Schema({ timestamps: true, versionKey: true })
+@Schema({ timestamps: true,})
 export class Condition {
   @Prop({ required: true, type: Types.ObjectId, ref: 'Customers' })
   userId: Types.ObjectId;

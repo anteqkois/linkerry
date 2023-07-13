@@ -4,7 +4,7 @@ import { AlertProvidersType } from '../types';
 
 export type AlertDocument = HydratedDocument<Alert>;
 
-@Schema({ timestamps: true, versionKey: true })
+@Schema({ timestamps: true, })
 export class Alert {
   @Prop({ required: true, type: Types.ObjectId, ref: 'Conditions', index: 1 })
   conditionId: Types.ObjectId;
@@ -15,7 +15,7 @@ export class Alert {
   @Prop({ required: false, type: Number, default: 86400 }) // 1 day in seconds
   alertValidityUnix: number;
 
-  @Prop({ required: true, type: AlertProvidersType })
+  @Prop({ required: true, type: String, enum: AlertProvidersType })
   alertProvider: AlertProvidersType;
 
   // TODO It should be field from ticker collection

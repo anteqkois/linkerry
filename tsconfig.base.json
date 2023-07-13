@@ -18,6 +18,6 @@
       "@market-connector/core": ["libs/core/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"],
-  "include": ["**/*.ts", "./libs/*/src/**/*", "./apps/*/src/**/*"]
+  // "exclude": ["node_modules", "tmp"],
+  "include": ["**/*.ts", "./libs/*/src/**/*", "./apps/*/src/**/*", "env.d.ts"]
 }

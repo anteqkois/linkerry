@@ -5,15 +5,15 @@ import { CustomerRoleTypes } from '../types';
 
 export type CustomerDocument = HydratedDocument<Customer>;
 
-@Schema({ timestamps: true, versionKey: true })
+@Schema({ timestamps: true, })
 export class Customer {
-  @Prop({ required: true, type: String })
+  @Prop({ required: true, type: String, unique: true })
   name: string;
 
-  @Prop({ required: true, type: [CustomerRoleTypes], default: [CustomerRoleTypes.CUSTOMER] })
+  @Prop({ type: [{ type: String, enum: CustomerRoleTypes, default: CustomerRoleTypes.CUSTOMER }] })
   roles: CustomerRoleTypes[];
 
-  @Prop({ required: false, type: String })
+  @Prop({ required: false, type: String, unique: true })
   phone: string;
 
   @Prop({ required: false, type: String })
@@ -22,7 +22,7 @@ export class Customer {
   @Prop({ required: true, type: Boolean, default: false })
   telegramBotConnected: boolean;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: true, type: String, unique: true })
   email: String;
 
   @Prop({ required: false, type: Date })
@@ -43,7 +43,7 @@ export class Customer {
   @Prop({ required: false, type: String, unique: true })
   cryptoWallet: string;
 
-  @Prop({ required: true, type: LanguageType, default: LanguageType.pl })
+  @Prop({ required: true, type: String, enum: LanguageType, default: LanguageType.pl })
   language: LanguageType;
 
   @Prop({ required: true, type: Number, default: 10 })
@@ -53,7 +53,7 @@ export class Customer {
   consents: Record<string, boolean>;
 
   // Shoulde be created almost one when customer was created
-  @Prop({ required: false, type: Types.ObjectId, ref: 'CustomerSettings' })
+  @Prop({ required: false, type: Types.ObjectId, ref: 'CustomerSettings', unique: true })
   settingsId: Types.ObjectId;
 
   @Prop({ required: false, type: Types.ObjectId, ref: 'Customers' })

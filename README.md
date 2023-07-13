@@ -5,6 +5,7 @@
 - all model schema also should be in @core lib
 - only unsherable service should be in apps
 - prefer storing date as a unix timestamp to have better backend, calculation performance 
+- all models, entities names are pluar (-s) 
 
 # NX monorepo disclaimer
 
