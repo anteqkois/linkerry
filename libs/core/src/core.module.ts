@@ -2,8 +2,11 @@ import { Module } from '@nestjs/common';
 import { AlertsModule } from './lib/alerts/alerts.module';
 import { AuthModule } from './lib/auth/auth.module';
 import { KafkaModule } from './lib/kafka/kafka.module';
+import { WinstonModule } from 'nest-winston';
 import { UserSettingsModule } from './lib/user-settings/user-settings.module';
 import { UsersModule } from './lib/users/users.module';
+import { WinstonConfig } from './lib/logger/winston.config';
+import { LoggerModule } from './lib/logger/logger.module';
 
 @Module({
   imports: [
@@ -12,6 +15,8 @@ import { UsersModule } from './lib/users/users.module';
     UserSettingsModule,
     AlertsModule,
     AuthModule,
+    WinstonModule.forRoot(WinstonConfig),
+    LoggerModule,
     // MongooseModule.forFeatureAsync([{
     //   name: User.name,
     //   useFactory: () => {

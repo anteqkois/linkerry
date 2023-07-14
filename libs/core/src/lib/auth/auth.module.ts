@@ -3,12 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from "@nestjs/passport";
+import { LoggerService } from '../logger/logger.service';
 import { User, UserSchema, UsersModule, UsersService } from '../users';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { HashService } from './hash.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
-import { HashService } from './hash.service';
 
 @Module({
   imports: [UsersModule,
@@ -17,6 +18,7 @@ import { HashService } from './hash.service';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
+        console.log(configService.get<string>('JWT_SECRET'));
         return {
           secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: '60s' },
@@ -33,6 +35,6 @@ import { HashService } from './hash.service';
       },
     },])],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, UsersService, JwtService, HashService]
+  providers: [AuthService, LocalStrategy, JwtStrategy, UsersService, JwtService, HashService, LoggerService, ConfigService]
 })
 export class AuthModule { }

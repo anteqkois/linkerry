@@ -5,9 +5,11 @@ import { User, UserSchema } from './schemas/user.schema';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { HashService } from '../auth/hash.service';
+import { LoggerService } from '../logger/logger.service';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
-  imports: [MongodbModule, MongooseModule.forFeatureAsync([{
+  imports: [MongodbModule, LoggerModule, MongooseModule.forFeatureAsync([{
     name: User.name,
     useFactory: () => {
       const schema = UserSchema;
@@ -16,6 +18,6 @@ import { HashService } from '../auth/hash.service';
     },
   },])],
   controllers: [UsersController],
-  providers: [UsersService, HashService]
+  providers: [UsersService, HashService, LoggerService]
 })
 export class UsersModule { }
