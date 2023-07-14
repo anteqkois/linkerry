@@ -1,5 +1,6 @@
 export * from './core.module';
 export * from './lib/alerts';
+export * from './lib/auth';
 export * from './lib/conditions';
 export * from './lib/customers';
 // export * from './lib/customer-settings';

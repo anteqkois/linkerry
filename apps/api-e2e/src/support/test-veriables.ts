@@ -10,3 +10,14 @@ export const testUser: CreateCustomerDto = {
   name: 'anteq',
   password: 'antekkoisA',
 }
+
+export const realUser: CreateCustomerDto = {
+  consents: {
+    test1: true,
+    test2: true,
+  },
+  email: 'anteqkois@gmail.com',
+  language: LanguageType.pl,
+  name: 'anteqkois',
+  password: 'antekkoisA',
+}

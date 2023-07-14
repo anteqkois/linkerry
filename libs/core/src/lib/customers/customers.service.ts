@@ -23,4 +23,13 @@ export class CustomersService {
       return new UnprocessableEntityException()
     }
   }
+
+  async find(filters?: any) {
+    const filter = {}
+    return this.customerModel.find(filter)
+  }
+
+  async findOne(name: string) {
+    return this.customerModel.findOne({ name })
+  }
 }

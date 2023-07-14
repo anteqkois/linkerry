@@ -19,7 +19,7 @@ async function bootstrap() {
 
   await app.listen(port);
   Logger.log(
-    `🚀 External Alerts service is running on: http://localhost:${ port }/${ globalPrefix }`
+    `🚀 Api service is running on: http://localhost:${ port }/${ globalPrefix }`
   );
 }
 bootstrap();
