@@ -4,6 +4,7 @@ import { MongodbModule } from '../mongodb';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { HashService } from '../auth/hash.service';
 
 @Module({
   imports: [MongodbModule, MongooseModule.forFeatureAsync([{
@@ -15,6 +16,6 @@ import { UsersService } from './users.service';
     },
   },])],
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [UsersService, HashService]
 })
 export class UsersModule { }

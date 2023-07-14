@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { HashService } from './hash.service';
 
 @Module({
   imports: [UsersModule,
@@ -32,6 +33,6 @@ import { LocalStrategy } from './strategies/local.strategy';
       },
     },])],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, UsersService, JwtService]
+  providers: [AuthService, LocalStrategy, JwtStrategy, UsersService, JwtService, HashService]
 })
 export class AuthModule { }

@@ -11,7 +11,7 @@ export const testUser: CreateUserDto = {
   password: 'antekkoisA',
 }
 
-export const realUser: CreateUserDto = {
+export const authUser: CreateUserDto = {
   consents: {
     test1: true,
     test2: true,

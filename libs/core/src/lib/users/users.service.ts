@@ -4,17 +4,20 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { UserRoleTypes } from './types';
+import { HashService } from '../auth/hash.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private readonly hashService: HashService,
   ) { }
 
   async createUser(createUserDto: CreateUserDto) {
+
     try {
-      const encryptedPassword = createUserDto.password
-      createUserDto.password = encryptedPassword
+      const hashedPassword = await this.hashService.hash(createUserDto.password)
+      createUserDto.password = hashedPassword
 
       const customr = await this.userModel.create({ ...createUserDto, roles: [UserRoleTypes.CUSTOMER] })
       return customr

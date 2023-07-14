@@ -19,23 +19,21 @@ module.exports = async function () {
   }
 
   console.log('[ CLEANED DATABASE ]');
-  await db.connection.createCollection('users')
 
-  const User = db.model('User', new mongoose.Schema({}, { strict: false }));
-  const user = new User({
-    consents: {
-      test1: true,
-      test2: true,
-    },
-    email: 'anteqkois@gmail.com',
-    language: 'Polish',
-    name: 'anteqkois',
-    password: 'antekkoisA',
-  });
-  await user.save();
-  // console.log('User real user for test:', user);
-
-  await new Promise(r => setTimeout(r, 2000))
+  // await db.connection.createCollection('users')
+  // const User = db.model('User', new mongoose.Schema({}, { strict: false }));
+  // const user = new User({
+  //   consents: {
+  //     test1: true,
+  //     test2: true,
+  //   },
+  //   email: 'anteqkois@gmail.com',
+  //   language: 'Polish',
+  //   name: 'anteqkois',
+  //   password: 'antekkoisA',
+  // });
+  // await user.save();
+  // await new Promise(r => setTimeout(r, 2000))
 
   // Hint: Use `globalThis` to pass variables to global teardown.
   globalThis.__TEARDOWN_MESSAGE__ = '\nTearing down...\n'
