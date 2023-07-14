@@ -4,7 +4,7 @@ import { database } from '../../../../tools/database'
 /* eslint-disable */
 var __TEARDOWN_MESSAGE__: string
 
-const collectionToDelete = ['customers']
+const collectionToDelete = ['users']
 
 module.exports = async function () {
   // Start services that that the app needs to run (e.g. database, docker-compose, etc.).
@@ -19,10 +19,10 @@ module.exports = async function () {
   }
 
   console.log('[ CLEANED DATABASE ]');
-  await db.connection.createCollection('customers')
+  await db.connection.createCollection('users')
 
-  const Customer = db.model('Customer', new mongoose.Schema({}, { strict: false }));
-  const customer = new Customer({
+  const User = db.model('User', new mongoose.Schema({}, { strict: false }));
+  const user = new User({
     consents: {
       test1: true,
       test2: true,
@@ -32,8 +32,8 @@ module.exports = async function () {
     name: 'anteqkois',
     password: 'antekkoisA',
   });
-  await customer.save();
-  // console.log('Customer real user for test:', customer);
+  await user.save();
+  // console.log('User real user for test:', user);
 
   await new Promise(r => setTimeout(r, 2000))
 

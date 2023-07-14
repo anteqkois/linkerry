@@ -1,6 +1,6 @@
-import { CreateCustomerDto, LanguageType } from '@market-connector/core'
+import { CreateUserDto, LanguageType } from '@market-connector/core'
 
-export const testUser: CreateCustomerDto = {
+export const testUser: CreateUserDto = {
   consents: {
     test1: true,
     test2: true,
@@ -11,7 +11,7 @@ export const testUser: CreateCustomerDto = {
   password: 'antekkoisA',
 }
 
-export const realUser: CreateCustomerDto = {
+export const realUser: CreateUserDto = {
   consents: {
     test1: true,
     test2: true,

@@ -1,18 +1,18 @@
-import { CreateCustomerDto, Customer, CustomerRoleTypes, LanguageType } from '@market-connector/core'
+import { LanguageType, User, UserRoleTypes } from '@market-connector/core'
 import axios from 'axios'
 import { testUser } from '../support/test-veriables'
 
-describe('POST /api/customers', () => {
-  it('can create customer', async () => {
-    const res = await axios.post<Customer>(`/customers`, testUser)
+describe('POST /api/users', () => {
+  it('can create user', async () => {
+    const res = await axios.post<User>(`/users`, testUser)
 
     expect(res.status).toBe(201)
-    expect(res.data.roles).toEqual([CustomerRoleTypes.CUSTOMER])
+    expect(res.data.roles).toEqual([UserRoleTypes.CUSTOMER])
   })
 
-  it('cannot duplicate customer', async () => {
+  it('cannot duplicate user', async () => {
     // duplicate name
-    const res = axios.post<Customer>(`/customers`, {
+    const res = axios.post<User>(`/users`, {
       consents: {
         test1: true,
         test2: true,
@@ -25,7 +25,7 @@ describe('POST /api/customers', () => {
     expect(res).rejects.toHaveProperty("response.status", 422);
 
     // duplicate email
-    const secondResponse = axios.post<Customer>(`/customers`, {
+    const secondResponse = axios.post<User>(`/users`, {
       consents: {
         test1: true,
         test2: true,
@@ -37,7 +37,7 @@ describe('POST /api/customers', () => {
     })
     expect(secondResponse).rejects.toHaveProperty("response.status", 422);
 
-    const thirdResponse = await axios.post<Customer>(`/customers`, {
+    const thirdResponse = await axios.post<User>(`/users`, {
       consents: {
         test1: true,
         test2: true,

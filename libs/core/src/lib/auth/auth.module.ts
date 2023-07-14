@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { Customer, CustomerSchema, CustomersModule, CustomersService } from '../customers';
-import { LocalStrategy } from './strategies/local.strategy';
-import { PassportModule } from "@nestjs/passport";
-import { MongooseModule } from '@nestjs/mongoose';
-import { AuthController } from './auth.controller';
-import { JwtService, JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { PassportModule } from "@nestjs/passport";
+import { User, UserSchema, UsersModule, UsersService } from '../users';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
-  imports: [CustomersModule,
+  imports: [UsersModule,
     PassportModule,
     ConfigModule,
     JwtModule.registerAsync({
@@ -24,14 +24,14 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       inject: [ConfigService],
     }),
     MongooseModule.forFeatureAsync([{
-      name: Customer.name,
+      name: User.name,
       useFactory: () => {
-        const schema = CustomerSchema;
+        const schema = UserSchema;
         schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }); // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
         return schema;
       },
     },])],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, CustomersService, JwtService]
+  providers: [AuthService, LocalStrategy, JwtStrategy, UsersService, JwtService]
 })
 export class AuthModule { }

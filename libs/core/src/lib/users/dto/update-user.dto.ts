@@ -1,11 +1,11 @@
-import { IsBoolean, IsDate, IsOptional } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateCustomerDto } from './create-customer.dto';
+import { IsBoolean, IsDate, IsOptional } from 'class-validator';
+import { CreateUserDto } from './create-user.dto';
 
-export class UpdateCustomerDto extends PartialType(CreateCustomerDto) {
+export class UpdateUserDto extends PartialType(CreateUserDto) {
   // @IsNotEmpty()
-  // @IsEnum(CustomerRoleTypes)
-  // roles: CustomerRoleTypes[];
+  // @IsEnum(UserRoleTypes)
+  // roles: UserRoleTypes[];
 
   @IsOptional()
   @IsBoolean()

@@ -1,17 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { LanguageType } from '../../languages';
-import { CustomerRoleTypes } from '../types';
+import { UserRoleTypes } from '../types';
 
-export type CustomerDocument = HydratedDocument<Customer>;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true, autoIndex: true })
-export class Customer {
+export class User {
   @Prop({ required: true, type: String, unique: true, index: true })
   name!: string;
 
-  @Prop({ type: [{ type: String, enum: CustomerRoleTypes, default: CustomerRoleTypes.CUSTOMER }] })
-  roles: CustomerRoleTypes[];
+  @Prop({ type: [{ type: String, enum: UserRoleTypes, default: UserRoleTypes.CUSTOMER }] })
+  roles: UserRoleTypes[];
 
   @Prop({ required: false, type: String, unique: true })
   phone: string;
@@ -52,11 +52,11 @@ export class Customer {
   @Prop({ required: true, type: Object })
   consents: Record<string, boolean>;
 
-  // Shoulde be created almost one when customer was created
-  @Prop({ required: false, type: Types.ObjectId, ref: 'CustomerSettings', unique: true })
+  // Shoulde be created almost one when user was created
+  @Prop({ required: false, type: Types.ObjectId, ref: 'UserSettings', unique: true })
   settingsId: Types.ObjectId;
 
-  @Prop({ required: false, type: Types.ObjectId, ref: 'Customers' })
+  @Prop({ required: false, type: Types.ObjectId, ref: 'Users' })
   referrerId: Types.ObjectId;
 
   // remember_token             String?   @db.VarChar(100)
@@ -65,4 +65,4 @@ export class Customer {
   // meta_data                  Json?
 }
 
-export const CustomerSchema = SchemaFactory.createForClass(Customer);
+export const UserSchema = SchemaFactory.createForClass(User);

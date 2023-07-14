@@ -1,23 +1,21 @@
 import { Module } from '@nestjs/common';
-import { KafkaModule } from './lib/kafka/kafka.module';
-import { CustomersModule } from './lib/customers/customer.module';
-import { CustomerSettingsModule } from './lib/customer-settings/customer-settings.module';
 import { AlertsModule } from './lib/alerts/alerts.module';
 import { AuthModule } from './lib/auth/auth.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Customer, CustomerSchema } from './lib/customers';
+import { KafkaModule } from './lib/kafka/kafka.module';
+import { UserSettingsModule } from './lib/user-settings/user-settings.module';
+import { UsersModule } from './lib/users/users.module';
 
 @Module({
   imports: [
     KafkaModule,
-    CustomersModule,
-    CustomerSettingsModule,
+    UsersModule,
+    UserSettingsModule,
     AlertsModule,
     AuthModule,
     // MongooseModule.forFeatureAsync([{
-    //   name: Customer.name,
+    //   name: User.name,
     //   useFactory: () => {
-    //     const schema = CustomerSchema;
+    //     const schema = UserSchema;
     //     schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }); // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
     //     return schema;
     //   },

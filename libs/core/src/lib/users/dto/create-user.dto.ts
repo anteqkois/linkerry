@@ -1,11 +1,11 @@
-import { IsBoolean, IsDate, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Length, MaxLength, MinLength, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, Length, MaxLength, MinLength, ValidateNested } from 'class-validator';
 
 class ConsentsDto {
   [key: string]: boolean;
 }
 
-export class CreateCustomerDto {
+export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(50)

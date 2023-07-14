@@ -1,4 +1,4 @@
-import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { ConditionOperatorType, ConditionTypeType } from '../types';
 
@@ -6,7 +6,7 @@ export type ConditionDocument = HydratedDocument<Condition>;
 
 @Schema({ timestamps: true,})
 export class Condition {
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Customers' })
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Users' })
   userId: Types.ObjectId;
 
   @Prop({ required: true, type: String })

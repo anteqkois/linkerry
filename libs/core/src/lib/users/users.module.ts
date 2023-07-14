@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { CustomersController } from './customers.controller';
-import { CustomersService } from './customers.service';
-import { MongodbModule } from '../mongodb';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Customer, CustomerSchema } from './schemas/customer.schema';
+import { MongodbModule } from '../mongodb';
+import { User, UserSchema } from './schemas/user.schema';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   imports: [MongodbModule, MongooseModule.forFeatureAsync([{
-    name: Customer.name,
+    name: User.name,
     useFactory: () => {
-      const schema = CustomerSchema;
+      const schema = UserSchema;
       schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }); // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
       return schema;
     },
   },])],
-  controllers: [CustomersController],
-  providers: [CustomersService]
+  controllers: [UsersController],
+  providers: [UsersService]
 })
-export class CustomersModule { }
+export class UsersModule { }
