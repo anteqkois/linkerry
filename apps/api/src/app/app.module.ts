@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-// import { MongodbModule } from './common/mongodb';
-import { AlertsModule, AuthModule, CondictionsModule, UsersModule } from '@market-connector/core';
+import { AlertsModule, AuthModule, CondictionsModule, CoreModule, UsersModule } from '@market-connector/core';
 
 @Module({
-  imports: [AlertsModule, CondictionsModule, UsersModule, AlertsModule, AuthModule],
+  imports: [CoreModule, CondictionsModule, UsersModule, AlertsModule, AuthModule],
   controllers: [AppController],
   providers: [
     AppService,

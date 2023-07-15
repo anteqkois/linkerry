@@ -1,7 +1,6 @@
-import { ConditionEvent } from '@market-connector/core';
+import { ConditionEvent, ConditionsConsumer } from '@market-connector/core';
 import { Controller, ValidationPipe } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ConditionsConsumer } from './conditions.consumer';
 
 @Controller()
 export class ConditionsController {

@@ -6,7 +6,7 @@ import { AppModule } from './app/app.module';
 const globalPrefix = 'api';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(),);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
   app.setGlobalPrefix(globalPrefix);
 
   const port = process.env.PORT_API || 3001;
@@ -14,7 +14,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     enableDebugMessages: true,
-
   }));
 
   await app.listen(port);

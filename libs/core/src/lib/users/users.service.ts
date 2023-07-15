@@ -5,16 +5,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { UserRoleTypes } from './types';
 import { HashService } from '../auth/hash.service';
-import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly hashService: HashService,
-    private readonly logger: LoggerService,
   ) {
-    logger.setContext(UsersService.name)
+    // logger.setContext(UsersService.name)
   }
 
   async createUser(createUserDto: CreateUserDto) {
@@ -24,7 +22,6 @@ export class UsersService {
       createUserDto.password = hashedPassword
 
       const customr = await this.userModel.create({ ...createUserDto, roles: [UserRoleTypes.CUSTOMER] })
-      this.logger.debug('New user created')
       return customr
     } catch (error) {
       console.log(error);

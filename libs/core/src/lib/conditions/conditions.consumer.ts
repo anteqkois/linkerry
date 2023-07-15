@@ -1,5 +1,5 @@
-import { ConditionEvent } from '@market-connector/core';
 import { Injectable } from '@nestjs/common';
+import { ConditionEvent } from './events/condition.event';
 
 
 @Injectable()

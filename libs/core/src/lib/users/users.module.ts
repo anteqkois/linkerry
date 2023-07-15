@@ -1,23 +1,25 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Logger } from 'winston';
+import { HashService } from '../auth/hash.service';
 import { MongodbModule } from '../mongodb';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { HashService } from '../auth/hash.service';
-import { LoggerService } from '../logger/logger.service';
-import { LoggerModule } from '../logger/logger.module';
 
 @Module({
-  imports: [MongodbModule, LoggerModule, MongooseModule.forFeatureAsync([{
-    name: User.name,
-    useFactory: () => {
-      const schema = UserSchema;
-      schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }); // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
-      return schema;
+  imports: [MongodbModule,
+    MongooseModule.forFeatureAsync([{
+      name: User.name,
+      useFactory: () => {
+        const schema = UserSchema;
+        schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }); // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
+        return schema;
+      },
     },
-  },])],
+    ])
+  ],
   controllers: [UsersController],
-  providers: [UsersService, HashService, LoggerService]
+  providers: [UsersService, HashService, Logger]
 })
 export class UsersModule { }
