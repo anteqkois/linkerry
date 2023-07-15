@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Logger } from 'winston';
 import { HashService } from '../auth/hash.service';
 import { MongodbModule } from '../mongodb';
 import { User, UserSchema } from './schemas/user.schema';
@@ -20,6 +19,6 @@ import { UsersService } from './users.service';
     ])
   ],
   controllers: [UsersController],
-  providers: [UsersService, HashService, Logger]
+  providers: [UsersService, HashService]
 })
 export class UsersModule { }

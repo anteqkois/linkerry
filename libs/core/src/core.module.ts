@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { KafkaModule } from './lib/kafka/kafka.module';
+import { RequestLoggerMiddleware } from './lib/middlewares/request-logger.middleware';
 
 @Module({
   imports: [
@@ -17,4 +18,9 @@ import { KafkaModule } from './lib/kafka/kafka.module';
   providers: [],
   exports: [],
 })
-export class CoreModule { }
+export class CoreModule {
+  // let's add a middleware on all routes
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}
