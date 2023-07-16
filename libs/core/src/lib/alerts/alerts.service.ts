@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Alert, AlertDocument } from './schemas/alert.schema';
 import { Model } from 'mongoose';
 import { Condition, ConditionDocument, ConditionOperatorType, ConditionTypeType } from '../conditions';
+import { User } from '../users';
 
 @Injectable()
 export class AlertsService {
@@ -14,10 +15,10 @@ export class AlertsService {
     @InjectModel(Condition.name) private conditionModel: Model<ConditionDocument>,
   ) { }
 
-  async createAlert(createAlertDto: CreateAlertDto) {
-    // Evry alert is also a condition
+  async createAlert(createAlertDto: CreateAlertDto, userId: string) {
+    // Evry alert is also a condition.
     const condition = await this.conditionModel.create({
-      userId: '',
+      userId: userId,
       name: createAlertDto.name,
       type: ConditionTypeType.ALERT,
       requiredValue: 1,
@@ -29,7 +30,7 @@ export class AlertsService {
     })
 
     const alert = await this.alertModel.create({
-      userId: '',
+      userId: userId,
       conditionId: condition.id,
       name: createAlertDto.name,
       active: createAlertDto.active,

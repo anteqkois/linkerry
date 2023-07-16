@@ -29,6 +29,10 @@ export class AuthService {
     return null;
   }
 
+  createJWTPayload(user: Pick<UserDocument, 'name' | 'id'>) {
+    return ({ name: user.name, sub: user.id })
+  }
+
   async signUp(signUpDto: SignUpDto) {
     try {
       const hashedPassword = await this.hashService.hash(signUpDto.password)
@@ -37,7 +41,7 @@ export class AuthService {
       const user = await this.userModel.create({ ...signUpDto, roles: [UserRoleTypes.CUSTOMER] })
       this.logger.debug('New signUp user')
 
-      const payload = { username: user.name, sub: user.id };
+      const payload = this.createJWTPayload(user)
       const secret = this.configService.get('JWT_SECRET')
       return {
         user,
@@ -50,8 +54,8 @@ export class AuthService {
     }
   }
 
-  async login(user: Partial<UserDocument>) {
-    const payload = { username: user.name, sub: user.id };
+  async login(user: User) {
+    const payload = this.createJWTPayload(user)
     const secret = this.configService.get('JWT_SECRET')
 
     return {

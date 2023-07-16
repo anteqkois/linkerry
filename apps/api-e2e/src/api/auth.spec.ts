@@ -32,13 +32,12 @@ describe('POST /api/auth', () => {
   it('user can login', async () => {
     const loginRes = await axios.post(`/auth/login`, { name: testAuthUser.name, password: testAuthUser.password })
     expect(loginRes.status).toBe(201)
-    console.log(loginRes.data.user);
     expect(loginRes.data.user.name).toBe(testAuthUser.name)
     expect(loginRes.data.user.password).toBeUndefined()
     axios.defaults.headers.authorization = `Bearer ${ loginRes.data.access_token }`;
   })
 
-  it('anybody can not signup using existing email', async () => {
+  it('can\'t signup using existing email', async () => {
     const res = axios.post(`/auth/signup`, {
       consents: {
         test1: true,
@@ -52,7 +51,7 @@ describe('POST /api/auth', () => {
     await expect(res).rejects.toHaveProperty("response.status", 422);
   })
 
-  it('anybody can not signup using existing name', async () => {
+  it('can\'t signup using existing name', async () => {
     const res = axios.post(`/auth/signup`, {
       consents: {
         test1: true,
