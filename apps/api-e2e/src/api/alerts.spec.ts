@@ -1,4 +1,4 @@
-import { AlertProvidersType } from '@market-connector/core'
+import { Alert, AlertProvidersType, Condition } from '@market-connector/core'
 import axios from 'axios'
 import { login } from '../support/login'
 
@@ -20,13 +20,28 @@ describe('POST /api/alerts', () => {
     const input = {
       alertProvider: AlertProvidersType.TRADING_VIEW,
       testMode: true,
-      // name: 'test',
+      name: 'test alert',
       active: true,
       alertValidityUnix: 389721,
       ticker: 'BTC'
     }
-      const res = await axios.post(`/alerts`, input)
-     // expect(res.status).toBe(201)
-    // expect(res.data).toEqual({ message: 'Hello API' })
+
+    const res = await axios.post(`/alerts`, input)
+    expect(res.data.condition).toBeDefined()
+    expect(res.data.alert).toBeDefined()
+  })
+
+  it('can\'t use existing alert name', async () => {
+    const input = {
+      alertProvider: AlertProvidersType.TRADING_VIEW,
+      testMode: true,
+      name: 'test alert',
+      active: true,
+      alertValidityUnix: 389721,
+      ticker: 'BTC'
+    }
+
+    const res = axios.post(`/alerts`, input)
+    await expect(res).rejects.toHaveProperty("response.status", 422)
   })
 })

@@ -11,5 +11,5 @@ export * from './lib/languages';
 export * from './lib/strategies-buy';
 export * from './lib/strategies-sell';
 export * from './lib/tickers';
-export * from './lib/utils/pipes';
+export * from './lib/utils';
 

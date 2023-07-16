@@ -40,7 +40,7 @@ export const alertModelFactory: AsyncModelFactory = {
   imports: [],
   useFactory: () => {
     const schema = AlertSchema;
-    // schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }); // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
+    schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
     return schema;
   },
   inject: [],

@@ -23,7 +23,6 @@ export class AlertsController {
   @Post()
   createAlert(@ReqUser() user: JWTUser, @Body() dto: CreateAlertDto) {
     console.log(dto);
-    console.log('IN ALERT', user, dto);
     return this.alertsService.createAlert(dto, user.id)
   }
 }

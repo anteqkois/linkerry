@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   async signUp(signUpDto: SignUpDto) {
-    try {
+    // try {
       const hashedPassword = await this.hashService.hash(signUpDto.password)
       signUpDto.password = hashedPassword
 
@@ -47,11 +47,11 @@ export class AuthService {
         user,
         access_token: this.jwtService.sign(payload, { secret }),
       };
-    } catch (err: any) {
-      const { password, ...input } = signUpDto
-      this.logger.error(err.message)
-      return new UnprocessableEntityException()
-    }
+    // } catch (err: any) {
+    //   const { password, ...input } = signUpDto
+    //   this.logger.error(err.message)
+    //   return new UnprocessableEntityException()
+    // }
   }
 
   async login(user: User) {
