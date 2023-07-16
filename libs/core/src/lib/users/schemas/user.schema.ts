@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { LanguageType } from '../../languages';
 import { UserRoleTypes } from '../types';
@@ -13,7 +13,7 @@ export class User {
   @Prop({ type: [{ type: String, enum: UserRoleTypes, default: UserRoleTypes.CUSTOMER }] })
   roles: UserRoleTypes[];
 
-  @Prop({ required: false, type: String, unique: true })
+  @Prop({ required: false, type: String })
   phone: string;
 
   @Prop({ required: false, type: String })
@@ -40,7 +40,7 @@ export class User {
   @Prop({ required: false, type: Date })
   deletedAtDate: Date;
 
-  @Prop({ required: false, type: String, unique: true })
+  @Prop({ required: false, type: String })
   cryptoWallet: string;
 
   @Prop({ required: true, type: String, enum: LanguageType, default: LanguageType.pl })
@@ -53,7 +53,7 @@ export class User {
   consents: Record<string, boolean>;
 
   // Shoulde be created almost one when user was created
-  @Prop({ required: false, type: Types.ObjectId, ref: 'UserSettings', unique: true })
+  @Prop({ required: false, type: Types.ObjectId, ref: 'UserSettings' })
   settingsId: Types.ObjectId;
 
   @Prop({ required: false, type: Types.ObjectId, ref: 'Users' })
@@ -66,3 +66,16 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.index({ phone: 1 }, { unique: true, sparse: true })
+UserSchema.index({ cryptoWallet: 1 }, { unique: true, sparse: true })
+
+export const userModelFactory: AsyncModelFactory = {
+  name: User.name,
+  imports: [],
+  useFactory: () => {
+    const schema = UserSchema;
+    schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+    return schema;
+  },
+  inject: [],
+};

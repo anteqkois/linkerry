@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { ConditionOperatorType, ConditionTypeType } from '../types';
 
@@ -32,6 +32,9 @@ export class Condition {
   @Prop({ required: false, type: String })
   ticker: string
 
+  @Prop({ required: true, type: Boolean, default: false })
+  testMode: boolean
+
   // TODO fields for future usage
   // @Prop({ required: false, type: Number})
   // expiredAtUnix: number
@@ -43,14 +46,18 @@ export class Condition {
 export const ConditionSchema = SchemaFactory.createForClass(Condition);
 ConditionSchema.index({ userId: 1, name: 1 }, { unique: true, });
 
-
-// Model factory
-// export const conditionModelFactory: AsyncModelFactory = {
-//   name: Condition.name,
-//   imports: [EmitterModule],
-//   useFactory: (emitter: EmitterService) => {
-//     const schema = ConditionSchema;
-//     return schema;
-//   },
-//   inject: [EmitterService],
-// };
+export const conditionModelFactory: AsyncModelFactory = {
+  name: Condition.name,
+  imports: [],
+  useFactory: () => {
+    const schema = ConditionSchema;
+    return schema;
+  },
+  inject: [],
+  // imports: [EmitterModule],
+  // useFactory: (emitter: EmitterService) => {
+  //   const schema = CategorySchema;
+  //   return schema;
+  // },
+  // inject: [EmitterService],
+};

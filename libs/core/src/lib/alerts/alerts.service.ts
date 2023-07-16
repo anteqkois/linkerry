@@ -1,11 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateAlertDto } from './dto/create-alert.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Alert, AlertDocument } from './schemas/alert.schema';
+import { Model } from 'mongoose';
+import { Condition, ConditionDocument, ConditionOperatorType, ConditionTypeType } from '../conditions';
 
 @Injectable()
 export class AlertsService {
+  // private readonly logger = new Logger(AlertsService.name);
 
-  createAlert(createAlertDto: CreateAlertDto) {
+  constructor(
+    @InjectModel(Alert.name) private alertModel: Model<AlertDocument>,
+    @InjectModel(Condition.name) private conditionModel: Model<ConditionDocument>,
+  ) { }
 
+  async createAlert(createAlertDto: CreateAlertDto) {
+    // Evry alert is also a condition
+    const condition = await this.conditionModel.create({
+      userId: '',
+      name: createAlertDto.name,
+      type: ConditionTypeType.ALERT,
+      requiredValue: 1,
+      operator: ConditionOperatorType.EQUAL,
+      active: createAlertDto.active,
+      eventValidityUnix: createAlertDto.alertValidityUnix,
+      ticker: createAlertDto.ticker,
+      testMode: createAlertDto.testMode
+    })
+
+    const alert = await this.alertModel.create({
+      userId: '',
+      conditionId: condition.id,
+      name: createAlertDto.name,
+      active: createAlertDto.active,
+      alertValidityUnix: createAlertDto.alertValidityUnix,
+      alertProvider: createAlertDto.alertProvider,
+      ticker: createAlertDto.ticker,
+      testMode: createAlertDto.testMode,
+      requiredValue: 1,
+    })
+    return {condition, alert}
   }
 
   generateLink() {

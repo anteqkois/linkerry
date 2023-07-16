@@ -31,6 +31,9 @@ export class CreateConditionDto {
   readonly indicator: IndicatorType;
 
 
+  @IsBoolean()
+  @IsNotEmpty()
+  readonly testMode: boolean
   // for future usecase
   // @IsBoolean()
   // @IsNotEmpty()

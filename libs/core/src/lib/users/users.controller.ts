@@ -9,13 +9,14 @@ export class UsersController {
 
   // Add more secure logic
   @UseGuards(JwtAuthGuard)
-  @Get('')
+  @Get()
   getUser() {
     return this.usersService.find()
   }
 
-  @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto)
-  }
+  // It should be avaible only for admin
+  // @Post()
+  // createUser(@Body() createUserDto: CreateUserDto) {
+  //   return this.usersService.createUser(createUserDto)
+  // }
 }

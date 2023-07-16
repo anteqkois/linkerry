@@ -1,10 +1,9 @@
-import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User, UserDocument } from './schemas/user.schema';
-import { UserRoleTypes } from './types';
+import { Model, ObjectId } from 'mongoose';
 import { HashService } from '../auth/hash.service';
+import { User, UserDocument } from './schemas/user.schema';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,18 +14,8 @@ export class UsersService {
     private readonly hashService: HashService,
   ) { }
 
-  async createUser(createUserDto: CreateUserDto) {
-
-    try {
-      const hashedPassword = await this.hashService.hash(createUserDto.password)
-      createUserDto.password = hashedPassword
-
-      const customr = await this.userModel.create({ ...createUserDto, roles: [UserRoleTypes.CUSTOMER] })
-      return customr
-    } catch (err: any) {
-      this.logger.error(err.message)
-      return new UnprocessableEntityException()
-    }
+  async create(createUserDto: CreateUserDto) {
+    return await this.userModel.create(createUserDto)
   }
 
   async find(filters?: any) {
@@ -34,7 +23,11 @@ export class UsersService {
     return this.userModel.find(filter)
   }
 
-  async findOne(name: string) {
-    return this.userModel.findOne({ name })
+  async findOne(filters: { name?: string, id?: string }) {
+    return this.userModel.findOne(filters, { password: 0 })
+  }
+
+  async findOneWithPassword(filters: { name?: string, id?: string }) {
+    return this.userModel.findOne(filters)
   }
 }

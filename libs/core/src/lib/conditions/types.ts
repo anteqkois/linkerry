@@ -5,7 +5,7 @@ export enum ConditionTypeType {
 
 // It's important in condition, not Event
 export enum ConditionOperatorType {
-  // 'equal' = 'equal',
+  EQUAL = 'equal',
   CROSSING = 'crossing',
   CROSSING_UP = 'crossingUp',
   CROSSING_DOWN = 'crossingDown',

@@ -1,32 +1,34 @@
-import { IsBoolean, IsEnum, IsMongoId, IsNotEmpty, IsOptional } from "class-validator";
+import { IsBoolean, IsDate, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { AlertProvidersType } from "../types";
 
 export class CreateAlertDto {
-  // @IsString()
-  // @IsNotEmpty()
-  // link: string
-
-  // @IsString()
-  // @IsNotEmpty()
-  // salt: string
-
-  // @IsString()
-  // @IsNotEmpty()
-  // link: string
+  @IsString()
+  @MinLength(2)
+  @MaxLength(100)
+  @IsNotEmpty()
+  readonly name: string
 
   @IsEnum(AlertProvidersType)
   @IsNotEmpty()
-  readonly provider: AlertProvidersType
+  readonly alertProvider: AlertProvidersType
 
-  // // Crete tisker module
-  // @IsString()
-  // @IsNotEmpty()
-  // readonly ticker: string
-
-  @IsOptional()
-  @IsMongoId()
+  @IsBoolean()
   @IsNotEmpty()
-  readonly condition?: string
+  readonly active: boolean
+
+  @IsNumber()
+  @IsNotEmpty()
+  alertValidityUnix: number;
+
+  @IsString()
+  @IsOptional()
+  // @IsEnum(Ticker) // In future it can be enum from db ?
+  readonly ticker?: string;
+
+  // @IsOptional()
+  // @IsMongoId()
+  // @IsNotEmpty()
+  // readonly condition?: string
 
   @IsBoolean()
   @IsNotEmpty()

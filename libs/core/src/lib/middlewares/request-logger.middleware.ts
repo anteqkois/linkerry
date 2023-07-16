@@ -8,7 +8,7 @@ export class RequestLoggerMiddleware implements NestMiddleware {
   use(req: FastifyRequest['raw'], res: FastifyReply['raw'], next: () => void) {
     res.on('finish', () => {
       const statusCode = res.statusCode;
-      if (statusCode === 401 || statusCode === 404 || statusCode === 405) {
+      if (statusCode === 400 ||statusCode === 401 || statusCode === 404 || statusCode === 405) {
         // this.logger.warn(`[${ req.method }] ${ req.url } - ${ statusCode }`);
         this.logger.warn(`[${ req.method }] ${ req.url } - ${ statusCode }`);
       }

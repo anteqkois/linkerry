@@ -18,10 +18,6 @@ export class CreateUserDto {
   @MinLength(6)
   password: string;
 
-  // @IsNotEmpty()
-  // @IsString({ each: true })
-  // roles: string[];
-
   @IsOptional()
   @IsString()
   @MaxLength(20)
