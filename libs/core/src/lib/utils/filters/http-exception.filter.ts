@@ -29,9 +29,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       status = exception.getStatus();
       const errorResponse = exception.getResponse();
       errorMessage =
-        (errorResponse as HttpExceptionResponse).error || exception.message;
+      (errorResponse as HttpExceptionResponse).error || exception.message;
     } else if (exception instanceof Error && exception.name === 'ValidationError') {
       // DTO validation
+      // TODO handle many errors using exception.errors
       status = HttpStatus.UNPROCESSABLE_ENTITY;
       errorMessage = exception.message;
     } else if (exception instanceof Error && exception.name === 'MongoServerError') {
