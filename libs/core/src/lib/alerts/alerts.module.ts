@@ -4,13 +4,16 @@ import { AlertsService } from './alerts.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { alertModelFactory } from './schemas/alert.schema';
 import { conditionModelFactory } from '../conditions';
+import { MessageProvider } from './message.provider';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports:[
+  imports: [
+    ConfigModule,
     MongooseModule.forFeatureAsync([alertModelFactory, conditionModelFactory
     ])
   ],
   controllers: [AlertsController],
-  providers: [AlertsService]
+  providers: [AlertsService, MessageProvider]
 })
 export class AlertsModule { }

@@ -29,7 +29,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       status = exception.getStatus();
       const errorResponse = exception.getResponse();
       errorMessage =
-      (errorResponse as HttpExceptionResponse).error || exception.message;
+        (errorResponse as HttpExceptionResponse).error || exception.message;
     } else if (exception instanceof Error && exception.name === 'ValidationError') {
       // DTO validation
       // TODO handle many errors using exception.errors
@@ -73,9 +73,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { method, url } = request;
     const errorLog = `[${ method }] ${ url } - ${ statusCode }
     ${ JSON.stringify(errorResponse) }
-    User: ${ JSON.stringify(request.user ?? 'Not signed in') }
-    ${ exception instanceof HttpException ? exception.stack : error }`;
+    User: ${ JSON.stringify(request.user ?? 'Not signed in') }`;
     return errorLog;
+    // const errorLog = `[${ method }] ${ url } - ${ statusCode }
+    // ${ JSON.stringify(errorResponse) }
+    // User: ${ JSON.stringify(request.user ?? 'Not signed in') }
+    // ${ exception instanceof HttpException ? exception.stack : error }`;
+    // return errorLog;
   };
 
   // private writeErrorLogToFile = (errorLog: string): void => {

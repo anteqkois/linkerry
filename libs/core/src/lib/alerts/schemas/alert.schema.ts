@@ -1,16 +1,18 @@
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { AlertProvidersType } from '../types';
 
-export type AlertDocument = HydratedDocument<Alert>;
+export type AlertDocument = mongoose.HydratedDocument<Alert>;
 
 @Schema({ timestamps: true, })
 export class Alert {
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Users' })
-  userId: Types.ObjectId;
+  _id: string;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Conditions', index: 1 })
-  conditionId: Types.ObjectId;
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
+  userId: mongoose.Schema.Types.ObjectId;
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Conditions', index: 1 })
+  conditionId: mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true, type: String })
   name: string;
@@ -30,6 +32,12 @@ export class Alert {
 
   @Prop({ required: true, type: Boolean, default: false })
   testMode: boolean
+
+  @Prop({ required: false, type: String })
+  messagePattern: String
+
+  @Prop({ required: true, type: String })
+  alertHandlerUrl: String
 }
 
 export const AlertSchema = SchemaFactory.createForClass(Alert);

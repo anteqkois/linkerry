@@ -17,6 +17,7 @@ declare global {
       MONGO_HOST: string,
       // MONGO_PORT: string,
       MONGO_DATABASE: string,
+      ALERT_HANDLER_URL: string,
     }
   }
 }

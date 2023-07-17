@@ -5,14 +5,18 @@ import { Alert, AlertDocument } from './schemas/alert.schema';
 import { Model } from 'mongoose';
 import { Condition, ConditionDocument, ConditionOperatorType, ConditionTypeType } from '../conditions';
 import { User } from '../users';
+import { MessageProvider } from './message.provider';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AlertsService {
   // private readonly logger = new Logger(AlertsService.name);
 
   constructor(
-    @InjectModel(Alert.name) private alertModel: Model<AlertDocument>,
-    @InjectModel(Condition.name) private conditionModel: Model<ConditionDocument>,
+    private readonly configService: ConfigService,
+    private readonly messageProvider: MessageProvider,
+    @InjectModel(Alert.name) private readonly alertModel: Model<AlertDocument>,
+    @InjectModel(Condition.name) private readonly conditionModel: Model<ConditionDocument>,
   ) { }
 
   async createAlert(createAlertDto: CreateAlertDto, userId: string) {
@@ -29,6 +33,8 @@ export class AlertsService {
       testMode: createAlertDto.testMode
     })
 
+    const alertHandlerUrl = this.configService.get('ALERT_HANDLER_URL')
+
     const alert = await this.alertModel.create({
       userId: userId,
       conditionId: condition.id,
@@ -39,8 +45,15 @@ export class AlertsService {
       ticker: createAlertDto.ticker,
       testMode: createAlertDto.testMode,
       requiredValue: 1,
+      alertHandlerUrl,
     })
-    return {condition, alert}
+
+    alert.messagePattern = this.messageProvider.getTemplate({ alertId: alert.id, alertProvider: createAlertDto.alertProvider })
+    alert.alertHandlerUrl = `${ alert.alertHandlerUrl }/${ alert.id }`
+
+    await alert.save()
+
+    return { condition:condition.toObject(), alert: alert.toObject() }
   }
 
   generateLink() {

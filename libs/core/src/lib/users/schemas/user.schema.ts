@@ -1,12 +1,14 @@
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { LanguageType } from '../../languages';
 import { UserRoleTypes } from '../types';
 
-export type UserDocument = HydratedDocument<User>;
+export type UserDocument = mongoose.HydratedDocument<User>;
 
 @Schema({ timestamps: true, autoIndex: true })
 export class User {
+  _id: string;
+
   @Prop({ required: true, type: String, unique: true, index: true })
   name!: string;
 
@@ -53,11 +55,11 @@ export class User {
   consents: Record<string, boolean>;
 
   // Shoulde be created almost one when user was created
-  @Prop({ required: false, type: Types.ObjectId, ref: 'UserSettings' })
-  settingsId: Types.ObjectId;
+  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'UserSettings' })
+  settingsId: mongoose.Schema.Types.ObjectId;
 
-  @Prop({ required: false, type: Types.ObjectId, ref: 'Users' })
-  referrerId: Types.ObjectId;
+  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
+  referrerId: mongoose.Schema.Types.ObjectId;
 
   // remember_token             String?   @db.VarChar(100)
   // subscription_expired_at    DateTime? @db.Date
