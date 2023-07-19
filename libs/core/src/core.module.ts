@@ -1,10 +1,10 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { AllExceptionsFilter, KafkaModule, RequestLoggerMiddleware } from '@market-connector/core'
+import { AlertsModule, AllExceptionsFilter, KafkaModule, RequestLoggerMiddleware } from '@market-connector/core'
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // KafkaModule,
     // MongooseModule.forFeatureAsync([{
     //   name: User.name,
     //   useFactory: () => {

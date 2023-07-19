@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongodbModule } from './common/mongodb/mongodb.module';
-import { ExternalAlertsModule } from './modules/external-alerts/external-alerts.module';
+// import { MongodbModule } from './common/mongodb/mongodb.module';
+// import { ExternalAlertsModule } from './modules/external-alerts/external-alerts.module';
 
 @Module({
   imports: [
@@ -19,8 +19,8 @@ import { ExternalAlertsModule } from './modules/external-alerts/external-alerts.
         groupId: configService.get('KAFKA_CONDITION_GROUP_ID'),
       }),
     }),
-    MongodbModule,
-    ExternalAlertsModule,
+    // MongodbModule,
+    // ExternalAlertsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

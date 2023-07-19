@@ -8,8 +8,8 @@ export class CondictionsController {
   @Get()
   getCondition(){}
 
-  @Post()
-  createCondition(@Body() createConditionDto){
+  // @Post()
+  // createCondition(@Body() createConditionDto){
 
-  }
+  // }
 }

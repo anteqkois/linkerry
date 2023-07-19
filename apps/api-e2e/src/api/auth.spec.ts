@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { existingUser, testAuthUser } from '../support/test-veriables'
+import { testAuthUser } from '@market-connector/tools'
 import { LanguageType, User, UserRoleTypes } from '@market-connector/core'
 
 describe('POST /api/auth', () => {

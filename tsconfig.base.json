@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@market-connector/core": ["libs/core/src/index.ts"]
+      "@market-connector/core": ["libs/core/src/index.ts"],
+      "@market-connector/tools": ["tools/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"],

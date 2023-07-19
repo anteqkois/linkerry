@@ -1,17 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Alert, AlertDocument } from './schemas/alert.schema';
 import { Model } from 'mongoose';
 import { Condition, ConditionDocument, ConditionOperatorType, ConditionTypeType } from '../conditions';
-import { User } from '../users';
 import { MessageProvider } from './message.provider';
 import { ConfigService } from '@nestjs/config';
+import { AlertProviderUrlPart } from './types';
 
 @Injectable()
 export class AlertsService {
-  // private readonly logger = new Logger(AlertsService.name);
-
   constructor(
     private readonly configService: ConfigService,
     private readonly messageProvider: MessageProvider,
@@ -34,6 +32,8 @@ export class AlertsService {
     })
 
     const alertHandlerUrl = this.configService.get('ALERT_HANDLER_URL')
+    const urlProviderPart = AlertProviderUrlPart[createAlertDto.alertProvider]
+    if (!urlProviderPart) throw new UnprocessableEntityException(`Can not find url part for given alert provider: ${ createAlertDto.alertProvider }`)
 
     const alert = await this.alertModel.create({
       userId: userId,
@@ -45,25 +45,15 @@ export class AlertsService {
       ticker: createAlertDto.ticker,
       testMode: createAlertDto.testMode,
       requiredValue: 1,
-      alertHandlerUrl,
+      alertHandlerUrl: `${ alertHandlerUrl }/${ urlProviderPart }`,
     })
 
     alert.messagePattern = this.messageProvider.getTemplate({ alertId: alert.id, alertProvider: createAlertDto.alertProvider })
+    if (!alert.messagePattern) throw new UnprocessableEntityException(`Can not find message pattern for given alert provider: ${ createAlertDto.alertProvider }`)
+
     alert.alertHandlerUrl = `${ alert.alertHandlerUrl }/${ alert.id }`
 
     await alert.save()
-
-    return { condition:condition.toObject(), alert: alert.toObject() }
-  }
-
-  generateLink() {
-    // console.log(createAlertLinkDto);
-
-    // generate salt
-
-    // get condition from db
-
-    // hash data to create hashed key
-
+    return { condition: condition.toObject(), alert: alert.toObject() }
   }
 }

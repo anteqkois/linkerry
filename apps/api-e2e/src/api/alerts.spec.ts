@@ -11,7 +11,6 @@ describe('POST /api/alerts', () => {
     }
 
     const res = axios.post(`/alerts`, input)
-
     await expect(res).rejects.toHaveProperty("response.status", 401)
   })
 
@@ -27,7 +26,7 @@ describe('POST /api/alerts', () => {
     }
 
     const res = await axios.post<{ alert: Alert, condition: Condition }>(`/alerts`, input)
-    
+
     expect(res.data.condition).toBeDefined()
     expect(res.data.condition).toHaveProperty('_id')
     expect(res.data.condition).toHaveProperty('userId')
@@ -47,7 +46,7 @@ describe('POST /api/alerts', () => {
     expect(res.data.alert).toHaveProperty('name', input.name)
     expect(res.data.alert).toHaveProperty('active', input.active)
     expect(res.data.alert).toHaveProperty('messagePattern')
-    expect(res.data.alert).toHaveProperty('alertHandlerUrl', `${ process.env.ALERT_HANDLER_URL }/${ res.data.alert._id }`)
+    expect(res.data.alert).toHaveProperty('alertHandlerUrl', `${ process.env.ALERT_HANDLER_URL }/trading-view/${ res.data.alert._id }`)
     expect(res.data.alert).toHaveProperty('alertValidityUnix', input.alertValidityUnix)
     expect(res.data.alert).toHaveProperty('alertProvider', input.alertProvider)
     expect(res.data.alert).toHaveProperty('ticker', input.ticker)

@@ -5,7 +5,7 @@ import { AlertsModule, AllExceptionsFilter, AuthModule, CondictionsModule, CoreM
 import { APP_FILTER } from '@nestjs/core';
 
 @Module({
-  imports: [CoreModule, CondictionsModule, UsersModule, AlertsModule, AuthModule],
+  imports: [CondictionsModule, UsersModule, AlertsModule, AuthModule],
   controllers: [AppController],
   providers: [
     AppService,
