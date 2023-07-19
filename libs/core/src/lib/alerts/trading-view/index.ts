@@ -1,4 +1,4 @@
 export * from './trading-view.dto'
 export * from './trading-view.message'
-export * from './types'
-
+export * from './models'
+export * from './trading-view.controller'

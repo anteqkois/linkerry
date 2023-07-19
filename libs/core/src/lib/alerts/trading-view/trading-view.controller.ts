@@ -1,10 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { AlertsService } from '../alerts.service';
-import { TradinViewDto } from './trading-view.dto';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AlertsProcessor } from '../alerts.processor';
+import { TradinViewDto } from './trading-view.dto';
 
-@Controller('tradin-view')
-export class TradinViewController {
+@Controller('trading-view')
+export class TradingViewController {
   constructor(private readonly alertsProcessor: AlertsProcessor) { }
 
   // TODO add protection, to use only by whitelist servers

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 
 export class TradinViewDto {
   @IsString()
@@ -6,6 +6,8 @@ export class TradinViewDto {
   readonly alertId: string
 
   @IsString()
+  @MinLength(1)
+  @MaxLength(100)
   @IsNotEmpty()
   readonly ticker: string
 

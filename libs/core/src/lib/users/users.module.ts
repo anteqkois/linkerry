@@ -7,7 +7,8 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
 @Module({
-  imports: [MongodbModule,
+  imports: [
+    MongodbModule,
     MongooseModule.forFeatureAsync([userModelFactory
     ])
   ],

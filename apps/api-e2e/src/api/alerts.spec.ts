@@ -70,7 +70,7 @@ describe('POST /api/alerts', () => {
   it('can\'t create alert with missing data', async () => {
     const input: Partial<CreateAlertDto> = {
       testMode: true,
-      name: 'test alert 2',
+      // name: 'test alert 2',
       active: true,
       alertValidityUnix: 389721,
       ticker: 'BTC',

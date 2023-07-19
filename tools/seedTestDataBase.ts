@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { database } from './database'
-import { alwaysExistingUser } from './models.mock'
+import { alwaysExistingAlert, alwaysExistingUser } from './models.mock'
 
 const collectionToDelete = ['users', 'alerts']
 
@@ -26,6 +26,15 @@ export const seedDatabase = async () => {
     password: alwaysExistingUser.encryptedPassword,
   });
   await user.save();
+
+  const Alert = db.model('ALERT', new mongoose.Schema({}, { strict: false, _id: false }));
+  const alert = new Alert({
+    ...alwaysExistingAlert,
+    _id: new mongoose.Types.ObjectId(alwaysExistingAlert._id),
+    userId: new mongoose.Types.ObjectId(alwaysExistingAlert.userId),
+    conditionId: new mongoose.Types.ObjectId(alwaysExistingAlert.conditionId)
+  });
+
   await new Promise(r => setTimeout(r, 2000))
 
   console.log('[ Database seeded ]');

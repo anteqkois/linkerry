@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { AlertsModule, AllExceptionsFilter, KafkaModule, RequestLoggerMiddleware } from '@market-connector/core'
 import { ConfigModule } from '@nestjs/config';
+import { EventsModule } from './lib/events/events.module';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     //     return schema;
     //   },
     // },])
-  ],
+  EventsModule],
   controllers: [],
   providers: [],
   exports: [],

@@ -1,6 +1,12 @@
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException, Logger, UnprocessableEntityException } from '@nestjs/common';
+import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException, Logger, UnprocessableEntityException, HttpException, HttpStatus } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+
+export class DtoException extends HttpException {
+  constructor(message: string) {
+    super(message, HttpStatus.UNPROCESSABLE_ENTITY);
+  }
+}
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
@@ -14,7 +20,8 @@ export class ValidationPipe implements PipeTransform<any> {
     const errors = await validate(object);
     if (errors.length > 0) {
       this.logger.error(errors)
-      throw new BadRequestException(Object.values(errors[0].constraints ?? {}));
+      const constraints = errors.map(error => `${error.property[0].toUpperCase()+error.property.slice(1)}: ${Object.values(error.constraints ?? {})}`)
+      throw new DtoException(constraints.join(', '));
     }
     return value;
   }

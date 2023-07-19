@@ -26,16 +26,17 @@ export class AlertsProcessor {
 
 
   async handleTradinViewAlert(dto: TradinViewDto) {
-    const event: ConditionEvent = {
-      event_id: this.eventsService.generateEventId(),
-      object: EventObjectType.CONDITION,
-      data: {
-        type: ConditionTypeType.ALERT,
-        value: "1",
-      }
-    }
+    console.log(dto);
+    // const event: ConditionEvent = {
+    //   event_id: this.eventsService.generateEventId(),
+    //   object: EventObjectType.CONDITION,
+    //   data: {
+    //     type: ConditionTypeType.ALERT,
+    //     value: "1",
+    //   }
+    // }
 
-    this.client.emit(this.topic, JSON.stringify(event))
+    // this.client.emit(this.topic, JSON.stringify(event))
     this.logger.verbose('New event created')
   }
 }
