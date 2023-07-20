@@ -1,5 +1,5 @@
-import { IsBoolean, IsDate, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { AlertProvidersType } from "../types";
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { AlertProvidersType } from "../models";
 
 export class CreateAlertDto {
   @IsString()
@@ -18,17 +18,11 @@ export class CreateAlertDto {
 
   @IsNumber()
   @IsNotEmpty()
-  alertValidityUnix: number;
+  readonly alertValidityUnix: number;
 
   @IsString()
   @IsOptional()
-  // @IsEnum(Ticker) // In future it can be enum from db ?
-  readonly ticker?: string;
-
-  // @IsOptional()
-  // @IsMongoId()
-  // @IsNotEmpty()
-  // readonly condition?: string
+  readonly symbol?: string;
 
   @IsBoolean()
   @IsNotEmpty()

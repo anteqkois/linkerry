@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import {  AlertTradinViewSchema, alertTradinViewModelFactory } from './trading-view/trading-view.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { conditionModelFactory } from '../conditions';
 import { EventsService } from '../events/events.service';
@@ -7,10 +8,22 @@ import { KafkaModule } from '../kafka';
 import { MongodbModule } from '../mongodb';
 import { AlertsController } from './alerts.controller';
 import { AlertsService } from './alerts.service';
-import { MessageProvider } from './message.provider';
 import { alertModelFactory } from './schemas/alert.schema';
 import { TradingViewController } from './trading-view/trading-view.controller';
-import { AlertsProcessor } from './alerts.processor';
+import { TradingViewService } from './trading-view/trading-view.service';
+
+const ALERT_MODELS = [
+  {
+    ...alertModelFactory,
+    discriminators: [
+      {
+        schema: AlertTradinViewSchema,
+        ...alertTradinViewModelFactory,
+      },
+    ],
+  },
+];
+
 
 @Module({
   imports: [
@@ -18,7 +31,8 @@ import { AlertsProcessor } from './alerts.processor';
       isGlobal: true,
     }),
     MongodbModule,
-    MongooseModule.forFeatureAsync([alertModelFactory, conditionModelFactory]),
+    MongooseModule.forFeatureAsync(ALERT_MODELS),
+    MongooseModule.forFeatureAsync([conditionModelFactory]),
     KafkaModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -29,6 +43,28 @@ import { AlertsProcessor } from './alerts.processor';
     }),
   ],
   controllers: [AlertsController, TradingViewController],
-  providers: [AlertsService, MessageProvider, EventsService, AlertsProcessor]
+  providers: [AlertsService, TradingViewService, EventsService]
 })
 export class AlertsModule { }
+
+// const ALERT_MODELS = [
+//   {
+//     name: Alert.name,
+//     useFactory: () => {
+//       const schema = AlertSchema;
+//       schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+//       return schema;
+//     },
+//     discriminators: [
+//       {
+//         name: AlertTradinView.name,
+//         schema: AlertTradinViewSchema,
+//         useFactory: () => {
+//           const schema = AlertTradinViewSchema;
+//           schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+//           return schema;
+//         },
+//       },
+//     ],
+//   },
+// ];

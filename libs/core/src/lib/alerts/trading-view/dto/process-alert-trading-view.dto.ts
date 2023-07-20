@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 
-export class TradinViewDto {
+export class ProcessAlertTradinViewDto {
   @IsString()
   @IsNotEmpty()
   readonly alertId: string

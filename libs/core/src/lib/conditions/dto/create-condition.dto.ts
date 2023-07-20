@@ -1,14 +1,15 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { ConditionOperatorType, ConditionTypeType, IndicatorType } from '@market-connector/core'
 
 export class CreateConditionDto {
-  @IsString()
-  @IsNotEmpty()
-  readonly ticker: string;
 
   @IsString()
   @IsEnum(ConditionTypeType)
   readonly type: ConditionTypeType;
+
+  @IsString()
+  @IsOptional()
+  readonly symbol?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -27,9 +28,8 @@ export class CreateConditionDto {
   readonly triggeredTimes: number;
 
   @IsEnum(IndicatorType)
-  @IsNotEmpty()
-  readonly indicator: IndicatorType;
-
+  @IsOptional()
+  readonly indicator?: IndicatorType;
 
   @IsBoolean()
   @IsNotEmpty()

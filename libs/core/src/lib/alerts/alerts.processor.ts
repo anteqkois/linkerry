@@ -1,13 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Condition, ConditionDocument, ConditionEvent, ConditionOperatorType, ConditionTypeType } from '../conditions';
-import { Alert, AlertDocument } from './schemas/alert.schema';
-import { TradinViewDto } from './trading-view';
-import { ClientKafka } from '@nestjs/microservices';
+import { Condition, ConditionDocument } from '../conditions';
 import { EventsService } from '../events/events.service';
-import { EventObjectType } from '../events';
+import { Alert, AlertDocument } from './schemas/alert.schema';
+import { ProcessAlertTradinViewDto } from './trading-view';
 
 @Injectable()
 export class AlertsProcessor {
@@ -25,7 +24,7 @@ export class AlertsProcessor {
   }
 
 
-  async handleTradinViewAlert(dto: TradinViewDto) {
+  async handleTradinViewAlert(dto: ProcessAlertTradinViewDto) {
     console.log(dto);
     // const event: ConditionEvent = {
     //   event_id: this.eventsService.generateEventId(),

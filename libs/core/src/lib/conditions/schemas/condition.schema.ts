@@ -30,9 +30,8 @@ export class Condition {
   @Prop({ required: false, type: Number, default: 86400 }) // 1 day in seconds
   eventValidityUnix: number;
 
-  // TODO It should be field from ticker collection
   @Prop({ required: false, type: String })
-  ticker: string
+  symbol?: string
 
   @Prop({ required: true, type: Boolean, default: false })
   testMode: boolean

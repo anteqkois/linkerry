@@ -22,7 +22,7 @@ describe('POST /api/alerts', () => {
       name: 'alert should pass test',
       active: true,
       alertValidityUnix: 389721,
-      ticker: 'BTC'
+      symbol: 'ETHUSDT'
     }
 
     const res = await axios.post<{ alert: Alert, condition: Condition }>(`/alerts`, input)
@@ -37,7 +37,7 @@ describe('POST /api/alerts', () => {
     expect(res.data.condition).toHaveProperty('testMode', input.testMode)
     expect(res.data.condition).toHaveProperty('active', input.active)
     expect(res.data.condition).toHaveProperty('eventValidityUnix', input.alertValidityUnix)
-    expect(res.data.condition).toHaveProperty('ticker', input.ticker)
+    expect(res.data.condition).toHaveProperty('symbol', input.symbol)
 
     expect(res.data.alert).toBeDefined()
     expect(res.data.alert).toHaveProperty('_id')
@@ -49,7 +49,7 @@ describe('POST /api/alerts', () => {
     expect(res.data.alert).toHaveProperty('alertHandlerUrl', `${ process.env.ALERT_HANDLER_URL }/trading-view/${ res.data.alert._id }`)
     expect(res.data.alert).toHaveProperty('alertValidityUnix', input.alertValidityUnix)
     expect(res.data.alert).toHaveProperty('alertProvider', input.alertProvider)
-    expect(res.data.alert).toHaveProperty('ticker', input.ticker)
+    expect(res.data.alert).toHaveProperty('symbol', input.symbol)
     expect(res.data.alert).toHaveProperty('testMode', input.testMode)
   })
 
@@ -60,7 +60,7 @@ describe('POST /api/alerts', () => {
       name: 'alert should pass test',
       active: true,
       alertValidityUnix: 389721,
-      ticker: 'BTC',
+      symbol: 'ETHUSDT',
     }
 
     const res = axios.post(`/alerts`, input)
@@ -73,7 +73,7 @@ describe('POST /api/alerts', () => {
       // name: 'test alert 2',
       active: true,
       alertValidityUnix: 389721,
-      ticker: 'BTC',
+      symbol: 'ETHUSDT',
     }
 
     const res = axios.post(`/alerts`, input)
