@@ -1,4 +1,5 @@
 import { Alert, AlertProvidersType, CreateAlertDto, Condition, ConditionTypeType, ConditionOperatorType } from '@market-connector/core'
+import { wait } from '@market-connector/tools'
 import axios from 'axios'
 import { login } from '../support/login'
 

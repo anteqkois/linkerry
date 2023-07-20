@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {  AlertTradinViewSchema, alertTradinViewModelFactory } from './trading-view/trading-view.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { conditionModelFactory } from '../conditions';
 import { EventsService } from '../events/events.service';
@@ -8,17 +7,28 @@ import { KafkaModule } from '../kafka';
 import { MongodbModule } from '../mongodb';
 import { AlertsController } from './alerts.controller';
 import { AlertsService } from './alerts.service';
-import { alertModelFactory } from './schemas/alert.schema';
+import { Alert, AlertSchema, alertModelFactory } from './schemas/alert.schema';
 import { TradingViewController } from './trading-view/trading-view.controller';
-import { TradingViewService } from './trading-view/trading-view.service';
+import { TradingViewGateway } from './trading-view/trading-view.gateway';
+import { AlertTradinView, AlertTradinViewSchema, alertTradinViewModelFactory } from './trading-view/trading-view.schema';
 
 const ALERT_MODELS = [
   {
-    ...alertModelFactory,
+    name: Alert.name,
+    useFactory: () => {
+      const schema = AlertSchema;
+      schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+      return schema;
+    },
     discriminators: [
       {
+        name: AlertTradinView.name,
         schema: AlertTradinViewSchema,
-        ...alertTradinViewModelFactory,
+        useFactory: () => {
+          const schema = AlertTradinViewSchema;
+          schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+          return schema;
+        },
       },
     ],
   },
@@ -43,7 +53,7 @@ const ALERT_MODELS = [
     }),
   ],
   controllers: [AlertsController, TradingViewController],
-  providers: [AlertsService, TradingViewService, EventsService]
+  providers: [AlertsService, TradingViewGateway, EventsService]
 })
 export class AlertsModule { }
 

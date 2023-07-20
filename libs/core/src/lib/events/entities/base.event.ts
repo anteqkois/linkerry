@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsObject, IsString } from "class-validator";
-import { EventObjectType } from "../types";
+import { EventObjectType } from "../models";
 
 export abstract class BaseEvent {
   @IsString()

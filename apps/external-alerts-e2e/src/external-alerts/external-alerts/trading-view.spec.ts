@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TradinViewDto } from '@market-connector/core'
+import { ProcessAlertTradinViewDto } from '@market-connector/core'
 import { alwaysExistingAlert } from '@market-connector/tools'
 
 describe('POST /trading-view', () => {
@@ -12,7 +12,7 @@ describe('POST /trading-view', () => {
   });
 
   it('should proccess alert when valid data', async () => {
-    const input: TradinViewDto = {
+    const input: ProcessAlertTradinViewDto = {
       alertId: alwaysExistingAlert._id,
       close: '1920',
       ticker: 'ETHUSDT'

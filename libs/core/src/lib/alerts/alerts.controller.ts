@@ -1,17 +1,17 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { AlertsService } from './alerts.service';
-import { CreateAlertDto } from './dto/create-alert.dto';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth';
 import { ReqUser } from '../auth/decorators/req-user.decorator';
 import { JWTUser } from '../auth/types';
-import { TradingViewService } from './trading-view/trading-view.service';
+import { AlertsService } from './alerts.service';
+import { CreateAlertDto } from './dto/create-alert.dto';
 import { AlertProvidersType } from './models';
+import { TradingViewGateway } from './trading-view/trading-view.gateway';
 
 @Controller('alerts')
 export class AlertsController {
   constructor(
     private readonly alertsService: AlertsService,
-    private readonly tradingViewService: TradingViewService,
+    private readonly tradingViewService: TradingViewGateway,
     ) {
       alertsService.registerPaymentGateway(AlertProvidersType.TRADING_VIEW, tradingViewService)
     }

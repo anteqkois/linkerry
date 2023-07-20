@@ -1,3 +1,4 @@
+import { ConditionEvent } from "../conditions";
 import { Alert } from "./schemas/alert.schema";
 
 export enum AlertProvidersType {
@@ -7,4 +8,5 @@ export enum AlertProvidersType {
 export abstract class AlertsGateway {
   abstract cresteAlert(dto: any, conditionId: string, userId:string): Promise<Alert>;
   abstract messagePattern(options:{ alertId: string }): string;
+  abstract conditionTriggeredEventEmiter(dto: any): void;
 }
