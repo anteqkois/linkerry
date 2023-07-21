@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { KafkaModule } from '../../lib/kafka';
-import { MongodbModule } from '../../lib/mongodb';
 import { conditionModelFactory } from '../conditions';
 import { EventsService } from '../events/events.service';
 import { AlertsController } from './alerts.controller';
@@ -36,10 +35,6 @@ const ALERT_MODELS = [
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    MongodbModule,
     MongooseModule.forFeatureAsync([...ALERT_MODELS, conditionModelFactory]),
     KafkaModule.registerAsync({
       inject: [ConfigService],

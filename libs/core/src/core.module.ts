@@ -1,19 +1,28 @@
 import { Module } from '@nestjs/common';
-import { EventsModule } from './modules/events/events.module';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './lib/utils';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongodbModule } from './lib/mongodb';
 
 @Module({
   imports: [
-    // MongooseModule.forFeatureAsync([{
-    //   name: User.name,
-    //   useFactory: () => {
-    //     const schema = UserSchema;
-    //     schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }); // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
-    //     return schema;
-    //   },
-    // },])
-  EventsModule],
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MongodbModule
+  ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    // To register as a global guard
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
+  ],
   exports: [],
 })
 export class CoreModule {

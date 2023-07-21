@@ -1,4 +1,4 @@
-import { AlertsModule, AllExceptionsFilter, KafkaModule, TradingViewController } from '@market-connector/core';
+import { AlertsModule, AllExceptionsFilter, CoreModule, KafkaModule, TradingViewController } from '@market-connector/core';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -9,9 +9,7 @@ import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    CoreModule,
     KafkaModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -21,15 +19,10 @@ import { APP_FILTER } from '@nestjs/core';
       }),
     }),
     AlertsModule,
-    // MongodbModule,
-    // ExternalAlertsModule,
   ],
   controllers: [AppController],
   providers: [
-    AppService,
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter,
-    },],
+    AppService
+  ],
 })
 export class AppModule { }
