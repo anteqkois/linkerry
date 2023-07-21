@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { KafkaModule } from '../../lib/kafka';
+import { MongodbModule } from '../../lib/mongodb';
 import { conditionModelFactory } from '../conditions';
 import { EventsService } from '../events/events.service';
-import { KafkaModule } from '../kafka';
-import { MongodbModule } from '../mongodb';
 import { AlertsController } from './alerts.controller';
 import { AlertsService } from './alerts.service';
-import { Alert, AlertSchema, alertModelFactory } from './schemas/alert.schema';
+import { Alert, AlertSchema } from './schemas/alert.schema';
 import { TradingViewController } from './trading-view/trading-view.controller';
 import { TradingViewGateway } from './trading-view/trading-view.gateway';
-import { AlertTradinView, AlertTradinViewSchema, alertTradinViewModelFactory } from './trading-view/trading-view.schema';
+import { AlertTradinView, AlertTradinViewSchema } from './trading-view/trading-view.schema';
 
 const ALERT_MODELS = [
   {
@@ -34,15 +34,13 @@ const ALERT_MODELS = [
   },
 ];
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     MongodbModule,
-    MongooseModule.forFeatureAsync(ALERT_MODELS),
-    MongooseModule.forFeatureAsync([conditionModelFactory]),
+    MongooseModule.forFeatureAsync([...ALERT_MODELS, conditionModelFactory]),
     KafkaModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({

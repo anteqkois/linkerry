@@ -1,3 +1,3 @@
-import { CreateUserDto } from '../../users';
+import { CreateUserDto } from '../../../modules/users';
 
 export class SignUpDto extends CreateUserDto { }

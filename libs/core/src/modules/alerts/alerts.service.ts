@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Condition, ConditionDocument, ConditionOperatorType, ConditionTypeType } from '../conditions';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { AlertProvidersType, AlertsGateway } from './models';
+import { Alert, AlertDocument } from './schemas/alert.schema';
 
 @Injectable()
 export class AlertsService {
@@ -18,9 +19,14 @@ export class AlertsService {
 
   constructor(
     @InjectModel(Condition.name) private readonly conditionModel: Model<ConditionDocument>,
+    @InjectModel(Alert.name) private readonly alertModel: Model<AlertDocument>,
   ) { }
 
   async createAlert(createAlertDto: CreateAlertDto, userId: string) {
+    // Unique index not always work, so implement additional guard
+    const existingAlert = await this.alertModel.findOne({name: createAlertDto.name, userId: userId})
+    if(existingAlert) throw new UnprocessableEntityException(`Alert with this data exists: ${ existingAlert.id }`)
+
     const alertGateway = this.alertProviderGateways[createAlertDto.alertProvider]
     if(!alertGateway) throw new UnprocessableEntityException(`No gateway for given alert provider: ${ createAlertDto.alertProvider }`)
 

@@ -1,15 +1,15 @@
 export * from './core.module';
-export * from './lib/alerts';
 export * from './lib/auth';
-export * from './lib/conditions';
-export * from './lib/users';
+export * from './modules/alerts';
+export * from './modules/conditions';
+export * from './modules/users';
 // export * from './lib/user-settings';
-export * from './lib/events';
-export * from './lib/indicators';
 export * from './lib/kafka';
-export * from './lib/languages';
-export * from './lib/strategies-buy';
-export * from './lib/strategies-sell';
 export * from './lib/tickers';
 export * from './lib/utils';
+export * from './modules/events';
+export * from './modules/indicators';
+export * from './modules/languages';
+export * from './modules/strategies-buy';
+export * from './modules/strategies-sell';
 

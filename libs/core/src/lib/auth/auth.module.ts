@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from "@nestjs/passport";
-import { User, UserSchema, UsersModule, UsersService } from '../users';
+import { User, UserSchema, UsersModule, UsersService } from '../../modules/users';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { HashService } from './hash.service';

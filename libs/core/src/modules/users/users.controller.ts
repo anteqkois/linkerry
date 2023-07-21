@@ -1,10 +1,8 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ReqUser } from '../../lib/auth/decorators/req-user.decorator';
+import { JwtAuthGuard } from '../../lib/auth/guards/jwt-auth.guard';
+import { JWTUser } from '../../lib/auth/types';
 import { UsersService } from './users.service';
-import { UserDocument } from './schemas/user.schema';
-import { ReqUser } from '../auth/decorators/req-user.decorator';
-import { JWTUser } from '../auth/types';
 
 @Controller('users')
 export class UsersController {

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { MongodbModule } from '../mongodb';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EventModelFactory } from './schemas/alert.schema';
+import { MongodbModule } from '../../lib/mongodb';
 import { EventsService } from './events.service';
+import { EventModelFactory } from './schemas/alert.schema';
 
 @Module({
   imports: [

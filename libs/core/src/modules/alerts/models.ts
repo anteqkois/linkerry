@@ -1,4 +1,3 @@
-import { ConditionEvent } from "../conditions";
 import { Alert } from "./schemas/alert.schema";
 
 export enum AlertProvidersType {

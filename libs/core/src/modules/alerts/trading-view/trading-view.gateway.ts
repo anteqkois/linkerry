@@ -1,15 +1,15 @@
 import { Inject, Injectable, Logger, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Condition, ConditionDocument, ConditionEvent, ConditionTypeType } from '../../conditions';
+import { ConditionEvent, ConditionTypeType } from '../../conditions';
+import { EventObjectType, TOKENS, TOPIC } from '../../events';
+import { EventsService } from '../../events/events.service';
 import { AlertProvidersType, AlertsGateway } from '../models';
 import { CreateAlertTradinViewDto } from './dto/create-alert-trading-view.dto';
-import { AlertTradinView, AlertTradinViewDocument } from './trading-view.schema';
 import { ProcessAlertTradinViewDto } from './dto/process-alert-trading-view.dto';
-import { EventsService } from '../../events/events.service';
-import { EventObjectType, TOKENS, TOPIC } from '../../events';
-import { ClientKafka } from '@nestjs/microservices';
+import { AlertTradinView, AlertTradinViewDocument } from './trading-view.schema';
 
 @Injectable()
 export class TradingViewGateway implements AlertsGateway {
