@@ -19,7 +19,7 @@
       "@market-connector/tools": ["tools/index.ts"],
       "@market-connector/ui-components": ["libs/ui-components/src/index.ts"],
       "@market-connector/ui-components/*": ["libs/ui-components/src/*"],
-      "@market-connector/ui-components/server": ["libs/ui-components/src/server.ts"]
+      // "@market-connector/ui-components/server": ["libs/ui-components/src/server.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"],

@@ -19,8 +19,7 @@
   "paths": {
     "@market-connector/ui-components": ["libs/ui-components/src/index.ts"],
     "@market-connector/ui-components/*": ["libs/ui-components/src/*"],
-    "@market-connector/ui-components/server": ["libs/ui-components/src/server.ts"],
+    // "@market-connector/ui-components/server": ["libs/ui-components/src/server.ts"],
   },
-  "files": ["../../node_modules/@nx/react/typings/cssmodule.d.ts", "../../node_modules/@nx/react/typings/image.d.ts"],
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
 }

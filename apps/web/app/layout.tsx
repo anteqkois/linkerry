@@ -1,5 +1,6 @@
-import 'tailwindcss/tailwind.css';
-import './global.css';
+import { ThemeProvider } from '@market-connector/ui-components'
+import 'tailwindcss/tailwind.css'
+import './global.css'
 
 export const metadata = {
   title: 'Welcome to web',
@@ -9,7 +10,11 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

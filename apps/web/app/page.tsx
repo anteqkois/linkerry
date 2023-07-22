@@ -1,4 +1,5 @@
 import {
+  Button,
   Menubar,
   MenubarContent,
   MenubarItem,
@@ -6,14 +7,10 @@ import {
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
+  ModeToggle,
 } from '@market-connector/ui-components'
 
 export default async function Index() {
-  /*
-   * Replace the elements below with your own.
-   *
-   * Note: The corresponding styles are in the ./index.css file.
-   */
   return (
     <div>
       <Menubar>
@@ -43,7 +40,16 @@ export default async function Index() {
             <MenubarItem>Print</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
+        <MenubarMenu>
+          <ModeToggle />
+        </MenubarMenu>
       </Menubar>
+      <Button>Test</Button>
+      <Button variant="secondary">Test</Button>
+      <Button variant="destructive">Test</Button>
+      <Button variant="ghost">Test</Button>
+      <Button variant="outline">Test</Button>
+      <Button variant="link">Test</Button>
     </div>
   )
 }
