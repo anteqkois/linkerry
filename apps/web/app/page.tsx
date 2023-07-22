@@ -1,3 +1,13 @@
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from '@market-connector/ui-components'
+
 export default async function Index() {
   /*
    * Replace the elements below with your own.
@@ -6,9 +16,34 @@ export default async function Index() {
    */
   return (
     <div>
-      <h1 className="text-purple-600 text-7xl">
-      Hello from Niecew
-      </h1>
+      <Menubar>
+        <MenubarMenu>
+          <MenubarTrigger>Alerts</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>New Window</MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem>Share</MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem>Print</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>Strategies</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem>New Window</MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem>Share</MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem>Print</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
     </div>
   )
 }
