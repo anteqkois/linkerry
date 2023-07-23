@@ -15,8 +15,12 @@ export const marketingConfig: MarketingConfig = {
       href: "/blog",
     },
     {
-      title: "Documentation",
-      href: "/docs",
+      title: "Alert Providers",
+      href: "/alerts",
+    },
+    {
+      title: "Brokers",
+      href: "/brokers",
     },
   ],
 }
