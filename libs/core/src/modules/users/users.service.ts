@@ -27,7 +27,7 @@ export class UsersService {
     return this.userModel.findOne(filters, { password: 0 })
   }
 
-  async findOneWithPassword(filters: { name?: string, id?: string }) {
+  async findOneWithPassword(filters: { email?: string, id?: string }) {
     return this.userModel.findOne(filters)
   }
 }

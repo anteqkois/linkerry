@@ -6,6 +6,7 @@ import { AuthService } from './auth.service'
 import { ReqUser } from './decorators/req-user.decorator'
 import { SignUpDto } from './dto/sign-up.dto'
 import { LocalAuthGuard } from './guards/local-auth.guard'
+import '@fastify/cookie'
 
 @Controller('auth')
 export class AuthController {
@@ -16,7 +17,6 @@ export class AuthController {
     const { access_token, user: userRes } = await this.authService.signUp(signUpDto)
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 
-    // @ts-ignore
     res.setCookie('access_token', access_token, {
       httpOnly: true,
       secure: false,
@@ -32,7 +32,6 @@ export class AuthController {
     const { access_token, user: userRes } = await this.authService.login(user)
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 
-    // @ts-ignore
     res.setCookie('access_token', access_token, {
       httpOnly: true,
       secure: false,

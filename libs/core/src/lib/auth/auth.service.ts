@@ -19,8 +19,8 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) { }
 
-  async validateUser(name: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOneWithPassword({ name });
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOneWithPassword({ email });
     const verifyPassword = await this.hashService.compare(pass, user?.password ?? '')
     if (user && verifyPassword) {
       const { password, ...result } = user.toObject();

@@ -30,9 +30,10 @@ describe('POST /api/auth', () => {
   })
 
   it('user can login', async () => {
-    const loginRes = await axios.post(`/auth/login`, { name: testAuthUser.name, password: testAuthUser.password })
+    const loginRes = await axios.post(`/auth/login`, { email: testAuthUser.email, password: testAuthUser.password })
     expect(loginRes.status).toBe(201)
     expect(loginRes.data.user.name).toBe(testAuthUser.name)
+    expect(loginRes.data.user.email).toBe(testAuthUser.email)
     expect(loginRes.data.user.password).toBeUndefined()
     axios.defaults.headers.Cookie = loginRes.headers['set-cookie'][0];
   })
