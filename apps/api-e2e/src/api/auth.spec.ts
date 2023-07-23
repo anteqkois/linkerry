@@ -9,11 +9,10 @@ describe('POST /api/auth', () => {
   })
 
   it('user can sign up and create account', async () => {
-    const signUpRes = await axios.post<{ user: User, access_token: string }>(`/auth/signup`, testAuthUser)
+    const signUpRes = await axios.post<{ user: User }>(`/auth/signup`, testAuthUser)
     expect(signUpRes.status).toBe(201)
     expect(signUpRes.data.user.roles).toEqual([UserRoleTypes.CUSTOMER])
-    expect(signUpRes.data.access_token).toEqual(expect.any(String));
-    axios.defaults.headers.authorization = `Bearer ${ signUpRes.data.access_token }`;
+    axios.defaults.headers.Cookie = signUpRes.headers['set-cookie'][0];
   })
 
   it('user has access to protected routes after login', async () => {
@@ -24,6 +23,7 @@ describe('POST /api/auth', () => {
   })
 
   it('user lost privilages after log out (delete jwt token)', async () => {
+    delete axios.defaults.headers.Cookie
     axios.defaults.headers.authorization = ``;
     const res = axios.get(`/users`)
     await expect(res).rejects.toHaveProperty("response.status", 401);
@@ -34,7 +34,7 @@ describe('POST /api/auth', () => {
     expect(loginRes.status).toBe(201)
     expect(loginRes.data.user.name).toBe(testAuthUser.name)
     expect(loginRes.data.user.password).toBeUndefined()
-    axios.defaults.headers.authorization = `Bearer ${ loginRes.data.access_token }`;
+    axios.defaults.headers.Cookie = loginRes.headers['set-cookie'][0];
   })
 
   it('can\'t signup using existing email', async () => {
