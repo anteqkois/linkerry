@@ -1,8 +1,6 @@
 import * as React from "react"
 
-import { siteConfig } from "../config/site"
 import { cn } from "@market-connector/ui-components/lib/utils"
-import { Icons } from "@market-connector/ui-components"
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (

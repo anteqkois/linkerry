@@ -6,7 +6,7 @@ import * as React from "react"
 
 import { Icons } from "@market-connector/ui-components"
 import { cn } from "@market-connector/ui-components/lib/utils"
-import { siteConfig } from "../config/site"
+import { siteConfig } from "../app/config"
 import { MainNavItem } from "../types"
 import { MobileNav } from "./mobile-nav"
 

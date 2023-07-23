@@ -9,7 +9,7 @@ import * as z from 'zod'
 
 import { Button, Icons, Input, Label, toast } from '@market-connector/ui-components'
 import { cn } from '@market-connector/ui-components/lib/utils'
-import { userAuthSchema } from '../validations/auth'
+import { userAuthSchema } from './validations'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 
