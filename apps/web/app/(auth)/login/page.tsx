@@ -2,7 +2,7 @@ import { Icons, buttonVariants } from "@market-connector/ui-components"
 import { cn } from "@market-connector/ui-components/lib/utils"
 import { Metadata } from "next"
 import Link from "next/link"
-import { UserAuthForm } from "../user-auth-form"
+import { LoginForm } from "./login-form"
 
 export const metadata: Metadata = {
   title: "Login",
@@ -34,10 +34,10 @@ export default function LoginPage() {
             Enter your email to sign in to your account
           </p>
         </div>
-        <UserAuthForm />
+        <LoginForm />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
-            href="/register"
+            href="/signup"
             className="hover:text-brand underline underline-offset-4"
           >
             Don&apos;t have an account? Sign Up

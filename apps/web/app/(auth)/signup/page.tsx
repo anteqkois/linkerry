@@ -1,7 +1,7 @@
 import { Icons, buttonVariants } from "@market-connector/ui-components"
 import { cn } from "@market-connector/ui-components/lib/utils"
 import Link from "next/link"
-import { UserAuthForm } from "../user-auth-form"
+import { SignUpForm } from "./signup-form"
 
 export const metadata = {
   title: "Create an account",
@@ -32,7 +32,7 @@ export default function RegisterPage() {
               Enter your email below to create your account
             </p>
           </div>
-          <UserAuthForm />
+          <SignUpForm />
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}
             <Link

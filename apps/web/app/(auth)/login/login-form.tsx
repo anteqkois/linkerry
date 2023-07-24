@@ -9,13 +9,13 @@ import * as z from 'zod'
 
 import { Button, Icons, Input, Label, toast } from '@market-connector/ui-components'
 import { cn } from '@market-connector/ui-components/lib/utils'
-import { userAuthSchema } from './validations'
+import { userAuthSchema } from '../validations'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 
 type FormData = z.infer<typeof userAuthSchema>
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const {
     register,
     handleSubmit,
