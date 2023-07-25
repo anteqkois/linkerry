@@ -3,7 +3,7 @@ import * as React from "react"
 
 import { Icons } from "@market-connector/ui-components"
 import { cn } from "@market-connector/ui-components/lib/utils"
-import { siteConfig } from "../app/config"
+import { siteConfig } from "../app/webConfig"
 import { useLockBody } from "../hooks/useLockBody"
 import { MainNavItem } from "../types"
 

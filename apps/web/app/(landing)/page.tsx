@@ -1,7 +1,7 @@
 import { Button, buttonVariants } from '@market-connector/ui-components'
 import { cn } from '@market-connector/ui-components/lib/utils'
 import Link from 'next/link'
-import { siteConfig } from '../config'
+import { siteConfig } from '../webConfig'
 
 // import { env } from "@/env.mjs"
 
