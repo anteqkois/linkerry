@@ -1,4 +1,4 @@
-import { Language } from "../models/language"
+import { Language } from '../models/language'
 
 export interface IAuthSignUpInput {
   email: string
@@ -31,4 +31,10 @@ export interface JWTToken {
 export interface JWTUser {
   id: string
   name: string
+}
+
+export enum AuthStatus {
+  LOADING = 'loading',
+  AUTHENTICATED = 'authenticated',
+  UNAUTHENTICATED = 'unauthenticated',
 }

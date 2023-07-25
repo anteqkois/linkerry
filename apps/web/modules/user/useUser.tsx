@@ -1,5 +1,7 @@
 'use client'
 import {
+  Cookies,
+  AuthStatus,
   IAuthLoginInput,
   IAuthLoginResponse,
   IAuthSignUpInput,
@@ -9,10 +11,11 @@ import {
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react'
 import { AuthApi } from '../api'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { useCookie } from '../../hooks/useCookie'
 
 type ReturnType = {
-  loged: boolean
-  setLoged: Dispatch<SetStateAction<boolean>>
+  authStatus: AuthStatus
+  setAuthStatus: Dispatch<SetStateAction<AuthStatus>>
   user: IUser
   setUser: Dispatch<SetStateAction<IUser>>
   signUp: (data: IAuthSignUpInput) => Promise<IAuthSignUpResponse>
@@ -22,14 +25,14 @@ type ReturnType = {
 const Context = createContext<ReturnType>({} as ReturnType)
 
 export function UserProvider({ children }: PropsWithChildren) {
-  const [loged, setLoged] = useLocalStorage('loged', false)
+  const [authStatus, setAuthStatus] = useCookie<AuthStatus>(Cookies.AUTH_STATUS, AuthStatus.LOADING)
   const [user, setUser] = useLocalStorage('user-data', {} as IUser)
 
   const signUp = useCallback(async (data: IAuthSignUpInput) => {
     const response = await AuthApi.signUp(data)
 
     setUser(response.data.user)
-    setLoged(true)
+    setAuthStatus(AuthStatus.AUTHENTICATED)
     return response.data
   }, [])
 
@@ -40,15 +43,15 @@ export function UserProvider({ children }: PropsWithChildren) {
     })
 
     setUser(response.data.user)
-    setLoged(true)
+    setAuthStatus(AuthStatus.AUTHENTICATED)
     return response.data
   }, [])
 
   return (
     <Context.Provider
       value={{
-        loged,
-        setLoged,
+        authStatus,
+        setAuthStatus,
         user,
         setUser,
         signUp,
