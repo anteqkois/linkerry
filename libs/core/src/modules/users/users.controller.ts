@@ -1,8 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ReqUser } from '../../lib/auth/decorators/req-user.decorator';
 import { JwtAuthGuard } from '../../lib/auth/guards/jwt-auth.guard';
-import { JWTUser } from '../../lib/auth/types';
 import { UsersService } from './users.service';
+import { JWTUser } from '@market-connector/types';
 
 @Controller('users')
 export class UsersController {

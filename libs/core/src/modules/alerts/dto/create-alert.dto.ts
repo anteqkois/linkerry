@@ -1,7 +1,7 @@
+import { AlertProvidersType, IAlertInput } from "@market-connector/types";
 import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { AlertProvidersType } from "../models";
 
-export class CreateAlertDto {
+export class CreateAlertDto implements IAlertInput {
   @IsString()
   @MinLength(2)
   @MaxLength(100)

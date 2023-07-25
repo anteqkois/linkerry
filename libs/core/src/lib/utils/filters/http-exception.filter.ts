@@ -8,11 +8,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import {
-  CustomHttpExceptionResponse,
-  HttpExceptionResponse,
-} from '../models/index';
 import { DtoException } from '../pipes';
+import { CustomHttpExceptionResponse, HttpExceptionResponse } from '@market-connector/types';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

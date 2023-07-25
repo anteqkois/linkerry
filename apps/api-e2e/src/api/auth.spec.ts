@@ -1,6 +1,6 @@
-import axios from 'axios'
 import { testAuthUser } from '@market-connector/tools'
-import { LanguageType, User, UserRoleTypes } from '@market-connector/core'
+import { IAuthSignUpResponse, Language, UserRoleTypes } from '@market-connector/types'
+import axios from 'axios'
 
 describe('POST /api/auth', () => {
   it('user hasn\'t access to protected routes', async () => {
@@ -9,7 +9,7 @@ describe('POST /api/auth', () => {
   })
 
   it('user can sign up and create account', async () => {
-    const signUpRes = await axios.post<{ user: User }>(`/auth/signup`, testAuthUser)
+    const signUpRes = await axios.post<IAuthSignUpResponse>(`/auth/signup`, testAuthUser)
     expect(signUpRes.status).toBe(201)
     expect(signUpRes.data.user.roles).toEqual([UserRoleTypes.CUSTOMER])
     axios.defaults.headers.Cookie = signUpRes.headers['set-cookie'][0];
@@ -45,7 +45,7 @@ describe('POST /api/auth', () => {
         test2: true,
       },
       email: testAuthUser.email,
-      language: LanguageType.pl,
+      language: Language.pl,
       name: 'anteq849012384',
       password: 'antekkoisA1',
     })
@@ -59,7 +59,7 @@ describe('POST /api/auth', () => {
         test2: true,
       },
       email: 'anteq12@gmail.com',
-      language: LanguageType.pl,
+      language: Language.pl,
       name: testAuthUser.name,
       password: 'antekkoisA2',
     })

@@ -18,7 +18,7 @@ export class UsersService {
     return await this.userModel.create(createUserDto)
   }
 
-  async find(filters?: any) {
+  async find(filers?: any) {
     const filter = {}
     return this.userModel.find(filter)
   }

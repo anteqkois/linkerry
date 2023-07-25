@@ -1,8 +1,7 @@
 import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { ConditionOperatorType, ConditionTypeType, IndicatorType } from '@market-connector/core'
+import { ConditionOperatorType, ConditionTypeType, IConditionInput, IndicatorType } from "@market-connector/types";
 
-export class CreateConditionDto {
-
+export class CreateConditionDto implements IConditionInput{
   @IsString()
   @IsEnum(ConditionTypeType)
   readonly type: ConditionTypeType;

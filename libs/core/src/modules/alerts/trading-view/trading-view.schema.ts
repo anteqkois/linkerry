@@ -1,7 +1,7 @@
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { AlertProvidersType } from '../models';
 import { Alert } from '../schemas/alert.schema';
+import { AlertProvidersType } from '@market-connector/types';
 
 export type AlertTradinViewDocument = mongoose.HydratedDocument<AlertTradinView>;
 

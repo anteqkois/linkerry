@@ -5,7 +5,7 @@ class ConsentsDto {
   [key: string]: boolean;
 }
 
-export class CreateUserDto {
+export class CreateUserDto{
   @IsNotEmpty()
   @IsString()
   @MaxLength(50)

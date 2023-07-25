@@ -1,10 +1,10 @@
-import { Alert, AlertProvidersType, CreateAlertDto, Condition, ConditionTypeType, ConditionOperatorType, CustomHttpExceptionResponse } from '@market-connector/core'
 import axios from 'axios'
 import { login } from '../support/login'
+import { CustomHttpExceptionResponse, IAlertInput } from '@market-connector/types'
 
 describe('POST /api/alerts', () => {
   it('Preperly create error schema for missing data', async () => {
-    const input: Partial<CreateAlertDto> = {
+    const input: Partial<IAlertInput> = {
       testMode: true,
       // name: 'test alert 2',
       active: true,

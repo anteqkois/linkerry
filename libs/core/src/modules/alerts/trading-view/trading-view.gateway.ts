@@ -3,13 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ConditionEvent, ConditionTypeType } from '../../conditions';
-import { EventObjectType, TOKENS, TOPIC } from '../../events';
+import { TOKENS, TOPIC } from '../../events';
 import { EventsService } from '../../events/events.service';
-import { AlertProvidersType, AlertsGateway } from '../models';
+import { AlertsGateway } from '../models';
 import { CreateAlertTradinViewDto } from './dto/create-alert-trading-view.dto';
 import { ProcessAlertTradinViewDto } from './dto/process-alert-trading-view.dto';
 import { AlertTradinView, AlertTradinViewDocument } from './trading-view.schema';
+import { AlertProvidersType, ConditionTypeType, EventObjectType, IConditionEvent } from '@market-connector/types';
 
 @Injectable()
 export class TradingViewGateway implements AlertsGateway {
@@ -29,8 +29,8 @@ export class TradingViewGateway implements AlertsGateway {
   async cresteAlert(dto: CreateAlertTradinViewDto, conditionId: string, userId: string) {
     const alertHandlerUrl = this.configService.get('ALERT_HANDLER_URL')
     const alert = await this.alertModel.create({
-      userId: userId,
-      conditionId,
+      user: userId,
+      condition: conditionId,
       name: dto.name,
       active: dto.active,
       alertValidityUnix: dto.alertValidityUnix,
@@ -50,7 +50,7 @@ export class TradingViewGateway implements AlertsGateway {
   }
 
   conditionTriggeredEventEmiter(dto: ProcessAlertTradinViewDto) {
-    const event: ConditionEvent = {
+    const event: IConditionEvent = {
       event_id: this.eventsService.generateEventId(),
       object: EventObjectType.CONDITION,
       data: {

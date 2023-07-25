@@ -1,17 +1,21 @@
+import { EventObjectType, IBaseEvent } from '@market-connector/types';
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
 export type EventDocument = mongoose.HydratedDocument<Event>;
 
 @Schema({ timestamps: true, })
-export class Event {
+export class Event  implements IBaseEvent{
   _id: string;
 
   @Prop({ required: true, type: String })
   event_id: string;
 
+  @Prop({ required: true, type: String, enum: EventObjectType })
+  object: EventObjectType;
+
   @Prop({ required: true, type: Object })
-  object: Object;
+  data: Object;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

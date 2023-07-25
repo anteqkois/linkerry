@@ -1,7 +1,3 @@
-export enum EventObjectType {
-  CONDITION = 'condition',
-}
-
 export const TOPIC = {
   CONDITION_TRIGGERED: 'condition.triggered'
 }

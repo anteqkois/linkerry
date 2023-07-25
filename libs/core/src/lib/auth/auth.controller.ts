@@ -1,19 +1,19 @@
+import '@fastify/cookie'
+import { IAuthSignUpResponse, IUser } from '@market-connector/types'
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { FastifyReply } from 'fastify'
-import { User } from '../../modules/users'
 import { AuthService } from './auth.service'
 import { ReqUser } from './decorators/req-user.decorator'
 import { SignUpDto } from './dto/sign-up.dto'
 import { LocalAuthGuard } from './guards/local-auth.guard'
-import '@fastify/cookie'
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService, private configService: ConfigService) {}
 
   @Post('signup')
-  async signup(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: FastifyReply) {
+  async signup(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthSignUpResponse> {
     const { access_token, user: userRes } = await this.authService.signUp(signUpDto)
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 
@@ -28,7 +28,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@ReqUser() user: User, @Res({ passthrough: true }) res: FastifyReply) {
+  async login(@ReqUser() user: IUser, @Res({ passthrough: true }) res: FastifyReply) {
     const { access_token, user: userRes } = await this.authService.login(user)
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 

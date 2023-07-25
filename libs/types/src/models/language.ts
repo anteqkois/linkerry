@@ -1,9 +1,9 @@
-export enum LanguageType {
+export enum Language {
   "en" = "English",
   "pl" = "Polish",
 }
 
-// export enum LanguageType {
+// export enum ILanguage {
 //   "aa" = "Afar",
 //   "ab" = "Abkhazian",
 //   "af" = "Afrikaans",

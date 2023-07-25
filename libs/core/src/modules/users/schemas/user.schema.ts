@@ -1,12 +1,11 @@
+import { IUser, Language, UserRoleTypes } from '@market-connector/types';
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { LanguageType } from '../../languages';
-import { UserRoleTypes } from '../types';
 
-export type UserDocument = mongoose.HydratedDocument<User>;
+export type UserDocument = mongoose.HydratedDocument<IUser>;
 
 @Schema({ timestamps: true, autoIndex: true })
-export class User {
+export class User implements IUser {
   _id: string;
 
   @Prop({ required: true, type: String, unique: true, index: true })
@@ -45,8 +44,8 @@ export class User {
   @Prop({ required: false, type: String })
   cryptoWallet: string;
 
-  @Prop({ required: true, type: String, enum: LanguageType, default: LanguageType.pl })
-  language: LanguageType;
+  @Prop({ required: true, type: String, enum: Language, default: Language.pl })
+  language: Language;
 
   @Prop({ required: true, type: Number, default: 10 })
   affiliationPercent: number;
@@ -56,10 +55,10 @@ export class User {
 
   // Shoulde be created almost one when user was created
   @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'UserSettings' })
-  settingsId: mongoose.Schema.Types.ObjectId;
+  settings: any;
 
   @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
-  referrerId: mongoose.Schema.Types.ObjectId;
+  referrer: IUser;
 
   // remember_token             String?   @db.VarChar(100)
   // subscription_expired_at    DateTime? @db.Date

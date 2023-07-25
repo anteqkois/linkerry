@@ -9,9 +9,8 @@ import * as z from 'zod'
 
 import { Button, Icons, Input, Label, toast } from '@market-connector/ui-components'
 import { cn } from '@market-connector/ui-components/lib/utils'
-import { AuthApi } from '../api'
 import { userAuthSchema } from '../validations'
-// import { LanguageType } from '@market-connector/core'
+// import { Language } from '@market-connector/core'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -43,8 +42,8 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
       //     'law': true,
       //   },
       //   email: data.email,
-      //   // language: LanguageType.pl,
-      //   language: 'LanguageType.pl',
+      //   // language: Language.pl,
+      //   language: 'Language.pl',
       //   name: data.email,
       //   // password: data.password,
       //   password: 'data.password',

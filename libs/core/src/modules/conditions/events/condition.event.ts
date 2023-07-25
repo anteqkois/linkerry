@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { BaseEvent } from "../../events/entities/base.event";
-import { ConditionTypeType } from "../types";
+import { ConditionTypeType, IConditionEvent } from "@market-connector/types";
 
 export class ConditionEventData {
   @IsString()
@@ -13,7 +13,7 @@ export class ConditionEventData {
   readonly value: string;
 }
 
-export class ConditionEvent extends BaseEvent {
+export class ConditionEvent extends BaseEvent implements IConditionEvent {
   @ValidateNested()
   @Type(() => ConditionEventData)
   readonly data: ConditionEventData;

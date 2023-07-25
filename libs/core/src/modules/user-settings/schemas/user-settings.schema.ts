@@ -1,14 +1,16 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import { IUserSettings } from '@market-connector/types'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import mongoose from 'mongoose'
+import { User } from '../../users'
 
-export type UserSettingsDocument = mongoose.HydratedDocument<UserSetting>;
+export type UserSettingsDocument = mongoose.HydratedDocument<UserSetting>
 
-@Schema({ timestamps: true,})
-export class UserSetting {
-  _id: string;
+@Schema({ timestamps: true })
+export class UserSetting implements IUserSettings {
+  _id: string
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  userId: mongoose.Schema.Types.ObjectId;
+  user: User
 }
 
-export const UserSettingsSchema = SchemaFactory.createForClass(UserSetting);
+export const UserSettingsSchema = SchemaFactory.createForClass(UserSetting)

@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsObject, IsString } from "class-validator";
-import { EventObjectType } from "../models";
+import { EventObjectType, IBaseEvent } from "@market-connector/types";
 
-export abstract class BaseEvent {
+export abstract class BaseEvent implements IBaseEvent {
   @IsString()
   @IsNotEmpty()
   event_id: string;

@@ -1,7 +1,6 @@
-import { Alert, AlertProvidersType, CreateAlertDto, Condition, ConditionTypeType, ConditionOperatorType } from '@market-connector/core'
-import { wait } from '@market-connector/tools'
 import axios from 'axios'
 import { login } from '../support/login'
+import { AlertProvidersType, ConditionOperatorType, ConditionTypeType, IAlertInput, IAlertResponse } from '@market-connector/types'
 
 describe('POST /api/alerts', () => {
   it('only authenticated users can create alert', async () => {
@@ -17,7 +16,7 @@ describe('POST /api/alerts', () => {
 
   it('can create alert', async () => {
     await login()
-    const input: CreateAlertDto = {
+    const input: IAlertInput = {
       alertProvider: AlertProvidersType.TRADING_VIEW,
       testMode: true,
       name: 'alert should pass test',
@@ -26,11 +25,11 @@ describe('POST /api/alerts', () => {
       symbol: 'ETHUSDT'
     }
 
-    const res = await axios.post<{ alert: Alert, condition: Condition }>(`/alerts`, input)
+    const res = await axios.post<IAlertResponse>(`/alerts`, input)
 
     expect(res.data.condition).toBeDefined()
     expect(res.data.condition).toHaveProperty('_id')
-    expect(res.data.condition).toHaveProperty('userId')
+    expect(res.data.condition).toHaveProperty('user')
     expect(res.data.condition).toHaveProperty('name', input.name)
     expect(res.data.condition).toHaveProperty('type', ConditionTypeType.ALERT)
     expect(res.data.condition).toHaveProperty('requiredValue', 1)
@@ -42,8 +41,8 @@ describe('POST /api/alerts', () => {
 
     expect(res.data.alert).toBeDefined()
     expect(res.data.alert).toHaveProperty('_id')
-    expect(res.data.alert).toHaveProperty('userId')
-    expect(res.data.alert).toHaveProperty('conditionId')
+    expect(res.data.alert).toHaveProperty('user')
+    expect(res.data.alert).toHaveProperty('condition')
     expect(res.data.alert).toHaveProperty('name', input.name)
     expect(res.data.alert).toHaveProperty('active', input.active)
     expect(res.data.alert).toHaveProperty('messagePattern')
@@ -55,7 +54,7 @@ describe('POST /api/alerts', () => {
   })
 
   it('can\'t use existing alert name', async () => {
-    const input: CreateAlertDto = {
+    const input: IAlertInput = {
       alertProvider: AlertProvidersType.TRADING_VIEW,
       testMode: true,
       name: 'alert should pass test',
@@ -69,7 +68,7 @@ describe('POST /api/alerts', () => {
   })
 
   it('can\'t create alert with missing data', async () => {
-    const input: Partial<CreateAlertDto> = {
+    const input: Partial<IAlertInput> = {
       testMode: true,
       // name: 'test alert 2',
       active: true,

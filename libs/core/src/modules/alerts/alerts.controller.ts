@@ -1,11 +1,10 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../lib/auth';
 import { ReqUser } from '../../lib/auth/decorators/req-user.decorator';
-import { JWTUser } from '../../lib/auth/types';
 import { AlertsService } from './alerts.service';
 import { CreateAlertDto } from './dto/create-alert.dto';
-import { AlertProvidersType } from './models';
 import { TradingViewGateway } from './trading-view/trading-view.gateway';
+import { AlertProvidersType, JWTUser } from '@market-connector/types';
 
 @Controller('alerts')
 export class AlertsController {

@@ -1,20 +1,21 @@
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { AlertProvidersType } from '../models';
-import {  AlertTradinView, AlertTradinViewSchema } from '../trading-view/trading-view.schema';
+import { AlertProvidersType, IAlert } from '@market-connector/types';
+import { User } from '../../users';
+import { Condition } from '../../conditions';
 
 export type AlertDocument = mongoose.HydratedDocument<Alert>;
 
 @Schema({ timestamps: true, discriminatorKey: "kind", })
-export class Alert {
+export class Alert implements IAlert{
   _id: string;
   kind: string;
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
-  userId: mongoose.Schema.Types.ObjectId;
+  user: User;
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Conditions', index: 1 })
-  conditionId: mongoose.Schema.Types.ObjectId;
+  condition: Condition;
 
   @Prop({ required: true, type: String })
   name: string;
@@ -32,11 +33,11 @@ export class Alert {
   testMode: boolean
 
   @Prop({ required: true, type: String })
-  alertHandlerUrl: String
+  alertHandlerUrl: string
 }
 
 export const AlertSchema = SchemaFactory.createForClass(Alert);
-AlertSchema.index({ userId: 1, name: 1 }, { unique: true, });
+AlertSchema.index({ user: 1, name: 1 }, { unique: true, });
 
 export const alertModelFactory: AsyncModelFactory = {
   name: Alert.name,

@@ -1,5 +1,3 @@
-import { LanguageType, User, UserRoleTypes } from '@market-connector/core'
-import axios from 'axios'
 
 describe('POST /api/users', () => {
   // it('can create user', async () => {
@@ -17,7 +15,7 @@ describe('POST /api/users', () => {
   //       test2: true,
   //     },
   //     email: 'anteq1@gmail.com',
-  //     language: LanguageType.pl,
+  //     language: Language.pl,
   //     name: 'anteq',
   //     password: 'antekkoisA1',
   //   })
@@ -30,7 +28,7 @@ describe('POST /api/users', () => {
   //       test2: true,
   //     },
   //     email: 'anteq@gmail.com',
-  //     language: LanguageType.pl,
+  //     language: Language.pl,
   //     name: 'anteq213',
   //     password: 'antekkoisA2',
   //   })
@@ -42,7 +40,7 @@ describe('POST /api/users', () => {
   //       test2: true,
   //     },
   //     email: 'anteq1@gmail.com',
-  //     language: LanguageType.pl,
+  //     language: Language.pl,
   //     name: 'anteq1',
   //     password: 'antekkoisA3',
   //   })
