@@ -1,22 +1,24 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSearchParams } from 'next/navigation'
-import * as React from 'react'
-// import { signIn } from "next-auth/react"
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
-
+import { Language } from '@market-connector/types'
 import { Button, Icons, Input, Label, toast } from '@market-connector/ui-components'
 import { cn } from '@market-connector/ui-components/lib/utils'
+import { useRouter, useSearchParams } from 'next/navigation'
+import * as React from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { useUser } from '../../../modules/user/useUser'
 import { userAuthSchema } from '../validations'
-// import { Language } from '@market-connector/core'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 
 type FormData = z.infer<typeof userAuthSchema>
 
 export function SignUpForm({ className, ...props }: UserAuthFormProps) {
+  const { signUp } = useUser()
+  const { push } = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -31,39 +33,35 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: FormData) {
     setIsLoading(true)
 
-    // const signInResult = await signIn("email", {
-    //   email: data.email.toLowerCase(),
-    //   redirect: false,
-    //   callbackUrl: searchParams?.get("from") || "/dashboard",
-    // })
+    const backUrl = searchParams?.get("from") || "/dashboard"
+
     try {
-      // const response = AuthApi.signUp({
-      //   consents:{
-      //     'law': true,
-      //   },
-      //   email: data.email,
-      //   // language: Language.pl,
-      //   language: 'Language.pl',
-      //   name: data.email,
-      //   // password: data.password,
-      //   password: 'data.password',
+      const signUpResponse = await signUp({
+        consents: {
+          law: true,
+        },
+        email: data.email,
+        language: Language.pl,
+        name: data.email,
+        password: data.password,
+      })
 
-      // })
-      const signInResult = { ok: true }
-      await new Promise((r) => setTimeout(r, 1500))
+      console.log(signUpResponse);
 
-      setIsLoading(false)
+      if (signUpResponse.error) throw new Error('Something went wrong')
 
-      if (!signInResult?.ok) throw new Error('Something went wrong')
-
-      return toast({
+      toast({
         title: 'Check your email',
         description: 'We sent you a login link. Be sure to check your spam too.',
       })
+
+      setIsLoading(false)
+      // push('/profile')
     } catch (error) {
+      console.log(error)
       return toast({
         title: 'Something went wrong.',
-        description: 'Your sign in request failed. Please try again.',
+        description: 'Your sign up request failed. Please try again.',
         variant: 'destructive',
       })
     }
@@ -89,6 +87,23 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
               {...register('email')}
             />
             {errors?.email && <p className="px-1 text-xs text-red-600">{errors.email.message}</p>}
+          </div>
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="email">
+              Password
+            </Label>
+            <Input
+              id="password"
+              placeholder="*********"
+              type="password"
+              autoCapitalize="none"
+              autoComplete="password"
+              autoCorrect="off"
+              // disabled={isLoading || isGitHubLoading}
+              disabled={isLoading}
+              {...register('password')}
+            />
+            {errors?.password && <p className="px-1 text-xs text-red-600">{errors.password.message}</p>}
           </div>
           <Button variant="secondary">
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}

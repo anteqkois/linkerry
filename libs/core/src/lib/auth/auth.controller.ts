@@ -13,7 +13,10 @@ export class AuthController {
   constructor(private authService: AuthService, private configService: ConfigService) {}
 
   @Post('signup')
-  async signup(@Body() signUpDto: SignUpDto, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthSignUpResponse> {
+  async signup(
+    @Body() signUpDto: SignUpDto,
+    @Res({ passthrough: true }) res: FastifyReply,
+  ): Promise<IAuthSignUpResponse> {
     const { access_token, user: userRes } = await this.authService.signUp(signUpDto)
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 
@@ -23,7 +26,8 @@ export class AuthController {
       sameSite: 'lax',
       expires: new Date(Date.now() + expireDateUnix),
     })
-    return res.send({ user: userRes, status: 'ok' })
+
+    return res.send({ user: userRes, error: undefined })
   }
 
   @UseGuards(LocalAuthGuard)
@@ -38,7 +42,8 @@ export class AuthController {
       sameSite: 'lax',
       expires: new Date(Date.now() + expireDateUnix),
     })
-    return res.send({ user: userRes, status: 'ok' })
+
+    return res.send({ user: userRes, error: undefined })
   }
 
   // @UseGuards(LocalAuthGuard)

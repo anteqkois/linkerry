@@ -3,12 +3,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSearchParams } from 'next/navigation'
 import * as React from 'react'
-// import { signIn } from "next-auth/react"
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { Button, Icons, Input, Label, toast } from '@market-connector/ui-components'
 import { cn } from '@market-connector/ui-components/lib/utils'
+import { useUser } from '../../../modules/user/useUser'
 import { userAuthSchema } from '../validations'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
@@ -16,6 +16,7 @@ type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 type FormData = z.infer<typeof userAuthSchema>
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
+  const { login } = useUser()
   const {
     register,
     handleSubmit,
@@ -29,29 +30,25 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 
   async function onSubmit(data: FormData) {
     setIsLoading(true)
+    try {
+      const loginResult = await login(data)
 
-    // const signInResult = await signIn("email", {
-    //   email: data.email.toLowerCase(),
-    //   redirect: false,
-    //   callbackUrl: searchParams?.get("from") || "/dashboard",
-    // })
-    const signInResult = { ok: true }
-    await new Promise((r) => setTimeout(r, 1500))
+      if (loginResult.error) throw new Error('Something get wrong')
 
-    setIsLoading(false)
-
-    if (!signInResult?.ok) {
-      return toast({
+      toast({
+        title: 'Check your email',
+        description: 'We sent you a login link. Be sure to check your spam too.',
+      })
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+      toast({
         title: 'Something went wrong.',
         description: 'Your sign in request failed. Please try again.',
         variant: 'destructive',
       })
+      setIsLoading(false)
     }
-
-    return toast({
-      title: 'Check your email',
-      description: 'We sent you a login link. Be sure to check your spam too.',
-    })
   }
 
   return (
@@ -75,9 +72,26 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             />
             {errors?.email && <p className="px-1 text-xs text-red-600">{errors.email.message}</p>}
           </div>
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="email">
+              Password
+            </Label>
+            <Input
+              id="password"
+              placeholder="*********"
+              type="password"
+              autoCapitalize="none"
+              autoComplete="password"
+              autoCorrect="off"
+              // disabled={isLoading || isGitHubLoading}
+              disabled={isLoading}
+              {...register('password')}
+            />
+            {errors?.password && <p className="px-1 text-xs text-red-600">{errors.password.message}</p>}
+          </div>
           <Button variant="secondary">
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In with Email
+            Login with Email
           </Button>
         </div>
       </form>

@@ -1,3 +1,4 @@
+import { Language } from '@market-connector/types';
 import { Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, IsString, Length, MaxLength, MinLength, ValidateNested } from 'class-validator';
 
@@ -42,7 +43,7 @@ export class CreateUserDto{
   @IsNotEmpty()
   @IsString()
   @MaxLength(60)
-  language: string;
+  language: Language;
 
   @IsNotEmpty()
   @ValidateNested()

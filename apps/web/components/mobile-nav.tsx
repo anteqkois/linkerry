@@ -4,7 +4,7 @@ import * as React from "react"
 import { Icons } from "@market-connector/ui-components"
 import { cn } from "@market-connector/ui-components/lib/utils"
 import { siteConfig } from "../app/config"
-import { useLockBody } from "../hooks/use-lock-body"
+import { useLockBody } from "../hooks/useLockBody"
 import { MainNavItem } from "../types"
 
 interface MobileNavProps {

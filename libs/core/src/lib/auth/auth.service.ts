@@ -39,7 +39,7 @@ export class AuthService {
     signUpDto.password = hashedPassword
 
     const user = await this.userModel.create({ ...signUpDto, roles: [UserRoleTypes.CUSTOMER] })
-    this.logger.debug('New signUp user')
+    this.logger.debug(`New signUp: ${signUpDto.email}`)
 
     const payload = this.createJWTPayload(user)
     const secret = this.configService.get('JWT_SECRET')
