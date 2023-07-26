@@ -28,13 +28,16 @@ export class AuthController {
     const { access_token, user: userRes } = await this.authService.signUp(signUpDto)
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 
-    res.setCookie('access_token', access_token, {
+    res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
+      path: '/',
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
       expires: new Date(Date.now() + expireDateUnix),
     })
-    res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED)
+    res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
+      path: '/',
+    })
 
     return res.send({ user: userRes, error: undefined })
   }
@@ -46,12 +49,15 @@ export class AuthController {
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 
     res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
+      path: '/',
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
       expires: new Date(Date.now() + expireDateUnix),
     })
-    res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED)
+    res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
+      path: '/',
+    })
 
     return res.send({ user: userRes, error: undefined })
   }
@@ -60,8 +66,12 @@ export class AuthController {
   @Post('logout')
   // async logut(@ReqJWTUser() user: IUser, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
   async logut(@Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
-    res.clearCookie(Cookies.ACCESS_TOKEN)
-    res.setCookie(Cookies.AUTH_STATUS, AuthStatus.UNAUTHENTICATED)
+    res.clearCookie(Cookies.ACCESS_TOKEN, {
+      path: '/',
+    })
+    res.setCookie(Cookies.AUTH_STATUS, AuthStatus.UNAUTHENTICATED, {
+      path: '/',
+    })
 
     return res.send({ error: undefined })
   }
