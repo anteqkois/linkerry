@@ -1,7 +1,6 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSearchParams } from 'next/navigation'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -10,16 +9,23 @@ import { Button, Icons, Input, Label, toast } from '@market-connector/ui-compone
 import { cn } from '@market-connector/ui-components/lib/utils'
 import { useUser } from '../../../modules/user/useUser'
 import { userAuthSchema } from '../validations'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { isCustomHttpException } from '@market-connector/types'
+import { isAxiosError } from 'axios'
+import { retriveServerHttpException } from '../../../utils'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 
 type FormData = z.infer<typeof userAuthSchema>
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
+  const { push } = useRouter()
+  const { get } = useSearchParams()
   const { login } = useUser()
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(userAuthSchema),
@@ -35,19 +41,16 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 
       if (loginResult.error) throw new Error('Something get wrong')
 
-      toast({
-        title: 'Check your email',
-        description: 'We sent you a login link. Be sure to check your spam too.',
-      })
       setIsLoading(false)
-    } catch (error) {
+      const from = get('from')
+      if (from) return push(from)
+      push('/app/dashboard')
+    } catch (error: any) {
+      setIsLoading(false)
+      const serverError = retriveServerHttpException(error)
+      if (serverError) return setError('root', { message: serverError.message, type: 'manual' })
       console.log(error)
-      toast({
-        title: 'Something went wrong.',
-        description: 'Your sign in request failed. Please try again.',
-        variant: 'destructive',
-      })
-      setIsLoading(false)
+      return setError('root', { message: 'Your sign in request failed. Please try again.', type: 'manual' })
     }
   }
 
@@ -87,7 +90,10 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
               disabled={isLoading}
               {...register('password')}
             />
-            {errors?.password && <p className="px-1 text-xs text-red-600">{errors.password.message}</p>}
+            <div className="h-3">
+              {errors?.password && <p className="px-1 text-xs text-red-600">{errors.password.message}</p>}
+              {errors?.root && <p className="px-1 text-xs text-red-600">{errors.root.message}</p>}
+            </div>
           </div>
           <Button variant="secondary">
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}

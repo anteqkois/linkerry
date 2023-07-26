@@ -11,6 +11,7 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from '@market-connector/ui-components'
+import Link from 'next/link'
 
 interface DesktopProps {
   children?: React.ReactNode
@@ -24,7 +25,9 @@ export function DesktopMenu({ children }: DesktopProps) {
           <MenubarTrigger>Strategies</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              Create New
+              <Link href="/app/strategies/create" prefetch={false}>
+                Create New
+              </Link>
               <MenubarShortcut>
                 <PlusIcon />
               </MenubarShortcut>
@@ -35,7 +38,11 @@ export function DesktopMenu({ children }: DesktopProps) {
                 <UpdateIcon />
               </MenubarShortcut>
             </MenubarItem>
-            <MenubarItem>All Strategies</MenubarItem>
+            <MenubarItem>
+              <Link href="/app/strategies" prefetch={false}>
+                All Strategies
+              </Link>
+            </MenubarItem>
             <MenubarItem>Analysis</MenubarItem>
             <MenubarSeparator />
             <MenubarItem disabled>

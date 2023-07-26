@@ -8,7 +8,7 @@ import { Icons } from "@market-connector/ui-components"
 import { cn } from "@market-connector/ui-components/lib/utils"
 import { siteConfig } from "../app/webConfig"
 import { MainNavItem } from "../types"
-import { MobileNav } from "./mobile-nav"
+import { MobileNav } from "./MobileNav"
 
 interface MainNavProps {
   items?: MainNavItem[]

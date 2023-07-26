@@ -1,8 +1,8 @@
+import { JWTUser } from '@market-connector/types';
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ReqUser } from '../../lib/auth/decorators/req-user.decorator';
+import { ReqJWTUser } from '../../lib/auth/decorators/req-user.decorator';
 import { JwtAuthGuard } from '../../lib/auth/guards/jwt-auth.guard';
 import { UsersService } from './users.service';
-import { JWTUser } from '@market-connector/types';
 
 @Controller('users')
 export class UsersController {
@@ -11,7 +11,7 @@ export class UsersController {
   // Add more secure logic
   @UseGuards(JwtAuthGuard)
   @Get()
-  getUser(@ReqUser() user: JWTUser) {
+  getUser(@ReqJWTUser() user: JWTUser) {
     return this.usersService.find()
   }
 

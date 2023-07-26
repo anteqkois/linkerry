@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { useUser } from '../../../modules/user/useUser'
 import { userAuthSchema } from '../validations'
+import { retriveServerHttpException } from '../../../utils'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -22,19 +23,16 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(userAuthSchema),
   })
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   // const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
-  const searchParams = useSearchParams()
 
   async function onSubmit(data: FormData) {
     setIsLoading(true)
-
-    const backUrl = searchParams?.get("from") || "/dashboard"
-
     try {
       const signUpResponse = await signUp({
         consents: {
@@ -46,24 +44,24 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
         password: data.password,
       })
 
-      console.log(signUpResponse);
+      console.log(signUpResponse)
 
       if (signUpResponse.error) throw new Error('Something went wrong')
 
       toast({
         title: 'Check your email',
         description: 'We sent you a login link. Be sure to check your spam too.',
+        duration: 6000,
       })
 
       setIsLoading(false)
-      // push('/profile')
+      push('/app/dashboard')
     } catch (error) {
+      setIsLoading(false)
+      const serverError = retriveServerHttpException(error)
+      if (serverError) return setError('root', { message: serverError.message, type: 'manual' })
       console.log(error)
-      return toast({
-        title: 'Something went wrong.',
-        description: 'Your sign up request failed. Please try again.',
-        variant: 'destructive',
-      })
+      return setError('root', { message: 'Your sign in request failed. Please try again.', type: 'manual' })
     }
   }
 
@@ -103,7 +101,10 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
               disabled={isLoading}
               {...register('password')}
             />
-            {errors?.password && <p className="px-1 text-xs text-red-600">{errors.password.message}</p>}
+            <div className="h-3">
+              {errors?.password && <p className="px-1 text-xs text-red-600">{errors.password.message}</p>}
+              {errors?.root && <p className="px-1 text-xs text-red-600">{errors.root.message}</p>}
+            </div>
           </div>
           <Button variant="secondary">
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}

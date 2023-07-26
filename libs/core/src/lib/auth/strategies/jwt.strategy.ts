@@ -1,4 +1,4 @@
-import { JWTToken } from '@market-connector/types'
+import { Cookies, JWTToken } from '@market-connector/types'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
@@ -15,9 +15,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  private static extractJWTFromCookie(req: { cookies: { access_token?: string } }): string | null {
-    if (req.cookies && req.cookies['access_token']) {
-      return req.cookies['access_token']
+  private static extractJWTFromCookie(req: { cookies: { [Cookies.ACCESS_TOKEN]?: string } }): string | null {
+    if (req.cookies && req.cookies[Cookies.ACCESS_TOKEN]) {
+      return req.cookies[Cookies.ACCESS_TOKEN]
     }
     return null
   }

@@ -23,6 +23,10 @@ export interface IAuthLoginResponse {
   error: string | undefined
 }
 
+export interface IAuthLogoutResponse {
+  error: string | undefined
+}
+
 export interface JWTToken {
   sub: string
   name: string

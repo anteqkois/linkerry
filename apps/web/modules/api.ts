@@ -1,4 +1,10 @@
-import { IAuthLoginInput, IAuthLoginResponse, IAuthSignUpInput, IAuthSignUpResponse } from '@market-connector/types'
+import {
+  IAuthLoginInput,
+  IAuthLoginResponse,
+  IAuthLogoutResponse,
+  IAuthSignUpInput,
+  IAuthSignUpResponse,
+} from '@market-connector/types'
 import { apiClient } from '../libs/api-client'
 
 export class AuthApi {
@@ -14,6 +20,13 @@ export class AuthApi {
     return apiClient.post<IAuthSignUpResponse>(
       '/auth/signup',
       input,
+      // fingerprint: await fingerprint,
+    )
+  }
+
+  static async logout() {
+    return apiClient.post<IAuthLogoutResponse>(
+      '/auth/logout',
       // fingerprint: await fingerprint,
     )
   }

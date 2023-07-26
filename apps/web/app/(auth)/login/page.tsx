@@ -2,7 +2,7 @@ import { Icons, buttonVariants } from "@market-connector/ui-components"
 import { cn } from "@market-connector/ui-components/lib/utils"
 import { Metadata } from "next"
 import Link from "next/link"
-import { LoginForm } from "./login-form"
+import { LoginForm } from "./LoginForm"
 
 export const metadata: Metadata = {
   title: "Login",

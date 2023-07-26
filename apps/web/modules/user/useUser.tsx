@@ -1,17 +1,19 @@
 'use client'
 import {
-  Cookies,
   AuthStatus,
+  Cookies,
   IAuthLoginInput,
   IAuthLoginResponse,
+  IAuthLogoutResponse,
   IAuthSignUpInput,
   IAuthSignUpResponse,
   IUser,
 } from '@market-connector/types'
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react'
-import { AuthApi } from '../api'
-import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext } from 'react'
 import { useCookie } from '../../hooks/useCookie'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { AuthApi } from '../api'
+import { useRouter } from 'next/navigation'
 
 type ReturnType = {
   authStatus: AuthStatus
@@ -20,6 +22,7 @@ type ReturnType = {
   setUser: Dispatch<SetStateAction<IUser>>
   signUp: (data: IAuthSignUpInput) => Promise<IAuthSignUpResponse>
   login: (data: IAuthLoginInput) => Promise<IAuthLoginResponse>
+  logout: () => Promise<IAuthLogoutResponse>
 }
 
 const Context = createContext<ReturnType>({} as ReturnType)
@@ -27,6 +30,7 @@ const Context = createContext<ReturnType>({} as ReturnType)
 export function UserProvider({ children }: PropsWithChildren) {
   const [authStatus, setAuthStatus] = useCookie<AuthStatus>(Cookies.AUTH_STATUS, AuthStatus.LOADING)
   const [user, setUser] = useLocalStorage('user-data', {} as IUser)
+  const { push } = useRouter()
 
   const signUp = useCallback(async (data: IAuthSignUpInput) => {
     const response = await AuthApi.signUp(data)
@@ -47,6 +51,17 @@ export function UserProvider({ children }: PropsWithChildren) {
     return response.data
   }, [])
 
+  const logout = useCallback(async () => {
+    const response = await AuthApi.logout()
+
+    setUser({} as IUser)
+    setAuthStatus(AuthStatus.UNAUTHENTICATED)
+    // if(response.data.error) // TODO handle error
+    push('/')
+
+    return response.data
+  }, [])
+
   return (
     <Context.Provider
       value={{
@@ -56,6 +71,7 @@ export function UserProvider({ children }: PropsWithChildren) {
         setUser,
         signUp,
         login,
+        logout,
       }}
     >
       {children}
