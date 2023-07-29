@@ -1,6 +1,6 @@
 export enum Language {
-  "en" = "English",
-  "pl" = "Polish",
+  'en' = 'English',
+  'pl' = 'Polish',
 }
 
 // export enum ILanguage {

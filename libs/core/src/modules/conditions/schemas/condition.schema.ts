@@ -1,65 +1,57 @@
-import { ConditionOperatorType, ConditionTypeType, ICondition } from '@market-connector/types';
-import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import { User } from '../../users';
+import {
+  ConditionOperatorType,
+  ConditionTypeType,
+  ICondition,
+} from '@market-connector/types'
+import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import mongoose from 'mongoose'
 
-export type ConditionDocument = mongoose.HydratedDocument<Condition>;
+export type ConditionDocument = mongoose.HydratedDocument<Condition>
 
-@Schema({ timestamps: true,})
-export class Condition  implements ICondition {
-  _id: string;
+@Schema({ timestamps: true, discriminatorKey: 'kind' })
+export class Condition implements ICondition {
+  _id: string
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
-  user: User;
+  user: string
 
   @Prop({ required: true, type: String })
-  name: string;
+  name: string
 
   @Prop({ required: true, type: String, enum: ConditionTypeType })
-  type: ConditionTypeType;
+  type: ConditionTypeType
 
-  @Prop({ required: true, type: Number, })
-  requiredValue: number;
+  @Prop({ required: true, type: Number })
+  requiredValue: number
 
   @Prop({ required: true, type: String, enum: ConditionOperatorType })
-  operator: ConditionOperatorType;
+  operator: ConditionOperatorType
 
   @Prop({ required: true, type: Boolean, default: false })
-  active: boolean;
+  active: boolean
 
-  // Howe long event from this condition should be valid
   @Prop({ required: false, type: Number, default: 86400 }) // 1 day in seconds
-  eventValidityUnix: number;
-
-  @Prop({ required: false, type: String })
-  symbol?: string
+  eventValidityUnix: number
 
   @Prop({ required: true, type: Boolean, default: false })
   testMode: boolean
 
-  // TODO fields for future usage
-  // @Prop({ required: false, type: Number})
-  // expiredAtUnix: number
+  @Prop({ required: true, type: Boolean, default: false })
+  isMarketProvider: boolean
 
-  // @Prop({ required: false, type: Boolean})
-  // required: boolean
+  @Prop({ required: true, type: Number, default: 0 })
+  triggeredTimes: number
 }
 
-export const ConditionSchema = SchemaFactory.createForClass(Condition);
-ConditionSchema.index({ userId: 1, name: 1 }, { unique: true, });
+export const ConditionSchema = SchemaFactory.createForClass(Condition)
+ConditionSchema.index({ user: 1, name: 1 }, { unique: true })
 
 export const conditionModelFactory: AsyncModelFactory = {
   name: Condition.name,
   imports: [],
   useFactory: () => {
-    const schema = ConditionSchema;
-    return schema;
+    const schema = ConditionSchema
+    return schema
   },
   inject: [],
-  // imports: [EmitterModule],
-  // useFactory: (emitter: EmitterService) => {
-  //   const schema = CategorySchema;
-  //   return schema;
-  // },
-  // inject: [EmitterService],
-};
+}

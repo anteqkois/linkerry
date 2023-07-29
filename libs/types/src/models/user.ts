@@ -24,6 +24,7 @@ export interface IUser{
   affiliationPercent: number;
   consents: Record<string, boolean>;
   settings: any;
-  referrer?: IUser;
+  referrer?: string;
+  // referrer?: IUser;
   // remember_token
 }

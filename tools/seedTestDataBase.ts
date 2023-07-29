@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { database } from './database'
-import { alwaysExistingAlert, alwaysExistingUser } from './models.mock'
+import { alwaysExistingConditionAlert, alwaysExistingUser } from './models.mock'
 
-const collectionToDelete = ['users', 'alerts']
+const collectionToDelete = ['users', 'conditions']
 
 export const seedDatabase = async () => {
   const db = await database
@@ -27,12 +27,11 @@ export const seedDatabase = async () => {
   });
   await user.save();
 
-  const Alert = db.model('ALERT', new mongoose.Schema({}, { strict: false, _id: false }));
-  const alert = new Alert({
-    ...alwaysExistingAlert,
-    _id: new mongoose.Types.ObjectId(alwaysExistingAlert._id),
-    userId: new mongoose.Types.ObjectId(alwaysExistingAlert.userId),
-    conditionId: new mongoose.Types.ObjectId(alwaysExistingAlert.conditionId)
+  const Condition = db.model('CONDITION', new mongoose.Schema({}, { strict: false, _id: false }));
+  const condition = new Condition({
+    ...alwaysExistingConditionAlert,
+    _id: new mongoose.Types.ObjectId(alwaysExistingConditionAlert._id),
+    user: new mongoose.Types.ObjectId(alwaysExistingConditionAlert.user),
   });
 
   await new Promise(r => setTimeout(r, 2000))

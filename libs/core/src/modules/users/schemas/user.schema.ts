@@ -58,7 +58,8 @@ export class User implements IUser {
   settings: any;
 
   @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
-  referrer: IUser;
+  // referrer: IUser;
+  referrer: string;
 
   // remember_token             String?   @db.VarChar(100)
   // subscription_expired_at    DateTime? @db.Date

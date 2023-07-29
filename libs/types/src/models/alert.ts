@@ -1,39 +1,17 @@
-import { ICondition } from './condition'
-import { IUser } from './user'
-
-export enum AlertProvidersType {
+export enum AlertProviderType {
   TRADING_VIEW = 'tradingView',
+  UNKNOWN = 'unknown',
 }
 
-export interface IAlertInput {
-  name: string
-  alertProvider: AlertProvidersType
-  active: boolean
-  alertValidityUnix: number
-  symbol?: string
-  testMode: boolean
+interface IBaseAlert {
+  handlerUrl: string
 }
 
-export interface IAlertResponse {
-  alert: IAlert
-  condition: ICondition
+export interface IAlertTradingView extends IBaseAlert {
+  provider: AlertProviderType.TRADING_VIEW
+  messagePattern: string
 }
 
-export interface IAlert {
-  _id: string
-  kind: string
-  user: IUser
-  condition: ICondition
-  name: string
-  active: boolean
-  alertValidityUnix: number
-  alertProvider: AlertProvidersType
-  testMode: boolean
-  alertHandlerUrl: string
-}
-
-export interface IAlertTradingView extends IAlert {
-  alertProvider: AlertProvidersType.TRADING_VIEW
-  symbol?: string
-  messagePattern?: string
+export interface IAlertUnknown extends IBaseAlert {
+  provider: AlertProviderType.UNKNOWN
 }

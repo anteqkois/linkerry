@@ -1,6 +1,6 @@
-import { IBaseEvent } from "./events"
-import { IndicatorType } from "./indicator"
-import { IUser } from "./user"
+import { AlertProviderType, IAlertTradingView, IAlertUnknown } from './alert'
+import { IBaseEvent } from './event'
+import { IUser } from './user'
 
 export enum ConditionTypeType {
   ALERT = 'alert',
@@ -25,38 +25,67 @@ export enum ConditionOperatorType {
   MOVING_DOWN_PERCENT = 'MovingDownPercent',
 }
 
-export interface IConditionInput {
-  type: ConditionTypeType
-  symbol?: string
-  value: string
-  operator: ConditionOperatorType
-  triggered: boolean
-  triggeredTimes: number
-  indicator?: IndicatorType
-  testMode: boolean
-}
-
-export interface IConditionResponse {
-  user: any
-  status: string
-}
-
-export interface IConditionEvent  extends IBaseEvent {
+export interface IConditionEvent extends IBaseEvent {
   data: {
     type: ConditionTypeType
     value: string
   }
 }
 
-export interface ICondition{
-  _id: string;
-  user: IUser;
-  name: string;
-  type: ConditionTypeType;
-  requiredValue: number;
-  operator: ConditionOperatorType;
-  active: boolean;
-  eventValidityUnix: number;
-  symbol?: string
+export interface IConditionIndicator extends ICondition {
+  type: ConditionTypeType.INDICATOR
+  indicator: {}
+}
+
+export interface IConditionAlert extends ICondition {
+  type: ConditionTypeType.ALERT
+  alert: IAlertTradingView | IAlertUnknown
+}
+
+// Stay with convenction I... :/
+export interface ICondition {
+  _id: string
+  type: ConditionTypeType
+  user: string
+  name: string
+  requiredValue: number
+  operator: ConditionOperatorType
+  triggeredTimes: number
+  active: boolean
+  eventValidityUnix: number
   testMode: boolean
+  isMarketProvider: boolean
+  // Alert Condition fields
+  alert?: IAlertTradingView | IAlertUnknown
+  // Indicator Condition fields
+  indicator?: any
+}
+
+export interface IConditionPopulated extends Omit<ICondition, 'user'> {
+  user: IUser
+}
+
+// # # # # #    API    # # # # #
+
+export interface IConditionInput {
+  name: string
+  type: ConditionTypeType
+  requiredValue: number
+  operator: ConditionOperatorType
+  eventValidityUnix: number
+  testMode: boolean
+  isMarketProvider: boolean
+  active: boolean
+  // readonly required: boolean;                 // for future usecase
+}
+
+export interface IConditionAlertInput extends IConditionInput {
+  type: ConditionTypeType.ALERT
+  alert: {
+    provider: AlertProviderType
+  }
+}
+
+export interface IConditionResponse {
+  condition: ICondition
 }

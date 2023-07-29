@@ -1,5 +1,9 @@
-// import { Alert, AlertProvidersType } from "@market-connector/core"
-import mongoose, { ObjectId } from "mongoose"
+import {
+  AlertProviderType,
+  ConditionOperatorType,
+  ConditionTypeType,
+  IConditionAlert,
+} from '../libs/types/src'
 
 export const testAuthUser = {
   consents: {
@@ -25,17 +29,21 @@ export const alwaysExistingUser = {
   encryptedPassword: '$2b$10$2SpfVPkBcknXuHPe1GbqMO1KPrmya6DCQ1prYAr3.lEfp2CfVF6Oa',
 }
 
-// export const alwaysExistingAlert: Omit<Alert, 'userId' | 'conditionId'> & { userId: string, conditionId: string } = {
-export const alwaysExistingAlert = {
+export const alwaysExistingConditionAlert: IConditionAlert = {
   _id: '111111111111111111111111',
   active: true,
-  alertHandlerUrl: `${ process.env.ALERT_HANDLER_URL }/trading-view/111111111111111111111111`,
-  name: 'Alwyas existing Alert',
-  userId: '000000000000000000000000',
-  conditionId: '000000000000000000000000',
-  alertValidityUnix: 389721,
-  alertProvider: 'tradingView',
-  ticker: 'BTC',
+  name: 'Alwyas existing Condition',
+  user: '000000000000000000000000',
   testMode: true,
-  messagePattern: "{\"alertId\": \"64b7ebc1f2e2233fc9d5540e\", \"ticker\": \"{{ticker}}\", \"close\": \"{{close}}\"}"
+  eventValidityUnix: 490382,
+  isMarketProvider: false,
+  operator: ConditionOperatorType.CROSSING,
+  requiredValue: 1,
+  triggeredTimes: 0,
+  type: ConditionTypeType.ALERT,
+  alert: {
+    handlerUrl: `${process.env.ALERT_HANDLER_URL}/trading-view/111111111111111111111111`,
+    messagePattern: '{"conditionId": "64b7ebc1f2e2233fc9d5540e", "ticker": "{{ticker}}", "close": "{{close}}"}',
+    provider: AlertProviderType.TRADING_VIEW,
+  },
 }
