@@ -1,25 +1,19 @@
-import {
-  ConditionOperatorType,
-  ConditionTypeType,
-  ICondition,
-} from '@market-connector/types'
+import { ConditionOperatorType, ConditionTypeType, ICondition } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
 export type ConditionDocument = mongoose.HydratedDocument<Condition>
 
-@Schema({ timestamps: true, discriminatorKey: 'kind' })
+@Schema({ timestamps: true, discriminatorKey: 'type' })
 export class Condition implements ICondition {
   _id: string
+  type: ConditionTypeType
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
   user: string
 
   @Prop({ required: true, type: String })
   name: string
-
-  @Prop({ required: true, type: String, enum: ConditionTypeType })
-  type: ConditionTypeType
 
   @Prop({ required: true, type: Number })
   requiredValue: number

@@ -2,9 +2,9 @@ import { AlertProviderType, ConditionOperatorType, ConditionTypeType, ICondition
 import { Logger, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { CreateConditionAlertDto } from '../dto/create-condition.dto'
+import {  CreateAlertDto } from '../dto/create-condition.dto'
 import { AlertProviderGateway, ConditionTypeGateway } from '../gateways'
-import { ConditionAlert } from './alerts.schema'
+import { Alert } from './alerts.schema'
 import { TradingViewGateway } from './trading-view/trading-view.gateway'
 
 export class AlertGateway implements ConditionTypeGateway {
@@ -17,12 +17,12 @@ export class AlertGateway implements ConditionTypeGateway {
 
   constructor(
     private readonly tradingViewGateway: TradingViewGateway,
-    @InjectModel(ConditionAlert.name) private readonly conditionAlertModel: Model<ConditionAlert>,
+    @InjectModel(Alert.name) private readonly conditionAlertModel: Model<Alert>,
   ) {
     this.registerAlertProvidertGateway(AlertProviderType.TRADING_VIEW, tradingViewGateway)
   }
 
-  async createCondition(dto: CreateConditionAlertDto, userId: string): Promise<ICondition> {
+  async createCondition(dto: CreateAlertDto, userId: string): Promise<ICondition> {
     const condition = await this.conditionAlertModel.create({
       user: userId,
       name: dto.name,

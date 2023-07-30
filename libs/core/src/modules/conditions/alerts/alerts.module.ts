@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Condition, ConditionSchema } from '../schemas/condition.schema'
 import { AlertGateway } from './alerts.gateway'
-import { ConditionAlert, ConditionAlertSchema } from './alerts.schema'
+import { Alert, AlertSchema } from './alerts.schema'
 import { TradingViewGateway } from './trading-view/trading-view.gateway'
 
 const CONDITIONS_MODELS = [
@@ -17,10 +17,10 @@ const CONDITIONS_MODELS = [
     },
     discriminators: [
       {
-        name: ConditionAlert.name,
-        schema: ConditionAlertSchema,
+        name: Alert.name,
+        schema: AlertSchema,
         useFactory: () => {
-          const schema = ConditionAlertSchema
+          const schema = AlertSchema
           schema.plugin(require('mongoose-unique-validator'), {
             message: 'Error, expected {PATH} to be unique. Received {VALUE}',
           })

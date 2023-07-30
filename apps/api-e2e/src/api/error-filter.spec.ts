@@ -1,10 +1,10 @@
+import { CustomHttpExceptionResponse, IAlertInput } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'
-import { CustomHttpExceptionResponse, IConditionAlertInput } from '@market-connector/types'
 
 describe('ERROR FILTER', () => {
   it('Preperly create error schema for missing data', async () => {
-    const input: Partial<IConditionAlertInput> = {
+    const input: Partial<IAlertInput> = {
       testMode: true,
       // name: 'test alert 2',
       active: true,

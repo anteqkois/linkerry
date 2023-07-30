@@ -1,3 +1,5 @@
+import { ConditionTypeType, ICondition } from "./condition"
+
 export enum AlertProviderType {
   TRADING_VIEW = 'tradingView',
   UNKNOWN = 'unknown',
@@ -14,4 +16,9 @@ export interface IAlertTradingView extends IBaseAlert {
 
 export interface IAlertUnknown extends IBaseAlert {
   provider: AlertProviderType.UNKNOWN
+}
+
+export interface IAlert extends ICondition {
+  type: ConditionTypeType.ALERT
+  alert: IAlertTradingView | IAlertUnknown
 }

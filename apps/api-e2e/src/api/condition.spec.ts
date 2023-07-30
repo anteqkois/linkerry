@@ -1,10 +1,10 @@
+import { AlertProviderType, ConditionOperatorType, ConditionTypeType, IAlertInput, IConditionResponse } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'
-import { AlertProviderType, ConditionOperatorType, ConditionTypeType, CustomHttpExceptionResponse, IConditionAlertInput, IConditionResponse } from '@market-connector/types'
 
 describe('POST /api/conditions', () => {
   it('only authenticated users can create conditions', async () => {
-    const input: Partial<IConditionAlertInput> = {
+    const input: Partial<IAlertInput> = {
       testMode: true,
       // name: 'test alert 2',
       active: true,
@@ -17,7 +17,7 @@ describe('POST /api/conditions', () => {
 
   it('can create condition - alert - Trading View', async () => {
     await login()
-    const input: IConditionAlertInput = {
+    const input: IAlertInput = {
       active: true,
       name: 'Test 1',
       eventValidityUnix: 389721,
@@ -51,7 +51,7 @@ describe('POST /api/conditions', () => {
   })
 
   it('can\'t use existing condition name', async () => {
-    const input: IConditionAlertInput = {
+    const input: IAlertInput = {
       active: true,
       name: 'Test 1',
       eventValidityUnix: 389721,
@@ -70,7 +70,7 @@ describe('POST /api/conditions', () => {
   })
 
   it('can\'t create alert with missing data', async () => {
-    const input: Partial<IConditionAlertInput> = {
+    const input: Partial<IAlertInput> = {
       testMode: true,
       // name: 'test alert 2',
       active: true,

@@ -4,8 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { KafkaModule } from '../../lib/kafka';
 import { EventsService } from '../events/events.service';
 import { AlertGateway } from './alerts/alerts.gateway';
-import { ConditionAlert, ConditionAlertSchema } from './alerts/alerts.schema';
 import { AlertModule } from './alerts/alerts.module';
+import { Alert, AlertSchema } from './alerts/alerts.schema';
 import { ConditionsController } from './conditions.controller';
 import { ConditionsService } from './conditions.service';
 import { Condition, ConditionSchema } from './schemas/condition.schema';
@@ -20,10 +20,10 @@ const CONDITIONS_MODELS = [
     },
     discriminators: [
       {
-        name: ConditionAlert.name,
-        schema: ConditionAlertSchema,
+        name: Alert.name,
+        schema: AlertSchema,
         useFactory: () => {
-          const schema = ConditionAlertSchema;
+          const schema = AlertSchema;
           schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
           return schema;
         },

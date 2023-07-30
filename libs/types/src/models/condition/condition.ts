@@ -1,10 +1,9 @@
-import { AlertProviderType, IAlertTradingView, IAlertUnknown } from './alert'
-import { IBaseEvent } from './event'
-import { IUser } from './user'
+import { IUser } from '../user'
+import { IAlertTradingView, IAlertUnknown } from './alert'
 
 export enum ConditionTypeType {
-  ALERT = 'alert',
-  INDICATOR = 'indicator',
+  ALERT = 'Alert',
+  INDICATOR = 'Indicator',
 }
 
 // It's important in condition, not Event
@@ -23,23 +22,6 @@ export enum ConditionOperatorType {
   MOVING_DOWN = 'movingDown',
   MOVING_UP_PERCENT = 'MovingUpPercent', // % => 10%
   MOVING_DOWN_PERCENT = 'MovingDownPercent',
-}
-
-export interface IConditionEvent extends IBaseEvent {
-  data: {
-    type: ConditionTypeType
-    value: string
-  }
-}
-
-export interface IConditionIndicator extends ICondition {
-  type: ConditionTypeType.INDICATOR
-  indicator: {}
-}
-
-export interface IConditionAlert extends ICondition {
-  type: ConditionTypeType.ALERT
-  alert: IAlertTradingView | IAlertUnknown
 }
 
 // Stay with convenction I... :/
@@ -63,29 +45,4 @@ export interface ICondition {
 
 export interface IConditionPopulated extends Omit<ICondition, 'user'> {
   user: IUser
-}
-
-// # # # # #    API    # # # # #
-
-export interface IConditionInput {
-  name: string
-  type: ConditionTypeType
-  requiredValue: number
-  operator: ConditionOperatorType
-  eventValidityUnix: number
-  testMode: boolean
-  isMarketProvider: boolean
-  active: boolean
-  // readonly required: boolean;                 // for future usecase
-}
-
-export interface IConditionAlertInput extends IConditionInput {
-  type: ConditionTypeType.ALERT
-  alert: {
-    provider: AlertProviderType
-  }
-}
-
-export interface IConditionResponse {
-  condition: ICondition
 }

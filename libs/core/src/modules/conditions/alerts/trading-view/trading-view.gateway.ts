@@ -1,7 +1,7 @@
 import { AlertProviderType } from '@market-connector/types'
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { CreateAlertDto } from '../../dto/create-condition.dto'
+import { ConditionAlertDto } from '../../dto/create-condition.dto'
 import { AlertProviderGateway } from '../../gateways'
 
 @Injectable()
@@ -17,7 +17,7 @@ export class TradingViewGateway implements AlertProviderGateway {
     return `{"conditionId": "${conditionId}", "ticker": "{{ticker}}", "close": "{{close}}"}`
   }
 
-  createAlert(dto: CreateAlertDto & { conditionId: string }) {
+  createAlert(dto: ConditionAlertDto & { conditionId: string }) {
     if (!dto.conditionId) throw new UnprocessableEntityException(`Missing condition Id: ${dto.conditionId}`)
     const message = this.messagePattern({ conditionId: dto.conditionId })
 

@@ -2,7 +2,7 @@ import {
   AlertProviderType,
   ConditionOperatorType,
   ConditionTypeType,
-  IConditionAlert,
+  IAlert,
 } from '../libs/types/src'
 
 export const testAuthUser = {
@@ -29,7 +29,7 @@ export const alwaysExistingUser = {
   encryptedPassword: '$2b$10$2SpfVPkBcknXuHPe1GbqMO1KPrmya6DCQ1prYAr3.lEfp2CfVF6Oa',
 }
 
-export const alwaysExistingConditionAlert: IConditionAlert = {
+export const alwaysExistingConditionAlert: IAlert = {
   _id: '111111111111111111111111',
   active: true,
   name: 'Alwyas existing Condition',
