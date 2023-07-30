@@ -4,8 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { KafkaModule } from '../../lib/kafka';
 import { EventsService } from '../events/events.service';
 import { AlertGateway } from './alerts/alerts.gateway';
-import { AlertModule } from './alerts/alerts.module';
 import { Alert, AlertSchema } from './alerts/alerts.schema';
+import { TradingViewGateway } from './alerts/trading-view/trading-view.gateway';
 import { ConditionsController } from './conditions.controller';
 import { ConditionsService } from './conditions.service';
 import { Condition, ConditionSchema } from './schemas/condition.schema';
@@ -35,7 +35,6 @@ const CONDITIONS_MODELS = [
 
 @Module({
   imports: [
-    AlertModule,
     MongooseModule.forFeatureAsync([...CONDITIONS_MODELS]),
     KafkaModule.registerAsync({
       inject: [ConfigService],
@@ -47,6 +46,6 @@ const CONDITIONS_MODELS = [
     }),
   ],
   controllers: [ConditionsController],
-  providers: [ConditionsService, EventsService, AlertGateway]
+  providers: [ConditionsService, EventsService, AlertGateway, AlertGateway, TradingViewGateway],
 })
 export class ConditionsModule {}

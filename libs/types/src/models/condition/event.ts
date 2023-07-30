@@ -1,9 +1,16 @@
-import { IBaseEvent } from "../event"
-import { ConditionTypeType } from "./condition"
+import { EventObjectType, IBaseEvent } from '../event'
 
-export interface IConditionEvent extends IBaseEvent {
+export interface IEventCondition extends IBaseEvent {
   data: {
-    type: ConditionTypeType
-    value: string
+    id: string
+    object: EventObjectType.CONDITION
+    value: number
   }
+  // type: EventTypeType.CONDITION_TRIGGERED
+}
+
+export interface IAlertTradingViewTriggerInput {
+  conditionId: string
+  ticker: string
+  close: string
 }

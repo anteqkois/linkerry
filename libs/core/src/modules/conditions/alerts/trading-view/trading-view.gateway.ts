@@ -1,17 +1,19 @@
-import { AlertProviderType } from '@market-connector/types'
-import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
+import {
+  AlertProviderType,
+  EventObjectType,
+  EventTypeType,
+  IEventCondition
+} from '@market-connector/types'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { EventsService } from '../../../events/events.service'
 import { ConditionAlertDto } from '../../dto/create-condition.dto'
 import { AlertProviderGateway } from '../../gateways'
+import { TriggerAlertTradingViewDto } from './dto/trigger-trading-view.dto'
 
 @Injectable()
 export class TradingViewGateway implements AlertProviderGateway {
-  private readonly logger = new Logger(TradingViewGateway.name)
-
-  constructor(
-    private readonly configService: ConfigService, // @InjectModel(AlertTradinView.name) private readonly alertModel: Model<AlertTradinViewDocument>, // private readonly eventsService: EventsService,
-  ) // @Inject(TOKENS.CONDITION) private readonly clientKafka: ClientKafka,
-  {}
+  constructor(private readonly configService: ConfigService, private readonly eventsService: EventsService) {}
 
   messagePattern({ conditionId }: { conditionId: string }) {
     return `{"conditionId": "${conditionId}", "ticker": "{{ticker}}", "close": "{{close}}"}`
@@ -26,17 +28,18 @@ export class TradingViewGateway implements AlertProviderGateway {
     return { provider: AlertProviderType.TRADING_VIEW, messagePattern: message, handlerUrl: alertHandlerUrl }
   }
 
-  // conditionTriggeredEventEmiter(dto: ProcessAlertTradinViewDto) {
-  conditionTriggeredEventEmiter(dto: any) {
-    // const event: IConditionEvent = {
-    //   event_id: this.eventsService.generateEventId(),
-    //   object: EventObjectType.CONDITION,
-    //   data: {
-    //     type: ConditionTypeType.ALERT,
-    //     value: '1',
-    //   },
-    // }
-    // this.clientKafka.emit(TOPIC.CONDITION_TRIGGERED, JSON.stringify(event))
-    // this.logger.verbose('New event created')
+  conditionTriggeredEventFactory(dto: TriggerAlertTradingViewDto) {
+    const event: IEventCondition = {
+      id: this.eventsService.generateEventId(),
+      createdUnix: new Date().getTime(),
+      data: {
+        id: dto.conditionId,
+        object: EventObjectType.CONDITION,
+        value: 1,
+      },
+      type: EventTypeType.CONDITION_TRIGGERED,
+    }
+
+    return event
   }
 }

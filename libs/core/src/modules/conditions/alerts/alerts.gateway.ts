@@ -1,8 +1,10 @@
 import { AlertProviderType, ConditionOperatorType, ConditionTypeType, ICondition } from '@market-connector/types'
-import { Logger, UnprocessableEntityException } from '@nestjs/common'
+import { Inject, Logger, UnprocessableEntityException } from '@nestjs/common'
+import { ClientKafka } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import {  CreateAlertDto } from '../dto/create-condition.dto'
+import { FilterQuery, Model, UpdateQuery } from 'mongoose'
+import { EVENT_TOKENS, EVENT_TOPIC } from '../../events'
+import { CreateAlertDto } from '../dto/create-condition.dto'
 import { AlertProviderGateway, ConditionTypeGateway } from '../gateways'
 import { Alert } from './alerts.schema'
 import { TradingViewGateway } from './trading-view/trading-view.gateway'
@@ -18,6 +20,7 @@ export class AlertGateway implements ConditionTypeGateway {
   constructor(
     private readonly tradingViewGateway: TradingViewGateway,
     @InjectModel(Alert.name) private readonly conditionAlertModel: Model<Alert>,
+    @Inject(EVENT_TOKENS.CONDITION) private readonly clientKafka: ClientKafka,
   ) {
     this.registerAlertProvidertGateway(AlertProviderType.TRADING_VIEW, tradingViewGateway)
   }
@@ -52,5 +55,18 @@ export class AlertGateway implements ConditionTypeGateway {
     await condition.save()
 
     return condition
+  }
+
+  async conditionTriggeredEmiter(dto: any, provider: AlertProviderType) {
+    const event = this.alertProviderGateways[provider].conditionTriggeredEventFactory(dto)
+
+    this.clientKafka.emit(EVENT_TOPIC.CONDITION_TRIGGERED, JSON.stringify(event))
+
+    await this.conditionAlertModel.findOneAndUpdate({ _id: event.data.id }, { $inc: { triggeredTimes: 1 } })
+    this.logger.verbose(`Event emited: ${event.id}`)
+  }
+
+  async updateCondition(filter: FilterQuery<Alert>, data: UpdateQuery<Alert>['$set']): Promise<ICondition | null> {
+    return await this.conditionAlertModel.findOneAndUpdate({ _id: filter._id }, data)
   }
 }

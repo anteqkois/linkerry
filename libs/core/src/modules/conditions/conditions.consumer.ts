@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ConditionEvent } from './events/condition.event';
+import { EventConditionDto } from './events/condition.event.dto';
 
 
 @Injectable()
 export class ConditionsConsumer {
-  processTriggered(conditionEvent: ConditionEvent) {
+  processTriggered(conditionEvent: EventConditionDto) {
 
   }
 }

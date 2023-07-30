@@ -1,7 +1,9 @@
-export const TOPIC = {
-  CONDITION_TRIGGERED: 'condition.triggered'
+import { EventTypeType } from "@market-connector/types";
+
+export enum EVENT_TOPIC {
+  CONDITION_TRIGGERED = EventTypeType.CONDITION_TRIGGERED,
 }
 
-export const TOKENS = {
-  CONDITION: 'CONDITION-PRODUCER'
+export enum EVENT_TOKENS {
+  CONDITION = 'CONDITION-PRODUCER',
 }
