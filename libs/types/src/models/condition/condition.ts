@@ -46,3 +46,19 @@ export interface ICondition {
 export interface IConditionPopulated extends Omit<ICondition, 'user'> {
   user: IUser
 }
+
+export interface IConditionInput {
+  name: string
+  type: ConditionTypeType
+  requiredValue: number
+  operator: ConditionOperatorType
+  eventValidityUnix: number
+  testMode: boolean
+  isMarketProvider: boolean
+  active: boolean
+  // readonly required: boolean;                 // for future usecase
+}
+
+export interface IConditionResponse {
+  condition: ICondition
+}
