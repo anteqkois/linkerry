@@ -6,6 +6,7 @@ import { CronJob } from 'cron'
 import { MarketsService } from '../../markets'
 import { CcxtProvider } from '../ccxt.provider'
 import { ExchangeGateway } from '../gateway'
+import { CronProvider } from '../../../lib/cron/cron'
 
 @Injectable()
 export class BinanceGateway implements ExchangeGateway {
@@ -17,6 +18,7 @@ export class BinanceGateway implements ExchangeGateway {
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly ccxtProvider: CcxtProvider,
     private readonly marketsService: MarketsService,
+    private readonly cronProvider: CronProvider,
   ) {
     ccxtProvider.init(this.code)
   }
@@ -38,24 +40,15 @@ export class BinanceGateway implements ExchangeGateway {
     return await this.ccxtProvider.getMarkets()
   }
 
-  // TODO separate to external module/provider
   async registerCronJobs() {
     const crontime = this.configService.get('CRON_MARKET_UPDATE')
     const CRON_JOB_NAME = `${this.code}_update_markets`
-
-    const job = new CronJob(crontime, () => {
-      this.updateMarket()
-    })
-
-    this.schedulerRegistry.addCronJob(CRON_JOB_NAME, job)
-    this.logger.log(`Add ${CRON_JOB_NAME}: ${crontime}`)
-    job.start()
+    this.cronProvider.registerCronJob(crontime, CRON_JOB_NAME, this.updateMarket.bind(this))
   }
 
   async updateMarket() {
     const markets = await this.getMarkets()
-    await this.marketsService.upsertMany(markets)
-
-    this.logger.debug(`Markets refresh: ${this.code}, ${markets.length} markets`)
+    this.marketsService.upsertMany(markets)
+    this.logger.debug(`Markets refresh: ${this.code}`)
   }
 }

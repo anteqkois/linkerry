@@ -1,11 +1,12 @@
 import { Model, MongooseBulkWriteOptions } from 'mongoose'
 import { IMarket } from '@market-connector/types'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Market } from './schemas/exchange.schema'
 
 @Injectable()
 export class MarketsService {
+  private logger = new Logger(MarketsService.name)
   constructor(@InjectModel(Market.name) private readonly marketModel: Model<Market>) {}
 
   async insertMany(data: IMarket[]) {
@@ -14,27 +15,18 @@ export class MarketsService {
 
   // async upsertMany(data: IMarket[] | Array<{ updateOne: Parameters<Model<Market>['updateOne']> }>) {
   async upsertMany(data: IMarket[]) {
-    const insertData = []
-
-    for (let i in data) {
-      console.log(data[i])
-      insertData.push({
-        updateOne: {
-          filter: { code: data[i].code, exchangeCode: data[i].exchangeCode },
-          update: data[i],
-          upsert: true,
-        },
+    this.marketModel
+      .bulkWrite(
+        data.map((market) => ({
+          updateOne: {
+            filter: { code: market.code, exchangeCode: market.exchangeCode, type: market.type },
+            update: market,
+            upsert: true,
+          },
+        })),
+      )
+      .then((result) => {
+        this.logger.log(`Upsert ${result.modifiedCount} markets`)
       })
-      // TODO improve performance
-      // data[i] = {
-      //   updateOne: {
-      //     filter: { code: data[i].code, exchangeCode: data[i].exchangeCode },
-      //     update: data[i],
-      //     upsert: true,
-      //   },
-      // }
-    }
-
-    this.marketModel.bulkWrite(insertData)
   }
 }
