@@ -4,8 +4,8 @@ import { IStrategyBuy, StrategyBuyMarketStrategyType } from './strategy-buy'
 export interface StrategyWithMarketProperty {
   market?: string // Id to market in db OR in fiture array to ids
   marketProperty?: {
-    id: IMarket['id']
-    exchangeId: IMarket['exchangeId']
+    id: IMarket['code']
+    exchangeId: IMarket['exchangeCode']
     symbol: IMarket['symbol']
   }
 }

@@ -1,5 +1,5 @@
 import { AlertProviderType, ConditionOperatorType, ConditionTypeType, ICondition } from '@market-connector/types'
-import { Inject, Logger, UnprocessableEntityException } from '@nestjs/common'
+import { Inject, Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ClientKafka } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model, UpdateQuery } from 'mongoose'
@@ -9,6 +9,7 @@ import { AlertProviderGateway, ConditionTypeGateway } from '../gateways'
 import { Alert } from './alerts.schema'
 import { TradingViewGateway } from './trading-view/trading-view.gateway'
 
+@Injectable()
 export class AlertGateway implements ConditionTypeGateway {
   private readonly logger = new Logger(AlertGateway.name)
   private alertProviderGateways: Record<string, AlertProviderGateway> = {}

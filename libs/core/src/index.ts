@@ -7,6 +7,8 @@ export * from './lib/kafka';
 export * from './lib/utils';
 export * from './modules/events';
 export * from './modules/indicators';
+export * from './modules/exchanges';
+export * from './modules/markets';
 // export * from './modules/languages';
 // export * from './modules/strategies-buy';
 // export * from './modules/strategies-sell';

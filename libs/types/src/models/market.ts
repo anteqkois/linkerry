@@ -1,6 +1,6 @@
 import { IExchange } from "./exchange"
 
-enum MarketType {
+export enum MarketType {
   spot = 'spot',
   future = 'future',
   swap = 'swap',
@@ -8,8 +8,8 @@ enum MarketType {
 }
 
 export interface IMarket {
-  id: string // string literal for referencing within an exchange
-  exchangeId: IExchange['id'],
+  code: string // string literal for referencing within an exchange
+  exchangeCode: IExchange['code'],
   symbol: string // uppercase string literal of a pair of currencies, ID IN CODEBASE 'BTC/USD'
   base: string
   quote: string // uppercase string, unified quote currency code, 3 or more letters
