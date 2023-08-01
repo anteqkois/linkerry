@@ -1,8 +1,5 @@
 export * from './utils'
 
-export * from './utils/auth'
-export * from './utils/error'
-
 export * from './models/condition'
 export * from './models/condition/alert'
 export * from './models/condition/indicator'

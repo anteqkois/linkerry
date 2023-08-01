@@ -1,10 +1,10 @@
-import { ValidationPipe } from '@market-connector/core'
-import { Logger } from '@nestjs/common'
+import fastifyCookie from '@fastify/cookie'
+import { exceptionFactoryDto } from '@market-connector/core'
+import { Logger, ValidationPipe } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 import { AppModule } from './app/app.module'
-import fastifyCookie from '@fastify/cookie'
-import { ConfigService } from '@nestjs/config'
 
 const globalPrefix = 'api'
 
@@ -28,7 +28,12 @@ async function bootstrap() {
 
   const port = process.env.PORT_API || 3001
 
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      exceptionFactory: exceptionFactoryDto,
+    }),
+  )
 
   await app.listen(port)
   Logger.log(`🚀 Api service is running on: http://localhost:${port}/${globalPrefix}`)

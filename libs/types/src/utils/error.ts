@@ -8,6 +8,7 @@ export interface CustomHttpExceptionResponse extends HttpExceptionResponse {
   method: string
   code: string
   message: string
+  field?: string
   timestamp: Date
 }
 

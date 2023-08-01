@@ -1,4 +1,5 @@
-import { IExchange } from "./exchange"
+import { IExchange } from './exchange'
+import { IPaginationQuery, IResourceResponse } from '../utils'
 
 export enum MarketType {
   spot = 'spot',
@@ -9,7 +10,7 @@ export enum MarketType {
 
 export interface IMarket {
   code: string // string literal for referencing within an exchange
-  exchangeCode: IExchange['code'],
+  exchangeCode: IExchange['code']
   symbol: string // uppercase string literal of a pair of currencies, ID IN CODEBASE 'BTC/USD'
   base: string
   quote: string // uppercase string, unified quote currency code, 3 or more letters
@@ -40,3 +41,14 @@ export interface IMarket {
   //     leverage: { ... },  // same min/max limits for the leverage of the order
   // },
 }
+
+export interface IMarketQuery extends IPaginationQuery {
+  exchangeCode?: IExchange['code']
+  symbol?: string
+  base?: string
+  quote?: string
+  active?: boolean
+  type?: MarketType
+}
+
+export interface IMarketResponse extends IResourceResponse<{ markets: IMarket[] }> {}

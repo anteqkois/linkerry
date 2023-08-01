@@ -17,12 +17,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let errorCode: string = 'UNKNOWN_ERROR'
     let errorMessage: string
     let humanMessage: string
+    let field: string | undefined
 
     if (exception instanceof DtoException) {
       status = HttpStatus.UNPROCESSABLE_ENTITY
       const errorResponse = exception.getResponse()
       errorMessage = (errorResponse as HttpExceptionResponse).error || exception.message
       humanMessage = errorMessage
+      field = exception.field
       errorCode = 'DtoException'
     } else if (exception instanceof HttpException) {
       status = exception.getStatus()
@@ -48,7 +50,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
       errorCode = 'InternalError'
     }
 
-    const errorResponse = this.getErrorResponse({ status, errorMessage, errorCode, message: humanMessage, request })
+    const errorResponse = this.getErrorResponse({
+      status,
+      errorMessage,
+      errorCode,
+      message: humanMessage,
+      request,
+      field,
+    })
     const errorLog = this.getErrorLog(errorResponse, humanMessage, request, exception)
     this.logger.error(errorLog)
     // this.writeErrorLogToFile(errorLog);
@@ -61,12 +70,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
     message,
     request,
     status,
+    field,
   }: {
     status: HttpStatus
     errorMessage: string
     errorCode: string
     message: string
     request: FastifyRequest
+    field?: string
   }): CustomHttpExceptionResponse => ({
     statusCode: status,
     code: errorCode,
@@ -75,6 +86,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     path: request.url,
     method: request.method,
     timestamp: new Date(),
+    field,
     // request_id
     // "details": {
     //   "field": "product_id",

@@ -17,7 +17,7 @@ export interface ExchangesServiceOptions {
 
 @Injectable()
 export class ExchangesService {
-  private logger = new Logger(ExchangesService.name)
+  private readonly logger = new Logger(ExchangesService.name)
   private exchangeGateways: Record<string, ExchangeGateway> = {}
   private crontimeExchangePattern: string
   private crontimeExchangeLast = 1
@@ -62,6 +62,10 @@ export class ExchangesService {
   }
 
   async findOne(filter: FilterQuery<Exchange>) {
+    return this.exchangeModel.findOne(filter)
+  }
+
+  async findMany(filter: FilterQuery<Exchange>) {
     return this.exchangeModel.find(filter)
   }
 }

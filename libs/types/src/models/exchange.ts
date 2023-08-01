@@ -152,3 +152,7 @@ export interface IExchange {
   rateLimit: number // number in milliseconds
   symbols: string[] // sorted list of string symbols (traded pairs), First support only pair to USDT, BUSD, USDC spot
 }
+
+export interface IExchangeQuery {
+
+}

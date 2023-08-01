@@ -1,5 +1,5 @@
 import { FilterQuery, Model, MongooseBulkWriteOptions } from 'mongoose'
-import { IMarket } from '@market-connector/types'
+import { IMarket, IMarketQuery } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Market } from './schemas/exchange.schema'
@@ -34,7 +34,9 @@ export class MarketsService {
     return this.marketModel.findOne(filter)
   }
 
-  async findMany(filter: FilterQuery<Market>): Promise<IMarket[] | null> {
-    return this.marketModel.find(filter)
+  async findMany(query: IMarketQuery): Promise<IMarket[]> {
+    const { limit, offset, ...filter } = query
+
+    return this.marketModel.find(filter, {}, { limit: query.limit, skip: query.offset })
   }
 }

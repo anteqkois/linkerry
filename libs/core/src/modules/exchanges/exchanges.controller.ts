@@ -1,11 +1,20 @@
-import { Controller } from '@nestjs/common'
+import { Controller, Get, Param, UseGuards } from '@nestjs/common'
 import { ExchangesService } from './exchanges.service'
-import { ExchangeCode } from '@market-connector/types'
-import { BinanceGateway } from './gateways/binance.gateway'
+import { JwtAuthGuard } from '../../lib/auth'
 
 @Controller('exchanges')
 export class ExchangesController {
-  // constructor(private readonly exchangesService: ExchangesService, private readonly binanceGateway: BinanceGateway) {
-  //   exchangesService.registerTypeGateway(ExchangeCode.binance, binanceGateway)
-  // }
+  constructor(private readonly exchangesService: ExchangesService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getExchanges() {
+    return this.exchangesService.findMany
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':code')
+  getExchange(@Param('code') code: string) {
+    return this.exchangesService.findOne({ code })
+  }
 }
