@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ExchangeGateway } from './gateway'
 import { ExchangeCode, IExchange } from '@market-connector/types'
 import { Exchange } from './schemas/exchange.schema'
-import { Model } from 'mongoose'
+import { FilterQuery, Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 
 @Injectable()
@@ -17,5 +17,9 @@ export class ExchangesService {
 
   async updateExchange(data: IExchange) {
     return this.exchangeModel.updateOne({ code: data.code }, data, { upsert: true })
+  }
+
+  async findOne(filter: FilterQuery<Exchange>) {
+    return this.exchangeModel.find(filter)
   }
 }

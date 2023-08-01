@@ -1,23 +1,26 @@
 import { ExchangeCode, IExchange, IMarket, ITimeFrame, MarketType, TimeFrameCode } from '@market-connector/types'
-import ccxt, { Dictionary, Exchange, exchanges } from 'ccxt'
+import ccxt, { Exchange, exchanges } from 'ccxt'
+import { MarketsService } from '../markets'
+import { Logger } from '@nestjs/common'
+import { ExchangesService } from './exchanges.service'
 
 // @Injectable()
 export class CcxtProvider {
   exchangeCode: keyof typeof exchanges
-  // exchangeCode: ExchangeCode
   restClient: Exchange
   // proClient:any
 
-  // public constructor(exchange: keyof typeof exchanges) {
-  //   this.name = exchange
-  //   this.restClient = new ccxt[exchange]()
-  // }
-  init(exchange: keyof typeof exchanges) {
+  public constructor(
+    exchange: keyof typeof exchanges,
+    readonly logger: Logger,
+    readonly marketsService: MarketsService,
+    readonly exchangesService: ExchangesService,
+  ) {
     this.exchangeCode = exchange
     this.restClient = new ccxt[exchange]()
   }
 
-  async getMarkets(): Promise<IMarket[]> {
+  async loadMarkets(): Promise<IMarket[]> {
     await this.restClient.loadMarkets()
     const markets = await this.restClient.fetchMarkets()
     const parsedMarets: IMarket[] = []
@@ -45,7 +48,7 @@ export class CcxtProvider {
     return parsedMarets
   }
 
-  async getExchangeInfo(): Promise<IExchange> {
+  async loadExchange(): Promise<IExchange> {
     await this.restClient.loadMarkets()
 
     const timeFrames: ITimeFrame[] = []
@@ -76,5 +79,38 @@ export class CcxtProvider {
       },
       version: this.restClient.version,
     }
+  }
+
+  async getMarkets(filter: {
+    code?: ExchangeCode
+    symbol?: string
+    base?: string
+    quote?: string
+  }): Promise<IMarket[] | []> {
+    return (await this.marketsService.findMany(filter)) ?? []
+  }
+
+  async getMarket(filter: {
+    code?: ExchangeCode
+    symbol?: string
+    base?: string
+    quote?: string
+  }): Promise<IMarket | null> {
+    return this.marketsService.findOne(filter)
+  }
+
+  getExchange() {
+    return this.exchangesService.findOne({ code: this.exchangeCode })
+  }
+
+  async updateMarket() {
+    const markets = await this.loadMarkets()
+    this.marketsService.upsertMany(markets)
+    this.logger.debug(`Markets refresh: ${this.exchangeCode}`)
+  }
+
+  async updateExchange() {
+    this.exchangesService.updateExchange(await this.loadExchange())
+    this.logger.debug(`Exchange refresh: ${this.exchangeCode}`)
   }
 }

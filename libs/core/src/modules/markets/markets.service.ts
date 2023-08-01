@@ -1,4 +1,4 @@
-import { Model, MongooseBulkWriteOptions } from 'mongoose'
+import { FilterQuery, Model, MongooseBulkWriteOptions } from 'mongoose'
 import { IMarket } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -28,5 +28,13 @@ export class MarketsService {
       .then((result) => {
         this.logger.log(`Upsert ${result.modifiedCount} markets`)
       })
+  }
+
+  async findOne(filter: FilterQuery<Market>): Promise<IMarket | null> {
+    return this.marketModel.findOne(filter)
+  }
+
+  async findMany(filter: FilterQuery<Market>): Promise<IMarket[] | null> {
+    return this.marketModel.find(filter)
   }
 }

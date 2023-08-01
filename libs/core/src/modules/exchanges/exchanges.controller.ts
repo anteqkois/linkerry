@@ -5,7 +5,7 @@ import { BinanceGateway } from './gateways/binance.gateway'
 
 @Controller('exchanges')
 export class ExchangesController {
-  constructor(private readonly exchangesService: ExchangesService, private readonly binanceGateway: BinanceGateway) {
-    exchangesService.registerTypeGateway(ExchangeCode.binance, binanceGateway)
-  }
+  // constructor(private readonly exchangesService: ExchangesService, private readonly binanceGateway: BinanceGateway) {
+  //   exchangesService.registerTypeGateway(ExchangeCode.binance, binanceGateway)
+  // }
 }
