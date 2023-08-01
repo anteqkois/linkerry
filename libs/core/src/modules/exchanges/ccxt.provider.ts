@@ -1,9 +1,10 @@
-import { ExchangeCode, IMarket, MarketType } from '@market-connector/types'
-import ccxt, { Exchange, exchanges } from 'ccxt'
+import { ExchangeCode, IExchange, IMarket, ITimeFrame, MarketType, TimeFrameCode } from '@market-connector/types'
+import ccxt, { Dictionary, Exchange, exchanges } from 'ccxt'
 
 // @Injectable()
 export class CcxtProvider {
   exchangeCode: keyof typeof exchanges
+  // exchangeCode: ExchangeCode
   restClient: Exchange
   // proClient:any
 
@@ -42,5 +43,38 @@ export class CcxtProvider {
     }
 
     return parsedMarets
+  }
+
+  async getExchangeInfo(): Promise<IExchange> {
+    await this.restClient.loadMarkets()
+
+    const timeFrames: ITimeFrame[] = []
+
+    for (const timeFrame in this.restClient.timeframes) {
+      if (Object.prototype.hasOwnProperty.call(this.restClient.timeframes, timeFrame)) {
+        const code = TimeFrameCode[timeFrame as TimeFrameCode]
+
+        if (!code) continue
+        timeFrames.push({
+          code,
+          value: this.restClient.timeframes[timeFrame],
+        })
+      }
+    }
+
+    return {
+      code: ExchangeCode[this.exchangeCode],
+      name: this.restClient.name,
+      rateLimit: this.restClient.rateLimit,
+      symbols: this.restClient.symbols,
+      timeframes: timeFrames,
+      timeout: this.restClient.timeout,
+      urls: {
+        fees: this.restClient.urls.fees,
+        logo: this.restClient.urls.logo,
+        www: this.restClient.urls.www,
+      },
+      version: this.restClient.version,
+    }
   }
 }

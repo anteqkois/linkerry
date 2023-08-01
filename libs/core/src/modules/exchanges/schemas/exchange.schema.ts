@@ -1,19 +1,30 @@
-import { ExchangeCode, IExchange, TimeFrames } from '@market-connector/types'
+import { ExchangeCode, IExchange, ITimeFrame, TimeFrameCode } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
 export type ExchangesDocument = mongoose.HydratedDocument<Exchange>
 
 class UrlsSchema {
-  @Prop({ required: true, type: String })
-  logo: string
+  @Prop({ required: false, type: String })
+  logo?: string
 
-  @Prop({ required: true, type: String })
-  www: string
+  @Prop({ required: false, type: String })
+  www?: string
 
-  @Prop({ required: true, type: String })
-  fees: string
+  @Prop({ required: false, type: String })
+  fees?: string
 }
+
+// @Schema({ timestamps: false })
+class TimeFrame {
+  @Prop({ required: true, type: String, enum: TimeFrameCode })
+  code: TimeFrameCode
+
+  @Prop({ required: true, type: mongoose.Schema.Types.Mixed })
+  value: string | number
+}
+
+const TimeFrameSchema = SchemaFactory.createForClass(TimeFrame)
 
 @Schema({ timestamps: true })
 export class Exchange implements IExchange {
@@ -31,8 +42,8 @@ export class Exchange implements IExchange {
   @Prop({ required: true, type: String })
   version: string
 
-  @Prop({ required: true, type: [{ type: String, enum: TimeFrames }] })
-  timeframes: TimeFrames[]
+  @Prop({ required: true, type: [TimeFrameSchema] })
+  timeframes: ITimeFrame[]
 
   @Prop({ required: true, type: Number })
   timeout: number
@@ -45,7 +56,6 @@ export class Exchange implements IExchange {
 }
 
 export const ExchangesSchema = SchemaFactory.createForClass(Exchange)
-
 
 export const exchangeModelFactory: AsyncModelFactory = {
   name: Exchange.name,

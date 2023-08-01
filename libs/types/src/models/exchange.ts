@@ -1,14 +1,25 @@
-export enum TimeFrames {
+import { Dictionary } from '../utils'
+
+export enum TimeFrameCode {
   '1m' = '1m',
+  '3m' = '3m',
   '5m' = '5m',
   '15m' = '15m',
   '30m' = '30m',
+  '45m' = '45m',
   '1h' = '1h',
+  '2h' = '2h',
+  '3h' = '3h',
   '4h' = '4h',
   '8h' = '8h',
   '1d' = '1d',
   '1w' = '1w',
   '1M' = '1M',
+}
+
+export interface ITimeFrame {
+  code: TimeFrameCode
+  value: string | number
 }
 
 export enum ExchangeCode {
@@ -118,25 +129,25 @@ export enum ExchangeCode {
   yobit = 'yobit',
   zaif = 'zaif',
   zonda = 'zonda',
-};
+}
 
 export interface IExchange {
-  code: ExchangeCode   // ID IN CODEBASE
+  code: ExchangeCode // ID IN CODEBASE
   name: string
   // countries: [ US, CN, EU ],   // array of ISO country codes
   urls: {
-    logo: string
+    logo?: string
     // api: {
     //   ...
     // },
-    www: string
-    fees: string
+    www?: string
+    fees?: string
   }
   version: string // string ending with digits
   // has: {
   //   ...
   // },
-  timeframes: TimeFrames[]
+  timeframes: Array<ITimeFrame>
   timeout: number // number in milliseconds
   rateLimit: number // number in milliseconds
   symbols: string[] // sorted list of string symbols (traded pairs), First support only pair to USDT, BUSD, USDC spot
