@@ -1,26 +1,21 @@
-import { IMarketResponse } from '@market-connector/types'
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Query, UseGuards, UseInterceptors } from '@nestjs/common'
 import { JwtAuthGuard } from '../../lib/auth'
+import { PaginatedResourceInterceptor } from '../../lib/utils'
 import { GetManyMarketsQueryDto } from './dto/get-many-markets.dto'
 import { MarketsService } from './markets.service'
+import { IMarketResponse } from '@market-connector/types'
 
 @Controller('markets')
 export class MarketsController {
   constructor(private readonly marketsService: MarketsService) {}
 
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(PaginatedResourceInterceptor)
   @Get()
-  async getMarkets(@Query() query: GetManyMarketsQueryDto): Promise<IMarketResponse> {
+  async getMarkets(@Query() query: GetManyMarketsQueryDto) {
     const markets = await this.marketsService.findMany(query)
-    
-    return {
-      count: markets.length,
-      data: {
-        markets,
-      },
-      hasNext: markets.length === query.limit,
-      offset: query.offset,
-    }
+
+    return { markets }
   }
 
   @UseGuards(JwtAuthGuard)

@@ -29,7 +29,6 @@ describe('POST /api/markets', () => {
       params,
     })
 
-    console.log(data)
     expect(status).toBe(200)
     expect(data.data.markets).toBeDefined()
     expect(data.data.markets.length).toEqual(params.limit)
