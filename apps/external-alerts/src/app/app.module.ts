@@ -1,4 +1,4 @@
-import { AlertsModule, AllExceptionsFilter, CoreModule, KafkaModule, TradingViewController } from '@market-connector/core';
+import { AllExceptionsFilter, CoreModule, KafkaModule } from '@market-connector/core';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -18,7 +18,6 @@ import { APP_FILTER } from '@nestjs/core';
         groupId: configService.get('KAFKA_CONDITION_GROUP_ID'),
       }),
     }),
-    AlertsModule,
   ],
   controllers: [AppController],
   providers: [

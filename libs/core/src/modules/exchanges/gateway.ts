@@ -9,7 +9,7 @@ export abstract class ExchangeGateway implements OnModuleInit {
     quote?: string
   }): Promise<IMarket[] | []>
   abstract updateMarket(): void
-  abstract registerCronJobs(): void
+  abstract onRegister(crontimeMarket: string, crontimeExchange: string): void
   abstract onModuleInit(): void
   abstract getMarket(filter: any): Promise<IMarket | null>
 }

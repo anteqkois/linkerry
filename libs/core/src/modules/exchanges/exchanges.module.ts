@@ -1,22 +1,59 @@
-import { Module, OnModuleInit } from '@nestjs/common'
+import { DynamicModule, Module, OnModuleInit } from '@nestjs/common'
 import { ScheduleModule } from '@nestjs/schedule'
 import { MongooseModule } from '@nestjs/mongoose'
-// import { CcxtProvider } from './ccxt.provider'
 import { ExchangesController } from './exchanges.controller'
-import { ExchangesService } from './exchanges.service'
+import { EXCHANGE_SERVICE_OPTIONS_TOKEN, ExchangesService, ExchangesServiceOptions } from './exchanges.service'
 import { MarketsModule } from '../markets'
 import { exchangeModelFactory } from './schemas/exchange.schema'
 import { BinanceGateway } from './gateways/binance.gateway'
 import { CronProvider } from '../../lib/cron/cron'
-import { ExchangeCode } from '@market-connector/types'
 
-@Module({
-  imports: [ScheduleModule.forRoot(), MarketsModule, MongooseModule.forFeatureAsync([exchangeModelFactory])],
-  controllers: [ExchangesController],
-  providers: [ExchangesService, CronProvider, BinanceGateway],
-})
+interface ExchangesModuleOptions extends ExchangesServiceOptions {}
+
+@Module({})
 export class ExchangesModule {
-  constructor(private readonly exchangesService: ExchangesService, private readonly binanceGateway: BinanceGateway) {
-    exchangesService.registerTypeGateway(ExchangeCode.binance, binanceGateway)
+  static register(config: ExchangesModuleOptions): DynamicModule {
+    return {
+      module: ExchangesModule,
+      imports: [ScheduleModule.forRoot(), MarketsModule, MongooseModule.forFeatureAsync([exchangeModelFactory])],
+      controllers: [ExchangesController],
+      providers: [
+        {
+          provide: EXCHANGE_SERVICE_OPTIONS_TOKEN,
+          useValue: {
+            ...config,
+          } as ExchangesServiceOptions,
+        },
+        ExchangesService,
+        CronProvider,
+        BinanceGateway,
+      ],
+    }
+  }
+
+  static registerAsync(options: {
+    inject: any[]
+    useFactory: (...args: any[]) => Promise<ExchangesModuleOptions>
+  }): DynamicModule {
+    return {
+      module: ExchangesModule,
+      imports: [ScheduleModule.forRoot(), MarketsModule, MongooseModule.forFeatureAsync([exchangeModelFactory])],
+      controllers: [ExchangesController],
+      providers: [
+        {
+          provide: EXCHANGE_SERVICE_OPTIONS_TOKEN,
+          useFactory: async (...args: any[]): Promise<ExchangesServiceOptions> => {
+            const config = await options.useFactory(...args)
+            return {
+              ...config,
+            }
+          },
+          inject: options.inject,
+        },
+        ExchangesService,
+        CronProvider,
+        BinanceGateway,
+      ],
+    }
   }
 }

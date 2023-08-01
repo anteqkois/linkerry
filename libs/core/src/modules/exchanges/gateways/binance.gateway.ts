@@ -19,18 +19,20 @@ export class BinanceGateway extends CcxtProvider implements ExchangeGateway {
   }
 
   async onModuleInit() {
-    await this.registerCronJobs()
-    this.logger.log(`Exchange initialized ${this.exchangeCode}`)
-    this.loadExchange()
+    this.logger.log(`Exchange initialized`)
+    // this.loadExchange()
+
+    // Register gateway to be avaible at rest app
+    this.exchangesService.registerTypeGateway(ExchangeCode.binance, this)
   }
 
-  async registerCronJobs() {
+  async onRegister(crontimeMarket: string, crontimeExchange: string) {
     // Refresh data
-    const crontimeMarket = this.configService.get('CRON_MARKET_UPDATE')
+    // const crontimeMarket = this.configService.get('CRON_MARKET_UPDATE')
     const CRON_JOB_NAME_MARKET = `${this.exchangeCode}_update_markets`
     this.cronProvider.registerCronJob(crontimeMarket, CRON_JOB_NAME_MARKET, this.updateMarket.bind(this))
 
-    const crontimeExchange = this.configService.get('CRON_EXCHANGE_UPDATE')
+    // const crontimeExchange = this.configService.get('CRON_EXCHANGE_UPDATE')
     const CRON_JOB_NAME_EXCHANGE = `${this.exchangeCode}_update_exchange`
     this.cronProvider.registerCronJob(crontimeExchange, CRON_JOB_NAME_EXCHANGE, this.updateExchange.bind(this))
   }

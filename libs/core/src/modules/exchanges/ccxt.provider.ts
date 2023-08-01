@@ -3,6 +3,7 @@ import ccxt, { Exchange, exchanges } from 'ccxt'
 import { MarketsService } from '../markets'
 import { Logger } from '@nestjs/common'
 import { ExchangesService } from './exchanges.service'
+import { ExchangeGateway } from './gateway'
 
 // @Injectable()
 export class CcxtProvider {
