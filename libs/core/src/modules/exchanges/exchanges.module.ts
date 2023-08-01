@@ -1,4 +1,4 @@
-import { DynamicModule, Module, OnModuleInit } from '@nestjs/common'
+import { DynamicModule, Module } from '@nestjs/common'
 import { ScheduleModule } from '@nestjs/schedule'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ExchangesController } from './exchanges.controller'
@@ -7,16 +7,19 @@ import { MarketsModule } from '../markets'
 import { exchangeModelFactory } from './schemas/exchange.schema'
 import { BinanceGateway } from './gateways/binance.gateway'
 import { CronProvider } from '../../lib/cron/cron'
+import { ByBitGateway } from './gateways/bybit.gateway'
 
 interface ExchangesModuleOptions extends ExchangesServiceOptions {}
 
-@Module({})
+@Module({
+  controllers: [ExchangesController],
+  imports: [ScheduleModule.forRoot(), MarketsModule, MongooseModule.forFeatureAsync([exchangeModelFactory])],
+  providers: [ExchangesService, CronProvider, BinanceGateway, ByBitGateway],
+})
 export class ExchangesModule {
   static register(config: ExchangesModuleOptions): DynamicModule {
     return {
       module: ExchangesModule,
-      imports: [ScheduleModule.forRoot(), MarketsModule, MongooseModule.forFeatureAsync([exchangeModelFactory])],
-      controllers: [ExchangesController],
       providers: [
         {
           provide: EXCHANGE_SERVICE_OPTIONS_TOKEN,
@@ -24,9 +27,6 @@ export class ExchangesModule {
             ...config,
           } as ExchangesServiceOptions,
         },
-        ExchangesService,
-        CronProvider,
-        BinanceGateway,
       ],
     }
   }
@@ -37,8 +37,6 @@ export class ExchangesModule {
   }): DynamicModule {
     return {
       module: ExchangesModule,
-      imports: [ScheduleModule.forRoot(), MarketsModule, MongooseModule.forFeatureAsync([exchangeModelFactory])],
-      controllers: [ExchangesController],
       providers: [
         {
           provide: EXCHANGE_SERVICE_OPTIONS_TOKEN,
@@ -50,9 +48,6 @@ export class ExchangesModule {
           },
           inject: options.inject,
         },
-        ExchangesService,
-        CronProvider,
-        BinanceGateway,
       ],
     }
   }

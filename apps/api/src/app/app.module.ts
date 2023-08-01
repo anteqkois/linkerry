@@ -14,9 +14,9 @@ import { AppService } from './app.service'
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         crontimeExchangeStart: configService.get('CRON_EXCHANGE_UPDATE'),
-        crontimeExchangeStep: 10,
+        crontimeExchangeStep: 1,
         crontimeMarketStart: configService.get('CRON_MARKET_UPDATE'),
-        crontimeMarketStep: 10,
+        crontimeMarketStep: 1,
         shouldUpdateData: true,
       }),
     }),
