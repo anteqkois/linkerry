@@ -3,7 +3,8 @@ import ccxt, { Exchange, exchanges } from 'ccxt'
 import { MarketsService } from '../markets'
 import { Logger } from '@nestjs/common'
 import { ExchangesService } from './exchanges.service'
-import { ExchangeGateway } from './gateway'
+import { ExchangeGateway, IOnRegisterInput } from './gateway'
+import { CronProvider } from '../../lib/cron/cron'
 
 // @Injectable()
 export class CcxtProvider {
@@ -16,6 +17,7 @@ export class CcxtProvider {
     readonly logger: Logger,
     readonly marketsService: MarketsService,
     readonly exchangesService: ExchangesService,
+    readonly cronProvider: CronProvider,
   ) {
     this.exchangeCode = exchange
     this.restClient = new ccxt[exchange]()
@@ -113,5 +115,17 @@ export class CcxtProvider {
   async updateExchange() {
     this.exchangesService.updateExchange(await this.loadExchange())
     this.logger.debug(`Exchange refresh: ${this.exchangeCode}`)
+  }
+
+  async onRegister(config: IOnRegisterInput) {
+    // Refresh data crons
+    if (config.cron.run) {
+      const { crontimeExchange, crontimeMarket } = config.cron
+      const CRON_JOB_NAME_MARKET = `${this.exchangeCode}_update_markets`
+      this.cronProvider.registerCronJob(crontimeMarket, CRON_JOB_NAME_MARKET, this.updateMarket.bind(this))
+
+      const CRON_JOB_NAME_EXCHANGE = `${this.exchangeCode}_update_exchange`
+      this.cronProvider.registerCronJob(crontimeExchange, CRON_JOB_NAME_EXCHANGE, this.updateExchange.bind(this))
+    }
   }
 }

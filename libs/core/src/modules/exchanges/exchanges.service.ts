@@ -28,12 +28,15 @@ export class ExchangesService {
   private shouldUpdateData: boolean
 
   registerTypeGateway(exchange: ExchangeCode, gateway: ExchangeGateway) {
-    if (this.shouldUpdateData) {
-      gateway.onRegister(
-        this.crontimeExchangePattern.replace('m', String(this.crontimeExchangeLast)),
-        this.crontimeMarketPattern.replace('m', String(this.crontimeMarketLast)),
-      )
+    gateway.onRegister({
+      cron: {
+        crontimeExchange: this.crontimeExchangePattern.replace('m', String(this.crontimeExchangeLast)),
+        crontimeMarket: this.crontimeMarketPattern.replace('m', String(this.crontimeMarketLast)),
+        run: this.shouldUpdateData,
+      },
+    })
 
+    if (this.shouldUpdateData) {
       // Increase Next Cron Jobs Time
       this.crontimeExchangeLast = this.crontimeExchangeLast + this.crontimeExchangeStep
       this.crontimeMarketLast = this.crontimeMarketLast + this.crontimeMarketStep
