@@ -1,8 +1,8 @@
-import { FilterQuery, Model, MongooseBulkWriteOptions } from 'mongoose'
 import { IMarket, IMarketQuery } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Market } from './schemas/exchange.schema'
+import { FilterQuery, Model } from 'mongoose'
+import { Market } from './schemas/market.schema'
 
 @Injectable()
 export class MarketsService {

@@ -1,11 +1,16 @@
-import { IStrategyBuy, StrategyBuyMarketStrategyType } from "./strategy-buy"
+import { ICondition } from "../condition"
+import { IStrategyBuy, StrategyBuy_TypeType } from "./strategy-buy"
 
-export interface StrategyWithDynamicMarketProperty {
+export interface IStrategyBuy_DynamicMarket_Property {
   conditionMarketProvider?: string
 }
 
-export interface IStrategyBuyDynamicMarket
-  extends Omit<IStrategyBuy, keyof StrategyWithDynamicMarketProperty>,
-    Required<StrategyWithDynamicMarketProperty> {
-  marketStrategy: StrategyBuyMarketStrategyType.DYNAMIC
+export interface IStrategyBuy_DynamicMarket
+  extends Omit<IStrategyBuy, keyof IStrategyBuy_DynamicMarket_Property>,
+    Required<IStrategyBuy_DynamicMarket_Property> {
+  type: StrategyBuy_TypeType.DYNAMIC_MARKET
+}
+
+export interface IStrategyBuy_DynamicMarket_Populated extends Omit<IStrategyBuy_DynamicMarket, 'conditionMarketProvider'> {
+  conditionMarketProvider: ICondition
 }

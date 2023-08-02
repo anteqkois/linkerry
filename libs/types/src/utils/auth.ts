@@ -27,12 +27,12 @@ export interface IAuthLogoutResponse {
   error: string | undefined
 }
 
-export interface JWTToken {
+export interface JwtToken {
   sub: string
   name: string
 }
 
-export interface JWTUser {
+export interface JwtUser {
   id: string
   name: string
 }

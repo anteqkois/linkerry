@@ -1,4 +1,4 @@
-import { AuthModule, ConditionsModule, CoreModule, ExchangesModule, UsersModule } from '@market-connector/core'
+import { AuthModule, ConditionsModule, CoreModule, ExchangesModule, StrategiesBuyModule, UsersModule } from '@market-connector/core'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AppController } from './app.controller'
@@ -10,6 +10,7 @@ import { AppService } from './app.service'
     ConditionsModule,
     UsersModule,
     AuthModule,
+    StrategiesBuyModule,
     ExchangesModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({

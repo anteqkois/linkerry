@@ -1,4 +1,4 @@
-import { Cookies, JWTToken } from '@market-connector/types'
+import { Cookies, JwtToken } from '@market-connector/types'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
@@ -22,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return null
   }
 
-  async validate(payload: JWTToken) {
+  async validate(payload: JwtToken) {
     // check for privilages using calb ? Logic to get privilages from db
     return { id: payload.sub, name: payload.name }
   }

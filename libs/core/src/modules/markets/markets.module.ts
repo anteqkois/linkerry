@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { MarketsService } from './markets.service'
-import { MarketsController } from './markets.controller'
-import { marketModelFactory } from './schemas/exchange.schema'
 import { MongooseModule } from '@nestjs/mongoose'
+import { MarketsController } from './markets.controller'
+import { MarketsService } from './markets.service'
+import { marketModelFactory } from './schemas/market.schema'
 
 @Module({
   imports: [MongooseModule.forFeatureAsync([marketModelFactory])],

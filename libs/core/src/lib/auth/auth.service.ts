@@ -1,3 +1,4 @@
+import { IUser, JwtToken, UserRoleTypes } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
@@ -6,7 +7,6 @@ import { Model } from 'mongoose'
 import { User, UserDocument, UsersService } from '../../modules/users'
 import { SignUpDto } from './dto/sign-up.dto'
 import { HashService } from './hash.service'
-import { IUser, JWTToken, UserRoleTypes } from '@market-connector/types'
 
 @Injectable()
 export class AuthService {
@@ -30,7 +30,7 @@ export class AuthService {
     return null
   }
 
-  createJWTPayload(user: Pick<UserDocument, 'name' | 'id'>): JWTToken {
+  createJWTPayload(user: Pick<UserDocument, 'name' | 'id'>): JwtToken {
     return { name: user.name, sub: user.id }
   }
 
