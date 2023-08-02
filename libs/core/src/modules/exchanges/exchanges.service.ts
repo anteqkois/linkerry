@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
 import { ExchangeGateway } from './gateway'
 import { Exchange } from './schemas/exchange.schema'
+import { GetManyExchangesQueryDto } from './dto/get-many-exchanges.dto'
 
 export const EXCHANGE_SERVICE_OPTIONS_TOKEN = 'ExchangesServiceOptionsToken'
 
@@ -65,7 +66,18 @@ export class ExchangesService {
     return this.exchangeModel.findOne(filter)
   }
 
-  async findMany(filter: FilterQuery<Exchange>) {
-    return this.exchangeModel.find(filter)
+  async findMany(query: GetManyExchangesQueryDto) {
+    const { limit, offset, ...filter } = query
+
+    return this.exchangeModel.find(
+      {
+        code: filter.code,
+        name: filter.name,
+        symbol: filter.symbol,
+        timeframes: filter.timeframes,
+      },
+      {},
+      { limit: query.limit, skip: query.offset },
+    )
   }
 }

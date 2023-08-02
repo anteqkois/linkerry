@@ -13,7 +13,6 @@ export class MarketsController {
   @Get()
   async getMarkets(@Query() query: GetManyMarketsQueryDto) {
     const markets = await this.marketsService.findMany(query)
-
     return { markets }
   }
 

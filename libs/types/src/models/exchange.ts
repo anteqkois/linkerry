@@ -1,4 +1,4 @@
-import { Dictionary } from '../utils'
+import { Dictionary, IPaginationQuery, IResourceResponse } from '../utils'
 
 export enum TimeFrameCode {
   '1m' = '1m',
@@ -153,6 +153,12 @@ export interface IExchange {
   symbols: string[] // sorted list of string symbols (traded pairs), First support only pair to USDT, BUSD, USDC spot
 }
 
-export interface IExchangeQuery {
-
+// TODO change to handle arrays
+export interface IExchangeQuery extends IPaginationQuery {
+  code?: IExchange['code']
+  name?: string
+  symbol?: string
+  timeframes: TimeFrameCode
 }
+
+export interface IExchangeResponse extends IResourceResponse<{ exchanges: IExchange[] }> {}
