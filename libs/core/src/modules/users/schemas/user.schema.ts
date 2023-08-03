@@ -1,8 +1,15 @@
-import { IUser, Language, UserRoleTypes } from '@market-connector/types';
+import { IUser, IUserMetadata, Language, UserRoleTypes } from '@market-connector/types';
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
 export type UserDocument = mongoose.HydratedDocument<IUser>;
+
+class UserMetadata implements IUserMetadata {
+  @Prop({ required: false, type: Boolean})
+  earlyAdopter?: boolean;
+}
+
+export const UserMetadataSchema = SchemaFactory.createForClass(UserMetadata);
 
 @Schema({ timestamps: true, autoIndex: true })
 export class User implements IUser {
@@ -61,10 +68,11 @@ export class User implements IUser {
   // referrer: IUser;
   referrer: string;
 
+  @Prop({required: false, type:UserMetadataSchema})
+  metadata?: UserMetadata
   // remember_token             String?   @db.VarChar(100)
   // subscription_expired_at    DateTime? @db.Date
   // current_plan_id            BigInt?   @db.UnsignedBigInt
-  // meta_data                  Json?
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

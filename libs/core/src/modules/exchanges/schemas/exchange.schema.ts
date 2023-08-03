@@ -30,10 +30,10 @@ const TimeFrameSchema = SchemaFactory.createForClass(TimeFrame)
 export class Exchange implements IExchange {
   _id: string
 
-  @Prop({ required: true, type: String, enum: ExchangeCode })
+  @Prop({ required: true, type: String, enum: ExchangeCode, unique: true })
   code: ExchangeCode
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: true, type: String, unique: true })
   name: string
 
   @Prop({ required: true, type: UrlsSchema })
@@ -56,6 +56,8 @@ export class Exchange implements IExchange {
 }
 
 export const ExchangesSchema = SchemaFactory.createForClass(Exchange)
+ExchangesSchema.index({ code: 1 }, { unique: true, sparse: true })
+ExchangesSchema.index({ name: 1 }, { unique: true, sparse: true })
 
 export const exchangeModelFactory: AsyncModelFactory = {
   name: Exchange.name,

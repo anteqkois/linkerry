@@ -52,6 +52,7 @@ export class Market implements IMarket {
 }
 
 export const MarketsSchema = SchemaFactory.createForClass(Market)
+MarketsSchema.index({ ExchangeCode: 1, code: 1 }, { unique: true, sparse: true })
 
 export const marketModelFactory: AsyncModelFactory = {
   name: Market.name,

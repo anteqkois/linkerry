@@ -10,6 +10,7 @@ export * from './modules/indicators';
 export * from './modules/exchanges';
 export * from './modules/markets';
 export * from './modules/strategies-buy';
+export * from './modules/user-keys';
 // export * from './modules/languages';
 // export * from './modules/strategies-sell';
 
