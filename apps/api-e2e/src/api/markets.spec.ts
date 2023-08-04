@@ -1,10 +1,5 @@
 import {
-  AlertProviderType,
-  ConditionOperatorType,
-  ConditionTypeType,
   ExchangeCode,
-  IAlertInput,
-  IConditionResponse,
   IMarketQuery,
   IMarketResponse,
   MarketType,

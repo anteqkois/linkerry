@@ -4,7 +4,7 @@ import { IsEnum, IsMongoId, IsNotEmpty, IsString, MaxLength, MinLength } from 'c
 export class CreateUserKeysDto implements IUserKeysInput {
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
+  @MinLength(1)
   @MaxLength(100)
   readonly name: string
 

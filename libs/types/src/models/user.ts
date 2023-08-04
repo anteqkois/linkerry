@@ -1,4 +1,4 @@
-import { Language } from "./language";
+import { Language } from './language'
 
 export enum UserRoleTypes {
   CUSTOMER = 'customer',
@@ -6,25 +6,29 @@ export enum UserRoleTypes {
   TESTER = 'tester',
 }
 
-export interface IUser{
-  _id: string;
-  name: string;
-  roles: UserRoleTypes[];
-  phone?: string;
-  telegramId?: string;
-  telegramBotConnected?: boolean;
-  email: string;
-  emailVerifiedAtDate?: Date;
-  password: string;
-  trialExpiredAtDate?: Date;
-  trialStartedAtDate?: Date;
-  deletedAtDate?: Date;
-  cryptoWallet?: string;
-  language: Language;
-  affiliationPercent: number;
-  consents: Record<string, boolean>;
-  settings: any;
-  referrer?: string;
+export interface IUser {
+  _id: string
+  name: string
+  roles: UserRoleTypes[]
+  phone?: string
+  telegramId?: string
+  telegramBotConnected?: boolean
+  email: string
+  emailVerifiedAtDate?: Date
+  password: string
+  trialExpiredAtDate?: Date
+  trialStartedAtDate?: Date
+  deletedAtDate?: Date
+  cryptoWallet?: string
+  language: Language
+  affiliationPercent: number
+  consents: Record<string, boolean>
+  settings: any
+  referrer?: string
   // referrer?: IUser;
   // remember_token
+}
+
+export interface IUserMetadata {
+  earlyAdopter?: boolean
 }

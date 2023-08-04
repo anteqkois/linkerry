@@ -25,20 +25,22 @@ export class UserKeysService {
     const aInfo = dto.aKey.slice(0, 5)
     const sInfo = dto.aKey.slice(0, 5)
 
-    const { aKey, sKey, salt, kv, ...rest } = await this.userKeysModel.create({
-      user: userId,
-      aKey: this.cryptoService.encryptKey(dto.aKey, _salt),
-      aKeyInfo: aInfo,
-      sKey: this.cryptoService.encryptKey(dto.sKey, _salt),
-      sKeyInfo: sInfo,
-      kv: _kv,
-      exchange: dto.exchange,
-      exchangeCode: dto.exchangeCode,
-      name: dto.name,
-      salt: rs,
-    })
+    const { aKey, sKey, salt, kv, ...rest } = (
+      await this.userKeysModel.create({
+        user: userId,
+        aKey: this.cryptoService.encryptKey(dto.aKey, _salt),
+        aKeyInfo: aInfo,
+        sKey: this.cryptoService.encryptKey(dto.sKey, _salt),
+        sKeyInfo: sInfo,
+        kv: _kv,
+        exchange: dto.exchange,
+        exchangeCode: dto.exchangeCode,
+        name: dto.name,
+        salt: rs,
+      })
+    ).toJSON()
 
-    return rest
+    return { userKeys: rest }
   }
 
   async getKeyPairsInfo(userId: Id): Promise<IUserKeysResponse[]> {
@@ -56,7 +58,7 @@ export class UserKeysService {
     const s = this.configService.get(`USER_KEYS_S_${_kv}`)
 
     return {
-      ...keys,
+      ...keys.toJSON(),
       aKey: this.cryptoService.decryptKey(keys.aKey, s.split(';') + keys.salt),
       sKey: this.cryptoService.decryptKey(keys.sKey, s.split(';') + keys.salt),
     }

@@ -12,4 +12,5 @@ export * from './models/strategy-buy'
 export * from './models/strategy-sell'
 export * from './models/user'
 export * from './models/user-settings'
+export * from './models/user-keys'
 

@@ -3,9 +3,9 @@ import { IMarket } from '../market'
 import { IStrategyBuy, IStrategyBuyInput, StrategyBuy_TypeType } from './strategy-buy'
 
 export interface IStrategyBuy_StaticMarket_Markets {
-  id: string // Id to market in db OR in fiture array to ids
-  // marketProperty?: { // for now, maybe it would be better to only store id of market to prevent issues with refreshing market data ?
-  //   code: IMarket['code']
+  id: Id // Id to market in db OR in fiture array to ids
+  // marketProperty?: { // for now, maybe it would be better to only store id of market to prevent issues with refreshing market data ? EDIT for now use simple populate
+  //   code: IMarket['code'] // TODO remember to refresh this data when some properties change
   //   exchangeCode: IMarket['exchangeCode']
   //   symbol: IMarket['symbol']
   // }
