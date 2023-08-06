@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
-import { ExchangesService } from './exchanges.service'
 import { JwtAuthGuard } from '../../lib/auth'
 import { PaginateResourceInterceptor } from '../../lib/utils'
 import { GetManyExchangesQueryDto } from './dto/get-many-exchanges.dto'
+import { ExchangesService } from './exchanges.service'
 
 @Controller('exchanges')
 export class ExchangesController {

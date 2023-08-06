@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 // import { useRouter } from 'next/router';
 // import { store } from '../../features/common/store';
@@ -6,17 +7,26 @@ import { redirect } from 'next/navigation'
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-const apiClient = axios.create({
+const apiServerClient = axios.create({
   withCredentials: true,
   baseURL: `${API_URL}/api`,
 })
 
-apiClient.interceptors.request.use(async (config) => {
+apiServerClient.interceptors.request.use(async (config) => {
+  // Pass client cookies on server to axios instance
+  cookies().getAll()
+  let cookieString = ''
+  cookies()
+    .getAll()
+    .forEach((cookie) => {
+      cookieString += `${cookie.name}=${cookie.value}; `
+    })
+  config.headers.Cookie = cookieString
   // config.headers.fingerprint = await fingerprint
   return config
 })
 
-apiClient.interceptors.response.use(
+apiServerClient.interceptors.response.use(
   (config) => {
     return config
   },
@@ -31,16 +41,16 @@ apiClient.interceptors.response.use(
             // fingerprint: await fingerprint,
           },
         })
-        if (response.data.success) return apiClient.request(originalRequest)
+        if (response.data.success) return apiServerClient.request(originalRequest)
         // Move user to login page, tell that session expired
         redirect('/login')
       } catch (e) {
-        redirect('/login')
         console.log({ e })
+        redirect('/login')
       }
     }
     throw error
   },
 )
 
-export { apiClient }
+export { apiServerClient }

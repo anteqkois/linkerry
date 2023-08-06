@@ -69,15 +69,20 @@ export class ExchangesService {
   async findMany(query: GetManyExchangesQueryDto) {
     const { limit, offset, ...filter } = query
 
-    return this.exchangeModel.find(
-      {
-        code: filter.code,
-        name: filter.name,
-        symbol: filter.symbol,
-        timeframes: filter.timeframes,
-      },
-      {},
-      { limit: query.limit, skip: query.offset },
-    )
+    const parsedFilter: FilterQuery<Exchange> = {}
+
+    if (filter.code) {
+      parsedFilter.code = filter.code
+    }
+
+    if (filter.name) {
+      parsedFilter.name = filter.name
+    }
+
+    if (filter.symbol) {
+      parsedFilter.symbols = filter.symbol
+    }
+
+    return this.exchangeModel.find(parsedFilter, {}, { limit: query.limit, skip: query.offset })
   }
 }

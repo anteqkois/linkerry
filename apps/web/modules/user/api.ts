@@ -1,11 +1,12 @@
 import {
-  IAuthLoginInput,
-  IAuthLoginResponse,
-  IAuthLogoutResponse,
-  IAuthSignUpInput,
-  IAuthSignUpResponse,
+    IAuthLoginInput,
+    IAuthLoginResponse,
+    IAuthLogoutResponse,
+    IAuthSignUpInput,
+    IAuthSignUpResponse,
 } from '@market-connector/types'
-import { apiClient } from '../libs/api-client'
+// import { apiClient } from '../../libs/api-client'
+import { apiClient } from '../../libs/api-client'
 
 export class AuthApi {
   static async login(input: IAuthLoginInput) {

@@ -12,7 +12,7 @@ import {
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext } from 'react'
 import { useCookie } from '../../hooks/useCookie'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
-import { AuthApi } from '../api'
+import { AuthApi } from './api'
 import { useRouter } from 'next/navigation'
 
 type ReturnType = {
