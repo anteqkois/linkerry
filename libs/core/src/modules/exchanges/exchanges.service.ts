@@ -58,7 +58,7 @@ export class ExchangesService {
     this.shouldUpdateData = options.shouldUpdateData
   }
 
-  async updateExchange(data: IExchange) {
+  async updateExchange(data: Omit<IExchange, '_id'>) {
     return this.exchangeModel.updateOne({ code: data.code }, data, { upsert: true })
   }
 

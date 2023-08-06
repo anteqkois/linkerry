@@ -18,33 +18,63 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  toast,
 } from '@market-connector/ui-components/client'
-import { Button } from '@market-connector/ui-components/server'
+import { Button, Icons } from '@market-connector/ui-components/server'
 import { useUser } from '../../../../modules/user/useUser'
+import Image from 'next/image'
+import { useState } from 'react'
+import { UserKeysApi } from '../../../../modules/user-keys/api'
+import { retriveServerHttpException } from '../../../../utils'
 
 type Props = { exchanges: IExchange[] }
 
 export const UserKeysForm = ({ exchanges }: Props) => {
+  const [isLoading, setIsLoading] = useState(false)
   const { user } = useUser()
   const form = useForm<z.infer<typeof userKeysSchema>>({
     resolver: zodResolver(userKeysSchema),
     defaultValues: {
       aKey: '',
-      exchange: '',
-      exchangeCode: ExchangeCode.binance,
+      exchange: exchanges[0]._id,
+      exchangeCode: exchanges[0].code,
       name: '',
       sKey: '',
       user: user._id,
     },
   })
 
-  function onSubmit(values: z.infer<typeof userKeysSchema>) {
+  const onSubmit = async (values: z.infer<typeof userKeysSchema>) => {
     console.log(values)
+    setIsLoading(true)
+    try {
+      const res = await UserKeysApi.create(values)
+
+      setIsLoading(false)
+      toast({
+        title: 'Keys saved',
+        description: `Your exchange keys are encrypted and saved. You can now use ${values.exchangeCode} exchange.`,
+        duration: 6000,
+      })
+    } catch (error: any) {
+      setIsLoading(false)
+      const serverError = retriveServerHttpException(error)
+      console.log(error)
+      if (serverError)
+        return toast({
+          title: "Keys didn't saved",
+          description: serverError ? serverError.message : 'Saving keys failed. Please try again.',
+          duration: 6000,
+          variant: 'destructive',
+        })
+      // if (serverError) return form.setError('root', { message: serverError.message, type: 'manual' })
+      // console.log(error)
+      // return form.setError('root', { message: 'Saving keys failed. Please try again.', type: 'manual' })
+    }
   }
 
   return (
     <Form {...form}>
-      {JSON.stringify(exchanges)}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
           control={form.control}
@@ -55,7 +85,8 @@ export const UserKeysForm = ({ exchanges }: Props) => {
               <Select
                 onValueChange={(v) => {
                   field.onChange(v)
-                  form.setValue('exchange', 'ADD DB ID')
+                  const selectedExchange = exchanges.find((exchange) => exchange.code === v)
+                  form.setValue('exchange', selectedExchange?._id!)
                 }}
                 defaultValue={field.value}
               >
@@ -65,8 +96,24 @@ export const UserKeysForm = ({ exchanges }: Props) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent position="popper">
-                  <SelectItem value={ExchangeCode.binance}>Binance</SelectItem>
-                  <SelectItem value={ExchangeCode.bybit}>ByBit</SelectItem>
+                  {exchanges.map((exchange) => {
+                    return (
+                      <SelectItem value={exchange.code} key={exchange._id}>
+                        <span className="flex gap-2 items-center">
+                          {exchange.urls.logo ? (
+                            <Image
+                              src={exchange.urls.logo}
+                              width={75}
+                              height={24}
+                              alt={`${exchange.name} logo`}
+                              className="rounded-sm"
+                            />
+                          ) : null}
+                          <p>{exchange.name}</p>
+                        </span>
+                      </SelectItem>
+                    )
+                  })}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -114,7 +161,7 @@ export const UserKeysForm = ({ exchanges }: Props) => {
         />
         <div className="flex justify-end">
           <Button type="submit" variant="secondary">
-            Create
+            {isLoading ? <Icons.spinner className="mr-2 h-4 w-10 animate-spin" /> : 'Create'}
           </Button>
         </div>
       </form>

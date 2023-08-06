@@ -32,7 +32,7 @@ export class AuthController {
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
-      expires: new Date(Date.now() + expireDateUnix),
+      expires: new Date(Date.now() + 1000 * expireDateUnix),
     })
     res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
       path: '/',
@@ -45,14 +45,14 @@ export class AuthController {
   @Post('login')
   async login(@ReqJwtUser() user: IUser, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLoginResponse> {
     const { access_token, user: userRes } = await this.authService.login(user)
-    const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
+    const expireDateUnix = +this.configService.get('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 
     res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
       path: '/',
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
-      expires: new Date(Date.now() + expireDateUnix),
+      expires: new Date(Date.now() + 1000 * expireDateUnix),
     })
     res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
       path: '/',

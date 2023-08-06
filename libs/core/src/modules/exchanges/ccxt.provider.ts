@@ -51,7 +51,7 @@ export class CcxtProvider {
     return parsedMarets
   }
 
-  async loadExchange(): Promise<IExchange> {
+  async loadExchange(): Promise<Omit<IExchange, '_id'>> {
     await this.restClient.loadMarkets()
 
     const timeFrames: ITimeFrame[] = []

@@ -1,4 +1,4 @@
-import { Dictionary, IPaginationQuery, IResourceResponse } from '../utils'
+import { Dictionary, IPaginationQuery, IResourceResponse, Id } from '../utils'
 
 export enum TimeFrameCode {
   '1m' = '1m',
@@ -132,6 +132,7 @@ export enum ExchangeCode {
 }
 
 export interface IExchange {
+  _id: Id
   code: ExchangeCode // ID IN CODEBASE
   name: string
   // countries: [ US, CN, EU ],   // array of ISO country codes
