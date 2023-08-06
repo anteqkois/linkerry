@@ -1,11 +1,5 @@
 import * as React from 'react'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
   Input,
   Label,
   Select,
@@ -14,7 +8,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@market-connector/ui-components/client'
-import { Button } from '@market-connector/ui-components/server'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@market-connector/ui-components/server'
 
 export function CardWithForm() {
   return (
