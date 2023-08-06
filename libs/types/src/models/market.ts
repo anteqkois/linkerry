@@ -1,5 +1,5 @@
-import { IExchange } from './exchange'
 import { IPaginationQuery, IResourceResponse } from '../utils'
+import { IExchange } from './exchange'
 
 export enum MarketType {
   spot = 'spot',

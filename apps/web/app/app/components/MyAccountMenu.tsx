@@ -1,5 +1,4 @@
 'use client'
-import { CopyIcon, GearIcon, HomeIcon, StarFilledIcon } from '@radix-ui/react-icons'
 import { useUser } from '../../../modules/user/useUser'
 
 import {
@@ -15,9 +14,9 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-  Button,
-} from '@market-connector/ui-components'
+} from '@market-connector/ui-components/client'
 import { LogoutDropDownMenuItem } from './LogoutDropDownMenuItem'
+import { Button,Icons } from '@market-connector/ui-components/server'
 
 interface MyAccountMenuProps {
   children?: React.ReactNode
@@ -30,7 +29,7 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
-          <HomeIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+          <Icons.home className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
@@ -47,7 +46,7 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
           <DropdownMenuItem>
             Settings
             <DropdownMenuShortcut>
-              <GearIcon />
+              <Icons.settings />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -60,13 +59,13 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
                 <DropdownMenuItem>
                   Rewards
                   <DropdownMenuShortcut>
-                    <StarFilledIcon />
+                    <Icons.rewards />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   Copy Reflink
                   <DropdownMenuShortcut>
-                    <CopyIcon />
+                    <Icons.copy />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

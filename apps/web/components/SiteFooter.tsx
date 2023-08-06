@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { cn } from "@market-connector/ui-components/lib/utils"
+import { cn } from "@market-connector/ui-components/utils"
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (

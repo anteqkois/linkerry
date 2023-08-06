@@ -22,7 +22,6 @@ describe('POST /api/user-keys', () => {
     await login()
 
     const { status, data } = await axios.post<IUserKeysResponse>(`/user-keys`, input)
-    console.log(data)
 
     expect(status).toBe(201)
     expect(data.userKeys.aKeyInfo.slice(0, 4)).toBe(input.aKey.slice(0, 4))

@@ -1,7 +1,7 @@
 import axios from 'axios'
 // import { useRouter } from 'next/router';
 // import { store } from '../../features/common/store';
-// import fingerprint from '../utils/fingerprint'
+// import fingerprint from '../../utils/fingerprint'
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
 

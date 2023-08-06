@@ -5,14 +5,13 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { Button, Icons, Input, Label, toast } from '@market-connector/ui-components'
-import { cn } from '@market-connector/ui-components/lib/utils'
-import { useUser } from '../../../modules/user/useUser'
-import { userAuthSchema } from '../validations'
+import { Input, Label } from '@market-connector/ui-components/client'
+import { cn } from '@market-connector/ui-components/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { isCustomHttpException } from '@market-connector/types'
-import { isAxiosError } from 'axios'
+import { useUser } from '../../../modules/user/useUser'
 import { retriveServerHttpException } from '../../../utils'
+import { userAuthSchema } from '../validations'
+import {Button, Icons } from '@market-connector/ui-components/server'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 

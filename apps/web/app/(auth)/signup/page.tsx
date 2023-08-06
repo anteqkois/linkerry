@@ -1,5 +1,5 @@
-import { H3, Icons, buttonVariants } from '@market-connector/ui-components'
-import { cn } from '@market-connector/ui-components/lib/utils'
+import { H3, Icons, buttonVariants} from '@market-connector/ui-components/server'
+import { cn } from '@market-connector/ui-components/utils'
 import Link from 'next/link'
 import { SignUpForm } from './signup-form'
 

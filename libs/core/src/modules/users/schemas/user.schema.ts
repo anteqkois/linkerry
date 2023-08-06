@@ -24,11 +24,11 @@ export class User implements IUser {
   @Prop({ required: false, type: String })
   phone: string;
 
-  @Prop({ required: false, type: String })
-  telegramId: string;
+  // @Prop({ required: false, type: String })
+  // telegramId: string;
 
-  @Prop({ required: true, type: Boolean, default: false })
-  telegramBotConnected: boolean;
+  // @Prop({ required: true, type: Boolean, default: false })
+  // telegramBotConnected: boolean;
 
   @Prop({ required: true, type: String, unique: true })
   email!: string;

@@ -17,7 +17,7 @@ export const alwaysExistingUser = {
     test1: true,
     test2: true,
   },
-  email: 'anteqqois.login@gmail.com',
+  email: 'anteqkois@gmail.com',
   language: 'Polish',
   name: 'anteqkois',
   password: 'antekkoisA',

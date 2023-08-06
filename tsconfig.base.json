@@ -18,7 +18,7 @@
       "@market-connector/core": ["libs/core/src/index.ts"],
       "@market-connector/tools": ["tools/index.ts"],
       "@market-connector/types": ["libs/types/src/index.ts"],
-      "@market-connector/ui-components": ["libs/ui-components/src/index.ts"],
+      // "@market-connector/ui-components": ["libs/ui-components/src/index.ts"],
       "@market-connector/ui-components/*": ["libs/ui-components/src/*"]
     }
   },

@@ -1,6 +1,6 @@
 import { UserProvider } from '../../modules/user/useUser'
 
-import { ModeToggle } from '@market-connector/ui-components'
+import { ModeToggle } from '@market-connector/ui-components/client'
 import { DesktopMenu } from './components/DesktopMenu'
 import { MobileMenu } from './components/MobileMenu'
 import { MyAccountMenu } from './components/MyAccountMenu'

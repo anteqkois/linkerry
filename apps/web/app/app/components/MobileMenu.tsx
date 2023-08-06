@@ -1,5 +1,3 @@
-import { Component1Icon, ComponentInstanceIcon, CubeIcon, HamburgerMenuIcon } from '@radix-ui/react-icons'
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,9 +5,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-  Button,
   DropdownMenuSeparator,
-} from '@market-connector/ui-components'
+} from '@market-connector/ui-components/client'
+import { Button,Icons } from '@market-connector/ui-components/server'
 
 interface MobileProps {
   children?: React.ReactNode
@@ -21,14 +19,14 @@ export function MobileMenu({ children }: MobileProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <HamburgerMenuIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Icons.hamburgerMenu className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="start">
           <DropdownMenuGroup>
             <DropdownMenuLabel>
               <div className="flex items-center gap-1 text-secondary">
-                <Component1Icon />
+                <Icons.strategy />
                 Strategies
               </div>
             </DropdownMenuLabel>
@@ -42,7 +40,7 @@ export function MobileMenu({ children }: MobileProps) {
           <DropdownMenuGroup>
             <DropdownMenuLabel>
               <div className="flex items-center gap-1 text-secondary">
-                <ComponentInstanceIcon />
+                <Icons.condition />
                 Conditions
               </div>
             </DropdownMenuLabel>
@@ -58,7 +56,7 @@ export function MobileMenu({ children }: MobileProps) {
           <DropdownMenuGroup>
             <DropdownMenuLabel>
               <div className="flex items-center gap-1 text-secondary">
-                <CubeIcon />
+                <Icons.exchange />
                 Exchanges
               </div>
             </DropdownMenuLabel>

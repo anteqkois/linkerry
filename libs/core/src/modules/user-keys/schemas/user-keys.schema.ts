@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 
 export type UserKeysDocument = mongoose.HydratedDocument<IUserKeys>
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection:'user-keys' })
 export class UserKeys implements IUserKeys {
   _id: string
 

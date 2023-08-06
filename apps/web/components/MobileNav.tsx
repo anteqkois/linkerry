@@ -1,8 +1,8 @@
 import Link from "next/link"
 import * as React from "react"
 
-import { Icons } from "@market-connector/ui-components"
-import { cn } from "@market-connector/ui-components/lib/utils"
+import { Icons } from "@market-connector/ui-components/server"
+import { cn } from "@market-connector/ui-components/utils"
 import { siteConfig } from "../app/webConfig"
 import { useLockBody } from "../hooks/useLockBody"
 import { MainNavItem } from "../types"

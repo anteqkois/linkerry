@@ -1,6 +1,21 @@
+import { Component1Icon, ComponentInstanceIcon, CubeIcon, ExitIcon, HamburgerMenuIcon, PlusIcon, ReaderIcon, UpdateIcon,  CopyIcon, GearIcon, HomeIcon, StarFilledIcon } from '@radix-ui/react-icons'
+
 type IconProps = React.HTMLAttributes<SVGElement>
+type RadixIconProps = React.HTMLAttributes<SVGElement> & { children?: undefined }
 
 export const Icons = {
+  rewards: (props: RadixIconProps) => <StarFilledIcon {...props} />,
+  home: (props: RadixIconProps) => <HomeIcon {...props} />,
+  settings: (props: RadixIconProps) => <GearIcon {...props} />,
+  copy: (props: RadixIconProps) => <CopyIcon {...props} />,
+  hamburgerMenu: (props: RadixIconProps) => <HamburgerMenuIcon {...props} />,
+  strategy: (props: RadixIconProps) => <Component1Icon {...props} />,
+  condition: (props: RadixIconProps) => <ComponentInstanceIcon {...props} />,
+  exchange: (props: RadixIconProps) => <CubeIcon {...props} />,
+  exit: (props: RadixIconProps) => <ExitIcon {...props} />,
+  article: (props: RadixIconProps) => <ReaderIcon {...props} />,
+  update: (props: RadixIconProps) => <UpdateIcon {...props} />,
+  plus: (props: RadixIconProps) => <PlusIcon {...props} />,
   close: (props: IconProps) => (
     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path

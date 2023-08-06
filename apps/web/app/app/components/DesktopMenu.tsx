@@ -1,5 +1,3 @@
-import { PlusIcon, ReaderIcon, UpdateIcon } from '@radix-ui/react-icons'
-
 import {
   Menubar,
   MenubarContent,
@@ -10,8 +8,9 @@ import {
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
-} from '@market-connector/ui-components'
+} from '@market-connector/ui-components/client'
 import Link from 'next/link'
+import { Icons } from '@market-connector/ui-components/server'
 
 interface DesktopProps {
   children?: React.ReactNode
@@ -29,13 +28,13 @@ export function DesktopMenu({ children }: DesktopProps) {
                 Create New
               </Link>
               <MenubarShortcut>
-                <PlusIcon />
+                <Icons.plus/>
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Edit Strategy
               <MenubarShortcut>
-                <UpdateIcon />
+                <Icons.update />
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
@@ -48,7 +47,7 @@ export function DesktopMenu({ children }: DesktopProps) {
             <MenubarItem disabled>
               Create First Strategy
               <MenubarShortcut>
-                <ReaderIcon />
+                <Icons.article/>
               </MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
@@ -59,13 +58,13 @@ export function DesktopMenu({ children }: DesktopProps) {
             <MenubarItem>
               Create New
               <MenubarShortcut>
-                <PlusIcon />
+                <Icons.plus/>
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Edit Condition
               <MenubarShortcut>
-                <UpdateIcon />
+                <Icons.update />
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>All Conditions</MenubarItem>
@@ -79,7 +78,7 @@ export function DesktopMenu({ children }: DesktopProps) {
             <MenubarItem disabled>
               Create First Condition
               <MenubarShortcut>
-                <ReaderIcon />
+                <Icons.article/>
               </MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
@@ -87,19 +86,21 @@ export function DesktopMenu({ children }: DesktopProps) {
         <MenubarMenu>
           <MenubarTrigger>Exchanges</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
-              Add Exchane
-              <MenubarShortcut>
-                <PlusIcon />
-              </MenubarShortcut>
-            </MenubarItem>
+            <Link href="/app/exchanges/create" prefetch={false}>
+              <MenubarItem>
+                Add Exchane
+                <MenubarShortcut>
+                  <Icons.plus/>
+                </MenubarShortcut>
+              </MenubarItem>
+            </Link>
             <MenubarItem>My Exchanges</MenubarItem>
             <MenubarItem>Avaible Exchanges</MenubarItem>
             <MenubarSeparator />
             <MenubarItem disabled>
               Security
               <MenubarShortcut>
-                <ReaderIcon />
+                <Icons.article/>
               </MenubarShortcut>
             </MenubarItem>
           </MenubarContent>

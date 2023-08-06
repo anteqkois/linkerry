@@ -16,7 +16,7 @@ class StrategyBuyCondition implements IStrategyBuy_Condition {
 
 const StrategyBuyConditionSchema = SchemaFactory.createForClass(StrategyBuyCondition)
 
-@Schema({ timestamps: true, discriminatorKey: 'type' })
+@Schema({ timestamps: true, discriminatorKey: 'type', collection:'strategies-buy' })
 export class StrategyBuy implements IStrategyBuy {
   _id: string
   // @Prop({requiredL: true, type: String, enum: StrategyBuy_TypeType})

@@ -11,8 +11,8 @@ export interface IUser {
   name: string
   roles: UserRoleTypes[]
   phone?: string
-  telegramId?: string
-  telegramBotConnected?: boolean
+  // telegramId?: string  // Move to external collection (notification-channels)
+  // telegramBotConnected?: boolean
   email: string
   emailVerifiedAtDate?: Date
   password: string

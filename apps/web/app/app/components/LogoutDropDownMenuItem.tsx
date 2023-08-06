@@ -1,7 +1,7 @@
 "use client"
-import { DropdownMenuItem, DropdownMenuShortcut } from '@market-connector/ui-components'
-import { ExitIcon } from '@radix-ui/react-icons'
+import { DropdownMenuItem, DropdownMenuShortcut } from '@market-connector/ui-components/client'
 import { useUser } from '../../../modules/user/useUser'
+import { Icons } from '@market-connector/ui-components/server'
 
 export function LogoutDropDownMenuItem() {
   const { logout } = useUser()
@@ -10,7 +10,7 @@ export function LogoutDropDownMenuItem() {
     <DropdownMenuItem onClick={logout}>
       Log out
       <DropdownMenuShortcut>
-        <ExitIcon />
+        <Icons.exit/>
       </DropdownMenuShortcut>
     </DropdownMenuItem>
   )
