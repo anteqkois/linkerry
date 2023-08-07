@@ -1,7 +1,7 @@
-import { ExchangeCode, IUserKeysInput } from '@market-connector/types'
+import { ExchangeCode, IUserKeysCreateInput } from '@market-connector/types'
 import { IsEnum, IsMongoId, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator'
 
-export class CreateUserKeysDto implements IUserKeysInput {
+export class CreateUserKeysDto implements IUserKeysCreateInput {
   @IsString()
   @IsNotEmpty()
   @MinLength(1)

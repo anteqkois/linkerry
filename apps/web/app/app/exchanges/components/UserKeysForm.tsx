@@ -23,14 +23,14 @@ import {
 import { Button, Icons } from '@market-connector/ui-components/server'
 import { useUser } from '../../../../modules/user/useUser'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UserKeysApi } from '../../../../modules/user-keys/api'
 import { retriveServerHttpException } from '../../../../utils'
 
 type Props = { exchanges: IExchange[] }
 
 export const UserKeysForm = ({ exchanges }: Props) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const { user } = useUser()
   const form = useForm<z.infer<typeof userKeysSchema>>({
     resolver: zodResolver(userKeysSchema),
@@ -44,17 +44,25 @@ export const UserKeysForm = ({ exchanges }: Props) => {
     },
   })
 
+  useEffect(() => {
+    setIsLoading(false)
+  }, [])
+
   const onSubmit = async (values: z.infer<typeof userKeysSchema>) => {
     console.log(values)
     setIsLoading(true)
     try {
       const res = await UserKeysApi.create(values)
 
+      form.setValue('aKey', `${res.data.userKeys.aKeyInfo}...`)
+      form.setValue('sKey', `${res.data.userKeys.sKeyInfo}...`)
+
       setIsLoading(false)
       toast({
         title: 'Keys saved',
         description: `Your exchange keys are encrypted and saved. You can now use ${values.exchangeCode} exchange.`,
         duration: 6000,
+        variant: 'success',
       })
     } catch (error: any) {
       setIsLoading(false)
@@ -161,7 +169,7 @@ export const UserKeysForm = ({ exchanges }: Props) => {
         />
         <div className="flex justify-end">
           <Button type="submit" variant="secondary">
-            {isLoading ? <Icons.spinner className="mr-2 h-4 w-10 animate-spin" /> : 'Create'}
+            {isLoading ? <Icons.spinner className="mr-2 h-4 w-9 animate-spin" /> : 'Create'}
           </Button>
         </div>
       </form>

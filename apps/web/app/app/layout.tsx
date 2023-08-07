@@ -11,7 +11,7 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen bg-muted">
+    <div className="min-h-screen bg-background-page">
       <UserProvider>
         <div>
           <MobileMenu />

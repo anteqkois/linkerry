@@ -1,8 +1,8 @@
-import { ExchangeCode, IUserKeysInput } from '@market-connector/types'
-import { ZodSchema, string, object, nativeEnum } from 'zod'
+import { ExchangeCode, IUserKeysCreateInput } from '@market-connector/types'
+import { ZodSchema, nativeEnum, object, string } from 'zod'
 import { mongoIdSchema } from '../../../libs/zod'
 
-export const userKeysSchema: ZodSchema<IUserKeysInput> = object({
+export const userKeysSchema: ZodSchema<IUserKeysCreateInput> = object({
   aKey: string()
     .min(10, {
       message: 'Too short key.',

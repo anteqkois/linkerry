@@ -1,9 +1,9 @@
+import { IUserKeysCreateResponse, IUserKeysGetManyResponse, JwtUser } from '@market-connector/types'
 import { Body, Controller, Get, Post } from '@nestjs/common'
-import { UserKeysService } from './user-keys.service'
-import { CreateUserKeysDto } from './dto/create-user-keys.dto'
-import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
-import { ExchangeCode, IUserKeysResponse, JwtUser } from '@market-connector/types'
+import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'
+import { CreateUserKeysDto } from './dto/create-user-keys.dto'
+import { UserKeysService } from './user-keys.service'
 
 @Controller('user-keys')
 export class UserKeysController {
@@ -15,11 +15,13 @@ export class UserKeysController {
 
   @UseJwtGuard()
   @Get()
-  getKeyPairs() {}
+  async getKeyPairs(@ReqJwtUser() user: JwtUser): Promise<IUserKeysGetManyResponse> {
+    return { userKeys: await this.userKeysService.getKeyPairsInfo(user.id) }
+  }
 
   @Post()
   @UseJwtGuard()
-  createKeyPair(@ReqJwtUser() user: JwtUser, @Body() dto: CreateUserKeysDto): Promise<IUserKeysResponse> {
+  createKeyPair(@ReqJwtUser() user: JwtUser, @Body() dto: CreateUserKeysDto): Promise<IUserKeysCreateResponse> {
     return this.userKeysService.createKeyPair(dto, user.id)
   }
 }

@@ -94,7 +94,9 @@ export function DesktopMenu({ children }: DesktopProps) {
                 </MenubarShortcut>
               </MenubarItem>
             </Link>
+            <Link href="/app/exchanges/list" prefetch={false}>
             <MenubarItem>My Exchanges</MenubarItem>
+            </Link>
             <MenubarItem>Avaible Exchanges</MenubarItem>
             <MenubarSeparator />
             <MenubarItem disabled>

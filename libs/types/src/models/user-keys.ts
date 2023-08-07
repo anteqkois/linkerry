@@ -1,8 +1,8 @@
-import { Id } from '../utils'
+import { DbTimestamp, Id } from '../utils'
 import { ExchangeCode, IExchange } from './exchange'
 import { IUser } from './user'
 
-export interface IUserKeys {
+export interface IUserKeys extends DbTimestamp {
   _id: string
   name: string
   exchange: Id
@@ -24,7 +24,7 @@ export interface IUserKeysPupulated extends Omit<IUserKeys, 'exchange' | 'user'>
 
 // # # # # #     API     # # # # #
 
-export interface IUserKeysInput {
+export interface IUserKeysCreateInput {
   name: string
   exchange: Id
   exchangeCode: ExchangeCode
@@ -33,7 +33,7 @@ export interface IUserKeysInput {
   sKey: string
 }
 
-export interface IUserKeysResponse {
+export interface IUserKeysCreateResponse {
   userKeys: {
     name: string
     exchange: Id
@@ -42,4 +42,15 @@ export interface IUserKeysResponse {
     aKeyInfo: string
     sKeyInfo: string
   }
+}
+
+export interface IUserKeysGetManyResponse {
+  userKeys: {
+    name: string
+    exchange: Id
+    exchangeCode: ExchangeCode
+    user: Id
+    aKeyInfo: string
+    sKeyInfo: string
+  }[]
 }

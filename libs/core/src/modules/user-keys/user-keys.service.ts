@@ -1,11 +1,11 @@
+import { ExchangeCode, IUserKeys, IUserKeysCreateResponse, IUserKeysGetManyResponse, Id } from '@market-connector/types'
 import { Injectable } from '@nestjs/common'
-import { CreateUserKeysDto } from './dto/create-user-keys.dto'
-import { ExchangeCode, IUserKeys, IUserKeysResponse, Id } from '@market-connector/types'
-import { InjectModel } from '@nestjs/mongoose'
-import { UserKeys } from './schemas/user-keys.schema'
-import { Model } from 'mongoose'
 import { ConfigService } from '@nestjs/config'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 import { CryptoService } from '../../lib/crypto'
+import { CreateUserKeysDto } from './dto/create-user-keys.dto'
+import { UserKeys } from './schemas/user-keys.schema'
 
 @Injectable()
 export class UserKeysService {
@@ -15,7 +15,7 @@ export class UserKeysService {
     @InjectModel(UserKeys.name) private readonly userKeysModel: Model<UserKeys>,
   ) {}
 
-  async createKeyPair(dto: CreateUserKeysDto, userId: Id): Promise<IUserKeysResponse> {
+  async createKeyPair(dto: CreateUserKeysDto, userId: Id): Promise<IUserKeysCreateResponse> {
     const _kv = this.configService.get('USER_KEYS_KV')
     const s = this.configService.get(`USER_KEYS_S_${_kv}`)
     const rs = this.cryptoService.randomString()
@@ -23,7 +23,7 @@ export class UserKeysService {
     const _salt = s.split(';') + rs
 
     const aInfo = dto.aKey.slice(0, 5)
-    const sInfo = dto.aKey.slice(0, 5)
+    const sInfo = dto.sKey.slice(0, 5)
 
     const { aKey, sKey, salt, kv, ...rest } = (
       await this.userKeysModel.create({
@@ -43,10 +43,10 @@ export class UserKeysService {
     return { userKeys: rest }
   }
 
-  async getKeyPairsInfo(userId: Id): Promise<IUserKeysResponse[]> {
+  async getKeyPairsInfo(userId: Id) {
     return this.userKeysModel.find(
       { user: userId },
-      { _id: 1, aKeyInfo: 1, exchange: 1, exchangeCode: 1, name: 1, sKeyInfo: 1, user: 1 },
+      { _id: 1, aKeyInfo: 1, exchange: 1, exchangeCode: 1, name: 1, sKeyInfo: 1, user: 1, createdAt: 1, updatedAt: 1 },
     )
   }
 

@@ -10,6 +10,6 @@
   },
   "aliases": {
     "components": "@market-connector/ui-components/components",
-    "utils": "@market-connector/ui-components/lib/utils"
+    "utils": "@market-connector/ui-components/utils"
   }
 }
