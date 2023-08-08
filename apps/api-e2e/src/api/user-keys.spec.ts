@@ -1,9 +1,9 @@
-import { ExchangeCode, IUserKeysCreateInput, IUserKeysCreateResponse } from '@market-connector/types'
+import { ExchangeCode, IUserKeys_CreateInput, IUserKeys_CreateResponse } from '@market-connector/types'
 import axios from 'axios'
-import { login } from '../support/login'
 import { alwaysExistingExchange, alwaysExistingUser } from 'tools/models.mock'
+import { login } from '../support/login'
 
-const input: IUserKeysCreateInput = {
+const input: IUserKeys_CreateInput = {
   aKey: 'some_secret_binance_akey',
   sKey: 'some_secret_binance_skey',
   exchangeCode: alwaysExistingExchange.code as ExchangeCode.binance,
@@ -21,7 +21,7 @@ describe('POST /api/user-keys', () => {
   it('user can store their exchange keys', async () => {
     await login()
 
-    const { status, data } = await axios.post<IUserKeysCreateResponse>(`/user-keys`, input)
+    const { status, data } = await axios.post<IUserKeys_CreateResponse>(`/user-keys`, input)
 
     expect(status).toBe(201)
     expect(data.userKeys.aKeyInfo.slice(0, 4)).toBe(input.aKey.slice(0, 4))

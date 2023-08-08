@@ -1,4 +1,4 @@
-import { IMarket, IMarketQuery } from '@market-connector/types'
+import { IMarket, IMarket_GetQuery } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
@@ -34,7 +34,7 @@ export class MarketsService {
     return this.marketModel.findOne(filter)
   }
 
-  async findMany(query: IMarketQuery): Promise<IMarket[]> {
+  async findMany(query: IMarket_GetQuery): Promise<IMarket[]> {
     const { limit, offset, ...filter } = query
 
     return this.marketModel.find(filter, {}, { limit: query.limit, skip: query.offset })

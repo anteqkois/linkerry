@@ -1,4 +1,4 @@
-import { EventObjectType, EventTypeType, IBaseEvent } from '@market-connector/types'
+import { EventObject, EventType, IBaseEvent } from '@market-connector/types'
 import { Type } from 'class-transformer'
 import {
   IsDefined,
@@ -13,8 +13,8 @@ import {
 
 export class BaseEventDataDto {
   @IsString()
-  @IsEnum(EventObjectType)
-  object: EventObjectType
+  @IsEnum(EventObject)
+  object: EventObject
 }
 
 export class BaseEventDto implements IBaseEvent {
@@ -34,6 +34,6 @@ export class BaseEventDto implements IBaseEvent {
   data!: BaseEventDataDto
 
   @IsString()
-  @IsEnum(EventTypeType)
-  type: EventTypeType
+  @IsEnum(EventType)
+  type: EventType
 }

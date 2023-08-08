@@ -1,4 +1,4 @@
-import { IUser, JwtToken, UserRoleTypes } from '@market-connector/types'
+import { IUser, JwtToken, UserRole } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
@@ -38,7 +38,7 @@ export class AuthService {
     const hashedPassword = await this.hashService.hash(signUpDto.password)
     signUpDto.password = hashedPassword
 
-    const user = await this.userModel.create({ ...signUpDto, roles: [UserRoleTypes.CUSTOMER] })
+    const user = await this.userModel.create({ ...signUpDto, roles: [UserRole.Customer] })
     this.logger.debug(`New signUp: ${signUpDto.email}`)
 
     const payload = this.createJWTPayload(user)

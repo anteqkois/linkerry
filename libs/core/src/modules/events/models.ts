@@ -1,7 +1,7 @@
-import { EventTypeType } from "@market-connector/types";
+import { EventType } from "@market-connector/types";
 
 export enum EVENT_TOPIC {
-  CONDITION_TRIGGERED = EventTypeType.CONDITION_TRIGGERED,
+  CONDITION_TRIGGERED = EventType.ConditionTriggered,
 }
 
 export enum EVENT_TOKENS {

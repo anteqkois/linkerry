@@ -1,5 +1,5 @@
 import { testAuthUser } from '@market-connector/tools'
-import { IAuthSignUpResponse, Language, UserRoleTypes } from '@market-connector/types'
+import { IAuthSignUpResponse, Language, UserRole } from '@market-connector/types'
 import axios from 'axios'
 
 describe('POST /api/auth', () => {
@@ -11,7 +11,7 @@ describe('POST /api/auth', () => {
   it('user can sign up and create account', async () => {
     const signUpRes = await axios.post<IAuthSignUpResponse>(`/auth/signup`, testAuthUser)
     expect(signUpRes.status).toBe(201)
-    expect(signUpRes.data.user.roles).toEqual([UserRoleTypes.CUSTOMER])
+    expect(signUpRes.data.user.roles).toEqual([UserRole.Customer])
     axios.defaults.headers.Cookie = signUpRes.headers['set-cookie'][0];
   })
 

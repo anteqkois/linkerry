@@ -1,4 +1,4 @@
-import { ConditionTypeType, JwtUser } from '@market-connector/types'
+import { ConditionType, JwtUser } from '@market-connector/types'
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'
@@ -9,7 +9,7 @@ import { CreateConditionDto } from './dto/create-condition.dto'
 @Controller('conditions')
 export class ConditionsController {
   constructor(private readonly conditionsService: ConditionsService, private readonly alertGateway: AlertGateway) {
-    conditionsService.registerTypeGateway(ConditionTypeType.ALERT, alertGateway)
+    conditionsService.registerTypeGateway(ConditionType.Alert, alertGateway)
   }
 
   @Get()

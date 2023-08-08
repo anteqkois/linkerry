@@ -1,4 +1,4 @@
-import { ExchangeCode, IUserKeys, IUserKeysCreateResponse, IUserKeysGetManyResponse, Id } from '@market-connector/types'
+import { ExchangeCode, IUserKeys, IUserKeys_CreateResponse, Id } from '@market-connector/types'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
@@ -15,7 +15,7 @@ export class UserKeysService {
     @InjectModel(UserKeys.name) private readonly userKeysModel: Model<UserKeys>,
   ) {}
 
-  async createKeyPair(dto: CreateUserKeysDto, userId: Id): Promise<IUserKeysCreateResponse> {
+  async createKeyPair(dto: CreateUserKeysDto, userId: Id): Promise<IUserKeys_CreateResponse> {
     const _kv = this.configService.get('USER_KEYS_KV')
     const s = this.configService.get(`USER_KEYS_S_${_kv}`)
     const rs = this.cryptoService.randomString()

@@ -24,7 +24,7 @@ export interface IUserKeysPupulated extends Omit<IUserKeys, 'exchange' | 'user'>
 
 // # # # # #     API     # # # # #
 
-export interface IUserKeysCreateInput {
+export interface IUserKeys_CreateInput {
   name: string
   exchange: Id
   exchangeCode: ExchangeCode
@@ -33,7 +33,7 @@ export interface IUserKeysCreateInput {
   sKey: string
 }
 
-export interface IUserKeysCreateResponse {
+export interface IUserKeys_CreateResponse {
   userKeys: {
     name: string
     exchange: Id
@@ -44,7 +44,7 @@ export interface IUserKeysCreateResponse {
   }
 }
 
-export interface IUserKeysGetManyResponse {
+export interface IUserKeys_GetManyResponse {
   userKeys: {
     name: string
     exchange: Id

@@ -1,10 +1,10 @@
-import { AlertProviderType, ConditionOperatorType, ConditionTypeType, IAlertInput, IConditionResponse } from '@market-connector/types'
+import { AlertProvider, ConditionOperator, ConditionType, IAlert_CreateInput, ICondition_CreateResponse } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'
 
 describe('POST /api/conditions', () => {
   it('only authenticated users can create conditions', async () => {
-    const input: Partial<IAlertInput> = {
+    const input: Partial<IAlert_CreateInput> = {
       testMode: true,
       // name: 'test alert 2',
       active: true,
@@ -17,21 +17,21 @@ describe('POST /api/conditions', () => {
 
   it('can create condition - alert - Trading View', async () => {
     await login()
-    const input: IAlertInput = {
+    const input: IAlert_CreateInput = {
       active: true,
       name: 'Test 1',
       eventValidityUnix: 389721,
       isMarketProvider: false,
-      operator: ConditionOperatorType.CROSSING,
+      operator: ConditionOperator.Crossing,
       requiredValue: 1,
       testMode: true,
-      type: ConditionTypeType.ALERT,
+      type: ConditionType.Alert,
       alert:{
-        provider: AlertProviderType.TRADING_VIEW
+        provider: AlertProvider.TradingView
       }
     }
 
-    const res = await axios.post<IConditionResponse>(`/conditions`, input)
+    const res = await axios.post<ICondition_CreateResponse>(`/conditions`, input)
 
     expect(res.status).toBe(201)
     expect(res.data.condition).toBeDefined()
@@ -51,17 +51,17 @@ describe('POST /api/conditions', () => {
   })
 
   it('can\'t use existing condition name', async () => {
-    const input: IAlertInput = {
+    const input: IAlert_CreateInput = {
       active: true,
       name: 'Test 1',
       eventValidityUnix: 389721,
       isMarketProvider: false,
-      operator: ConditionOperatorType.CROSSING,
+      operator: ConditionOperator.Crossing,
       requiredValue: 1,
       testMode: true,
-      type: ConditionTypeType.ALERT,
+      type: ConditionType.Alert,
       alert:{
-        provider: AlertProviderType.TRADING_VIEW
+        provider: AlertProvider.TradingView
       }
     }
 
@@ -70,7 +70,7 @@ describe('POST /api/conditions', () => {
   })
 
   it('can\'t create alert with missing data', async () => {
-    const input: Partial<IAlertInput> = {
+    const input: Partial<IAlert_CreateInput> = {
       testMode: true,
       // name: 'test alert 2',
       active: true,

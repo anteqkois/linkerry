@@ -1,16 +1,16 @@
-export enum EventObjectType {
-  CONDITION = 'condition',
+export enum EventObject {
+  Condition = 'Condition',
 }
 
-export enum EventTypeType {
-  CONDITION_TRIGGERED = 'condition.triggered',
+export enum EventType {
+  ConditionTriggered = 'condition.triggered',
 }
 
 export interface IBaseEvent {
   id: string
   createdUnix: number
   data: {
-    object: EventObjectType
+    object: EventObject
   }
-  type: EventTypeType
+  type: EventType
 }

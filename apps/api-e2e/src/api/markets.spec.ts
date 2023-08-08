@@ -1,7 +1,7 @@
 import {
   ExchangeCode,
-  IMarketQuery,
-  IMarketResponse,
+  IMarket_GetQuery,
+  IMarket_GetResponse,
   MarketType,
 } from '@market-connector/types'
 import axios from 'axios'
@@ -15,12 +15,12 @@ describe('POST /api/markets', () => {
 
   it('can filter markets ByBit (test default query values)', async () => {
     await login()
-    const params: IMarketQuery = {
+    const params: IMarket_GetQuery = {
       exchangeCode: ExchangeCode.bybit,
       limit: 250,
     }
 
-    const { status, data } = await axios.get<IMarketResponse>(`/markets`, {
+    const { status, data } = await axios.get<IMarket_GetResponse>(`/markets`, {
       params,
     })
 

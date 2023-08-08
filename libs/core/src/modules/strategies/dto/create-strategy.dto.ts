@@ -1,7 +1,7 @@
-import { IStrategyInput, Id, StrategyType } from '@market-connector/types'
+import { IStrategy_CreateInput, Id, StrategyType } from '@market-connector/types'
 import { IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
 
-export class CreateStrategyDto implements IStrategyInput {
+export class CreateStrategyDto implements IStrategy_CreateInput {
   @IsString()
   @MinLength(2)
   @MaxLength(30)

@@ -1,4 +1,4 @@
-import { ConditionTypeType } from '@market-connector/types';
+import { ConditionType } from '@market-connector/types';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -11,7 +11,7 @@ export class ConditionsService {
   private conditionTypeGateways: Record<string, ConditionTypeGateway> = {};
 
   public registerTypeGateway(
-    alertProvider: ConditionTypeType,
+    alertProvider: ConditionType,
     gateway: ConditionTypeGateway,
   ) {
     this.conditionTypeGateways[alertProvider] = gateway;

@@ -1,4 +1,4 @@
-import { AlertProviderType, ConditionOperatorType, ConditionTypeType, ICondition } from '@market-connector/types'
+import { AlertProvider, ConditionOperator, ConditionType, ICondition } from '@market-connector/types'
 import { Inject, Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ClientKafka } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
@@ -14,7 +14,7 @@ export class AlertGateway implements ConditionTypeGateway {
   private readonly logger = new Logger(AlertGateway.name)
   private alertProviderGateways: Record<string, AlertProviderGateway> = {}
 
-  public registerAlertProvidertGateway(alertProvider: AlertProviderType, gateway: AlertProviderGateway) {
+  public registerAlertProvidertGateway(alertProvider: AlertProvider, gateway: AlertProviderGateway) {
     this.alertProviderGateways[alertProvider] = gateway
   }
 
@@ -23,16 +23,16 @@ export class AlertGateway implements ConditionTypeGateway {
     @InjectModel(Alert.name) private readonly conditionAlertModel: Model<Alert>,
     @Inject(EVENT_TOKENS.CONDITION) private readonly clientKafka: ClientKafka,
   ) {
-    this.registerAlertProvidertGateway(AlertProviderType.TRADING_VIEW, tradingViewGateway)
+    this.registerAlertProvidertGateway(AlertProvider.TradingView, tradingViewGateway)
   }
 
   async createCondition(dto: CreateAlertDto, userId: string): Promise<ICondition> {
     const condition = await this.conditionAlertModel.create({
       user: userId,
       name: dto.name,
-      type: ConditionTypeType.ALERT,
+      type: ConditionType.Alert,
       requiredValue: 1,
-      operator: dto.operator ?? ConditionOperatorType.EQUAL,
+      operator: dto.operator ?? ConditionOperator.Equal,
       active: dto.active,
       eventValidityUnix: dto.eventValidityUnix,
       testMode: dto.testMode,
@@ -58,7 +58,7 @@ export class AlertGateway implements ConditionTypeGateway {
     return condition
   }
 
-  async conditionTriggeredEmiter(dto: any, provider: AlertProviderType) {
+  async conditionTriggeredEmiter(dto: any, provider: AlertProvider) {
     const event = this.alertProviderGateways[provider].conditionTriggeredEventFactory(dto)
 
     this.clientKafka.emit(EVENT_TOPIC.CONDITION_TRIGGERED, JSON.stringify(event))

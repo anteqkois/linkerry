@@ -1,4 +1,4 @@
-import { Dictionary, IPaginationQuery, IResourceResponse, Id } from '../utils'
+import { IPaginationQuery, IResourceResponse, Id } from '../utils'
 
 export enum TimeFrameCode {
   '1m' = '1m',
@@ -155,11 +155,11 @@ export interface IExchange {
 }
 
 // TODO change to handle arrays
-export interface IExchangeQuery extends IPaginationQuery {
+export interface IExchange_GetQuery extends IPaginationQuery {
   code?: IExchange['code']
   name?: string
   symbol?: string
   timeframes: TimeFrameCode
 }
 
-export interface IExchangeResponse extends IResourceResponse<{ exchanges: IExchange[] }> {}
+export interface IExchange_GetResponse extends IResourceResponse<{ exchanges: IExchange[] }> {}

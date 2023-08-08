@@ -42,7 +42,7 @@ export interface IMarket {
   // },
 }
 
-export interface IMarketQuery extends IPaginationQuery {
+export interface IMarket_GetQuery extends IPaginationQuery {
   exchangeCode?: IExchange['code']
   symbol?: string
   base?: string
@@ -51,4 +51,4 @@ export interface IMarketQuery extends IPaginationQuery {
   type?: MarketType
 }
 
-export interface IMarketResponse extends IResourceResponse<{ markets: IMarket[] }> {}
+export interface IMarket_GetResponse extends IResourceResponse<{ markets: IMarket[] }> {}

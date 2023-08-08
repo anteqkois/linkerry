@@ -1,6 +1,5 @@
 import { Id } from '../../utils'
-import { IExchange } from '../exchange'
-import { IStrategyExecution, IStrategyExecutionInput, StrategyExecutionType } from './strategy-execution'
+import { IStrategyExecution, IStrategyExecution_CreateInput, StrategyExecutionType } from './strategy-execution'
 
 export interface IStrategyExecution_StaticMarket
   extends Omit<IStrategyExecution, keyof IStrategyExecution_StaticMarket_MarketsInput>,
@@ -14,7 +13,7 @@ export interface IStrategyExecution_StaticMarket_MarketsInput {
   group: string
 }
 
-export interface IStrategyExecution_StaticMarket_Input extends IStrategyExecutionInput {
+export interface IStrategyExecution_StaticMarket_Input extends IStrategyExecution_CreateInput {
   markets: Array<IStrategyExecution_StaticMarket_MarketsInput>
 }
 

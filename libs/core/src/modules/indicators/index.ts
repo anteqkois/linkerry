@@ -1,6 +1,6 @@
 import { IndicatorType } from "@market-connector/types";
 
 export const indicatorToFunction: Record<IndicatorType, Function> =  {
-  default: (x: any)=> x,
-  rsi: (x: any)=> x,
+  [IndicatorType.Default]: (x: any)=> x,
+  [IndicatorType.RSI]: (x: any)=> x,
 }

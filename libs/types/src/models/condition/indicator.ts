@@ -1,12 +1,12 @@
-import { ConditionTypeType, ICondition } from './condition'
+import { ConditionType, ICondition } from './condition'
 
 export enum IndicatorType {
-  DEFAULT = 'default',
-  RSI = 'rsi',
+  Default = 'Default',
+  RSI = 'RSI',
 }
 
 export interface IIndicator extends ICondition {
-  type: ConditionTypeType.INDICATOR
+  type: ConditionType.Indicator
   indicator: {
     type: IndicatorType
   }

@@ -1,6 +1,6 @@
 import {
-  IStrategyBuyInput,
   IStrategyBuy_Condition,
+  IStrategyBuy_CreateInput,
   Id,
   StrategyBuy_TypeType
 } from '@market-connector/types'
@@ -12,7 +12,7 @@ export class StrategyBuyConditionDto implements IStrategyBuy_Condition {
   readonly id: Id
 }
 
-export class CreateStrategyBuyDto implements IStrategyBuyInput {
+export class CreateStrategyBuyDto implements IStrategyBuy_CreateInput {
   @IsString()
   @MinLength(2)
   @MaxLength(30)

@@ -1,20 +1,20 @@
 import { Id } from '../../utils'
 
 export enum StrategyState {
-  Idle,
-  WaitForBuySignal,
-  OpenPosition,
-  ClosePosition,
-  Paused,
-  Inactive,
-  Error,
-  RecoveryMode,
-  Backtesting,
+  Idle = 'Idle',
+  WaitForBuySignal = 'WaitForBuySignal',
+  OpenPosition = 'OpenPosition',
+  ClosePosition = 'ClosePosition',
+  Paused = 'Paused',
+  Inactive = 'Inactive',
+  Error = 'Error',
+  RecoveryMode = 'RecoveryMode',
+  Backtesting = 'Backtesting',
 }
 
 export enum StrategyType {
-  StrategyDynamicMarkets,
-  StrategyStaticMarkets,
+  StrategyDynamicMarkets = 'StrategyDynamicMarkets',
+  StrategyStaticMarkets = 'StrategyStaticMarkets',
 }
 
 // One interface. Theare will be validation logic, which check if StrategyDynamicMarkets have at one buy strategy with conditionMarketProvider
@@ -33,7 +33,7 @@ export interface IStrategy {
   // strategyPause: Id[]
 }
 
-export interface IStrategyInput {
+export interface IStrategy_CreateInput {
   name: string
   type: StrategyType
   // validityUnix: number

@@ -1,4 +1,4 @@
-import { IUser, IUserMetadata, Language, UserRoleTypes } from '@market-connector/types';
+import { IUser, IUserMetadata, Language, UserRole } from '@market-connector/types';
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
@@ -18,8 +18,8 @@ export class User implements IUser {
   @Prop({ required: true, type: String, unique: true, index: true })
   name!: string;
 
-  @Prop({ type: [{ type: String, enum: UserRoleTypes, default: UserRoleTypes.CUSTOMER }] })
-  roles: UserRoleTypes[];
+  @Prop({ type: [{ type: String, enum: UserRole, default: UserRole.Customer }] })
+  roles: UserRole[];
 
   @Prop({ required: false, type: String })
   phone: string;

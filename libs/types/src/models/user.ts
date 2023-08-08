@@ -1,15 +1,21 @@
 import { Language } from './language'
 
-export enum UserRoleTypes {
-  CUSTOMER = 'customer',
-  ADMIN = 'admin',
-  TESTER = 'tester',
+export enum UserRole {
+  Customer = 'Customer',
+  Admin = 'Admin',
+  Tester = 'Tester',
 }
+
+// export enum UserRole {
+//   CUSTOMER = 'customer',
+//   ADMIN = 'admin',
+//   TESTER = 'tester',
+// }
 
 export interface IUser {
   _id: string
   name: string
-  roles: UserRoleTypes[]
+  roles: UserRole[]
   phone?: string
   // telegramId?: string  // Move to external collection (notification-channels)
   // telegramBotConnected?: boolean

@@ -1,4 +1,4 @@
-import { AlertProviderType, ConditionOperatorType, ConditionTypeType, IAlert } from '../libs/types/src'
+import { AlertProvider, ConditionOperator, ConditionType, IAlert } from '../libs/types/src'
 
 export const testAuthUser = {
   consents: {
@@ -32,14 +32,14 @@ export const alwaysExistingConditionAlert: IAlert = {
   testMode: true,
   eventValidityUnix: 490382,
   isMarketProvider: false,
-  operator: ConditionOperatorType.CROSSING,
+  operator: ConditionOperator.Crossing,
   requiredValue: 1,
   triggeredTimes: 0,
-  type: ConditionTypeType.ALERT,
+  type: ConditionType.Alert,
   alert: {
     handlerUrl: `${process.env.ALERT_HANDLER_URL}/trading-view/111111111111111111111111`,
     messagePattern: '{"conditionId": "64b7ebc1f2e2233fc9d5540e", "ticker": "{{ticker}}", "close": "{{close}}"}',
-    provider: AlertProviderType.TRADING_VIEW,
+    provider: AlertProvider.TradingView,
   },
 }
 

@@ -1,7 +1,7 @@
 import {
-  AlertProviderType,
-  EventObjectType,
-  EventTypeType,
+  AlertProvider,
+  EventObject,
+  EventType,
   IEventCondition
 } from '@market-connector/types'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
@@ -25,7 +25,7 @@ export class TradingViewGateway implements AlertProviderGateway {
 
     const alertHandlerUrl = `${this.configService.get('ALERT_HANDLER_URL')}/${dto.conditionId}`
 
-    return { provider: AlertProviderType.TRADING_VIEW, messagePattern: message, handlerUrl: alertHandlerUrl }
+    return { provider: AlertProvider.TradingView, messagePattern: message, handlerUrl: alertHandlerUrl }
   }
 
   conditionTriggeredEventFactory(dto: TriggerAlertTradingViewDto) {
@@ -34,10 +34,10 @@ export class TradingViewGateway implements AlertProviderGateway {
       createdUnix: new Date().getTime(),
       data: {
         id: dto.conditionId,
-        object: EventObjectType.CONDITION,
+        object: EventObject.Condition,
         value: 1,
       },
-      type: EventTypeType.CONDITION_TRIGGERED,
+      type: EventType.ConditionTriggered,
     }
 
     return event

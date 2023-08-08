@@ -1,9 +1,9 @@
 import {
-  AlertProviderType,
-  ConditionOperatorType,
-  ConditionTypeType,
-  IAlertInput,
-  IConditionInput,
+  AlertProvider,
+  ConditionOperator,
+  ConditionType,
+  IAlert_CreateInput,
+  ICondition_CreateInput,
 } from '@market-connector/types'
 import { Type } from 'class-transformer'
 import {
@@ -18,10 +18,10 @@ import {
   ValidateNested,
 } from 'class-validator'
 
-export class CreateConditionDto implements IConditionInput {
+export class CreateConditionDto implements ICondition_CreateInput {
   @IsString()
-  @IsEnum(ConditionTypeType)
-  readonly type: ConditionTypeType
+  @IsEnum(ConditionType)
+  readonly type: ConditionType
 
   @IsString()
   @IsNotEmpty()
@@ -32,8 +32,8 @@ export class CreateConditionDto implements IConditionInput {
   readonly requiredValue: number
 
   @IsString()
-  @IsEnum(ConditionOperatorType)
-  readonly operator: ConditionOperatorType
+  @IsEnum(ConditionOperator)
+  readonly operator: ConditionOperator
 
   @IsNumber()
   @IsNotEmpty()
@@ -54,14 +54,14 @@ export class CreateConditionDto implements IConditionInput {
 
 export class ConditionAlertDto {
   @IsString()
-  @IsEnum(AlertProviderType)
-  readonly provider: AlertProviderType
+  @IsEnum(AlertProvider)
+  readonly provider: AlertProvider
 }
 
-export class CreateAlertDto extends CreateConditionDto implements IAlertInput {
+export class CreateAlertDto extends CreateConditionDto implements IAlert_CreateInput {
   @IsString()
-  @IsEnum(ConditionTypeType)
-  override readonly type: ConditionTypeType.ALERT
+  @IsEnum(ConditionType)
+  override readonly type: ConditionType.Alert
 
   @IsDefined()
   @IsNotEmptyObject()

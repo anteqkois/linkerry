@@ -1,31 +1,32 @@
-import { ConditionTypeType, ICondition, IConditionInput } from "./condition"
+import { ConditionType, ICondition, ICondition_CreateInput } from "./condition"
 
-export enum AlertProviderType {
-  TRADING_VIEW = 'tradingView',
-  UNKNOWN = 'unknown',
+export enum AlertProvider {
+  TradingView = 'TradingView',
+  Unknown = 'Unknown',
 }
+
 
 interface IBaseAlert {
   handlerUrl: string
 }
 
 export interface IAlertTradingView extends IBaseAlert {
-  provider: AlertProviderType.TRADING_VIEW
+  provider: AlertProvider.TradingView
   messagePattern: string
 }
 
 export interface IAlertUnknown extends IBaseAlert {
-  provider: AlertProviderType.UNKNOWN
+  provider: AlertProvider.Unknown
 }
 
 export interface IAlert extends ICondition {
-  type: ConditionTypeType.ALERT
+  type: ConditionType.Alert
   alert: IAlertTradingView | IAlertUnknown
 }
 
-export interface IAlertInput extends IConditionInput {
-  type: ConditionTypeType.ALERT
+export interface IAlert_CreateInput extends ICondition_CreateInput {
+  type: ConditionType.Alert
   alert: {
-    provider: AlertProviderType
+    provider: AlertProvider
   }
 }

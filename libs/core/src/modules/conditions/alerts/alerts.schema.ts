@@ -1,4 +1,4 @@
-import { ConditionTypeType, ICondition } from '@market-connector/types'
+import { ICondition } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { Condition } from '../schemas/condition.schema'

@@ -1,8 +1,8 @@
-import { ExchangeCode, IMarketQuery, MarketType } from '@market-connector/types'
+import { ExchangeCode, IMarket_GetQuery, MarketType } from '@market-connector/types'
 import { IsBoolean, IsEnum, IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
 import { PaginationDto } from '../../../lib/utils/dto/pagination.dto'
 
-export class GetManyMarketsQueryDto extends PaginationDto implements IMarketQuery {
+export class GetManyMarketsQueryDto extends PaginationDto implements IMarket_GetQuery {
   @IsBoolean()
   @IsOptional()
   readonly active?: boolean
