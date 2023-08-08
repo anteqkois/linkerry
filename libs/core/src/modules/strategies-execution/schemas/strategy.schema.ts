@@ -19,6 +19,7 @@ const StrategyBuyConditionSchema = SchemaFactory.createForClass(StrategyBuyCondi
 @Schema({ timestamps: true, discriminatorKey: 'type', collection:'strategies-buy' })
 export class StrategyBuy implements IStrategyBuy {
   _id: string
+  // @Prop({requiredL: true, type: String, enum: StrategyBuy_TypeType})
   type: StrategyBuy_TypeType
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
@@ -30,8 +31,17 @@ export class StrategyBuy implements IStrategyBuy {
   @Prop({ required: false, type: Number, default: 5356800 }) // 2 month
   validityUnix: number
 
+  @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StrategySells' }], default: [] })
+  strategySell: Id[]
+
   @Prop({ required: true, type: [StrategyBuyConditionSchema], default: [] })
   conditions: IStrategyBuy_Condition[]
+
+  @Prop({ required: true, type: Boolean, default: false })
+  active: boolean
+
+  @Prop({ required: true, type: Boolean, default: false })
+  testMode: boolean
 
   @Prop({ required: true, type: Number, default: 0 })
   triggeredTimes: number

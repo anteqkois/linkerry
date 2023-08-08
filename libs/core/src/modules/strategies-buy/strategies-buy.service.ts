@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common'
-import { CreateStrategyBuyStaticMarket } from './dro/create-strategy-buy-static-market.dto'
-import { StrategyBuyStaticMarket } from './schemas/strategy-buy-static-market.schema'
-import { Model } from 'mongoose'
-import { InjectModel } from '@nestjs/mongoose'
 import { Id, StrategyBuy_TypeType } from '@market-connector/types'
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { CreateStrategyBuyStaticMarketDto } from './dro/create-strategy-buy-static-market.dto'
+import { StrategyBuyStaticMarket } from './schemas/strategy-buy-static-market.schema'
 
 @Injectable()
 export class StrategiesBuyService {
@@ -11,17 +11,14 @@ export class StrategiesBuyService {
     @InjectModel(StrategyBuyStaticMarket.name) private readonly  strategyBuyStaticMarketModel: Model<StrategyBuyStaticMarket>,
   ) {}
 
-  createStrategyStaticMarket(dto: CreateStrategyBuyStaticMarket, userId: Id) {
+  createStrategyStaticMarket(dto: CreateStrategyBuyStaticMarketDto, userId: Id) {
 
     return this.strategyBuyStaticMarketModel.create({
-      active: dto.active,
       conditions: dto.conditions,
-      markets: dto.markets,
       name: dto.name,
       strategySell: [],
-      testMode: dto.testMode,
       triggeredTimes: 0,
-      type: StrategyBuy_TypeType.STATIC_MARKET,
+      type: StrategyBuy_TypeType.StrategyBuyStaticMarkets,
       user: userId,
     })
   }
