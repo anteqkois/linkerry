@@ -13,6 +13,8 @@ export * from './components/ui/toaster'
 export * from './components/ui/use-toast'
 export * from './components/ui/form'
 export * from './components/ui/checkbox'
+export * from './components/ui/popover'
+export * from './components/ui/tabs'
 
 export * from './components/theme/provider'
 export * from './components/theme/toggle-button'
