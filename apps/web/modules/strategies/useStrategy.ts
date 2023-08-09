@@ -2,34 +2,34 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  StrategyBuyType,
+  StrategyType,
 } from '@market-connector/types'
 import { toast } from '@market-connector/ui-components/client'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { retriveServerHttpException } from '../../utils'
-import { StrategyBuyApi } from './api'
-import { strategyBuyStaticMarketSchema } from './validations'
+import { StrategyApi } from './api'
+import { strategyStaticMarketSchema } from './validations'
 
 
-export const useStrategyBuy = () => {
+export const useStrategy = () => {
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<z.infer<typeof strategyBuyStaticMarketSchema>>({
-    resolver: zodResolver(strategyBuyStaticMarketSchema),
+  const createForm = useForm<z.infer<typeof strategyStaticMarketSchema>>({
+    resolver: zodResolver(strategyStaticMarketSchema),
     defaultValues: {
-      type: StrategyBuyType.StrategyBuyStaticMarkets,
+      type: StrategyType.StrategyStaticMarkets,
       name: '',
-      conditions: [],
+      strategyBuy:[]
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof strategyBuyStaticMarketSchema>) => {
+  const onSubmitCreate = async (values: z.infer<typeof strategyStaticMarketSchema>) => {
     console.log(values)
     setIsLoading(true)
     try {
-      const res = await StrategyBuyApi.createStatic(values)
+      const res = await StrategyApi.createStatic(values)
       setIsLoading(false)
     } catch (error: any) {
       setIsLoading(false)
@@ -37,7 +37,7 @@ export const useStrategyBuy = () => {
       if (serverError)
         return toast({
           title: "Strategy didn't saved",
-          description: serverError ? serverError.message : 'Saving strategy buy failed. Please try again.',
+          description: serverError ? serverError.message : 'Saving strategy failed. Please try again.',
           duration: 6000,
           variant: 'destructive',
         })
@@ -47,7 +47,7 @@ export const useStrategyBuy = () => {
   return {
     isLoading,
     setIsLoading,
-    form,
-    onSubmit,
+    createForm,
+    onSubmitCreate,
   }
 }

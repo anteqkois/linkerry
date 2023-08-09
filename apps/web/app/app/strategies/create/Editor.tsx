@@ -3,55 +3,95 @@ import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, Controls, Node, ReactFlowProvider } from 'reactflow'
-import { AddConditionNode } from './AddConditionNode'
+import { AddConditionNode } from './components/AddConditionNode'
+import { StrategyBuyNode } from './components/StrategyBuyNode'
 import { useStrategiesStore } from './store'
-import { StrategyBuyNode } from './StrategyBuyNode'
+import { StrategyStartNode } from './components/StrategyStartNode'
 
 const nodeTypes = {
   strategyBuyNode: StrategyBuyNode,
-  addConditionNode: AddConditionNode
- }
+  addConditionNode: AddConditionNode,
+  strategyStartNode: StrategyStartNode,
+}
+
+// const initialNodes: Node[] = [
+//   {
+//     id: 'A',
+//     // type: 'group',
+//     type: 'strategyBuyNode',
+//     position: { x: 0, y: 0 },
+//     style: {
+//       // width: 500,
+//       // height: 250,
+//     },
+//     data: {},
+//   },
+//   {
+//     id: 'addConditionButton',
+//     type: 'addConditionNode',
+//     position: {
+//       x: 0,
+//       y: 0,
+//     },
+//     data: {},
+//     deletable: false,
+//     // draggable: false,
+//     parentNode: 'A',
+//     extent: 'parent',
+//     expandParent: true,
+//   },
+//   {
+//     id: 'addConditionButton2',
+//     type: 'addConditionNode',
+//     position: {
+//       x: 100,
+//       y: 100,
+//     },
+//     data: {},
+//     deletable: false,
+//     // draggable: false,
+//     parentNode: 'A',
+//     extent: 'parent',
+//     expandParent: true,
+//   },
+// ]
 
 const initialNodes: Node[] = [
   {
-    id: 'A',
+    id: 'strategyStart',
     // type: 'group',
-    type: 'strategyBuyNode',
+    type: 'strategyStartNode',
     position: { x: 0, y: 0 },
-    style: {
-      // width: 500,
-      // height: 250,
-    },
     data: {},
   },
-  {
-    id: 'addConditionButton',
-    type: 'addConditionNode',
-    position: {
-      x: 0,
-      y: 0,
-    },
-    data: {},
-    deletable: false,
-    // draggable: false,
-    parentNode: 'A',
-    extent: 'parent',
-    expandParent: true,
-  },
-  {
-    id: 'addConditionButton2',
-    type: 'addConditionNode',
-    position: {
-      x: 100,
-      y: 100,
-    },
-    data: {},
-    deletable: false,
-    // draggable: false,
-    parentNode: 'A',
-    extent: 'parent',
-    expandParent: true,
-  },
+  // {
+  //   id: 'addConditionButton',
+  //   type: 'addConditionNode',
+  //   position: {
+  //     x: 0,
+  //     y: 0,
+  //   },
+  //   data: {},
+  //   deletable: false,
+  //   // draggable: false,
+  //   parentNode: 'A',
+  //   extent: 'parent',
+  //   expandParent: true,
+  // },
+  // {
+  //   id: 'addConditionButton2',
+  //   type: 'addConditionNode',
+  //   position: {
+  //     x: 100,
+  //     y: 100,
+  //   },
+  //   data: {},
+  //   deletable: false,
+  //   // draggable: false,
+  //   parentNode: 'A',
+  //   extent: 'parent',
+  //   expandParent: true,
+  // },
 ]
 
 export const Editor = () => {

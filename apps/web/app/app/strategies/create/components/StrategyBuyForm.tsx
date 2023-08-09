@@ -1,7 +1,7 @@
 'use client'
 
 import { Form, useForm } from "react-hook-form"
-import { useUser } from "../../../../modules/user/useUser"
+import { useUser } from "../../../../../modules/user/useUser"
 import { z } from "zod"
 
 // export const StrategyBuyForm = () => {

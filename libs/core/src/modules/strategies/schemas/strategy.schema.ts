@@ -18,7 +18,7 @@ class StrategyStrategyBuy implements IStrategy_StrategyBuy {
 
 const StrategyStrategyBuySchema = SchemaFactory.createForClass(StrategyStrategyBuy)
 
-@Schema({ timestamps: true, discriminatorKey: 'type', collection: 'strategies-buy' })
+@Schema({ timestamps: true, discriminatorKey: 'type', collection: 'strategies' })
 export class Strategy implements IStrategy {
   _id: string
   // @Prop({requiredL: true, type: String, enum: StrategyType})

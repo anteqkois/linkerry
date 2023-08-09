@@ -19,13 +19,13 @@ export function MobileMenu({ children }: MobileProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <Icons.hamburgerMenu className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Icons.hamburgerMenu className="h-[1.2rem] w-[1.2rem]" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuContent className="w-56 max-h-[calc(100vh-60px)] overflow-y-scroll" align="start">
           <DropdownMenuGroup>
             <DropdownMenuLabel>
-              <div className="flex items-center gap-1 text-secondary">
+              <div className="flex items-center gap-1 text-primary">
                 <Icons.strategy />
                 Strategies
               </div>
@@ -39,7 +39,7 @@ export function MobileMenu({ children }: MobileProps) {
           </DropdownMenuGroup>
           <DropdownMenuGroup>
             <DropdownMenuLabel>
-              <div className="flex items-center gap-1 text-secondary">
+              <div className="flex items-center gap-1 text-primary">
                 <Icons.condition />
                 Conditions
               </div>
@@ -55,7 +55,7 @@ export function MobileMenu({ children }: MobileProps) {
           </DropdownMenuGroup>
           <DropdownMenuGroup>
             <DropdownMenuLabel>
-              <div className="flex items-center gap-1 text-secondary">
+              <div className="flex items-center gap-1 text-primary">
                 <Icons.exchange />
                 Exchanges
               </div>

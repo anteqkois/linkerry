@@ -1,5 +1,5 @@
 import { PageContainer } from '../../components/PageContainer'
-import { CardWithForm } from '../components/CreateCard'
+import { CardWithForm } from './CreateCard'
 
 export default function Page() {
   return (

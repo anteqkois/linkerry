@@ -49,3 +49,15 @@ export interface IStrategy_CreateInput {
   // strategySell: Id[]
   // strategyPause: Id[]
 }
+
+export interface IStrategy_CreateResponse {
+  _id: Id
+  name: string
+  type: StrategyType
+  // validityUnix: number
+  testMode: boolean
+  active: boolean
+  strategyBuy: IStrategy_StrategyBuy[]
+  // strategySell: Id[]
+  // strategyPause: Id[]
+}
