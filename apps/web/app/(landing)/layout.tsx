@@ -18,7 +18,7 @@ export default async function MarketingLayout({ children }: MarketingLayoutProps
         <div className="flex h-20 items-center justify-between py-6">
           <MainNav items={marketingConfig.mainNav} />
           <nav className='flex gap-2 items-center'>
-            <Link href="/login" className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }), 'px-4')}>
+            <Link href="/login" className={cn(buttonVariants({ size: 'sm' }), 'px-4')}>
               Login
             </Link>
             <ModeToggle/>

@@ -5,7 +5,6 @@ import {
     IAuthSignUpInput,
     IAuthSignUpResponse,
 } from '@market-connector/types'
-// import { apiClient } from '../../libs/api-client'
 import { apiClient } from '../../libs/api-client'
 
 export class AuthApi {

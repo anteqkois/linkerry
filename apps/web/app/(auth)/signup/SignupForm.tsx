@@ -107,7 +107,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
               {errors?.root && <p className="px-1 text-xs text-red-600">{errors.root.message}</p>}
             </div>
           </div>
-          <Button variant="secondary">
+          <Button>
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
             Sign In with Email
           </Button>

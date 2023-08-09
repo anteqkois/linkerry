@@ -1,12 +1,11 @@
-import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import mongoose from 'mongoose'
-import { StrategyBuy } from './strategy.schema'
 import {
   IStrategyBuy_StaticMarket,
   IStrategyBuy_StaticMarket_Markets,
-  Id,
-  StrategyBuy_TypeType,
+  Id
 } from '@market-connector/types'
+import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import mongoose from 'mongoose'
+import { StrategyBuy } from './strategy.schema'
 
 export type StrategyBuyStaticMarketDocument = mongoose.HydratedDocument<StrategyBuyStaticMarket>
 
@@ -25,7 +24,7 @@ const StrategyBuyStaticMarketMarketsSchema = SchemaFactory.createForClass(Strate
 
 @Schema()
 export class StrategyBuyStaticMarket extends StrategyBuy implements IStrategyBuy_StaticMarket {
-  override type: StrategyBuy_TypeType.STATIC_MARKET
+  override type: StrategyBuyType.STATIC_MARKET
 
   @Prop({ required: true, type: [StrategyBuyStaticMarketMarketsSchema] })
   readonly markets: Array<IStrategyBuy_StaticMarket_Markets>

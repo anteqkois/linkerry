@@ -8,6 +8,55 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263.4 70% 50.4%;
+  }
+
+
+
+  /* Purole from 08.08.2023 */
+    /*
+  :root {
     --background-page: 0 0% 96%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -26,9 +75,8 @@
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
-    /*
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%; */
+
+    --secondary-foreground: 222.2 47.4% 11.2%;
     --secondary: 261 70.4% 47.5%;
     --secondary-foreground: 261 50.4% 98%;
 
@@ -60,8 +108,6 @@
     --border: 261 50% 17%;
     --input: 261 50% 17%;
 
-    /* --card: 261 20% 4%; */
-    /* --card: 261 20% 6%; */
     --card: 261 20% 7%;
     --card-foreground: 213 31% 91%;
 
@@ -77,7 +123,7 @@
     --ring: 261 34% 17%;
 
     --radius: 0.5rem;
-  }
+  } */
 
   /* purple improved 1 */
   /* .dark {

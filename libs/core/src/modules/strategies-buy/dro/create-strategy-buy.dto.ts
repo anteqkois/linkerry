@@ -2,7 +2,7 @@ import {
   IStrategyBuy_Condition,
   IStrategyBuy_CreateInput,
   Id,
-  StrategyBuy_TypeType
+  StrategyBuyType
 } from '@market-connector/types'
 import { Type } from 'class-transformer'
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsEnum, IsMongoId, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
@@ -18,10 +18,10 @@ export class CreateStrategyBuyDto implements IStrategyBuy_CreateInput {
   @MaxLength(30)
   readonly name: string
 
-  @IsEnum(StrategyBuy_TypeType)
+  @IsEnum(StrategyBuyType)
   @MinLength(2)
   @MaxLength(30)
-  readonly type: StrategyBuy_TypeType
+  readonly type: StrategyBuyType
 
   @IsArray()
   @ArrayMinSize(1)

@@ -10,7 +10,7 @@ export class StrategiesBuyController {
   constructor(private readonly strategiesBuyService: StrategiesBuyService) {}
 
   @UseJwtGuard()
-  @Post('/static-market')
+  @Post('/static-market/static')
   createStrategyStaticMarket(@ReqJwtUser() user: JwtUser,@Body() dto: CreateStrategyBuyStaticMarketDto){
     return this.strategiesBuyService.createStrategyStaticMarket(dto, user.id)
   }

@@ -1,4 +1,7 @@
-import { Id, StrategyBuy_TypeType } from '@market-connector/types'
+import {
+  Id,
+  StrategyBuyType
+} from '@market-connector/types'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
@@ -18,7 +21,7 @@ export class StrategiesBuyService {
       name: dto.name,
       strategySell: [],
       triggeredTimes: 0,
-      type: StrategyBuy_TypeType.StrategyBuyStaticMarkets,
+      type: StrategyBuyType.StrategyBuyStaticMarkets,
       user: userId,
     })
   }

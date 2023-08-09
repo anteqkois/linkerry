@@ -1,7 +1,7 @@
 'use client'
 import 'reactflow/dist/style.css'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, Controls, Node, ReactFlowProvider } from 'reactflow'
 import { AddConditionNode } from './AddConditionNode'
 import { useStrategiesStore } from './store'
@@ -19,8 +19,8 @@ const initialNodes: Node[] = [
     type: 'strategyBuyNode',
     position: { x: 0, y: 0 },
     style: {
-      width: 500,
-      height: 250,
+      // width: 500,
+      // height: 250,
     },
     data: {},
   },
@@ -36,6 +36,7 @@ const initialNodes: Node[] = [
     // draggable: false,
     parentNode: 'A',
     extent: 'parent',
+    expandParent: true,
   },
   {
     id: 'addConditionButton2',
@@ -49,6 +50,7 @@ const initialNodes: Node[] = [
     // draggable: false,
     parentNode: 'A',
     extent: 'parent',
+    expandParent: true,
   },
 ]
 

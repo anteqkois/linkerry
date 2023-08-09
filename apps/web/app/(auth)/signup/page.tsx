@@ -1,7 +1,7 @@
 import { H3, Icons, buttonVariants} from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import Link from 'next/link'
-import { SignUpForm } from './signup-form'
+import { SignUpForm } from './SignupForm'
 
 export const metadata = {
   title: 'Create an account',

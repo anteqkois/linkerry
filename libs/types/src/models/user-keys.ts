@@ -28,7 +28,6 @@ export interface IUserKeys_CreateInput {
   name: string
   exchange: Id
   exchangeCode: ExchangeCode
-  user: Id
   aKey: string
   sKey: string
 }

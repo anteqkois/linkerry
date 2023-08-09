@@ -2,7 +2,7 @@ import {
   IStrategyBuy,
   IStrategyBuy_Condition,
   Id,
-  StrategyBuy_TypeType
+  StrategyBuyType
 } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
@@ -18,9 +18,16 @@ const StrategyBuyConditionSchema = SchemaFactory.createForClass(StrategyBuyCondi
 
 @Schema({ timestamps: true, discriminatorKey: 'type', collection:'strategies-buy' })
 export class StrategyBuy implements IStrategyBuy {
+  user: string
+  type: StrategyBuyType
+  name: string
+  validityUnix: number
+  triggeredTimes: number
+  conditions: IStrategyBuy_Condition[]
+  conditionMarketProvider?: string | undefined
   _id: string
-  // @Prop({requiredL: true, type: String, enum: StrategyBuy_TypeType})
-  type: StrategyBuy_TypeType
+  // @Prop({requiredL: true, type: String, enum: StrategyBuyType})
+  type: StrategyBuyType
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
   user: string

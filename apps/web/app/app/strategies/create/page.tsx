@@ -1,3 +1,5 @@
+'use client'
+
 import { PageContainer } from '../../components/PageContainer'
 import { Editor } from './Editor'
 

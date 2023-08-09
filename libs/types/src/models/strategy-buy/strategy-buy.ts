@@ -2,7 +2,7 @@ import { Id } from '../../utils'
 import { IStrategyBuy_DynamicMarket_Property } from './strategy-dynamic-market'
 import { StrategyBuy_StaticMarket_Property } from './strategy-static-market'
 
-export enum StrategyBuy_TypeType {
+export enum StrategyBuyType {
   StrategyBuyDynamicMarkets = 'StrategyBuyDynamicMarkets',
   StrategyBuyStaticMarkets = 'StrategyBuyStaticMarkets',
 }
@@ -20,7 +20,7 @@ export interface IStrategyBuy_Condition {
 
 export interface IStrategyBuy extends StrategyBuy_StaticMarket_Property, IStrategyBuy_DynamicMarket_Property {
   user: Id
-  type: StrategyBuy_TypeType
+  type: StrategyBuyType
   name: string
   validityUnix: number
   triggeredTimes: number
@@ -32,7 +32,13 @@ export interface IStrategyBuy extends StrategyBuy_StaticMarket_Property, IStrate
 // }
 
 export interface IStrategyBuy_CreateInput {
-  type: StrategyBuy_TypeType
+  type: StrategyBuyType
+  name: string
+  conditions: IStrategyBuy_Condition[]
+}
+
+export interface IStrategyBuy_CreateResponse {
+  type: StrategyBuyType
   name: string
   conditions: IStrategyBuy_Condition[]
 }

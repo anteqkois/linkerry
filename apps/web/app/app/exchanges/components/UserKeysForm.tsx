@@ -168,7 +168,7 @@ export const UserKeysForm = ({ exchanges }: Props) => {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" variant="secondary">
+          <Button type="submit">
             {isLoading ? <Icons.spinner className="mr-2 h-4 w-9 animate-spin" /> : 'Create'}
           </Button>
         </div>

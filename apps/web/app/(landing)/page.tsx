@@ -36,7 +36,7 @@ export default async function IndexPage() {
           </p>
           <div className="space-x-4">
             <Link href="/login">
-              <Button size="lg" variant={'secondary'}>
+              <Button size="lg">
                 Get Started
               </Button>
             </Link>
