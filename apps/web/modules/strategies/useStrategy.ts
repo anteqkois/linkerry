@@ -26,7 +26,6 @@ export const useStrategy = () => {
   })
 
   const onSubmitCreate = async (values: z.infer<typeof strategyStaticMarketSchema>) => {
-    console.log(values)
     setIsLoading(true)
     try {
       const res = await StrategyApi.createStatic(values)

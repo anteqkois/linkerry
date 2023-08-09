@@ -29,7 +29,7 @@ export interface IStrategyBuy extends StrategyBuy_StaticMarket_Property, IStrate
   conditions: IStrategyBuy_Condition[]
 }
 
-
+// POST
 export interface IStrategyBuy_CreateInput {
   type: StrategyBuyType
   name: string
@@ -41,3 +41,7 @@ export interface IStrategyBuy_CreateResponse {
   name: string
   conditions: IStrategyBuy_Condition[]
 }
+
+// PUT
+export interface IStrategyBuy_UpdateInput extends IStrategyBuy {}
+export interface IStrategyBuy_UpdateResponse extends IStrategyBuy_CreateResponse {}

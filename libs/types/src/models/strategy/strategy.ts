@@ -25,6 +25,7 @@ export interface IStrategy_StrategyBuy {
 
 // One interface. Theare will be validation logic, which check if StrategyDynamicMarkets have at one buy strategy with conditionMarketProvider
 export interface IStrategy {
+  _id: Id
   user: Id
   name: string
   type: StrategyType
@@ -39,6 +40,7 @@ export interface IStrategy {
   // strategyPause: Id[]
 }
 
+// POST
 export interface IStrategy_CreateInput {
   name: string
   type: StrategyType
@@ -61,3 +63,8 @@ export interface IStrategy_CreateResponse {
   // strategySell: Id[]
   // strategyPause: Id[]
 }
+
+// PUT
+export interface IStrategy_UpdateInput extends IStrategy {}
+
+export interface IStrategy_UpdateResponse extends IStrategy_CreateResponse {}

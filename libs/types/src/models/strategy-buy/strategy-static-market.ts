@@ -1,4 +1,4 @@
-import { IStrategyBuy, IStrategyBuy_CreateInput, IStrategyBuy_CreateResponse, StrategyBuyType } from './strategy-buy'
+import { IStrategyBuy, IStrategyBuy_CreateInput, IStrategyBuy_CreateResponse, IStrategyBuy_UpdateInput, IStrategyBuy_UpdateResponse, StrategyBuyType } from './strategy-buy'
 
 export interface IStrategyBuy_StaticMarket
   extends Omit<IStrategyBuy, keyof StrategyBuy_StaticMarket_Property>,
@@ -6,11 +6,12 @@ export interface IStrategyBuy_StaticMarket
   type: StrategyBuyType.StrategyBuyStaticMarkets
 }
 
-export interface IStrategyBuy_StaticMarket_CreateInput extends IStrategyBuy_CreateInput {
-}
+export interface StrategyBuy_StaticMarket_Property {}
 
-export interface IStrategyBuy_StaticMarket_Response extends IStrategyBuy_CreateResponse {
-}
+// POST
+export interface IStrategyBuy_StaticMarket_CreateInput extends IStrategyBuy_CreateInput {}
+export interface IStrategyBuy_StaticMarket_CreateResponse extends IStrategyBuy_CreateResponse {}
 
-export interface StrategyBuy_StaticMarket_Property {
-}
+// PUT
+export interface IStrategyBuy_StaticMarket_UpdateInput extends IStrategyBuy_UpdateInput {}
+export interface IStrategyBuy_StaticMarket_UpdateResponse extends IStrategyBuy_UpdateResponse {}
