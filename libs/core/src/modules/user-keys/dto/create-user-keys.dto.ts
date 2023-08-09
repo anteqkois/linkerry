@@ -16,10 +16,6 @@ export class CreateUserKeysDto implements IUserKeys_CreateInput {
   @IsNotEmpty()
   readonly exchangeCode: ExchangeCode
 
-  @IsMongoId()
-  @IsNotEmpty()
-  readonly user: string
-
   @IsString()
   @IsNotEmpty()
   @MinLength(10)

@@ -17,6 +17,12 @@ export enum StrategyType {
   StrategyStaticMarkets = 'StrategyStaticMarkets',
 }
 
+export interface IStrategy_StrategyBuy {
+  id: Id
+  strategyBuy: Id
+  active: boolean
+}
+
 // One interface. Theare will be validation logic, which check if StrategyDynamicMarkets have at one buy strategy with conditionMarketProvider
 export interface IStrategy {
   user: Id
@@ -26,10 +32,10 @@ export interface IStrategy {
   testMode: boolean
   active: boolean
   triggeredTimes: number
-  strategyBuy: Id[]
-  strategySell: Id[]
-  strategyExecution: Id[]
   state: StrategyState
+  strategyBuy: IStrategy_StrategyBuy[]
+  // strategySell: Id[]
+  // strategyExecution: Id[]
   // strategyPause: Id[]
 }
 
@@ -39,8 +45,7 @@ export interface IStrategy_CreateInput {
   // validityUnix: number
   testMode: boolean
   active: boolean
-  // triggeredTimes: number
-  strategyBuy: Id[]
-  strategySell: Id[]
+  strategyBuy: IStrategy_StrategyBuy[]
+  // strategySell: Id[]
   // strategyPause: Id[]
 }

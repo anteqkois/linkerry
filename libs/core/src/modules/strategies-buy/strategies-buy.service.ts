@@ -19,7 +19,7 @@ export class StrategiesBuyService {
     return this.strategyBuyStaticMarketModel.create({
       conditions: dto.conditions,
       name: dto.name,
-      strategySell: [],
+      // strategySell: [],
       triggeredTimes: 0,
       type: StrategyBuyType.StrategyBuyStaticMarkets,
       user: userId,

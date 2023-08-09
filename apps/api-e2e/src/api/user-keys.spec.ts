@@ -9,7 +9,6 @@ const input: IUserKeys_CreateInput = {
   exchangeCode: alwaysExistingExchange.code as ExchangeCode.binance,
   exchange: alwaysExistingExchange._id,
   name: 'test keys',
-  user: alwaysExistingUser._id,
 }
 
 describe('POST /api/user-keys', () => {
@@ -29,6 +28,5 @@ describe('POST /api/user-keys', () => {
     expect(data.userKeys.exchange).toBe(input.exchange)
     expect(data.userKeys.exchangeCode).toBe(input.exchangeCode)
     expect(data.userKeys.name).toBe(input.name)
-    expect(data.userKeys.user).toBe(input.user)
   })
 })

@@ -21,14 +21,8 @@ export class Condition implements ICondition {
   @Prop({ required: true, type: String, enum: ConditionOperator })
   operator: ConditionOperator
 
-  @Prop({ required: true, type: Boolean, default: false })
-  active: boolean
-
   @Prop({ required: false, type: Number, default: 86400 }) // 1 day in seconds
   eventValidityUnix: number
-
-  @Prop({ required: true, type: Boolean, default: false })
-  testMode: boolean
 
   @Prop({ required: true, type: Boolean, default: false })
   isMarketProvider: boolean

@@ -5,9 +5,7 @@ import { login } from '../support/login'
 describe('POST /api/conditions', () => {
   it('only authenticated users can create conditions', async () => {
     const input: Partial<IAlert_CreateInput> = {
-      testMode: true,
       // name: 'test alert 2',
-      active: true,
       eventValidityUnix: 389721,
     }
 
@@ -18,13 +16,11 @@ describe('POST /api/conditions', () => {
   it('can create condition - alert - Trading View', async () => {
     await login()
     const input: IAlert_CreateInput = {
-      active: true,
       name: 'Test 1',
       eventValidityUnix: 389721,
       isMarketProvider: false,
       operator: ConditionOperator.Crossing,
       requiredValue: 1,
-      testMode: true,
       type: ConditionType.Alert,
       alert:{
         provider: AlertProvider.TradingView
@@ -37,13 +33,11 @@ describe('POST /api/conditions', () => {
     expect(res.data.condition).toBeDefined()
     expect(res.data.condition).toHaveProperty('_id')
     expect(res.data.condition).toHaveProperty('user')
-    expect(res.data.condition).toHaveProperty('active', input.active)
     expect(res.data.condition).toHaveProperty('name', input.name)
     expect(res.data.condition).toHaveProperty('eventValidityUnix', input.eventValidityUnix)
     expect(res.data.condition).toHaveProperty('isMarketProvider', input.isMarketProvider)
     expect(res.data.condition).toHaveProperty('operator', input.operator)
     expect(res.data.condition).toHaveProperty('requiredValue', input.requiredValue)
-    expect(res.data.condition).toHaveProperty('testMode', input.testMode)
     expect(res.data.condition).toHaveProperty('type', input.type)
     expect(res.data.condition.alert.provider).toBe(input.alert.provider)
     expect(res.data.condition.alert.handlerUrl).toBeDefined()
@@ -52,13 +46,11 @@ describe('POST /api/conditions', () => {
 
   it('can\'t use existing condition name', async () => {
     const input: IAlert_CreateInput = {
-      active: true,
       name: 'Test 1',
       eventValidityUnix: 389721,
       isMarketProvider: false,
       operator: ConditionOperator.Crossing,
       requiredValue: 1,
-      testMode: true,
       type: ConditionType.Alert,
       alert:{
         provider: AlertProvider.TradingView
@@ -71,9 +63,7 @@ describe('POST /api/conditions', () => {
 
   it('can\'t create alert with missing data', async () => {
     const input: Partial<IAlert_CreateInput> = {
-      testMode: true,
       // name: 'test alert 2',
-      active: true,
       requiredValue: 2
     }
 

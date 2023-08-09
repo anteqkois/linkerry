@@ -1,5 +1,13 @@
-import { IStrategy_CreateInput, Id, StrategyType } from '@market-connector/types'
-import { IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength } from 'class-validator'
+import { IStrategy_CreateInput, IStrategy_StrategyBuy, Id, StrategyType } from '@market-connector/types'
+import { Type } from 'class-transformer'
+import { IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
+
+export class StrategyStrategyBuyDto implements IStrategy_StrategyBuy {
+  @IsMongoId()
+  readonly id: Id
+  readonly active: boolean
+  readonly strategyBuy: string
+}
 
 export class CreateStrategyDto implements IStrategy_CreateInput {
   @IsString()
@@ -19,9 +27,9 @@ export class CreateStrategyDto implements IStrategy_CreateInput {
   readonly strategySell: Id[]
 
   @IsArray()
-  @IsOptional()
-  @IsMongoId({ each: true })
-  readonly strategyBuy: Id[]
+  @ValidateNested({ each: true })
+  @Type(() => StrategyStrategyBuyDto)
+  readonly strategyBuy: StrategyStrategyBuyDto[]
 
   // @IsArray()
   // @IsOptional()

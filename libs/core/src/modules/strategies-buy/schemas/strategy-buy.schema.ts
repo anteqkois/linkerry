@@ -1,22 +1,23 @@
-import {
-  IStrategyBuy,
-  IStrategyBuy_Condition,
-  Id,
-  StrategyBuyType
-} from '@market-connector/types'
+import { IStrategyBuy, IStrategyBuy_Condition, Id, StrategyBuyType } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
 export type StrategyBuyDocument = mongoose.HydratedDocument<StrategyBuy>
 
 class StrategyBuyCondition implements IStrategyBuy_Condition {
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Conditions' })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'conditions' })
   readonly id: Id
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'conditions' })
+  readonly condition: Id
+
+  @Prop({ required: true, type: Boolean })
+  active: boolean
 }
 
 const StrategyBuyConditionSchema = SchemaFactory.createForClass(StrategyBuyCondition)
 
-@Schema({ timestamps: true, discriminatorKey: 'type', collection:'strategies-buy' })
+@Schema({ timestamps: true, discriminatorKey: 'type', collection: 'strategies-buy' })
 export class StrategyBuy implements IStrategyBuy {
   _id: string
   type: StrategyBuyType

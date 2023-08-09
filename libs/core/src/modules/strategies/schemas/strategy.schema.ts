@@ -1,8 +1,22 @@
-import { IStrategy, Id, StrategyState, StrategyType } from '@market-connector/types'
+import { IStrategy, IStrategy_StrategyBuy, Id, StrategyState, StrategyType } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
 export type StrategyDocument = mongoose.HydratedDocument<Strategy>
+
+
+class StrategyStrategyBuy implements IStrategy_StrategyBuy {
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'strategies-buy' })
+  readonly id: Id
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'strategies-buy' })
+  readonly strategyBuy: Id
+
+  @Prop({ required: true, type: Boolean, default: false })
+  active: boolean
+}
+
+const StrategyStrategyBuySchema = SchemaFactory.createForClass(StrategyStrategyBuy)
 
 @Schema({ timestamps: true, discriminatorKey: 'type', collection: 'strategies-buy' })
 export class Strategy implements IStrategy {
@@ -10,7 +24,7 @@ export class Strategy implements IStrategy {
   // @Prop({requiredL: true, type: String, enum: StrategyType})
   type: StrategyType
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'users' })
   user: string
 
   @Prop({ required: true, type: String })
@@ -22,14 +36,14 @@ export class Strategy implements IStrategy {
   @Prop({ required: true, type: String, enum: StrategyState, default: StrategyState.Idle })
   state: StrategyState
 
-  @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StrategyBuys' }], default: [] })
-  strategyBuy: Id[]
+  @Prop({ required: true, type: [StrategyStrategyBuySchema], default: [] })
+  strategyBuy: IStrategy_StrategyBuy[]
 
-  @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StrategySells' }], default: [] })
-  strategySell: Id[]
+  // @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StrategySells' }], default: [] })
+  // strategySell: Id[]
 
-  @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StrategyExecutions' }], default: [] })
-  strategyExecution: Id[]
+  // @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StrategyExecutions' }], default: [] })
+  // strategyExecution: Id[]
 
   @Prop({ required: true, type: Boolean, default: false })
   active: boolean

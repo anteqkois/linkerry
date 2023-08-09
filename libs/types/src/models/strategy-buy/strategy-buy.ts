@@ -9,6 +9,8 @@ export enum StrategyBuyType {
 
 export interface IStrategyBuy_Condition {
   id: Id
+  condition: Id
+  active: boolean
   // conditionProperty?:{ // For future ?
   // eventValidityUnix: boolean
   // }
@@ -27,9 +29,6 @@ export interface IStrategyBuy extends StrategyBuy_StaticMarket_Property, IStrate
   conditions: IStrategyBuy_Condition[]
 }
 
-// export interface IStrategyBuyPopulated{
-// strategySell: IStrategySell[]
-// }
 
 export interface IStrategyBuy_CreateInput {
   type: StrategyBuyType

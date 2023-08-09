@@ -42,14 +42,6 @@ export class CreateConditionDto implements ICondition_CreateInput {
   @IsBoolean()
   @IsNotEmpty()
   readonly isMarketProvider: boolean
-
-  @IsBoolean()
-  @IsNotEmpty()
-  readonly testMode: boolean
-
-  @IsBoolean()
-  @IsNotEmpty()
-  readonly active: boolean
 }
 
 export class ConditionAlertDto {

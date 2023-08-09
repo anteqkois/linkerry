@@ -33,9 +33,7 @@ export interface ICondition {
   requiredValue: number
   operator: ConditionOperator
   triggeredTimes: number
-  active: boolean
   eventValidityUnix: number
-  testMode: boolean
   isMarketProvider: boolean
   // Alert Condition fields
   alert?: IAlertTradingView | IAlertUnknown
@@ -53,9 +51,7 @@ export interface ICondition_CreateInput {
   requiredValue: number
   operator: ConditionOperator
   eventValidityUnix: number
-  testMode: boolean
   isMarketProvider: boolean
-  active: boolean
   // readonly required: boolean;                 // for future usecase
 }
 

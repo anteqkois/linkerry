@@ -26,10 +26,8 @@ export const alwaysExistingUser = {
 
 export const alwaysExistingConditionAlert: IAlert = {
   _id: '111111111111111111111111',
-  active: true,
   name: 'Alwyas existing Condition',
   user: '000000000000000000000000',
-  testMode: true,
   eventValidityUnix: 490382,
   isMarketProvider: false,
   operator: ConditionOperator.Crossing,

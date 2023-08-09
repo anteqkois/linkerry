@@ -5,8 +5,6 @@ import { login } from '../support/login'
 describe('ERROR FILTER', () => {
   it('Preperly create error schema for missing data', async () => {
     const input: Partial<IAlert_CreateInput> = {
-      testMode: true,
-      active: true,
       eventValidityUnix: 389721,
     }
     await login()
