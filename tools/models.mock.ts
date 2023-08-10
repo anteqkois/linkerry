@@ -4,6 +4,8 @@ import {
   ConditionType,
   IAlert,
   IStrategy,
+  IStrategyBuy,
+  StrategyBuyType,
   StrategyState,
   StrategyType,
 } from '../libs/types/src'
@@ -2690,7 +2692,7 @@ export const alwaysExistingExchange = {
   },
 }
 
-export const alwaysExistingStrategy: IStrategy = {
+export const alwaysExistingStrategyStaticMarket: IStrategy = {
   _id: '222222222222222222222222',
   user: alwaysExistingUser._id,
   name: 'Always existing strategy',
@@ -2701,4 +2703,14 @@ export const alwaysExistingStrategy: IStrategy = {
   testMode: false,
   triggeredTimes: 0,
   type: StrategyType.StrategyStaticMarket,
+}
+
+export const alwaysExistingStrategyBuyStaticMarket: IStrategyBuy = {
+  _id: '333333333333333333333333',
+  user: alwaysExistingUser._id,
+  name: 'Alwyas existing buy startegy',
+  validityUnix: 5356800,
+  conditions: [],
+  triggeredTimes: 1,
+  type: StrategyBuyType.StrategyBuyStaticMarket,
 }

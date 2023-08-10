@@ -1,11 +1,18 @@
 import { IStrategy_CreateInput, IStrategy_StrategyBuy, Id, StrategyType } from '@market-connector/types'
 import { Type } from 'class-transformer'
-import { IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
+import { IsArray, IsBoolean, IsDefined, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
 
 export class StrategyStrategyBuyDto implements IStrategy_StrategyBuy {
+  @IsDefined()
   @IsMongoId()
   readonly id: Id
+
+  @IsDefined()
+  @IsBoolean()
   readonly active: boolean
+
+  @IsDefined()
+  @IsMongoId()
   readonly strategyBuy: string
 }
 

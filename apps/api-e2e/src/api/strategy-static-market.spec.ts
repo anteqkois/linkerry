@@ -1,6 +1,9 @@
 import {
+  DeepPartial,
   IStrategy_StaticMarket_CreateInput,
   IStrategy_StaticMarket_CreateResponse,
+  IStrategy_StaticMarket_PatchInput,
+  IStrategy_StaticMarket_PatchResponse,
   IStrategy_StaticMarket_UpdateInput,
   IStrategy_StaticMarket_UpdateResponse,
   StrategyState,
@@ -8,7 +11,7 @@ import {
 } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'
-import { alwaysExistingUser } from 'tools/models.mock'
+import { alwaysExistingStrategyBuyStaticMarket, alwaysExistingUser } from 'tools/models.mock'
 
 const input: IStrategy_StaticMarket_CreateInput = {
   type: StrategyType.StrategyStaticMarket,
@@ -51,7 +54,7 @@ describe('POST /api/strategies/static-market', () => {
       ...lastStrategyData,
       active: false,
       name: 'Updated strategy',
-      state: StrategyState.OpenPosition
+      state: StrategyState.OpenPosition,
     }
 
     const { status, data } = await axios.put<IStrategy_StaticMarket_UpdateResponse>(
@@ -85,5 +88,22 @@ describe('POST /api/strategies/static-market', () => {
     )
 
     await expect(status).toBe(200)
+  })
+
+  it('user can not add strategy buy without required fields (active, etc.)', async () => {
+    const patchInput: DeepPartial<IStrategy_StaticMarket_PatchInput> = {
+      ...lastStrategyData,
+      strategyBuy: [
+        {
+          id: alwaysExistingStrategyBuyStaticMarket._id,
+        },
+      ],
+    }
+
+    const res = axios.patch<IStrategy_StaticMarket_PatchResponse>(
+      `/strategies/static-market/${lastStrategyData._id}`,
+      patchInput,
+    )
+    await expect(res).rejects.toHaveProperty('response.status', 422)
   })
 })

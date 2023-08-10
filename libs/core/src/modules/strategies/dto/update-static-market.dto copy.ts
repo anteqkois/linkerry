@@ -1,5 +1,5 @@
 import { IStrategy_StaticMarket_UpdateInput, Id, StrategyState } from '@market-connector/types'
-import { CreateStrategyStaticMarketDto } from './create-strategy-static-market.dto'
+import { CreateStrategyStaticMarketDto } from './create-static-market.dto'
 
 export class UpdateStrategyStaticMarketDto extends CreateStrategyStaticMarketDto implements IStrategy_StaticMarket_UpdateInput {
   readonly _id: Id
