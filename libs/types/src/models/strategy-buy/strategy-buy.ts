@@ -21,6 +21,7 @@ export interface IStrategyBuy_Condition {
 }
 
 export interface IStrategyBuy extends StrategyBuy_StaticMarket_Property, IStrategyBuy_DynamicMarket_Property {
+  _id: Id
   user: Id
   type: StrategyBuyType
   name: string
@@ -35,12 +36,7 @@ export interface IStrategyBuy_CreateInput {
   name: string
   conditions: IStrategyBuy_Condition[]
 }
-
-export interface IStrategyBuy_CreateResponse {
-  type: StrategyBuyType
-  name: string
-  conditions: IStrategyBuy_Condition[]
-}
+export interface IStrategyBuy_CreateResponse extends IStrategyBuy{}
 
 // PUT
 export interface IStrategyBuy_UpdateInput extends IStrategyBuy {}

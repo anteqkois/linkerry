@@ -3,10 +3,12 @@ import {
   IStrategy_StaticMarket_CreateResponse,
   IStrategy_StaticMarket_UpdateInput,
   IStrategy_StaticMarket_UpdateResponse,
+  StrategyState,
   StrategyType,
 } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'
+import { alwaysExistingUser } from 'tools/models.mock'
 
 const input: IStrategy_StaticMarket_CreateInput = {
   type: StrategyType.StrategyStaticMarket,
@@ -17,7 +19,7 @@ const input: IStrategy_StaticMarket_CreateInput = {
 }
 
 describe('POST /api/strategies/static-market', () => {
-  let createdStrategy: IStrategy_StaticMarket_CreateResponse
+  let lastStrategyData: IStrategy_StaticMarket_CreateResponse
 
   it('only authenticated users can create strategies', async () => {
     const res = axios.post(`/strategies/static-market`, input)
@@ -32,43 +34,53 @@ describe('POST /api/strategies/static-market', () => {
     expect(status).toBe(201)
     expect(data._id).toBeDefined()
     expect(data.triggeredTimes).toBe(0)
+    expect(data.state).toBe(StrategyState.Idle)
+    expect(data.triggeredTimes).toBe(0)
     expect(data.validityUnix).toBeDefined()
     expect(data.active).toBe(input.active)
     expect(data.name).toBe(input.name)
     expect(data.testMode).toBe(input.testMode)
     expect(data.type).toBe(input.type)
+    expect(data.user).toBe(alwaysExistingUser._id)
     expect(data.strategyBuy).toStrictEqual([])
-    createdStrategy = data
+    lastStrategyData = data
   })
 
   it('user can update strategy', async () => {
     const secondInput: IStrategy_StaticMarket_UpdateInput = {
-      ...createdStrategy,
+      ...lastStrategyData,
       active: false,
       name: 'Updated strategy',
+      state: StrategyState.OpenPosition
     }
-    
+
     const { status, data } = await axios.put<IStrategy_StaticMarket_UpdateResponse>(
-      `/strategies/static-market/${createdStrategy._id}`,
+      `/strategies/static-market/${lastStrategyData._id}`,
       secondInput,
     )
 
     expect(status).toBe(200)
+    expect(data._id).toBe(lastStrategyData._id)
+    expect(data.state).toBe(StrategyState.OpenPosition)
+    expect(data.triggeredTimes).toBe(0)
+    expect(data.validityUnix).toBe(lastStrategyData.validityUnix)
     expect(data.active).toBe(secondInput.active)
     expect(data.name).toBe(secondInput.name)
-    expect(data.testMode).toBe(secondInput.testMode)
-    expect(data.type).toBe(secondInput.type)
+    expect(data.testMode).toBe(lastStrategyData.testMode)
+    expect(data.type).toBe(lastStrategyData.type)
+    expect(data.user).toBe(alwaysExistingUser._id)
     expect(data.strategyBuy).toStrictEqual([])
+    lastStrategyData = data
   })
 
   it('user can not update strategy _id', async () => {
     const secondInput: IStrategy_StaticMarket_UpdateInput = {
-      ...createdStrategy,
+      ...lastStrategyData,
       _id: '9381y4ufb142380h982109j',
     }
 
     const { status } = await axios.put<IStrategy_StaticMarket_UpdateResponse>(
-      `/strategies/static-market/${createdStrategy._id}`,
+      `/strategies/static-market/${lastStrategyData._id}`,
       secondInput,
     )
 

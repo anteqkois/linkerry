@@ -14,20 +14,13 @@ export class StrategiesBuyService {
   ) {}
 
   createStaticMarket(dto: CreateStrategyBuyStaticMarketDto, userId: Id) {
-    return this.strategyBuyStaticMarketModel.create({
-      conditions: dto.conditions,
-      name: dto.name,
-      // strategySell: [],
-      triggeredTimes: 0,
-      type: StrategyBuyType.StrategyBuyStaticMarket,
-      user: userId,
-    })
+    return this.strategyBuyStaticMarketModel.create({...dto, user: userId})
   }
 
   async updateStaticMarket(dto: UpdateStrategyBuyStaticMarketDto, userId: Id, id: Id) {
     // TODO migrate to logic which will check if every condiyion exist in db, and when not, create it
     const strategyBuy = await this.strategyBuyStaticMarketModel
-      .findOneAndUpdate({ _id: id, user: userId }, { $set: dto }, { new: true })
+      .findOneAndUpdate({ _id: id, user: userId }, { $set: {...dto, _id: undefined} }, { new: true })
       .exec()
     if (!strategyBuy) throw new NotFoundException(`Can not find buy strategy: ${id}`)
     return strategyBuy

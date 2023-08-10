@@ -8,6 +8,7 @@ export interface IStrategyBuy_DynamicMarket
   type: StrategyBuyType.StrategyBuyDynamicMarket
 }
 
+
 export interface IStrategyBuy_DynamicMarket_Populated extends Omit<IStrategyBuy_DynamicMarket, 'conditionMarketProvider'> {
   conditionMarketProvider: ICondition
 }

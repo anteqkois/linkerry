@@ -26,7 +26,6 @@ export class CreateStrategyBuyDto implements IStrategyBuy_CreateInput {
   readonly type: StrategyBuyType
 
   @IsArray()
-  @ArrayMinSize(1)
   @ArrayMaxSize(10)
   @ValidateNested({ each: true })
   @Type(() => StrategyBuyConditionDto)

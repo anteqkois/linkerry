@@ -13,14 +13,7 @@ export class StrategiesService {
   ) {}
 
   async createStaticMarket(dto: CreateStrategyStaticMarketDto, userId: Id) {
-    return this.strategyStaticMarketModel.create({
-      user: userId,
-      active: false,
-      name: dto.name,
-      state: StrategyState.Idle,
-      strategyBuy: dto.strategyBuy,
-      testMode: dto.testMode,
-    })
+    return this.strategyStaticMarketModel.create({...dto, user: userId})
   }
 
   async updateStaticMarket(dto: UpdateStrategyStaticMarketDto, userId: Id, id: Id) {
