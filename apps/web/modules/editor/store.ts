@@ -3,8 +3,8 @@
 import {
   Connection,
   Edge,
-  Node,
   EdgeChange,
+  Node,
   NodeChange,
   OnConnect,
   OnEdgesChange,
@@ -15,7 +15,7 @@ import {
 } from 'reactflow'
 import { create } from 'zustand'
 
-interface IStrategiesState {
+interface IEditorState {
   isLoading: boolean
   setIsLoading: (value: boolean) => void
   lastConditionId: number
@@ -30,7 +30,7 @@ interface IStrategiesState {
   // handleAddNode: (...rest: any) => void
 }
 
-export const useStrategiesStore = create<IStrategiesState>((set, get) => ({
+export const useEditor = create<IEditorState>((set, get) => ({
   isLoading: false,
   setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
   lastConditionId: 1,

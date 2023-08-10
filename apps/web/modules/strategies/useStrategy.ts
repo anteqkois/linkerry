@@ -1,34 +1,55 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  StrategyType,
-} from '@market-connector/types'
+import { IStrategy_CreateResponse, StrategyType } from '@market-connector/types'
 import { toast } from '@market-connector/ui-components/client'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { retriveServerHttpException } from '../../utils'
-import { StrategyApi } from './api'
 import { StrategyStaticMarketchema } from './validations'
+import { StrategyApi } from './api'
+import { useRouter } from 'next/navigation'
 
+const strategyResloverGateway = {
+  [StrategyType.StrategyStaticMarket]: StrategyStaticMarketchema,
+  [StrategyType.StrategyDynamicMarket]: StrategyStaticMarketchema,
+}
 
 export const useStrategy = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const { push } = useRouter()
 
   const createForm = useForm<z.infer<typeof StrategyStaticMarketchema>>({
-    resolver: zodResolver(StrategyStaticMarketchema),
+    resolver: async (data, context, options) => zodResolver(strategyResloverGateway[data.type])(data, context, options),
     defaultValues: {
       type: StrategyType.StrategyStaticMarket,
       name: '',
-      strategyBuy:[]
+      strategyBuy: [],
+      active: true,
+      testMode: false,
     },
   })
 
   const onSubmitCreate = async (values: z.infer<typeof StrategyStaticMarketchema>) => {
     setIsLoading(true)
     try {
-      const res = await StrategyApi.createStatic(values)
+      let response: IStrategy_CreateResponse
+      switch (values.type) {
+        case StrategyType.StrategyStaticMarket:
+          response = (await StrategyApi.createStatic(values)).data
+          break
+        case StrategyType.StrategyDynamicMarket:
+          response = (await StrategyApi.createStatic(values)).data
+          break
+      }
+      toast({
+        title: 'Strategy created',
+        description: `Your strategy has been created. You can now add sub-strategies to it, such as 'Buying Strategies'.`,
+        duration: 6000,
+        variant: 'success',
+      })
+      push(response._id)
       setIsLoading(false)
     } catch (error: any) {
       setIsLoading(false)

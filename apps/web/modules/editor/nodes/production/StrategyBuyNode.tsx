@@ -1,17 +1,17 @@
 'use client'
 
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    Input
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input
 } from '@market-connector/ui-components/client'
 import { Button, H4 } from '@market-connector/ui-components/server'
 import { NodeProps } from 'reactflow'
-import { useStrategyBuy } from '../../../../../modules/strategies/useStrategyBuy'
+import { useStrategyBuy } from '../../../strategies/useStrategyBuy'
 
 type Props = NodeProps
 

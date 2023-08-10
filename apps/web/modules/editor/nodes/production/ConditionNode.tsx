@@ -11,19 +11,17 @@ import {
 } from '@market-connector/ui-components/client'
 import {
   Button,
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from '@market-connector/ui-components/server'
-import { useCallback } from 'react'
-import { Handle, Node, NodeProps, Position, useReactFlow } from 'reactflow'
+import { NodeProps } from 'reactflow'
 
 type Props = NodeProps
 
-export function AddConditionNode({ data, xPos, yPos }: Props) {
+export function ConditionNode({ data, xPos, yPos }: Props) {
   // const onClickAdd = useCallback(() => {
   //   const newId = +nodes[nodes.length - 1].id + 1;
 

@@ -24,7 +24,7 @@ export function DesktopMenu({ children }: DesktopProps) {
           <MenubarTrigger>Strategies</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              <Link href="/app/strategies/create" prefetch={false}>
+              <Link href="/app/strategies/editor" prefetch={false}>
                 Create New
               </Link>
               <MenubarShortcut>
