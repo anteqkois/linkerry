@@ -86,16 +86,16 @@ export function DesktopMenu({ children }: DesktopProps) {
         <MenubarMenu>
           <MenubarTrigger>Exchanges</MenubarTrigger>
           <MenubarContent>
-            <Link href="/app/exchanges/create" prefetch={false}>
+            <Link href="/app/user-keys/create" prefetch={false}>
               <MenubarItem>
-                Add Exchane
+                Add API Keys
                 <MenubarShortcut>
                   <Icons.plus/>
                 </MenubarShortcut>
               </MenubarItem>
             </Link>
-            <Link href="/app/exchanges/list" prefetch={false}>
-            <MenubarItem>My Exchanges</MenubarItem>
+            <Link href="/app/user-keys/list" prefetch={false}>
+            <MenubarItem>My API keys</MenubarItem>
             </Link>
             <MenubarItem>Avaible Exchanges</MenubarItem>
             <MenubarSeparator />

@@ -1,4 +1,25 @@
-import { Component1Icon, ComponentInstanceIcon, CubeIcon, ExitIcon, HamburgerMenuIcon, PlusIcon, ReaderIcon, UpdateIcon,  CopyIcon, GearIcon, HomeIcon, StarFilledIcon, DotsHorizontalIcon, ChevronLeftIcon, Cross1Icon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, CaretSortIcon } from '@radix-ui/react-icons'
+import {
+  Component1Icon,
+  ComponentInstanceIcon,
+  CubeIcon,
+  ExitIcon,
+  HamburgerMenuIcon,
+  PlusIcon,
+  ReaderIcon,
+  UpdateIcon,
+  CopyIcon,
+  GearIcon,
+  HomeIcon,
+  StarFilledIcon,
+  DotsHorizontalIcon,
+  ChevronLeftIcon,
+  Cross1Icon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ChevronRightIcon,
+  CaretSortIcon,
+} from '@radix-ui/react-icons'
+import { cn } from '../../utils'
 
 type IconProps = React.HTMLAttributes<SVGElement>
 type RadixIconProps = React.HTMLAttributes<SVGElement> & { children?: undefined }
@@ -142,7 +163,7 @@ export const Icons = {
       />
     </svg>
   ),
-  spinner: (props: IconProps) => (
+  spinner: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -153,6 +174,7 @@ export const Icons = {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={cn('animate-spin', className)}
       {...props}
     >
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />

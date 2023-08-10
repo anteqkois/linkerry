@@ -12,8 +12,7 @@ export class ExchangesController {
   @UsePaginatedResourceInterceptor()
   @Get()
   async getExchanges(@Query() query: GetManyExchangesQueryDto) {
-    const exchanges = await this.exchangesService.findMany(query)
-    return { exchanges }
+    return this.exchangesService.findMany(query)
   }
 
   @UseGuards(JwtAuthGuard)

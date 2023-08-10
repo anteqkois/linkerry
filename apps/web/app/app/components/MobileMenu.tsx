@@ -60,9 +60,9 @@ export function MobileMenu({ children }: MobileProps) {
                 Exchanges
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuItem>Add Exchange</DropdownMenuItem>
-            <DropdownMenuItem>My Exchanges</DropdownMenuItem>
-            <DropdownMenuItem>MAvaible Exchanges</DropdownMenuItem>
+            <DropdownMenuItem>Add API Keys</DropdownMenuItem>
+            <DropdownMenuItem>My API Keys</DropdownMenuItem>
+            <DropdownMenuItem>Avaible Exchanges</DropdownMenuItem>
             <DropdownMenuItem disabled>Security</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

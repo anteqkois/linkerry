@@ -1,10 +1,6 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { userKeysSchema } from '../validations'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ExchangeCode, IExchange } from '@market-connector/types'
+import { IExchange } from '@market-connector/types'
 import {
   Form,
   FormControl,
@@ -18,73 +14,21 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  toast,
 } from '@market-connector/ui-components/client'
-import { Button, Icons } from '@market-connector/ui-components/server'
-import { useUser } from '../../../../modules/user/useUser'
+import { Button } from '@market-connector/ui-components/server'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { UserKeysApi } from '../../../../modules/user-keys/api'
-import { retriveServerHttpException } from '../../../../utils'
+import { useUserKeys } from '../../../../modules/user-keys/useUserKeys'
 
 type Props = { exchanges: IExchange[] }
 
 export const UserKeysForm = ({ exchanges }: Props) => {
-  const [isLoading, setIsLoading] = useState(true)
-  const { user } = useUser()
-  const form = useForm<z.infer<typeof userKeysSchema>>({
-    resolver: zodResolver(userKeysSchema),
-    defaultValues: {
-      aKey: '',
-      exchange: exchanges[0]._id,
-      exchangeCode: exchanges[0].code,
-      name: '',
-      sKey: '',
-    },
-  })
-
-  useEffect(() => {
-    setIsLoading(false)
-  }, [])
-
-  const onSubmit = async (values: z.infer<typeof userKeysSchema>) => {
-    console.log(values)
-    setIsLoading(true)
-    try {
-      const res = await UserKeysApi.create(values)
-
-      form.setValue('aKey', `${res.data.aKeyInfo}...`)
-      form.setValue('sKey', `${res.data.sKeyInfo}...`)
-
-      setIsLoading(false)
-      toast({
-        title: 'Keys saved',
-        description: `Your exchange keys are encrypted and saved. You can now use ${values.exchangeCode} exchange.`,
-        duration: 6000,
-        variant: 'success',
-      })
-    } catch (error: any) {
-      setIsLoading(false)
-      const serverError = retriveServerHttpException(error)
-      console.log(error)
-      if (serverError)
-        return toast({
-          title: "Keys didn't saved",
-          description: serverError ? serverError.message : 'Saving keys failed. Please try again.',
-          duration: 6000,
-          variant: 'destructive',
-        })
-      // if (serverError) return form.setError('root', { message: serverError.message, type: 'manual' })
-      // console.log(error)
-      // return form.setError('root', { message: 'Saving keys failed. Please try again.', type: 'manual' })
-    }
-  }
+  const { createForm, isLoading, onSubmitCreate } = useUserKeys()
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+    <Form {...createForm}>
+      <form onSubmit={createForm.handleSubmit(onSubmitCreate)} className="space-y-5">
         <FormField
-          control={form.control}
+          control={createForm.control}
           name="exchangeCode"
           render={({ field }) => (
             <FormItem>
@@ -93,7 +37,7 @@ export const UserKeysForm = ({ exchanges }: Props) => {
                 onValueChange={(v) => {
                   field.onChange(v)
                   const selectedExchange = exchanges.find((exchange) => exchange.code === v)
-                  form.setValue('exchange', selectedExchange?._id!)
+                  createForm.setValue('exchange', selectedExchange?._id!)
                 }}
                 defaultValue={field.value}
               >
@@ -128,7 +72,7 @@ export const UserKeysForm = ({ exchanges }: Props) => {
           )}
         />
         <FormField
-          control={form.control}
+          control={createForm.control}
           name="name"
           render={({ field }) => (
             <FormItem>
@@ -141,7 +85,7 @@ export const UserKeysForm = ({ exchanges }: Props) => {
           )}
         />
         <FormField
-          control={form.control}
+          control={createForm.control}
           name="aKey"
           render={({ field }) => (
             <FormItem>
@@ -154,7 +98,7 @@ export const UserKeysForm = ({ exchanges }: Props) => {
           )}
         />
         <FormField
-          control={form.control}
+          control={createForm.control}
           name="sKey"
           render={({ field }) => (
             <FormItem>
@@ -167,8 +111,8 @@ export const UserKeysForm = ({ exchanges }: Props) => {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit">
-            {isLoading ? <Icons.spinner className="mr-2 h-4 w-9 animate-spin" /> : 'Create'}
+          <Button type="submit" loading={isLoading} className="w-full">
+            Create
           </Button>
         </div>
       </form>
