@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 
 export type StrategyDocument = mongoose.HydratedDocument<Strategy>
 
-
+@Schema({ _id: false })
 class StrategyStrategyBuy implements IStrategy_StrategyBuy {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'strategies-buy' })
   readonly id: Id

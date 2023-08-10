@@ -55,6 +55,4 @@ export interface ICondition_CreateInput {
   // readonly required: boolean;                 // for future usecase
 }
 
-export interface ICondition_CreateResponse {
-  condition: ICondition
-}
+export interface ICondition_CreateResponse extends ICondition {}

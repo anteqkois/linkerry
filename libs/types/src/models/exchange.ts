@@ -154,6 +154,8 @@ export interface IExchange {
   symbols: string[] // sorted list of string symbols (traded pairs), First support only pair to USDT, BUSD, USDC spot
 }
 
+
+// GET
 // TODO change to handle arrays
 export interface IExchange_GetQuery extends IPaginationQuery {
   code?: IExchange['code']
@@ -161,5 +163,7 @@ export interface IExchange_GetQuery extends IPaginationQuery {
   symbol?: string
   timeframes: TimeFrameCode
 }
+export interface IExchange_GetResponse extends IResourceResponse<IExchange[]> {}
 
-export interface IExchange_GetResponse extends IResourceResponse<{ exchanges: IExchange[] }> {}
+// POST
+export interface IExchange_CreateInput extends Omit<IExchange, '_id'>{}

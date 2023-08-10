@@ -1,9 +1,4 @@
-import {
-  ExchangeCode,
-  IMarket_GetQuery,
-  IMarket_GetResponse,
-  MarketType,
-} from '@market-connector/types'
+import { ExchangeCode, IMarket_GetQuery, IMarket_GetResponse, MarketType } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'
 
@@ -25,16 +20,13 @@ describe('POST /api/markets', () => {
     })
 
     expect(status).toBe(200)
-    expect(data.data.markets).toBeDefined()
-    expect(data.data.markets.length).toEqual(params.limit)
-    expect(data.count).toEqual(params.limit)
+    expect(data.value).toBeDefined()
+    expect(data.value.length).toEqual(params.limit)
     expect(data.hasNext).toEqual(true)
     expect(data.offset).toEqual(0)
 
     let rightMarketCount = 0
-    data.data.markets.forEach(
-      (m) => m.exchangeCode === ExchangeCode.bybit && m.type === MarketType.spot && rightMarketCount++,
-    )
+    data.value.forEach((m) => m.exchangeCode === ExchangeCode.bybit && m.type === MarketType.spot && rightMarketCount++)
     expect(rightMarketCount).toEqual(params.limit)
   })
 })

@@ -1,6 +1,8 @@
-import { DbTimestamp, Id } from '../utils'
+import { DbTimestamp, IResourceResponse, Id } from '../utils'
 import { ExchangeCode, IExchange } from './exchange'
 import { IUser } from './user'
+
+type PrivateFields = 'aKey' | 'sKey' | 'kv' | 'salt'
 
 export interface IUserKeys extends DbTimestamp {
   _id: string
@@ -22,8 +24,11 @@ export interface IUserKeysPupulated extends Omit<IUserKeys, 'exchange' | 'user'>
   user: IUser
 }
 
-// # # # # #     API     # # # # #
+// GET
+export interface IUserKeys_GetOneResponse extends Omit<IUserKeys, PrivateFields> {}
+export interface IUserKeys_GetResponse extends IResourceResponse<IUserKeys_GetOneResponse[]> {}
 
+// POST
 export interface IUserKeys_CreateInput {
   name: string
   exchange: Id
@@ -32,24 +37,4 @@ export interface IUserKeys_CreateInput {
   sKey: string
 }
 
-export interface IUserKeys_CreateResponse {
-  userKeys: {
-    name: string
-    exchange: Id
-    exchangeCode: ExchangeCode
-    user: Id
-    aKeyInfo: string
-    sKeyInfo: string
-  }
-}
-
-export interface IUserKeys_GetManyResponse {
-  userKeys: {
-    name: string
-    exchange: Id
-    exchangeCode: ExchangeCode
-    user: Id
-    aKeyInfo: string
-    sKeyInfo: string
-  }[]
-}
+export interface IUserKeys_CreateResponse extends Omit<IUserKeys, PrivateFields> {}

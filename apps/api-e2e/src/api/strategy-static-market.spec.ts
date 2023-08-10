@@ -106,4 +106,36 @@ describe('POST /api/strategies/static-market', () => {
     )
     await expect(res).rejects.toHaveProperty('response.status', 422)
   })
+
+  it('user can add strategy buy', async () => {
+    const patchInput: IStrategy_StaticMarket_PatchInput = {
+      ...lastStrategyData,
+      strategyBuy: [
+        {
+
+          id: alwaysExistingStrategyBuyStaticMarket._id,
+          strategyBuy: alwaysExistingStrategyBuyStaticMarket._id,
+          active: true,
+        },
+      ],
+    }
+
+    const { status, data } = await axios.patch<IStrategy_StaticMarket_PatchResponse>(
+      `/strategies/static-market/${lastStrategyData._id}`,
+      patchInput,
+    )
+
+    expect(status).toBe(200)
+    expect(data._id).toBe(lastStrategyData._id)
+    expect(data.state).toBe(StrategyState.OpenPosition)
+    expect(data.triggeredTimes).toBe(0)
+    expect(data.validityUnix).toBe(lastStrategyData.validityUnix)
+    expect(data.active).toBe(patchInput.active)
+    expect(data.name).toBe(patchInput.name)
+    expect(data.testMode).toBe(lastStrategyData.testMode)
+    expect(data.type).toBe(lastStrategyData.type)
+    expect(data.user).toBe(alwaysExistingUser._id)
+    expect(data.strategyBuy[0]).toMatchObject(patchInput.strategyBuy[0])
+    lastStrategyData = data
+  })
 })

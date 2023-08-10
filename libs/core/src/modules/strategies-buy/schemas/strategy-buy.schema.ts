@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 
 export type StrategyBuyDocument = mongoose.HydratedDocument<StrategyBuy>
 
+@Schema({ _id: false })
 class StrategyBuyCondition implements IStrategyBuy_Condition {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'conditions' })
   readonly id: Id

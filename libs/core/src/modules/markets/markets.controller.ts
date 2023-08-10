@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from '../../lib/auth'
-import { PaginateResourceInterceptor } from '../../lib/utils'
+import { UsePaginatedResourceInterceptor } from '../../lib/utils'
 import { GetManyMarketsQueryDto } from './dto/get-many-markets.dto'
 import { MarketsService } from './markets.service'
 
@@ -9,11 +9,10 @@ export class MarketsController {
   constructor(private readonly marketsService: MarketsService) {}
 
   @UseGuards(JwtAuthGuard)
-  @PaginateResourceInterceptor()
+  @UsePaginatedResourceInterceptor()
   @Get()
   async getMarkets(@Query() query: GetManyMarketsQueryDto) {
-    const markets = await this.marketsService.findMany(query)
-    return { markets }
+    return this.marketsService.findMany(query)
   }
 
   @UseGuards(JwtAuthGuard)

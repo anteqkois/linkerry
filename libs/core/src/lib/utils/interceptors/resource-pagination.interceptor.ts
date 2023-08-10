@@ -13,13 +13,11 @@ export class PaginatedResourceInterceptor<T> implements NestInterceptor<T, IReso
     const limit = +(req.query?.limit ?? 250)
 
     return next.handle().pipe(
-      map((data: any) => {
-        const count = data[Object.keys(data)[0]].length
+      map((value: any) => {
         return {
-          hasNext: count === limit,
-          data,
+          hasNext: value.length === limit,
+          value,
           offset,
-          count,
         }
       }),
     )

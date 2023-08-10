@@ -31,6 +31,6 @@ export class ConditionsService {
 
     const condition = await conditionTypeGateway.createCondition(dto, userId)
 
-    return { condition }
+    return condition
   }
 }

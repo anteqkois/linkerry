@@ -19,7 +19,7 @@ export const useStrategyBuy = () => {
   const form = useForm<z.infer<typeof strategyBuyStaticMarketSchema>>({
     resolver: zodResolver(strategyBuyStaticMarketSchema),
     defaultValues: {
-      type: StrategyBuyType.StrategyBuyStaticMarkets,
+      type: StrategyBuyType.StrategyBuyStaticMarket,
       name: '',
       conditions: [],
     },

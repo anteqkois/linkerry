@@ -3,12 +3,8 @@ import {
   IStrategyBuy_StaticMarket_CreateResponse,
   IStrategyBuy_StaticMarket_UpdateInput,
   IStrategyBuy_StaticMarket_UpdateResponse,
-  IStrategy_StaticMarket_CreateInput,
-  IStrategy_StaticMarket_CreateResponse,
-  IStrategy_StaticMarket_UpdateInput,
   IStrategy_StaticMarket_UpdateResponse,
   StrategyBuyType,
-  StrategyType,
 } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'

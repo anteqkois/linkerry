@@ -1,4 +1,4 @@
-import { IMarket, IMarket_GetQuery } from '@market-connector/types'
+import { IMarket, IMarket_CreateInput, IMarket_GetQuery } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
@@ -9,12 +9,12 @@ export class MarketsService {
   private logger = new Logger(MarketsService.name)
   constructor(@InjectModel(Market.name) private readonly marketModel: Model<Market>) {}
 
-  async insertMany(data: IMarket[]) {
+  async insertMany(data: IMarket_CreateInput[]) {
     return await this.marketModel.insertMany(data)
   }
 
   // async upsertMany(data: IMarket[] | Array<{ updateOne: Parameters<Model<Market>['updateOne']> }>) {
-  async upsertMany(data: IMarket[]) {
+  async upsertMany(data: IMarket_CreateInput[]) {
     this.marketModel
       .bulkWrite(
         data.map((market) => ({

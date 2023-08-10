@@ -12,9 +12,8 @@ export interface IPaginationResponse {
 
 export interface IResourceResponse<R> {
   hasNext: boolean
-  data: R
+  value: R
   offset: number
-  count: number
 }
 
 export type Id = string // Id to db docuemnt

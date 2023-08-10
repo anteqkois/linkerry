@@ -1,4 +1,4 @@
-import { ExchangeCode, IExchange, IMarket, ITimeFrame, MarketType, TimeFrameCode } from '@market-connector/types'
+import { ExchangeCode, IExchange, IExchange_CreateInput, IMarket, IMarket_CreateInput, ITimeFrame, MarketType, TimeFrameCode } from '@market-connector/types'
 import ccxt, { Exchange, exchanges } from 'ccxt'
 import { MarketsService } from '../markets'
 import { Logger } from '@nestjs/common'
@@ -23,10 +23,10 @@ export class CcxtProvider {
     this.restClient = new ccxt[exchange]()
   }
 
-  async loadMarkets(): Promise<IMarket[]> {
+  async loadMarkets() {
     await this.restClient.loadMarkets()
     const markets = await this.restClient.fetchMarkets()
-    const parsedMarets: IMarket[] = []
+    const parsedMarets: IMarket_CreateInput[] = []
 
     for (let market of markets) {
       // const parsedMarket = this.restClient.parseMarket(market)
@@ -51,7 +51,7 @@ export class CcxtProvider {
     return parsedMarets
   }
 
-  async loadExchange(): Promise<Omit<IExchange, '_id'>> {
+  async loadExchange(): Promise<IExchange_CreateInput> {
     await this.restClient.loadMarkets()
 
     const timeFrames: ITimeFrame[] = []

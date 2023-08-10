@@ -13,7 +13,7 @@ export async function CardWithForm() {
         <CardDescription>When you add exchange, you will be able to use it in conditions.</CardDescription>
       </CardHeader>
       <CardContent>
-        <UserKeysForm exchanges={res.data.data.exchanges} />
+        <UserKeysForm exchanges={res.data.value} />
       </CardContent>
     </Card>
   )

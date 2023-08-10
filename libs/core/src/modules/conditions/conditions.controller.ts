@@ -1,4 +1,4 @@
-import { ConditionType, JwtUser } from '@market-connector/types'
+import { ConditionType, ICondition_CreateResponse, JwtUser } from '@market-connector/types'
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'
@@ -17,7 +17,7 @@ export class ConditionsController {
 
   @UseJwtGuard()
   @Post()
-  createCondition(@ReqJwtUser() user: JwtUser, @Body() dto: CreateConditionDto) {
+  createCondition(@ReqJwtUser() user: JwtUser, @Body() dto: CreateConditionDto): Promise<ICondition_CreateResponse> {
     return this.conditionsService.createCondition(dto, user.id)
   }
 }

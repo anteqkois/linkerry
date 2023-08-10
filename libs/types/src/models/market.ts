@@ -1,4 +1,4 @@
-import { IPaginationQuery, IResourceResponse } from '../utils'
+import { IPaginationQuery, IResourceResponse, Id } from '../utils'
 import { IExchange } from './exchange'
 
 export enum MarketType {
@@ -9,6 +9,7 @@ export enum MarketType {
 }
 
 export interface IMarket {
+  _id: Id
   code: string // string literal for referencing within an exchange
   exchangeCode: IExchange['code']
   symbol: string // uppercase string literal of a pair of currencies, ID IN CODEBASE 'BTC/USD'
@@ -42,6 +43,7 @@ export interface IMarket {
   // },
 }
 
+// GET
 export interface IMarket_GetQuery extends IPaginationQuery {
   exchangeCode?: IExchange['code']
   symbol?: string
@@ -50,5 +52,7 @@ export interface IMarket_GetQuery extends IPaginationQuery {
   active?: boolean
   type?: MarketType
 }
+export interface IMarket_GetResponse extends IResourceResponse<IMarket[]> {}
 
-export interface IMarket_GetResponse extends IResourceResponse<{ markets: IMarket[] }> {}
+// POST
+export interface IMarket_CreateInput extends Omit<IMarket, '_id'> {}

@@ -40,7 +40,6 @@ export const UserKeysForm = ({ exchanges }: Props) => {
       exchangeCode: exchanges[0].code,
       name: '',
       sKey: '',
-      user: user._id,
     },
   })
 
@@ -54,8 +53,8 @@ export const UserKeysForm = ({ exchanges }: Props) => {
     try {
       const res = await UserKeysApi.create(values)
 
-      form.setValue('aKey', `${res.data.userKeys.aKeyInfo}...`)
-      form.setValue('sKey', `${res.data.userKeys.sKeyInfo}...`)
+      form.setValue('aKey', `${res.data.aKeyInfo}...`)
+      form.setValue('sKey', `${res.data.sKeyInfo}...`)
 
       setIsLoading(false)
       toast({

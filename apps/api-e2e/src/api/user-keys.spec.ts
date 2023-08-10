@@ -1,6 +1,6 @@
 import { ExchangeCode, IUserKeys_CreateInput, IUserKeys_CreateResponse } from '@market-connector/types'
 import axios from 'axios'
-import { alwaysExistingExchange, alwaysExistingUser } from 'tools/models.mock'
+import { alwaysExistingExchange } from 'tools/models.mock'
 import { login } from '../support/login'
 
 const input: IUserKeys_CreateInput = {
@@ -23,10 +23,10 @@ describe('POST /api/user-keys', () => {
     const { status, data } = await axios.post<IUserKeys_CreateResponse>(`/user-keys`, input)
 
     expect(status).toBe(201)
-    expect(data.userKeys.aKeyInfo.slice(0, 4)).toBe(input.aKey.slice(0, 4))
-    expect(data.userKeys.sKeyInfo.slice(0, 4)).toBe(input.sKey.slice(0, 4))
-    expect(data.userKeys.exchange).toBe(input.exchange)
-    expect(data.userKeys.exchangeCode).toBe(input.exchangeCode)
-    expect(data.userKeys.name).toBe(input.name)
+    expect(data.aKeyInfo.slice(0, 4)).toBe(input.aKey.slice(0, 4))
+    expect(data.sKeyInfo.slice(0, 4)).toBe(input.sKey.slice(0, 4))
+    expect(data.exchange).toBe(input.exchange)
+    expect(data.exchangeCode).toBe(input.exchangeCode)
+    expect(data.name).toBe(input.name)
   })
 })

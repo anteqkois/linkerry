@@ -40,7 +40,7 @@ export class UserKeysService {
       })
     ).toJSON()
 
-    return { userKeys: rest }
+    return rest
   }
 
   async getKeyPairsInfo(userId: Id) {
