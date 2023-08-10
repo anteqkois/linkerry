@@ -3,8 +3,8 @@ import { IStrategyBuy_DynamicMarket_Property } from './strategy-dynamic-market'
 import { StrategyBuy_StaticMarket_Property } from './strategy-static-market'
 
 export enum StrategyBuyType {
-  StrategyBuyDynamicMarkets = 'StrategyBuyDynamicMarkets',
-  StrategyBuyStaticMarkets = 'StrategyBuyStaticMarkets',
+  StrategyBuyDynamicMarket = 'StrategyBuyDynamicMarket',
+  StrategyBuyStaticMarket = 'StrategyBuyStaticMarket',
 }
 
 export interface IStrategyBuy_Condition {

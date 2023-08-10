@@ -15,10 +15,10 @@ export class CreateStrategyDto implements IStrategy_CreateInput {
   @MaxLength(30)
   readonly name: string
 
-
-  @IsEnum(StrategyType)
+  @IsString()
   @MinLength(2)
   @MaxLength(30)
+  @IsEnum(StrategyType)
   readonly type: StrategyType
 
   @IsArray()

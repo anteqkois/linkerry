@@ -3,7 +3,7 @@ import { IStrategy, IStrategy_CreateInput, IStrategy_CreateResponse, IStrategy_U
 export interface IStrategy_StaticMarket
   extends Omit<IStrategy, keyof Strategy_StaticMarket_Property>,
     Required<Strategy_StaticMarket_Property> {
-  type: StrategyType.StrategyStaticMarkets
+  type: StrategyType.StrategyStaticMarket
 }
 
 export interface Strategy_StaticMarket_Property {}

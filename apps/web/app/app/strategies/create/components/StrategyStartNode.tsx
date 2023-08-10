@@ -1,5 +1,6 @@
 'use client'
 
+import { StrategyType } from '@market-connector/types'
 import {
   Form,
   FormControl,
@@ -20,12 +21,10 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-  H4,
+  CardTitle
 } from '@market-connector/ui-components/server'
 import { NodeProps } from 'reactflow'
 import { useStrategy } from '../../../../../modules/strategies/useStrategy'
-import { StrategyType } from '@market-connector/types'
 
 type Props = NodeProps
 
@@ -78,7 +77,7 @@ export function StrategyStartNode({ data, xPos, yPos }: Props) {
                         <SelectContent position="popper">
                           {Object.keys(StrategyType).map((type) => {
                             return (
-                              <SelectItem value={type} key={type} disabled={type === StrategyType.StrategyDynamicMarkets}>
+                              <SelectItem value={type} key={type} disabled={type === StrategyType.StrategyDynamicMarket}>
                                 <span className="flex gap-2 items-center">
                                   {/* {exchange.urls.logo ? (
                                     <Image

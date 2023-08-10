@@ -7,7 +7,7 @@ import {
 import { ZodSchema, z } from 'zod'
 import { mongoIdSchema } from '../../libs/zod'
 
-export const strategyStaticMarketSchema: ZodSchema<IStrategy_StaticMarket_CreateInput> = z.object({
+export const StrategyStaticMarketchema: ZodSchema<IStrategy_StaticMarket_CreateInput> = z.object({
   type: z.nativeEnum(StrategyType, { invalid_type_error: 'Invalid strategytype' }),
   name: z
     .string()

@@ -11,7 +11,7 @@ export type StrategyStaticMarketDocument = mongoose.HydratedDocument<StrategySta
 
 @Schema()
 export class StrategyStaticMarket extends Strategy implements IStrategy_StaticMarket {
-  override type: StrategyType.StrategyStaticMarkets
+  override type: StrategyType.StrategyStaticMarket
 }
 
 export const StrategyStaticMarketSchema = SchemaFactory.createForClass(StrategyStaticMarket)

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { database } from './database'
-import { alwaysExistingConditionAlert, alwaysExistingUser } from './models.mock'
+import { alwaysExistingConditionAlert, alwaysExistingStrategy, alwaysExistingUser } from './models.mock'
 
-const collectionToDelete = ['users', 'conditions', 'user-keys']
+const collectionToDelete = ['users', 'conditions', 'user-keys', 'strategies', 'strategies-buy']
 
 export const seedDatabase = async () => {
   const db = await database
@@ -16,7 +16,6 @@ export const seedDatabase = async () => {
   console.log('[ Database cleaned ]');
 
   const User = db.model('User', new mongoose.Schema({}, { strict: false, _id: false }));
-
   const user = new User({
     _id: new mongoose.Types.ObjectId(alwaysExistingUser._id),
     consents: alwaysExistingUser.consents,
@@ -27,12 +26,21 @@ export const seedDatabase = async () => {
   });
   await user.save();
 
-  const Condition = db.model('CONDITION', new mongoose.Schema({}, { strict: false, _id: false }));
+  const Condition = db.model('Condition', new mongoose.Schema({}, { strict: false, _id: false }));
   const condition = new Condition({
     ...alwaysExistingConditionAlert,
     _id: new mongoose.Types.ObjectId(alwaysExistingConditionAlert._id),
     user: new mongoose.Types.ObjectId(alwaysExistingConditionAlert.user),
   });
+  condition.save()
+
+  const Strategy = db.model('Strategy', new mongoose.Schema({}, { strict: false, _id: false }));
+  const strategy = new Strategy({
+    ...alwaysExistingStrategy,
+    _id: new mongoose.Types.ObjectId(alwaysExistingStrategy._id),
+    user: new mongoose.Types.ObjectId(alwaysExistingStrategy.user),
+  });
+  strategy.save()
 
   await new Promise(r => setTimeout(r, 2000))
 

@@ -1,4 +1,12 @@
-import { AlertProvider, ConditionOperator, ConditionType, IAlert } from '../libs/types/src'
+import {
+  AlertProvider,
+  ConditionOperator,
+  ConditionType,
+  IAlert,
+  IStrategy,
+  StrategyState,
+  StrategyType,
+} from '../libs/types/src'
 
 export const testAuthUser = {
   consents: {
@@ -2680,4 +2688,17 @@ export const alwaysExistingExchange = {
     logo: 'https://user-images.githubusercontent.com/1294454/29604020-d5483cdc-87ee-11e7-94c7-d1a8d9169293.jpg',
     www: 'https://www.binance.com',
   },
+}
+
+export const alwaysExistingStrategy: IStrategy = {
+  _id: '222222222222222222222222',
+  user: alwaysExistingUser._id,
+  name: 'Always existing strategy',
+  validityUnix: 5356800,
+  state: StrategyState.Idle,
+  strategyBuy: [],
+  active: false,
+  testMode: false,
+  triggeredTimes: 0,
+  type: StrategyType.StrategyStaticMarket,
 }

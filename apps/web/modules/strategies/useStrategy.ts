@@ -10,22 +10,22 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { retriveServerHttpException } from '../../utils'
 import { StrategyApi } from './api'
-import { strategyStaticMarketSchema } from './validations'
+import { StrategyStaticMarketchema } from './validations'
 
 
 export const useStrategy = () => {
   const [isLoading, setIsLoading] = useState(false)
 
-  const createForm = useForm<z.infer<typeof strategyStaticMarketSchema>>({
-    resolver: zodResolver(strategyStaticMarketSchema),
+  const createForm = useForm<z.infer<typeof StrategyStaticMarketchema>>({
+    resolver: zodResolver(StrategyStaticMarketchema),
     defaultValues: {
-      type: StrategyType.StrategyStaticMarkets,
+      type: StrategyType.StrategyStaticMarket,
       name: '',
       strategyBuy:[]
     },
   })
 
-  const onSubmitCreate = async (values: z.infer<typeof strategyStaticMarketSchema>) => {
+  const onSubmitCreate = async (values: z.infer<typeof StrategyStaticMarketchema>) => {
     setIsLoading(true)
     try {
       const res = await StrategyApi.createStatic(values)
