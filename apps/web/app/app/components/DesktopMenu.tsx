@@ -38,7 +38,7 @@ export function DesktopMenu({ children }: DesktopProps) {
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
-              <Link href="/app/strategies" prefetch={false}>
+              <Link href="/app/strategies/list" prefetch={false}>
                 All Strategies
               </Link>
             </MenubarItem>

@@ -61,3 +61,7 @@ export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<any, TValue>[]
   data: TData[]
 }
+
+export enum LocalStorageKeys {
+  StrategyCache = 'StrategyCache',
+}

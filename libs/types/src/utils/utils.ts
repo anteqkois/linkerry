@@ -36,3 +36,9 @@ export interface DeepPartialArray<Thing> extends Array<DeepPartial<Thing>> {}
 export type DeepPartialObject<Thing> = {
   [Key in keyof Thing]?: DeepPartial<Thing[Key]>
 }
+
+export type Nullable<T> = T | undefined | null;
+
+export type DeepNullable<T> = {
+  [P in keyof T]: T[P] | null;
+};

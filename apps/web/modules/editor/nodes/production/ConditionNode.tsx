@@ -15,7 +15,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@market-connector/ui-components/server'
 import { NodeProps } from 'reactflow'
 
@@ -58,43 +58,53 @@ export function ConditionNode({ data, xPos, yPos }: Props) {
   //   setNodes(nds => [...nds, newNode]);
   // }, [project]);
 
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Add Buy Condition</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-full">
-        <Tabs defaultValue="account" className="w-[400px]">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="account">Create New</TabsTrigger>
-            <TabsTrigger value="password">Add Existing</TabsTrigger>
-          </TabsList>
-          <TabsContent value="account">
-            {/* <Card> */}
-            <CardHeader className="p-2">
-              <CardTitle>Account</CardTitle>
-              <CardDescription>Make changes to your account here. Click save when you're done.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2 p-2">
-              <div className="space-y-1">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" defaultValue="Pedro Duarte" />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="username">Username</Label>
-                <Input id="username" defaultValue="@peduarte" />
-              </div>
-            </CardContent>
-            <CardFooter className="p-2 flex justify-end">
-              <Button variant={'secondary'}>Add condition</Button>
-            </CardFooter>
-            {/* </Card> */}
-          </TabsContent>
-          <TabsContent value="password">
+  // return (
+  //   <Popover>
+  //     <PopoverTrigger asChild>
+  //       <Button variant="outline">Add Buy Condition</Button>
+  //     </PopoverTrigger>
+  //     <PopoverContent className="w-full">
+  //       <Tabs defaultValue="account" className="w-[400px]">
+  //         <TabsList className="grid w-full grid-cols-2">
+  //           <TabsTrigger value="account">Create New</TabsTrigger>
+  //           <TabsTrigger value="password">Add Existing</TabsTrigger>
+  //         </TabsList>
+  //         <TabsContent value="account">
+  //           {/* <Card> */}
+  //           <CardHeader className="p-2">
+  //             <CardTitle>Account</CardTitle>
+  //             <CardDescription>Make changes to your account here. Click save when you're done.</CardDescription>
+  //           </CardHeader>
+  //           <CardContent className="space-y-2 p-2">
+  //             <div className="space-y-1">
+  //               <Label htmlFor="name">Name</Label>
+  //               <Input id="name" defaultValue="Pedro Duarte" />
+  //             </div>
+  //             <div className="space-y-1">
+  //               <Label htmlFor="username">Username</Label>
+  //               <Input id="username" defaultValue="@peduarte" />
+  //             </div>
+  //           </CardContent>
+  //           <CardFooter className="p-2 flex justify-end">
+  //             <Button variant={'secondary'}>Add condition</Button>
+  //           </CardFooter>
+  //           {/* </Card> */}
+  //         </TabsContent>
+  //         <TabsContent value="password">
 
-          </TabsContent>
-        </Tabs>
-      </PopoverContent>
-    </Popover>
+  //         </TabsContent>
+  //       </Tabs>
+  //     </PopoverContent>
+  //   </Popover>
+  // )
+  return (
+    <div className="w-28 min-h-16 bg-primary">
+      Node
+      <p>1</p>
+      <p>1</p>
+      <p>1</p>
+      <p>1</p>
+      <p>1</p>
+    </div>
   )
 }

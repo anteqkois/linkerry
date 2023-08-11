@@ -1,5 +1,5 @@
 import { IUserKeys_GetResponse } from '@market-connector/types'
-import { DataTable } from '../../../../components/DataTable'
+import { DataTable } from '../../../../components/Table/DataTable'
 import { apiServerClient } from '../../../../libs/api-server-client'
 import { PageContainer } from '../../components/PageContainer'
 import { columns } from './columns'

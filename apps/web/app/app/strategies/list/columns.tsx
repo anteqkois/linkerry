@@ -1,22 +1,22 @@
 'use client'
 
-import { IUserKeys } from '@market-connector/types'
-import {  ColumnDef } from '@tanstack/react-table'
+import { IStrategy } from '@market-connector/types'
+import { ColumnDef } from '@tanstack/react-table'
 
-import { Button, Icons } from '@market-connector/ui-components/server'
 import {
+  Checkbox,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Checkbox,
 } from '@market-connector/ui-components/client'
-import { dayjs } from '../../../../libs/dayjs'
+import { Button, Icons, TableCellContent } from '@market-connector/ui-components/server'
 import { TableColumnHeader } from '../../../../components/Table/TableColumnHeader'
+import { dayjs } from '../../../../libs/dayjs'
 
-export const columns: ColumnDef<IUserKeys>[] = [
+export const columns: ColumnDef<IStrategy>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -38,27 +38,34 @@ export const columns: ColumnDef<IUserKeys>[] = [
   },
   {
     accessorKey: 'name',
-    header: 'Keys name',
+    header: 'Strategy name',
   },
   {
-    accessorKey: 'exchangeCode',
-    header: ({ column }) => <TableColumnHeader column={column} title="Exchange" sortable />,
+    accessorKey: 'active',
+    header: ({ column }) => <TableColumnHeader column={column} title="Active" sortable />,
     cell: ({ row }) => {
-      return <div className="font-medium pl-4">{row.getValue('exchangeCode')}</div>
+      return <TableCellContent variant={'boolean'}>{row.getValue('active')}</TableCellContent>
     },
   },
   {
-    accessorKey: 'aKeyInfo',
-    header: () => <div className="text-right">Access Key</div>,
+    accessorKey: 'state',
+    header: ({ column }) => <TableColumnHeader column={column} title="State" sortable />,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue('aKeyInfo')}...</div>
+      return <TableCellContent position={'sortable'}>{row.getValue('state')}</TableCellContent>
     },
   },
   {
-    accessorKey: 'sKeyInfo',
-    header: () => <div className="text-right">Secret Key</div>,
+    accessorKey: 'testMode',
+    header: ({ column }) => <TableColumnHeader column={column} title="Test Mode" sortable />,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue('sKeyInfo')}...</div>
+      return <TableCellContent variant={'boolean'}>{row.getValue('testMode')}</TableCellContent>
+    },
+  },
+  {
+    accessorKey: 'triggeredTimes',
+    header: ({ column }) => <TableColumnHeader column={column} title="Triggered Count" sortable />,
+    cell: ({ row }) => {
+      return <TableCellContent position={'centered'}>{row.getValue('triggeredTimes')}</TableCellContent>
     },
   },
   {
@@ -88,8 +95,9 @@ export const columns: ColumnDef<IUserKeys>[] = [
               Copy exchange name
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View exchange info</DropdownMenuItem>
-            <DropdownMenuItem>Deleye keys</DropdownMenuItem>
+            <DropdownMenuItem>Run</DropdownMenuItem>
+            <DropdownMenuItem>Move to Test Mode</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

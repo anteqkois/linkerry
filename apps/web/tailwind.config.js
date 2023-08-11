@@ -9,7 +9,7 @@ module.exports = {
     // './components/**/*.{ts,tsx}',
     // './app/**/*.{ts,tsx}',
     // './src/**/*.{ts,tsx}',
-    join(__dirname, '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
+    join(__dirname, '{src,pages,components,app,modules}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
@@ -58,6 +58,20 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
+        },
+        strategy: {
+          buy: {
+            DEFAULT: 'hsl(var(--strategy-buy))',
+            foreground: 'hsl(var(--strategy-buy-foreground))',
+          },
+          execution: {
+            DEFAULT: 'hsl(var(--strategy-execution))',
+            foreground: 'hsl(var(--strategy-execution-foreground))',
+          },
+        },
+        positive: {
+          DEFAULT: 'hsl(var(--positive))',
+          foreground: 'hsl(var(--positive-foreground))',
         },
       },
       space: {

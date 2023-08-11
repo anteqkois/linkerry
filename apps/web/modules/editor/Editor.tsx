@@ -15,7 +15,6 @@ interface EditorProps {
   }
   cache: {
     saveState: undefined
-    restoreState: undefined
   }
 }
 
@@ -28,7 +27,7 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
     setNodes(initalData.nodes)
     // TODO add some kind of guard to prevent lost state
     return () => {}
-  }, [])
+  }, [initalData])
 
   return (
     <ReactFlowProvider>
@@ -36,6 +35,7 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          // TODO add saving to cache when nodes/edges changed
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}

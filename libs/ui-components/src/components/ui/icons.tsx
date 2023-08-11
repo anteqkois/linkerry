@@ -18,6 +18,10 @@ import {
   ChevronUpIcon,
   ChevronRightIcon,
   CaretSortIcon,
+  CheckIcon,
+  Cross2Icon,
+  CheckCircledIcon,
+  CrossCircledIcon,
 } from '@radix-ui/react-icons'
 import { cn } from '../../utils'
 
@@ -25,6 +29,10 @@ type IconProps = React.HTMLAttributes<SVGElement>
 type RadixIconProps = React.HTMLAttributes<SVGElement> & { children?: undefined }
 
 export const Icons = {
+  true: (props: RadixIconProps) => <CheckIcon {...props} />,
+  false: (props: RadixIconProps) => <Cross2Icon {...props} />,
+  // true: (props: RadixIconProps) => <CheckCircledIcon {...props} />,
+  // false: (props: RadixIconProps) => <CrossCircledIcon {...props} />,
   more: (props: RadixIconProps) => <DotsHorizontalIcon {...props} />,
   rewards: (props: RadixIconProps) => <StarFilledIcon {...props} />,
   home: (props: RadixIconProps) => <HomeIcon {...props} />,

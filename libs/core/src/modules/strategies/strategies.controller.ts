@@ -1,13 +1,34 @@
-import { IStrategy_CreateResponse, Id, JwtUser } from '@market-connector/types'
-import { Body, Controller, Param, Patch, Post, Put } from '@nestjs/common'
+import {
+  IStrategy_CreateResponse,
+  IStrategy_GetOneResponse,
+  IStrategy_GetResponse,
+  Id,
+  JwtUser,
+} from '@market-connector/types'
+import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'
 import { StrategiesService } from './strategies.service'
 import { CreateStrategyStaticMarketDto, PatchStrategyStaticMarketDto, UpdateStrategyStaticMarketDto } from './dto'
+import { GetManyStrategiesQueryDto } from './dto/get-many.dto'
+import { UsePaginatedResourceInterceptor } from '../../lib/utils'
 
 @Controller('strategies')
 export class StrategiesController {
   constructor(private readonly strategiesService: StrategiesService) {}
+
+  @UseJwtGuard()
+  @Get('/:id')
+  findOne(@ReqJwtUser() user: JwtUser, @Param('id') id: string): Promise<IStrategy_GetOneResponse> {
+    return this.strategiesService.findOne(id, user.id)
+  }
+
+  @UseJwtGuard()
+  @UsePaginatedResourceInterceptor()
+  @Get('')
+  find(@ReqJwtUser() user: JwtUser, @Query() query: GetManyStrategiesQueryDto) {
+    return this.strategiesService.findMany(user.id, query)
+  }
 
   @UseJwtGuard()
   @Post('/static-market')

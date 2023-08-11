@@ -1,4 +1,4 @@
-import { Id } from '../../utils'
+import { DbTimestamp, DeepNullable, IPaginationQuery, IResourceResponse, Id, Nullable } from '../../utils'
 
 export enum StrategyState {
   Idle = 'Idle',
@@ -24,7 +24,7 @@ export interface IStrategy_StrategyBuy {
 }
 
 // One interface. Theare will be validation logic, which check if StrategyDynamicMarket have at one buy strategy with conditionMarketProvider
-export interface IStrategy {
+export interface IStrategy extends DbTimestamp {
   _id: Id
   user: Id
   name: string
@@ -40,6 +40,13 @@ export interface IStrategy {
   // strategyPause: Id[]
 }
 
+// GET
+export interface IStrategy_GetOneQuery {}
+export type IStrategy_GetOneResponse = Nullable<IStrategy>
+
+export interface IStrategy_GetQuery extends IPaginationQuery {}
+export interface IStrategy_GetResponse extends IResourceResponse<IStrategy[]> {}
+
 // POST
 export interface IStrategy_CreateInput {
   name: string
@@ -54,5 +61,5 @@ export interface IStrategy_CreateInput {
 export interface IStrategy_CreateResponse extends IStrategy {}
 
 // PUT
-export interface IStrategy_UpdateInput extends IStrategy {}
+export interface IStrategy_UpdateInput extends Omit<IStrategy, '_id' | 'user'> {}
 export interface IStrategy_UpdateResponse extends IStrategy_CreateResponse {}

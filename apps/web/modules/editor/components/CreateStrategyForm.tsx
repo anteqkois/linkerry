@@ -24,12 +24,12 @@ import {
 import { UseFormReturn } from 'react-hook-form'
 
 export interface StrategyFormProps {
-  createForm: UseFormReturn<IStrategy_StaticMarket_CreateInput, any, undefined>
+  form: UseFormReturn<IStrategy_StaticMarket_CreateInput, any, undefined>
   onSubmit: any
   isLoading: boolean
 }
 
-export const StrategyForm = ({ createForm, isLoading, onSubmit }: StrategyFormProps) => {
+export const CreateStrategyForm = ({ form, isLoading, onSubmit }: StrategyFormProps) => {
   return (
     <div className="w-full h-full">
       <Card>
@@ -38,10 +38,10 @@ export const StrategyForm = ({ createForm, isLoading, onSubmit }: StrategyFormPr
           <CardDescription>Every strategy creation starts with giving a name 🚀.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...createForm}>
-            <form onSubmit={createForm.handleSubmit(onSubmit)} className="space-y-8 w-96">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
               <FormField
-                control={createForm.control}
+                control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
@@ -54,7 +54,7 @@ export const StrategyForm = ({ createForm, isLoading, onSubmit }: StrategyFormPr
                 )}
               />
               <FormField
-                control={createForm.control}
+                control={form.control}
                 name="type"
                 render={({ field }) => (
                   <FormItem>
