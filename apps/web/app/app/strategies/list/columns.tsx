@@ -15,6 +15,7 @@ import {
 import { Button, Icons, TableCellContent } from '@market-connector/ui-components/server'
 import { TableColumnHeader } from '../../../../components/Table/TableColumnHeader'
 import { dayjs } from '../../../../libs/dayjs'
+import Link from 'next/link'
 
 export const columns: ColumnDef<IStrategy>[] = [
   {
@@ -56,14 +57,14 @@ export const columns: ColumnDef<IStrategy>[] = [
   },
   {
     accessorKey: 'testMode',
-    header: ({ column }) => <TableColumnHeader column={column} title="Test Mode" sortable />,
+    header: ({ column }) => <TableColumnHeader column={column} title="Test" sortable />,
     cell: ({ row }) => {
       return <TableCellContent variant={'boolean'}>{row.getValue('testMode')}</TableCellContent>
     },
   },
   {
     accessorKey: 'triggeredTimes',
-    header: ({ column }) => <TableColumnHeader column={column} title="Triggered Count" sortable />,
+    header: ({ column }) => <TableColumnHeader column={column} title="Triggered" sortable />,
     cell: ({ row }) => {
       return <TableCellContent position={'centered'}>{row.getValue('triggeredTimes')}</TableCellContent>
     },
@@ -79,7 +80,7 @@ export const columns: ColumnDef<IStrategy>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const exchange = row.original
+      const strategy = row.original
 
       return (
         <DropdownMenu>
@@ -95,6 +96,12 @@ export const columns: ColumnDef<IStrategy>[] = [
               Copy exchange name
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
+            <Link href={`/app/strategies/editor/${strategy._id}`} prefetch={false}>
+              <DropdownMenuItem className="flex gap-1 justify-between items-center">
+                <span>Edit</span>
+                <Icons.edit />
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem>Run</DropdownMenuItem>
             <DropdownMenuItem>Move to Test Mode</DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>

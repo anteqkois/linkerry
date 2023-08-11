@@ -63,5 +63,5 @@ export interface DataTableProps<TData, TValue> {
 }
 
 export enum LocalStorageKeys {
-  StrategyCache = 'StrategyCache',
+  StrategyCache = 'strategy-cache',
 }

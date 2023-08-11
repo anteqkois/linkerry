@@ -22,6 +22,7 @@ import {
   Cross2Icon,
   CheckCircledIcon,
   CrossCircledIcon,
+  Pencil2Icon,
 } from '@radix-ui/react-icons'
 import { cn } from '../../utils'
 
@@ -36,6 +37,7 @@ export const Icons = {
   more: (props: RadixIconProps) => <DotsHorizontalIcon {...props} />,
   rewards: (props: RadixIconProps) => <StarFilledIcon {...props} />,
   home: (props: RadixIconProps) => <HomeIcon {...props} />,
+  edit: (props: RadixIconProps) => <Pencil2Icon {...props} />,
   settings: (props: RadixIconProps) => <GearIcon {...props} />,
   copy: (props: RadixIconProps) => <CopyIcon {...props} />,
   hamburgerMenu: (props: RadixIconProps) => <HamburgerMenuIcon {...props} />,

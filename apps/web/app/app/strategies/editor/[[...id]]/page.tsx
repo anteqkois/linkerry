@@ -106,13 +106,15 @@ const renderStrategyNodes = (strategy: IStrategy) => {
   ]
 }
 
+// Always first node Should be strategy node with strategy id
 export default function Page({ params }: { params: { id: string } }) {
   const { value, set, remove } = useLocalStorageValue<Node[]>(LocalStorageKeys.StrategyCache)
-  const [state, actions] = useAsync<Node[]>(async () => {
-    // Return cached Nodes state
-    if (value) return value
 
+  const [state, actions] = useAsync<Node[]>(async () => {
     const id = params?.id?.[0]
+    // Return cached Nodes state
+    if ((value && id && value[0].data?.strategy?._id === id) || (value && !id)) return value
+
     if (id) {
       // Fetch and render if exists
       const { data } = await StrategyApi.get(id)
@@ -150,30 +152,3 @@ export default function Page({ params }: { params: { id: string } }) {
     />
   )
 }
-
-
-  // const initialNodes: Node[] = await useMemo(async () => {
-  //   // Return cached Nodes state
-  //   if (value) return value
-
-  //   const id = params?.id?.[0]
-  //   if (id) {
-  //     // Fetch and render if exists
-  //     const { data } = await StrategyApi.get(id)
-  //     if (data && data._id === id) {
-  //       const nodes = renderStrategyNodes(data)
-  //       set(nodes)
-  //       return nodes
-  //     }
-  //   }
-
-  //   // Create new strategy
-  //   return [
-  //     {
-  //       id: 'strategyStart',
-  //       type: 'strategyNode',
-  //       position: { x: 0, y: 0 },
-  //       data: {},
-  //     },
-  //   ]
-  // }, [params])
