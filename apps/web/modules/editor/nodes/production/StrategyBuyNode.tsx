@@ -7,15 +7,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input
+  Input,
 } from '@market-connector/ui-components/client'
 import { Button, H4 } from '@market-connector/ui-components/server'
-import { NodeProps } from 'reactflow'
+import { Node, NodeProps } from 'reactflow'
 import { useStrategyBuy } from '../../../strategies/useStrategyBuy'
+import { IStrategyBuy } from '@market-connector/types'
 
-type Props = NodeProps
+type StrategyBuyNodeProps = NodeProps<{ strategyBuy?: Partial<IStrategyBuy> }>
 
-export function StrategyBuyNode({ data, xPos, yPos }: Props) {
+export function StrategyBuyNode({ data, xPos, yPos }: StrategyBuyNodeProps) {
   const { form, isLoading, onSubmit } = useStrategyBuy()
   return (
     <>

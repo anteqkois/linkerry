@@ -1,107 +1,53 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
-import { Node } from 'reactflow'
-import { ConditionNode, Editor, StrategyBuyNode, StrategyNode, StrategyNodeProps } from '../../../../../modules/editor'
-import { useAsync, useLocalStorageValue } from '@react-hookz/web'
-import { LocalStorageKeys } from '../../../../../types'
-import { StrategyApi } from '../../../../../modules/strategies/api'
 import { IStrategy } from '@market-connector/types'
+import { useAsync, useLocalStorageValue } from '@react-hookz/web'
+import { useCallback, useEffect, useMemo } from 'react'
+import { Edge, Node } from 'reactflow'
+import { ConditionNode, Editor, IStrategyNode, StrategyBuyNode, StrategyNode } from '../../../../../modules/editor'
+import { AddStrategyBuyNode, IAddStrategyBuyNode } from '../../../../../modules/editor/nodes/shared/AddStrategyBuyNode'
+import { StrategyApi } from '../../../../../modules/strategies/api'
+import { LocalStorageKeys } from '../../../../../types'
 
 const nodeTypes = {
-  strategyBuyNode: StrategyBuyNode,
-  conditionNode: ConditionNode,
-  strategyNode: StrategyNode,
+  StrategyBuyNode: StrategyBuyNode,
+  ConditionNode: ConditionNode,
+  StrategyNode: StrategyNode,
+  AddStrategyBuyNode: AddStrategyBuyNode,
 }
 
-// const initialNodes: Node[] = [
-//   {
-//     id: 'A',
-//     // type: 'group',
-//     type: 'strategyBuyNode',
-//     position: { x: 0, y: 0 },
-//     style: {
-//       // width: 500,
-//       // height: 250,
-//     },
-//     data: {},
-//   },
-//   {
-//     id: 'addConditionButton',
-//     type: 'conditionNode',
-//     position: {
-//       x: 0,
-//       y: 0,
-//     },
-//     data: {},
-//     deletable: false,
-//     // draggable: false,
-//     parentNode: 'A',
-//     extent: 'parent',
-//     expandParent: true,
-//   },
-//   {
-//     id: 'addConditionButton2',
-//     type: 'conditionNode',
-//     position: {
-//       x: 100,
-//       y: 100,
-//     },
-//     data: {},
-//     deletable: false,
-//     // draggable: false,
-//     parentNode: 'A',
-//     extent: 'parent',
-//     expandParent: true,
-//   },
-// ]
-
-// const initialNodes: Node[] = [
-// {
-//   id: 'strategyStart',
-//   // type: 'group',
-//   type: 'strategyNode',
-//   position: { x: 0, y: 0 },
-//   data: {},
-// },
-// {
-//   id: 'addConditionButton',
-//   type: 'conditionNode',
-//   position: {
-//     x: 0,
-//     y: 0,
-//   },
-//   data: {},
-//   deletable: false,
-//   parentNode: 'strategyStart',
-//   extent: 'parent',
-//   expandParent: true,
-// },
-// {
-//   id: 'addConditionButton2',
-//   type: 'conditionNode',
-//   position: {
-//     x: 200,
-//     y: 200,
-//   },
-//   data: {},
-//   deletable: false,
-//   parentNode: 'strategyStart',
-//   extent: 'parent',
-//   expandParent: true,
-// },
-// ]
-
 const renderStrategyNodes = (strategy: IStrategy) => {
+  const strategyNode: IStrategyNode = {
+    id: 'Strategy',
+    type: 'StrategyNode',
+    position: { x: 0, y: 0 },
+    data: {
+      strategy,
+    },
+  }
+
+  const addBuyStrategy: IAddStrategyBuyNode = {
+    id: 'AddStrategyBuyNode',
+    type: 'AddStrategyBuyNode',
+    position: { x: 218, y: 450 },
+    data: {
+      parentId: strategyNode.id,
+    },
+    parentNode: 'Strategy',
+  }
+
+  // const strategyBuyNodes = strategy.strategyBuy.map({})
+
+  return [strategyNode, addBuyStrategy]
+}
+
+const renderStrategyEdges = (nodes: Node[]): Edge[] => {
   return [
     {
-      id: 'strategyStart',
-      // type: 'group',
-      type: 'strategyNode',
-      position: { x: 0, y: 0 },
-      data: {
-        strategy,
-      } as StrategyNodeProps['data'],
+      id: 'Strategy-AddStrategyBuyNode',
+      type: 'default',
+      source: 'Strategy',
+      target: 'AddStrategyBuyNode',
     },
   ]
 }
@@ -110,17 +56,17 @@ const renderStrategyNodes = (strategy: IStrategy) => {
 export default function Page({ params }: { params: { id: string } }) {
   const { value, set, remove } = useLocalStorageValue<Node[]>(LocalStorageKeys.StrategyCache)
 
-  const [state, actions] = useAsync<Node[]>(async () => {
+  const [initialNodes, actions] = useAsync<Node[]>(async () => {
     const id = params?.id?.[0]
-    // Return cached Nodes state
-    if ((value && id && value[0].data?.strategy?._id === id) || (value && !id)) return value
+    // Return cached Nodes state => cached id must be equeal to params id, other ways it must be id of unsaved strategy
+    if ((value && id && value[0].data?.strategy?._id === id) || (value && !value[0].data?.strategy?._id)) return value
 
     if (id) {
       // Fetch and render if exists
       const { data } = await StrategyApi.get(id)
       if (data && data._id === id) {
         const nodes = renderStrategyNodes(data)
-        set(nodes)
+        // set(nodes)
         return nodes
       }
     }
@@ -128,13 +74,17 @@ export default function Page({ params }: { params: { id: string } }) {
     // Create new strategy
     return [
       {
-        id: 'strategyStart',
+        id: 'Strategy',
         type: 'strategyNode',
         position: { x: 0, y: 0 },
         data: {},
       },
     ]
   })
+
+  const initialEdges = useMemo(() => {
+    return renderStrategyEdges(initialNodes.result ?? [])
+  }, [initialNodes.result])
 
   useEffect(() => {
     actions.execute()
@@ -144,7 +94,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Editor
-      initalData={{ edges: [], nodes: state.result ?? [] }}
+      initalData={{ edges: initialEdges, nodes: initialNodes.result ?? [] }}
       nodeTypes={nodeTypes}
       mode="production"
       limits={undefined}

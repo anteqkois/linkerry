@@ -27,6 +27,7 @@ import {
 } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import { UseFormReturn } from 'react-hook-form'
+import { Handle, Position } from 'reactflow'
 
 export interface UpdateStrategyFormProps {
   form: UseFormReturn<IStrategy_StaticMarket_UpdateInput, any, undefined>
@@ -102,6 +103,7 @@ export const UpdateStrategyForm = ({ form, isLoading, onSubmit, className }: Upd
           </Form>
         </CardContent>
       </Card>
+      <Handle type="source" position={Position.Bottom}/>
     </div>
   )
 }

@@ -2,15 +2,16 @@
 import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
-import ReactFlow, { Background, BackgroundVariant, Controls, Edge, Node, ReactFlowProvider } from 'reactflow'
-import { useEditor } from './store'
+import ReactFlow, { Background, BackgroundVariant, Controls, Edge, ReactFlowProvider } from 'reactflow'
+import { useEditor } from './useEditor'
+import { CustomNode } from './nodes'
 
 interface EditorProps {
   limits: undefined // How many strategies buy can be etc.
   mode: 'demo' | 'production'
   nodeTypes: Record<string, (...props: any) => JSX.Element>
   initalData: {
-    nodes: Node[]
+    nodes: CustomNode[]
     edges: Edge[]
   }
   cache: {
@@ -27,7 +28,13 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
     setNodes(initalData.nodes)
     // TODO add some kind of guard to prevent lost state
     return () => {}
-  }, [initalData])
+  }, [initalData.nodes])
+
+  useEffect(() => {
+    // setup inital editor state
+    setEdges(initalData.edges)
+    return () => {}
+  }, [initalData.edges])
 
   return (
     <ReactFlowProvider>
@@ -43,9 +50,6 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
           fitView
           maxZoom={1}
           defaultViewport={{ x: 1, y: 1, zoom: 0.1 }}
-          // fitViewOptions={{
-          //   padding: 1,
-          // }}
         >
           <Controls />
           {/* <MiniMap /> */}
