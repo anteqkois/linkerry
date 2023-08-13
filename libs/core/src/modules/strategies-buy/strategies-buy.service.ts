@@ -2,10 +2,10 @@ import { IStrategyBuy_Condition, Id } from '@market-connector/types'
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { StrategyBuyStaticMarket } from './schemas/strategy-buy-static-market.schema'
-import { UpdateStrategyBuyDto } from './dro/update.dto'
-import { CreateStrategyBuyDto, StrategyBuyConditionDto } from './dro/create.dto'
 import { ConditionsService } from '../conditions/conditions.service'
+import { CreateStrategyBuyDto, StrategyBuyConditionDto } from './dro/create.dto'
+import { UpdateStrategyBuyDto } from './dro/update.dto'
+import { StrategyBuyStaticMarket } from './schemas/strategy-buy-static-market.schema'
 
 @Injectable()
 export class StrategiesBuyService {
@@ -19,7 +19,7 @@ export class StrategiesBuyService {
 
   async #safeConditionParse(conditions: StrategyBuyConditionDto[], userId: Id) {
     const parsedConditions: IStrategyBuy_Condition[] = []
-    for (const c of conditions) {
+    for await (const c of conditions) {
       if (c.id) {
         parsedConditions.push(c)
         continue

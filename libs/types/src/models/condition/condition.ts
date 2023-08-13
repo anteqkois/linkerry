@@ -1,5 +1,5 @@
 import { IUser } from '../user'
-import { IAlertTradingView, IAlertUnknown } from './alert'
+import { AlertProvider, IAlertTradingView, IAlertUnknown } from './alert'
 
 export enum ConditionType {
   Alert = 'Alert',
@@ -53,6 +53,12 @@ export interface ICondition_CreateInput {
   eventValidityUnix: number
   isMarketProvider: boolean
   // readonly required: boolean;                 // for future usecase
+  // Alert Condition fields
+  alert?: {
+    provider: AlertProvider
+  }
+  // Indicator Condition fields
+  // indicator?: any
 }
 
 export interface ICondition_CreateResponse extends ICondition {}

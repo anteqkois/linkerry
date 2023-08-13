@@ -1,11 +1,11 @@
 import {
+  AlertProvider,
   ConditionOperator,
   ConditionType,
   IStrategyBuy_CreateInput,
   IStrategyBuy_CreateResponse,
   IStrategyBuy_UpdateInput,
   IStrategyBuy_UpdateResponse,
-  IStrategy_UpdateResponse,
   StrategyBuyType,
 } from '@market-connector/types'
 import axios from 'axios'
@@ -78,11 +78,11 @@ describe('POST /api/strategies-buy', () => {
       secondInput,
     )
 
-    await expect(status).toBe(200)
+    expect(status).toBe(200)
   })
 
   it('condition is created when strategy buy input include data for creating condition', async () => {
-    const input: IStrategyBuy_CreateInput = {
+    const inputWithCondition: IStrategyBuy_CreateInput = {
       type: StrategyBuyType.StrategyBuyStaticMarket,
       conditions: [
         {
@@ -93,6 +93,9 @@ describe('POST /api/strategies-buy', () => {
             requiredValue: 1,
             eventValidityUnix: 100000,
             isMarketProvider: false,
+            alert: {
+              provider: AlertProvider.TradingView,
+            },
           },
           active: true,
         },
@@ -100,13 +103,12 @@ describe('POST /api/strategies-buy', () => {
       name: 'Strategy with condition to create',
     }
 
-    const { status, data } = await axios.post<IStrategyBuy_CreateResponse>(`/strategies-buy`, input)
+    const { status, data } = await axios.post<IStrategyBuy_CreateResponse>(`/strategies-buy`, inputWithCondition)
 
-    await expect(status).toBe(201)
-    
+    expect(status).toBe(201)
     expect(data.conditions[0]).toBeDefined()
-    expect(data.conditions[0]).toHaveLength(1)
-    expect(data.conditions[0].active).toBe(input.conditions[0].active)
+    expect(data.conditions).toHaveLength(1)
+    expect(data.conditions[0].active).toBe(inputWithCondition.conditions[0].active)
     expect(data.conditions[0].condition).toBeDefined()
     expect(data.conditions[0].condition).toHaveLength(24)
     expect(data.conditions[0].id).toBeDefined()

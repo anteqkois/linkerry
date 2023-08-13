@@ -14,9 +14,16 @@ import {
   IsNotEmptyObject,
   IsNumber,
   IsObject,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator'
+
+export class ConditionAlertDto {
+  @IsString()
+  @IsEnum(AlertProvider)
+  readonly provider: AlertProvider
+}
 
 export class CreateConditionDto implements ICondition_CreateInput {
   @IsString()
@@ -42,12 +49,12 @@ export class CreateConditionDto implements ICondition_CreateInput {
   @IsBoolean()
   @IsNotEmpty()
   readonly isMarketProvider: boolean
-}
 
-export class ConditionAlertDto {
-  @IsString()
-  @IsEnum(AlertProvider)
-  readonly provider: AlertProvider
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ConditionAlertDto)
+  alert?: ConditionAlertDto
 }
 
 export class CreateAlertDto extends CreateConditionDto implements IAlert_CreateInput {
@@ -60,5 +67,5 @@ export class CreateAlertDto extends CreateConditionDto implements IAlert_CreateI
   @IsObject()
   @ValidateNested()
   @Type(() => ConditionAlertDto)
-  alert!: ConditionAlertDto
+  override alert!: ConditionAlertDto
 }

@@ -6,9 +6,10 @@ import {
   StrategyBuyType
 } from '@market-connector/types'
 import { Type } from 'class-transformer'
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsEnum, IsMongoId, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
+import { ArrayMaxSize, IsArray, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
 
 export class StrategyBuyConditionDto implements IStrategyBuy_Condition {
+  @IsOptional()
   @IsMongoId()
   readonly id?: Id
   readonly active: boolean
