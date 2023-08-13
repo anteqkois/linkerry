@@ -4,6 +4,7 @@ import { StrategiesBuyController } from './strategies-buy.controller';
 import { StrategyBuy, StrategyBuySchema } from './schemas/strategy-buy.schema';
 import { StrategyBuyStaticMarket, StrategyBuyStaticMarketSchema } from './schemas/strategy-buy-static-market.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConditionsModule } from '../conditions';
 
 const STRATEGIES_BUY_MODELS = [
   {
@@ -30,6 +31,7 @@ const STRATEGIES_BUY_MODELS = [
 @Module({
   imports:[
     MongooseModule.forFeatureAsync([...STRATEGIES_BUY_MODELS]),
+    ConditionsModule
   ],
   controllers: [StrategiesBuyController],
   providers: [StrategiesBuyService],

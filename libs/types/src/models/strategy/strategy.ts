@@ -19,7 +19,7 @@ export enum StrategyType {
   StrategyStaticMarket = 'StrategyStaticMarket',
 }
 
-export interface IStrategy_StrategyBuy {
+export interface IStrategyStrategyBuy {
   active: boolean
   // For existing strategies buy
   id?: Id
@@ -39,7 +39,7 @@ export interface IStrategy extends Partial<Strategy_StaticMarket_Property>, DbTi
   active: boolean
   triggeredTimes: number
   state: StrategyState
-  strategyBuy: IStrategy_StrategyBuy[]
+  strategyBuy: IStrategyStrategyBuy[]
   // strategySell: Id[]
   // strategyExecution: Id[]
   // strategyPause: Id[]
@@ -59,7 +59,7 @@ export interface IStrategy_CreateInput {
   // validityUnix: number
   testMode: boolean
   active: boolean
-  strategyBuy: IStrategy_StrategyBuy[]
+  strategyBuy: IStrategyStrategyBuy[]
   // strategySell: Id[]
   // strategyPause: Id[]
 }

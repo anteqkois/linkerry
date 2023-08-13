@@ -19,17 +19,17 @@ export class StrategyBuyConditionDto implements IStrategyBuy_Condition {
 export class CreateStrategyBuyDto implements IStrategyBuy_CreateInput {
   @IsString()
   @MinLength(2)
-  @MaxLength(30)
+  @MaxLength(150)
   readonly name: string
 
   @IsEnum(StrategyBuyType)
   @MinLength(2)
-  @MaxLength(30)
+  @MaxLength(100)
   readonly type: StrategyBuyType
 
   @IsArray()
   @ArrayMaxSize(10)
   @ValidateNested({ each: true })
   @Type(() => StrategyBuyConditionDto)
-  readonly conditions: IStrategyBuy_Condition[]
+  conditions: IStrategyBuy_Condition[]
 }

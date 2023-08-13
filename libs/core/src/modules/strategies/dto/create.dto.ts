@@ -1,9 +1,9 @@
-import { IStrategy_CreateInput, IStrategy_StrategyBuy, Id, StrategyType } from '@market-connector/types'
+import { IStrategyStrategyBuy, IStrategy_CreateInput, Id, StrategyType } from '@market-connector/types'
 import { Type } from 'class-transformer'
 import { IsArray, IsBoolean, IsDefined, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
 import { CreateStrategyBuyStaticMarketDto } from '../../strategies-buy/dro/staticMarket/create.dto'
 
-export class StrategyStrategyBuyDto implements IStrategy_StrategyBuy {
+export class StrategyStrategyBuyDto implements IStrategyStrategyBuy {
   @IsOptional()
   @IsMongoId()
   readonly id?: Id
@@ -25,12 +25,12 @@ export class StrategyStrategyBuyDto implements IStrategy_StrategyBuy {
 export class CreateStrategyDto implements IStrategy_CreateInput {
   @IsString()
   @MinLength(2)
-  @MaxLength(30)
+  @MaxLength(150)
   readonly name: string
 
   @IsString()
   @MinLength(2)
-  @MaxLength(30)
+  @MaxLength(100)
   @IsEnum(StrategyType)
   readonly type: StrategyType
 

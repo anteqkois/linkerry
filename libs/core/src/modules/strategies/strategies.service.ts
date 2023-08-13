@@ -1,4 +1,4 @@
-import { IStrategy, IStrategy_GetQuery, IStrategy_StrategyBuy, Id } from '@market-connector/types'
+import { IStrategy, IStrategyStrategyBuy, IStrategy_GetQuery, Id } from '@market-connector/types'
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
@@ -7,15 +7,15 @@ import {
   CreateStrategyDto,
   PatchStrategyStaticMarketDto,
   StrategyStrategyBuyStaticMarketDto,
-  UpdateStrategyStaticMarketDto
+  UpdateStrategyStaticMarketDto,
 } from './dto'
-import { StrategyStaticMarket } from './schemas/strategy-buy-static-market.schema'
 import { UpdateStrategyDto } from './dto/update.dto'
+import { StrategyStaticMarket } from './schemas/strategy-buy-static-market.schema'
 
 @Injectable()
 export class StrategiesService {
   async #safeUpdateOne(dto: Partial<UpdateStrategyStaticMarketDto>, userId: Id, id: Id) {
-    if(dto.strategyBuy) dto.strategyBuy = await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
+    if (dto.strategyBuy) dto.strategyBuy = await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
 
     const strategy = await this.strategyStaticMarketModel
       .findOneAndUpdate({ _id: id, user: userId }, { $set: { ...dto, _id: undefined } }, { new: true })
@@ -25,7 +25,7 @@ export class StrategiesService {
   }
 
   async #safeStrategyBuyParse(strategyBuy: StrategyStrategyBuyStaticMarketDto[], userId: Id) {
-    const strategies: IStrategy_StrategyBuy[] = []
+    const strategies: IStrategyStrategyBuy[] = []
     for (const sb of strategyBuy) {
       if (sb.id) {
         strategies.push(sb)
@@ -33,7 +33,7 @@ export class StrategiesService {
       }
       if (sb.strategyBuyCreateInput) {
         const newStrategyBuy = await this.strategiesBuyService.create(sb.strategyBuyCreateInput, userId)
-        strategies.push(newStrategyBuy.toObject())
+        strategies.push({ active: sb.active, id: newStrategyBuy._id, strategyBuy: newStrategyBuy._id })
         continue
       }
       throw new UnprocessableEntityException('Invalid Strategy Buy')
@@ -67,12 +67,12 @@ export class StrategiesService {
   }
 
   async update(dto: UpdateStrategyDto, userId: Id, id: Id) {
-    if(dto.strategyBuy) await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
+    if (dto.strategyBuy) await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
     return this.#safeUpdateOne(dto, userId, id)
   }
 
   async patch(dto: PatchStrategyStaticMarketDto, userId: Id, id: Id) {
-    if(dto.strategyBuy) await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
+    if (dto.strategyBuy) await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
     return this.#safeUpdateOne(dto, userId, id)
   }
 }

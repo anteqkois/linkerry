@@ -47,5 +47,6 @@ const CONDITIONS_MODELS = [
   ],
   controllers: [ConditionsController],
   providers: [ConditionsService, EventsService, AlertGateway, AlertGateway, TradingViewGateway],
+  exports:[ConditionsService]
 })
 export class ConditionsModule {}

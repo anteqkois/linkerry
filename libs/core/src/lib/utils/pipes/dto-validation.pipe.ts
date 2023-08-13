@@ -1,14 +1,14 @@
 import {
-  PipeTransform,
-  Injectable,
   ArgumentMetadata,
-  Logger,
   HttpException,
   HttpStatus,
+  Injectable,
+  Logger,
+  PipeTransform,
   ValidationError,
 } from '@nestjs/common'
-import { validate } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
+import { validate } from 'class-validator'
 
 export class DtoException extends HttpException {
   constructor(message: string, public field: string) {
@@ -17,9 +17,14 @@ export class DtoException extends HttpException {
 }
 
 export const exceptionFactoryDto = (errors: ValidationError[]) => {
+  let lastErrors = errors
+  while(lastErrors[0].children && lastErrors[0].children?.length > 0){
+    lastErrors = lastErrors[0].children
+  }
+
   throw new DtoException(
-    Object.values(errors[0].constraints ?? {})[0] ?? 'Unknown validation error',
-    errors[0].property,
+    `${Object.values(lastErrors[0]?.constraints ?? {})[0] ?? 'Unknown validation error'}. Receive: ${lastErrors[0].value}`,
+    lastErrors[0].property,
   )
 }
 

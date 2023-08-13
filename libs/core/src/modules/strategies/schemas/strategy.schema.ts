@@ -1,11 +1,11 @@
-import { IStrategy, IStrategy_StrategyBuy, Id, StrategyState, StrategyType } from '@market-connector/types'
+import { IStrategy, IStrategyStrategyBuy, Id, StrategyState, StrategyType } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
 export type StrategyDocument = mongoose.HydratedDocument<Strategy>
 
 @Schema({ _id: false })
-class StrategyStrategyBuy implements IStrategy_StrategyBuy {
+class StrategyStrategyBuy implements IStrategyStrategyBuy {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'strategies-buy' })
   readonly id: Id
 
@@ -37,7 +37,7 @@ export class Strategy implements IStrategy {
   state: StrategyState
 
   @Prop({ required: true, type: [StrategyStrategyBuySchema], default: [] })
-  strategyBuy: IStrategy_StrategyBuy[]
+  strategyBuy: IStrategyStrategyBuy[]
 
   // @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StrategySells' }], default: [] })
   // strategySell: Id[]
