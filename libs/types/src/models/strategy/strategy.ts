@@ -24,8 +24,6 @@ export interface IStrategyStrategyBuy {
   // For existing strategies buy
   id?: Id
   strategyBuy?: Id
-  // For request to create strategy buy
-  strategyBuyCreateInput?:IStrategyBuy_CreateInput
 }
 
 // One interface. Theare will be validation logic, which check if StrategyDynamicMarket have at one buy strategy with conditionMarketProvider
@@ -59,7 +57,8 @@ export interface IStrategy_CreateInput {
   // validityUnix: number
   testMode: boolean
   active: boolean
-  strategyBuy: IStrategyStrategyBuy[]
+  // For request to create strategy buy
+  strategyBuy: (IStrategyStrategyBuy & { strategyBuyCreateInput?: IStrategyBuy_CreateInput })[]
   // strategySell: Id[]
   // strategyPause: Id[]
 }

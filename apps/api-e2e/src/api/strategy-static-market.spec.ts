@@ -6,6 +6,7 @@ import {
   IStrategy_PatchResponse,
   IStrategy_UpdateInput,
   IStrategy_UpdateResponse,
+  StrategyBuyType,
   StrategyState,
   StrategyType,
 } from '@market-connector/types'
@@ -138,5 +139,33 @@ describe('POST /api/strategies', () => {
     expect(data.user).toBe(alwaysExistingUser._id)
     expect(data.strategyBuy[0]).toMatchObject(patchInput.strategyBuy[0])
     lastStrategyData = data
+  })
+
+  it('strategy buy is created when strategy input include data for creating strategy buy', async () => {
+    const inputWithStrategyBuy: IStrategy_CreateInput = {
+      type: StrategyType.StrategyStaticMarket,
+      active: false,
+      name: 'Strategy one',
+      strategyBuy: [{
+        active: true,
+        strategyBuyCreateInput:{
+          name:'Strategy create strategy buy',
+          type: StrategyBuyType.StrategyBuyStaticMarket,
+          conditions:[]
+        }
+      }],
+      testMode: false,
+    }
+
+    const { status, data } = await axios.post<IStrategy_CreateResponse>(`/strategies`, inputWithStrategyBuy)
+
+    expect(status).toBe(201)
+    expect(data.strategyBuy[0]).toBeDefined()
+    expect(data.strategyBuy).toHaveLength(1)
+    expect(data.strategyBuy[0].active).toBe(inputWithStrategyBuy.strategyBuy[0].active)
+    expect(data.strategyBuy[0].strategyBuy).toBeDefined()
+    expect(data.strategyBuy[0].strategyBuy).toHaveLength(24)
+    expect(data.strategyBuy[0].id).toBeDefined()
+    expect(data.strategyBuy[0].id).toHaveLength(24)
   })
 })

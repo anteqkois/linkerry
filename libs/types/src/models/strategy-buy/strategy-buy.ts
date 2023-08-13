@@ -12,7 +12,6 @@ export interface IStrategyBuy_Condition {
   id?: Id
   condition?: Id
   active: boolean
-  conditionCreateInput?: ICondition_CreateInput
 }
 
 export interface IStrategyBuy extends Partial<StrategyBuy_StaticMarket_Property>, Partial<IStrategyBuy_DynamicMarket_Property> {
@@ -29,7 +28,7 @@ export interface IStrategyBuy extends Partial<StrategyBuy_StaticMarket_Property>
 export interface IStrategyBuy_CreateInput {
   type: StrategyBuyType
   name: string
-  conditions: IStrategyBuy_Condition[]
+  conditions: (IStrategyBuy_Condition & {conditionCreateInput?: ICondition_CreateInput})[]
 }
 export interface IStrategyBuy_CreateResponse extends IStrategyBuy{}
 
