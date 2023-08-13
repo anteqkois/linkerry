@@ -1,4 +1,5 @@
 import { Id } from '../../utils'
+import { ICondition_CreateInput } from '../condition'
 import { IStrategyBuy_DynamicMarket_Property } from './strategy-dynamic-market'
 import { StrategyBuy_StaticMarket_Property } from './strategy-static-market'
 
@@ -8,19 +9,13 @@ export enum StrategyBuyType {
 }
 
 export interface IStrategyBuy_Condition {
-  id: Id
-  condition: Id
+  id?: Id
+  condition?: Id
   active: boolean
-  // conditionProperty?:{ // For future ?
-  // eventValidityUnix: boolean
-  // }
-
-  // Create something like a cllas, to have ability to overide default values ?
-  // eventValidityUnix: boolean
-  // required: boolean
+  conditionCreateInput?: ICondition_CreateInput
 }
 
-export interface IStrategyBuy extends StrategyBuy_StaticMarket_Property, IStrategyBuy_DynamicMarket_Property {
+export interface IStrategyBuy extends Partial<StrategyBuy_StaticMarket_Property>, Partial<IStrategyBuy_DynamicMarket_Property> {
   _id: Id
   user: Id
   type: StrategyBuyType
@@ -39,5 +34,9 @@ export interface IStrategyBuy_CreateInput {
 export interface IStrategyBuy_CreateResponse extends IStrategyBuy{}
 
 // PUT
-export interface IStrategyBuy_UpdateInput extends IStrategyBuy {}
+export interface IStrategyBuy_UpdateInput extends Omit<IStrategyBuy, '_id' | 'user'> {}
 export interface IStrategyBuy_UpdateResponse extends IStrategyBuy_CreateResponse {}
+
+// PATCH
+export interface IStrategyBuy_PatchInput extends Partial<IStrategyBuy_UpdateInput> {}
+export interface IStrategyBuy_PatchResponse extends IStrategyBuy_UpdateResponse {}

@@ -1,4 +1,5 @@
 import {
+  ICondition_CreateInput,
   IStrategyBuy_Condition,
   IStrategyBuy_CreateInput,
   Id,
@@ -9,9 +10,10 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsEnum, IsMongoId, IsString, MaxLe
 
 export class StrategyBuyConditionDto implements IStrategyBuy_Condition {
   @IsMongoId()
-  readonly id: Id
+  readonly id?: Id
   readonly active: boolean
-  readonly condition: string
+  readonly condition?: string
+  readonly conditionCreateInput?: ICondition_CreateInput | undefined
 }
 
 export class CreateStrategyBuyDto implements IStrategyBuy_CreateInput {

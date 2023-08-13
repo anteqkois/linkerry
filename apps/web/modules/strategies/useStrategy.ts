@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   IStrategy,
   IStrategy_CreateResponse,
+  IStrategy_PatchInput,
   IStrategy_UpdateResponse,
   Id,
   StrategyType,
@@ -27,7 +28,6 @@ const updateStrategyResloverGateway = {
   [StrategyType.StrategyDynamicMarket]: StrategyStaticMarketUpdateSchema,
 }
 
-// TODO get id of strategy as a props ? => so main state store at useEditor and pass when useStrategy is defined as a props
 interface useStrategyProps {
   idToFetch?: Id
   strategy?: IStrategy
@@ -129,6 +129,12 @@ export const useStrategy = ({ idToFetch, strategy }: useStrategyProps) => {
     }
   }
 
+  const patchStrategy = async (input: IStrategy_PatchInput) => {
+    if (!strategy?._id) throw new Error('Missing strategy id')
+    const res = await StrategyApi.patch(strategy?._id, input)
+    return res.data
+  }
+
   return {
     isLoading,
     setIsLoading,
@@ -136,5 +142,6 @@ export const useStrategy = ({ idToFetch, strategy }: useStrategyProps) => {
     onSubmitCreate,
     updateForm,
     onSubmitUpdate,
+    patchStrategy
   }
 }

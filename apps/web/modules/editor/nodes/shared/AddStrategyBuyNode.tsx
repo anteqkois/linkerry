@@ -16,7 +16,7 @@ export function AddStrategyBuyNode({ data, xPos, yPos, sourcePosition, targetPos
 
   // console.log(getNodeById(data.parentId));
   return (
-    <Button className="text-strategy-buy gap-1" variant={'outline'} onClick={addStrategyBuyNode}>
+    <Button className="gap-1 text-strategy-buy border-strategy-buy/50" variant={'outline'} onClick={addStrategyBuyNode}>
       <Icons.plus />
       Buy Strategy <Handle type="target" position={Position.Top} />
     </Button>

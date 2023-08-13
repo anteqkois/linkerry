@@ -1,11 +1,11 @@
 import {
   DeepPartial,
-  IStrategy_StaticMarket_CreateInput,
-  IStrategy_StaticMarket_CreateResponse,
-  IStrategy_StaticMarket_PatchInput,
-  IStrategy_StaticMarket_PatchResponse,
-  IStrategy_StaticMarket_UpdateInput,
-  IStrategy_StaticMarket_UpdateResponse,
+  IStrategy_CreateInput,
+  IStrategy_CreateResponse,
+  IStrategy_PatchInput,
+  IStrategy_PatchResponse,
+  IStrategy_UpdateInput,
+  IStrategy_UpdateResponse,
   StrategyState,
   StrategyType,
 } from '@market-connector/types'
@@ -13,7 +13,7 @@ import axios from 'axios'
 import { login } from '../support/login'
 import { alwaysExistingStrategyBuyStaticMarket, alwaysExistingUser } from 'tools/models.mock'
 
-const input: IStrategy_StaticMarket_CreateInput = {
+const input: IStrategy_CreateInput = {
   type: StrategyType.StrategyStaticMarket,
   active: false,
   name: 'Strategy one',
@@ -21,18 +21,18 @@ const input: IStrategy_StaticMarket_CreateInput = {
   testMode: false,
 }
 
-describe('POST /api/strategies/static-market', () => {
-  let lastStrategyData: IStrategy_StaticMarket_CreateResponse
+describe('POST /api/strategies', () => {
+  let lastStrategyData: IStrategy_CreateResponse
 
   it('only authenticated users can create strategies', async () => {
-    const res = axios.post(`/strategies/static-market`, input)
+    const res = axios.post(`/strategies`, input)
     await expect(res).rejects.toHaveProperty('response.status', 401)
   })
 
   it('user can create strategy', async () => {
     await login()
 
-    const { status, data } = await axios.post<IStrategy_StaticMarket_CreateResponse>(`/strategies/static-market`, input)
+    const { status, data } = await axios.post<IStrategy_CreateResponse>(`/strategies`, input)
 
     expect(status).toBe(201)
     expect(data._id).toBeDefined()
@@ -50,15 +50,15 @@ describe('POST /api/strategies/static-market', () => {
   })
 
   it('user can update strategy', async () => {
-    const secondInput: IStrategy_StaticMarket_UpdateInput = {
+    const secondInput: IStrategy_UpdateInput = {
       ...lastStrategyData,
       active: false,
       name: 'Updated strategy',
       state: StrategyState.OpenPosition,
     }
 
-    const { status, data } = await axios.put<IStrategy_StaticMarket_UpdateResponse>(
-      `/strategies/static-market/${lastStrategyData._id}`,
+    const { status, data } = await axios.put<IStrategy_UpdateResponse>(
+      `/strategies/${lastStrategyData._id}`,
       secondInput,
     )
 
@@ -77,13 +77,14 @@ describe('POST /api/strategies/static-market', () => {
   })
 
   it('user can not update strategy _id', async () => {
-    const secondInput: IStrategy_StaticMarket_UpdateInput = {
+    const secondInput: IStrategy_UpdateInput = {
       ...lastStrategyData,
+      // @ts-ignore
       _id: '9381y4ufb142380h982109j',
     }
 
-    const { status } = await axios.put<IStrategy_StaticMarket_UpdateResponse>(
-      `/strategies/static-market/${lastStrategyData._id}`,
+    const { status } = await axios.put<IStrategy_UpdateResponse>(
+      `/strategies/${lastStrategyData._id}`,
       secondInput,
     )
 
@@ -91,7 +92,7 @@ describe('POST /api/strategies/static-market', () => {
   })
 
   it('user can not add strategy buy without required fields (active, etc.)', async () => {
-    const patchInput: DeepPartial<IStrategy_StaticMarket_PatchInput> = {
+    const patchInput: DeepPartial<IStrategy_PatchInput> = {
       ...lastStrategyData,
       strategyBuy: [
         {
@@ -100,15 +101,15 @@ describe('POST /api/strategies/static-market', () => {
       ],
     }
 
-    const res = axios.patch<IStrategy_StaticMarket_PatchResponse>(
-      `/strategies/static-market/${lastStrategyData._id}`,
+    const res = axios.patch<IStrategy_PatchResponse>(
+      `/strategies/${lastStrategyData._id}`,
       patchInput,
     )
     await expect(res).rejects.toHaveProperty('response.status', 422)
   })
 
   it('user can add strategy buy', async () => {
-    const patchInput: IStrategy_StaticMarket_PatchInput = {
+    const patchInput: IStrategy_PatchInput = {
       ...lastStrategyData,
       strategyBuy: [
         {
@@ -120,8 +121,8 @@ describe('POST /api/strategies/static-market', () => {
       ],
     }
 
-    const { status, data } = await axios.patch<IStrategy_StaticMarket_PatchResponse>(
-      `/strategies/static-market/${lastStrategyData._id}`,
+    const { status, data } = await axios.patch<IStrategy_PatchResponse>(
+      `/strategies/${lastStrategyData._id}`,
       patchInput,
     )
 

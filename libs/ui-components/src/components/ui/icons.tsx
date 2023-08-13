@@ -23,6 +23,7 @@ import {
   CheckCircledIcon,
   CrossCircledIcon,
   Pencil2Icon,
+  TrashIcon,
 } from '@radix-ui/react-icons'
 import { cn } from '../../utils'
 
@@ -30,6 +31,7 @@ type IconProps = React.HTMLAttributes<SVGElement>
 type RadixIconProps = React.HTMLAttributes<SVGElement> & { children?: undefined }
 
 export const Icons = {
+  delete: (props: RadixIconProps) => <TrashIcon {...props} />,
   true: (props: RadixIconProps) => <CheckIcon {...props} />,
   false: (props: RadixIconProps) => <Cross2Icon {...props} />,
   // true: (props: RadixIconProps) => <CheckCircledIcon {...props} />,

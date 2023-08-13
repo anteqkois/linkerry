@@ -1,50 +1,58 @@
 'use client'
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-} from '@market-connector/ui-components/client'
-import { Button, H4 } from '@market-connector/ui-components/server'
-import { Node, NodeProps } from 'reactflow'
+import { IStrategyBuy, IStrategyBuy_CreateResponse, IStrategyBuy_UpdateResponse } from '@market-connector/types'
+import { NodeProps } from 'reactflow'
 import { useStrategyBuy } from '../../../strategies/useStrategyBuy'
-import { IStrategyBuy } from '@market-connector/types'
+import { CreateStrategyBuyForm } from '../../components/CreateStrategyBuyForm'
+import { UpdateStrategyBuyForm } from '../../components/StrategyBuyForm'
+import { useEditor } from '../../useEditor'
+import { CustomNodeId } from '../types'
+import { useCallback } from 'react'
+import { useStrategy } from '../../../strategies/useStrategy'
 
-type StrategyBuyNodeProps = NodeProps<{ strategyBuy?: Partial<IStrategyBuy> }>
+type StrategyBuyNodeProps = NodeProps<{ strategyBuy: Partial<IStrategyBuy> }> & { id: CustomNodeId }
 
-export function StrategyBuyNode({ data, xPos, yPos }: StrategyBuyNodeProps) {
-  const { form, isLoading, onSubmit } = useStrategyBuy()
-  return (
-    <>
-      <div className="w-full h-full bg-background/60 borderd border-2 p-1 rounded-md">
-        <div className="absolute -top-16">
-          <H4>Buy strategies</H4>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              {form.control ? (
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="shadcn" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ) : null}
-              <Button type="submit">Add</Button>
-            </form>
-          </Form>
-        </div>
-      </div>
-    </>
+export function StrategyBuyNode({ data, id }: StrategyBuyNodeProps) {
+  const { createForm, updateForm, onSubmitUpdate, isLoading } = useStrategyBuy({
+    strategyBuy: data.strategyBuy,
+  })
+  const { updateNode } = useEditor()
+  // const { patchStrtaegy } = useStrategy()
+
+  const updateStrategyBuyNode = useCallback(
+    (newStrategyBuy?: IStrategyBuy_CreateResponse | IStrategyBuy_UpdateResponse) => {
+      // Update React Flow
+      newStrategyBuy &&
+        updateNode(id, {
+          id: `StrategyBuy_${newStrategyBuy?._id}`,
+          data: {
+            strategyBuy: {
+              ...newStrategyBuy,
+            },
+          },
+        })
+    },
+    [],
+  )
+
+  return data.strategyBuy?._id ? (
+    <UpdateStrategyBuyForm
+      form={updateForm}
+      onSubmit={async (values: any) => {
+        updateStrategyBuyNode(await onSubmitUpdate(values))
+      }}
+      isLoading={isLoading}
+      strategyBuy={data.strategyBuy}
+    />
+  ) : (
+    <CreateStrategyBuyForm
+      form={createForm}
+      onSubmit={async (values: any) => {
+        console.log(values);
+        // updateStrategyBuyNode(await onSubmitCreate(values))
+      }}
+      isLoading={isLoading}
+      baseStrategyBuy={data.strategyBuy}
+    />
   )
 }

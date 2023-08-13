@@ -4,7 +4,7 @@ import {
   Connection,
   Edge,
   EdgeChange,
-  Node as RFNode,
+  Node,
   NodeChange,
   OnConnect,
   OnEdgesChange,
@@ -14,16 +14,16 @@ import {
   applyNodeChanges,
 } from 'reactflow'
 import { create } from 'zustand'
-import { CustomNode, CustomNodeType } from './nodes'
+import { CustomNode, CustomNodeId, CustomNodeType } from './nodes'
 
-type Node = RFNode | CustomNode
+type EditorNode = Node | CustomNode
 
 interface IEditorState {
   isLoading: boolean
   setIsLoading: (value: boolean) => void
   lastId: Record<CustomNodeType, number>
   // nodes: (CustomNode | Node)[]
-  nodes: Node[]
+  nodes: EditorNode[]
   setNodes: (nodes: CustomNode[]) => void
   addNode: (node: CustomNode) => void
   edges: Edge[]
@@ -32,6 +32,7 @@ interface IEditorState {
   onEdgesChange: OnEdgesChange
   onConnect: OnConnect
   getNodeById: (id: string) => CustomNode | undefined
+  updateNode: (nodeId: CustomNodeId, changes: Partial<CustomNode>) => void
   // handleAddNode: (node: IStrategyNode| IStrategyBuyNode ) => void
 }
 
@@ -67,5 +68,13 @@ export const useEditor = create<IEditorState>((set, get) => ({
   getNodeById: (id: string) => {
     // TODO change it in fitire to map to not using filter (performance)?
     return get().nodes.filter((node) => node.id === id)[0] as CustomNode
+  },
+  updateNode: (id: CustomNodeId, changes: Partial<CustomNode>) => {
+    set({
+      nodes: get().nodes.map((node) => {
+        if (node.id !== id) return node
+        return { ...node, changes }
+      }),
+    })
   },
 }))

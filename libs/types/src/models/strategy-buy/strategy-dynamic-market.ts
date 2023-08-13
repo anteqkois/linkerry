@@ -14,5 +14,5 @@ export interface IStrategyBuy_DynamicMarket_Populated extends Omit<IStrategyBuy_
 }
 
 export interface IStrategyBuy_DynamicMarket_Property {
-  conditionMarketProvider?: Id
+  conditionMarketProvider: Id
 }

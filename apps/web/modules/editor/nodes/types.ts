@@ -1,12 +1,12 @@
-import { IStrategy, IStrategyBuy } from '@market-connector/types'
+import { IStrategy, IStrategyBuy, Id } from '@market-connector/types'
 import { Node } from 'reactflow'
 
-export interface ICustomNode<I extends CustomNodeId, D> extends Node<D, I> {
-  id: `${I}${`_${number}` | ''}`
+export interface ICustomNode<I extends CustomNodeId, D> extends Node<D, `${I}Node`> {
+  id: `${I}${`_${Id}`|`_Temp` | ''}`
 }
-export interface IAddStrategyBuyNode extends ICustomNode<'AddStrategyBuyNode', { parentId: string }> {}
-export interface IStrategyNode extends ICustomNode<'StrategyNode', { strategy: IStrategy }> {}
-export interface IStrategyBuyNode extends ICustomNode<'StrategyBuyNode', { strategyBuy: Partial<IStrategyBuy> }> {}
+export interface IAddStrategyBuyNode extends ICustomNode<'AddStrategyBuy', { parentId: string }> {}
+export interface IStrategyNode extends ICustomNode<'Strategy', { strategy: Partial<IStrategy> }> {}
+export interface IStrategyBuyNode extends ICustomNode<'StrategyBuy', { strategyBuy: Partial<IStrategyBuy> }> {}
 
 
 export type CustomNode = IStrategyNode | IStrategyBuyNode | IAddStrategyBuyNode

@@ -1,19 +1,25 @@
 import { IStrategy_CreateInput, IStrategy_StrategyBuy, Id, StrategyType } from '@market-connector/types'
 import { Type } from 'class-transformer'
 import { IsArray, IsBoolean, IsDefined, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
+import { CreateStrategyBuyStaticMarketDto } from '../../strategies-buy/dro/staticMarket/create.dto'
 
 export class StrategyStrategyBuyDto implements IStrategy_StrategyBuy {
-  @IsDefined()
+  @IsOptional()
   @IsMongoId()
-  readonly id: Id
+  readonly id?: Id
+
+  @IsOptional()
+  @IsMongoId()
+  readonly strategyBuy?: string
 
   @IsDefined()
   @IsBoolean()
   readonly active: boolean
 
-  @IsDefined()
-  @IsMongoId()
-  readonly strategyBuy: string
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateStrategyBuyStaticMarketDto)
+  readonly strategyBuyCreateInput?: CreateStrategyBuyStaticMarketDto
 }
 
 export class CreateStrategyDto implements IStrategy_CreateInput {
@@ -36,7 +42,7 @@ export class CreateStrategyDto implements IStrategy_CreateInput {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => StrategyStrategyBuyDto)
-  readonly strategyBuy: StrategyStrategyBuyDto[]
+  strategyBuy: StrategyStrategyBuyDto[]
 
   // @IsArray()
   // @IsOptional()

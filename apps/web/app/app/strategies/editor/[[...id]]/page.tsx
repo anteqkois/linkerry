@@ -2,12 +2,21 @@
 
 import { IStrategy } from '@market-connector/types'
 import { useAsync, useLocalStorageValue } from '@react-hookz/web'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Edge, Node } from 'reactflow'
-import { ConditionNode, Editor, IStrategyNode, StrategyBuyNode, StrategyNode } from '../../../../../modules/editor'
-import { AddStrategyBuyNode, IAddStrategyBuyNode } from '../../../../../modules/editor/nodes/shared/AddStrategyBuyNode'
+import {
+  ConditionNode,
+  CustomNode,
+  Editor,
+  IAddStrategyBuyNode,
+  IStrategyBuyNode,
+  IStrategyNode,
+  StrategyBuyNode,
+  StrategyNode,
+} from '../../../../../modules/editor'
 import { StrategyApi } from '../../../../../modules/strategies/api'
 import { LocalStorageKeys } from '../../../../../types'
+import { AddStrategyBuyNode } from '../../../../../modules/editor/nodes/shared/AddStrategyBuyNode'
 
 const nodeTypes = {
   StrategyBuyNode: StrategyBuyNode,
@@ -26,25 +35,34 @@ const renderStrategyNodes = (strategy: IStrategy) => {
     },
   }
 
-  const addBuyStrategy: IAddStrategyBuyNode = {
-    id: 'AddStrategyBuyNode',
-    type: 'AddStrategyBuyNode',
+  // const addBuyStrategy: IAddStrategyBuyNode = {
+  //   id: 'AddStrategyBuy',
+  //   type: 'AddStrategyBuyNode',
+  //   position: { x: 218, y: 450 },
+  //   data: {
+  //     parentId: strategyNode.id,
+  //   },
+  //   parentNode: 'Strategy',
+  // }
+
+  const strategyBuyNode: IStrategyBuyNode = {
+    id: 'StrategyBuy',
+    type: 'StrategyBuyNode',
     position: { x: 218, y: 450 },
     data: {
-      parentId: strategyNode.id,
+      strategyBuy:{}
     },
-    parentNode: 'Strategy',
+    parentNode:'Strategy'
   }
 
-  // const strategyBuyNodes = strategy.strategyBuy.map({})
-
-  return [strategyNode, addBuyStrategy]
+  // return [strategyNode, addBuyStrategy]
+  return [strategyNode, strategyBuyNode]
 }
 
 const renderStrategyEdges = (nodes: Node[]): Edge[] => {
   return [
     {
-      id: 'Strategy-AddStrategyBuyNode',
+      id: 'Strategy-AddStrategyBuy',
       type: 'default',
       source: 'Strategy',
       target: 'AddStrategyBuyNode',
@@ -54,12 +72,16 @@ const renderStrategyEdges = (nodes: Node[]): Edge[] => {
 
 // Always first node Should be strategy node with strategy id
 export default function Page({ params }: { params: { id: string } }) {
-  const { value, set, remove } = useLocalStorageValue<Node[]>(LocalStorageKeys.StrategyCache)
+  const { value, set, remove } = useLocalStorageValue<CustomNode[]>(LocalStorageKeys.StrategyCache)
 
-  const [initialNodes, actions] = useAsync<Node[]>(async () => {
+  const [initialNodes, actions] = useAsync<CustomNode[]>(async () => {
     const id = params?.id?.[0]
     // Return cached Nodes state => cached id must be equeal to params id, other ways it must be id of unsaved strategy
-    if ((value && id && value[0].data?.strategy?._id === id) || (value && !value[0].data?.strategy?._id)) return value
+    if (
+      (value && id && value[0].type === 'StrategyNode' && value[0].data?.strategy?._id === id) ||
+      (value && value[0].type === 'StrategyNode' && !value[0].data?.strategy?._id)
+    )
+      return value
 
     if (id) {
       // Fetch and render if exists
@@ -75,9 +97,11 @@ export default function Page({ params }: { params: { id: string } }) {
     return [
       {
         id: 'Strategy',
-        type: 'strategyNode',
+        type: 'StrategyNode',
         position: { x: 0, y: 0 },
-        data: {},
+        data: {
+          strategy:{}
+        },
       },
     ]
   })

@@ -42,3 +42,5 @@ export type Nullable<T> = T | undefined | null;
 export type DeepNullable<T> = {
   [P in keyof T]: T[P] | null;
 };
+
+export type ValueOf<T> = Required<T>[keyof T];

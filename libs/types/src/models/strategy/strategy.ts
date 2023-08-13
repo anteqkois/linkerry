@@ -1,4 +1,6 @@
-import { DbTimestamp, DeepNullable, IPaginationQuery, IResourceResponse, Id, Nullable } from '../../utils'
+import { DbTimestamp, IPaginationQuery, IResourceResponse, Id, Nullable } from '../../utils'
+import { IStrategyBuy_CreateInput } from '../strategy-buy'
+import { Strategy_StaticMarket_Property } from './strategy-static-market'
 
 export enum StrategyState {
   Idle = 'Idle',
@@ -18,13 +20,16 @@ export enum StrategyType {
 }
 
 export interface IStrategy_StrategyBuy {
-  id: Id
-  strategyBuy: Id
   active: boolean
+  // For existing strategies buy
+  id?: Id
+  strategyBuy?: Id
+  // For request to create strategy buy
+  strategyBuyCreateInput?:IStrategyBuy_CreateInput
 }
 
 // One interface. Theare will be validation logic, which check if StrategyDynamicMarket have at one buy strategy with conditionMarketProvider
-export interface IStrategy extends DbTimestamp {
+export interface IStrategy extends Partial<Strategy_StaticMarket_Property>, DbTimestamp {
   _id: Id
   user: Id
   name: string
@@ -63,3 +68,7 @@ export interface IStrategy_CreateResponse extends IStrategy {}
 // PUT
 export interface IStrategy_UpdateInput extends Omit<IStrategy, '_id' | 'user'> {}
 export interface IStrategy_UpdateResponse extends IStrategy_CreateResponse {}
+
+// PATCH
+export interface IStrategy_PatchInput extends Partial<IStrategy_UpdateInput> {}
+export interface IStrategy_PatchResponse extends IStrategy_UpdateResponse {}

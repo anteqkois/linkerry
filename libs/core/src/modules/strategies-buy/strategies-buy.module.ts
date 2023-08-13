@@ -32,6 +32,7 @@ const STRATEGIES_BUY_MODELS = [
     MongooseModule.forFeatureAsync([...STRATEGIES_BUY_MODELS]),
   ],
   controllers: [StrategiesBuyController],
-  providers: [StrategiesBuyService]
+  providers: [StrategiesBuyService],
+  exports: [StrategiesBuyService],
 })
 export class StrategiesBuyModule {}

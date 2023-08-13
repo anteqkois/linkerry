@@ -1,5 +1,5 @@
-export * from './create-static-market.dto'
 export * from './create.dto'
-export * from './patch-static-market.dto'
-export * from './update-static-market.dto copy'
+export * from './staticMarket/create.dto'
+export * from './staticMarket/patch.dto'
+export * from './staticMarket/update.dto copy'
 
