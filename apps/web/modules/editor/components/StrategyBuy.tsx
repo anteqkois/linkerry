@@ -1,7 +1,7 @@
 import {
   IStrategyBuy,
-  IStrategyBuy_StaticMarket_CreateInput,
   IStrategyBuy_StaticMarket_UpdateInput,
+  IStrategyBuy_UpdateInput,
   StrategyBuyType
 } from '@market-connector/types'
 import {
@@ -26,20 +26,20 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@market
 import { useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
-export interface UpdateStrategyBuyFormProps {
-  form: UseFormReturn<IStrategyBuy_StaticMarket_UpdateInput, any, undefined>
+export interface StrategyBuyProps {
+  form: UseFormReturn<IStrategyBuy_UpdateInput, any, undefined>
   onSubmit: any
   isLoading: boolean
   strategyBuy: Partial<IStrategyBuy>
 }
 
-export const UpdateStrategyBuyForm = ({ form, isLoading, onSubmit, strategyBuy }: UpdateStrategyBuyFormProps) => {
-  const [showForm, setShowForm] = useState<boolean>(!strategyBuy)
+export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy }: StrategyBuyProps) => {
+  const [showEditForm, setShowEditForm] = useState<boolean>(!strategyBuy)
 
   return (
     <div className="w-full h-full">
       <Card>
-        {!showForm ? (
+        {!showEditForm ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size={'icon'} className="absolute top-2 right-2">

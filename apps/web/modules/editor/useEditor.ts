@@ -73,7 +73,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
     set({
       nodes: get().nodes.map((node) => {
         if (node.id !== id) return node
-        return { ...node, changes }
+        return { ...node, changes, data:{...node.data, ...changes.data} }
       }),
     })
   },

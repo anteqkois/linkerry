@@ -8,7 +8,6 @@ import {
   ConditionNode,
   CustomNode,
   Editor,
-  IAddStrategyBuyNode,
   IStrategyBuyNode,
   IStrategyNode,
   StrategyBuyNode,
@@ -72,7 +71,7 @@ const renderStrategyEdges = (nodes: Node[]): Edge[] => {
 
 // Always first node Should be strategy node with strategy id
 export default function Page({ params }: { params: { id: string } }) {
-  const { value, set, remove } = useLocalStorageValue<CustomNode[]>(LocalStorageKeys.StrategyCache)
+  const { value, remove } = useLocalStorageValue<CustomNode[]>(LocalStorageKeys.StrategyCache)
 
   const [initialNodes, actions] = useAsync<CustomNode[]>(async () => {
     const id = params?.id?.[0]
@@ -113,7 +112,7 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     actions.execute()
     // Clean cache
-    ;() => remove()
+    return remove()
   }, [])
 
   return (

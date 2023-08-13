@@ -1,5 +1,5 @@
 import { IStrategy, IStrategyBuy, Id } from '@market-connector/types'
-import { Node } from 'reactflow'
+import { Node, NodeProps } from 'reactflow'
 
 export interface ICustomNode<I extends CustomNodeId, D> extends Node<D, `${I}Node`> {
   id: `${I}${`_${Id}`|`_Temp` | ''}`
@@ -11,4 +11,5 @@ export interface IStrategyBuyNode extends ICustomNode<'StrategyBuy', { strategyB
 
 export type CustomNode = IStrategyNode | IStrategyBuyNode | IAddStrategyBuyNode
 export type CustomNodeType = NonNullable<CustomNode['type']>
+export type CustomNodeProps<D> = NodeProps<D> & { id: CustomNodeId }
 export type CustomNodeId = CustomNode['id']

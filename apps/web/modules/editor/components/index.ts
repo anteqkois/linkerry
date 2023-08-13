@@ -1,2 +1,2 @@
-export * from './UpdateStrategyForm'
+export * from './Strategy'
 export * from './CreateStrategyForm'

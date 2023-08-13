@@ -11,7 +11,7 @@ import {
 } from '@market-connector/types'
 import { toast } from '@market-connector/ui-components/client'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { retriveServerHttpException } from '../../utils'
@@ -38,13 +38,13 @@ export const useStrategy = ({ idToFetch, strategy }: useStrategyProps) => {
   const pathname = usePathname()
   const { push } = useRouter()
 
-  useEffect(() => {
-    ;(() => {
-      // Strategy data passed from cache (local storage etc)
-      if (strategy) {
-      }
-    })()
-  }, [])
+  // useEffect(() => {
+  //   ;(() => {
+  //     // Strategy data passed from cache (local storage etc)
+  //     if (strategy) {
+  //     }
+  //   })()
+  // }, [])
 
   const createForm = useForm<z.infer<typeof StrategyStaticMarketCreateSchema>>({
     resolver: async (data, context, options) =>
@@ -100,27 +100,21 @@ export const useStrategy = ({ idToFetch, strategy }: useStrategyProps) => {
   const onSubmitUpdate = async (values: z.infer<typeof StrategyStaticMarketUpdateSchema>) => {
     setIsLoading(true)
     try {
-      let response: IStrategy_UpdateResponse
-      switch (values.type) {
-        case StrategyType.StrategyStaticMarket:
-          response = (await StrategyApi.updateStatic(values)).data
-          break
-        case StrategyType.StrategyDynamicMarket:
-          response = (await StrategyApi.updateStatic(values)).data
-          break
-      }
-      toast({
-        title: 'Strategy saved',
-        description: `Your strategy has been saved, it is running in test ${values.testMode ? 'test' : 'live'} mode`,
-        duration: 6000,
-        variant: 'success',
-      })
+      if (!strategy?._id) throw new Error('Missing strategy id')
+      const res = await StrategyApi.update(strategy?._id, values)
       setIsLoading(false)
+      // toast({
+      //   title: 'Strategy saved',
+      //   description: `Your strategy has been saved, it is running in test ${values.testMode ? 'test' : 'live'} mode`,
+      //   duration: 6000,
+      //   variant: 'success',
+      // })
+      return res.data
     } catch (error: any) {
       setIsLoading(false)
       const serverError = retriveServerHttpException(error)
       if (serverError)
-        return toast({
+        toast({
           title: "Strategy didn't saved",
           description: serverError ? serverError.message : 'Saving strategy failed. Please try again.',
           duration: 6000,
@@ -142,6 +136,6 @@ export const useStrategy = ({ idToFetch, strategy }: useStrategyProps) => {
     onSubmitCreate,
     updateForm,
     onSubmitUpdate,
-    patchStrategy
+    patchStrategy,
   }
 }

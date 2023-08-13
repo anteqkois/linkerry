@@ -16,6 +16,7 @@ export * from './components/ui/checkbox'
 export * from './components/ui/popover'
 export * from './components/ui/tabs'
 export * from './components/ui/switch'
+export * from './components/ui/separator'
 
 export * from './components/theme/provider'
 export * from './components/theme/toggle-button'

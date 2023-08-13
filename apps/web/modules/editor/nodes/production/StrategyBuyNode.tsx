@@ -1,14 +1,13 @@
 'use client'
 
 import { IStrategyBuy, IStrategyBuy_CreateResponse, IStrategyBuy_UpdateResponse } from '@market-connector/types'
+import { useCallback } from 'react'
 import { NodeProps } from 'reactflow'
 import { useStrategyBuy } from '../../../strategies/useStrategyBuy'
 import { CreateStrategyBuyForm } from '../../components/CreateStrategyBuyForm'
-import { UpdateStrategyBuyForm } from '../../components/StrategyBuyForm'
+import { StrategyBuy } from '../../components/StrategyBuy'
 import { useEditor } from '../../useEditor'
 import { CustomNodeId } from '../types'
-import { useCallback } from 'react'
-import { useStrategy } from '../../../strategies/useStrategy'
 
 type StrategyBuyNodeProps = NodeProps<{ strategyBuy: Partial<IStrategyBuy> }> & { id: CustomNodeId }
 
@@ -36,7 +35,7 @@ export function StrategyBuyNode({ data, id }: StrategyBuyNodeProps) {
   )
 
   return data.strategyBuy?._id ? (
-    <UpdateStrategyBuyForm
+    <StrategyBuy
       form={updateForm}
       onSubmit={async (values: any) => {
         updateStrategyBuyNode(await onSubmitUpdate(values))
