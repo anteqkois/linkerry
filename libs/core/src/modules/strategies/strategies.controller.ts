@@ -55,22 +55,4 @@ export class StrategiesController {
   updateStrategyBuy(@ReqJwtUser() user: JwtUser, @Body() dto: PatchStrategyStrategyBuyDto, @Param('id') id: Id, @Param('sId') sId: Id) {
     return this.strategiesService.patchStrategyBuy(dto, user.id, id, sId)
   }
-
-  // @Post('/static-market')
-  // createStaticMarket(
-  //   @ReqJwtUser() user: JwtUser,
-  //   @Body() dto: CreateStrategyStaticMarketDto,
-  // ): Promise<IStrategy_CreateResponse> {
-  //   return this.strategiesService.create(dto, user.id)
-  // }
-
-  // @Put('/static-market/:id')
-  // updateStaticMarket(@ReqJwtUser() user: JwtUser, @Body() dto: UpdateStrategyStaticMarketDto, @Param('id') id: Id) {
-  //   return this.strategiesService.updateStaticMarket(dto, user.id, id)
-  // }
-
-  // @Patch('/static-market/:id')
-  // patchStaticMarket(@ReqJwtUser() user: JwtUser, @Body() dto: PatchStrategyStaticMarketDto, @Param('id') id: Id) {
-  //   return this.strategiesService.patchStaticMarket(dto, user.id, id)
-  // }
 }

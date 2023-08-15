@@ -6,12 +6,22 @@ import { ConditionsService } from '../conditions/conditions.service'
 import { CreateStrategyBuyDto, StrategyBuyConditionDto } from './dro/create.dto'
 import { UpdateStrategyBuyDto } from './dro/update.dto'
 import { StrategyBuyStaticMarket } from './schemas/strategy-buy-static-market.schema'
+import { PatchStrategytBuyDto } from './dro/patch.dto'
 
 @Injectable()
 export class StrategiesBuyService {
   async #safeUpdateOne(dto: Partial<UpdateStrategyBuyDto>, userId: Id, id: Id) {
+    let parsedConditions: IStrategyBuy_Condition[] = []
+    if (dto.conditions) parsedConditions = await this.#safeConditionParse(dto.conditions, userId)
+
+    delete dto.conditions
+
     const strategyBuy = await this.strategyBuyStaticMarketModel
-      .findOneAndUpdate({ _id: id, user: userId }, { $set: { ...dto, _id: undefined } }, { new: true })
+      .findOneAndUpdate(
+        { _id: id, user: userId },
+        { $set: { ...dto }, $push: { conditions: { $each: parsedConditions } } },
+        { new: true },
+      )
       .exec()
     if (!strategyBuy) throw new NotFoundException(`Can not find buy strategy: ${id}`)
     return strategyBuy
@@ -48,7 +58,10 @@ export class StrategiesBuyService {
   }
 
   async update(dto: UpdateStrategyBuyDto, userId: Id, id: Id) {
-    if (dto.conditions) dto.conditions = await this.#safeConditionParse(dto.conditions, userId)
+    return this.#safeUpdateOne(dto, userId, id)
+  }
+
+  async patch(dto: PatchStrategytBuyDto, userId: Id, id: Id) {
     return this.#safeUpdateOne(dto, userId, id)
   }
 }

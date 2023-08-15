@@ -21,7 +21,6 @@ export class StrategiesService {
     let parsedStrategyBuy: IStrategyStrategyBuy[] = []
     if (dto.strategyBuy) parsedStrategyBuy = await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
 
-    delete dto._id
     delete dto.strategyBuy
 
     const strategy = await this.strategyStaticMarketModel
@@ -102,20 +101,34 @@ export class StrategiesService {
       .findOneAndUpdate({ _id: id, user: userId }, { $push: { strategyBuy: strategyBuy[0] } }, { new: true })
       .exec()
     if (!strategy) throw new NotFoundException('Can not find strategy')
+    return strategy
   }
 
   async patchStrategyBuy(dto: PatchStrategyStrategyBuyDto, userId: Id, id: Id, strategyBuyId: Id) {
-    return this.strategyStaticMarketModel.findOneAndUpdate(
-      {
-        _id: id,
-        user: userId,
-        'strategyBuy._id': strategyBuyId,
-      },
-      {
-        $set: {
-          'strategyBuy.$': dto,
+    // Update strategy
+    const strategy = await this.strategyStaticMarketModel
+      .findOneAndUpdate(
+        {
+          _id: id,
+          user: userId,
+          'strategyBuy.id': strategyBuyId,
         },
-      },
-    )
+        {
+          $set: {
+            'strategyBuy.$.active': dto.active,
+          },
+        },
+        { new: true },
+      )
+      .exec()
+
+      console.log(strategy);
+
+    delete dto.active
+
+    // Update strategy buy
+    await this.strategiesBuyService.patch(dto, userId, strategyBuyId)
+
+    return strategy
   }
 }

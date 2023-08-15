@@ -1,2 +1,3 @@
 - Use separate routes for alert providers to have better performacne => no serach for handlers and cleaner logic for handle alert
 - data access layer with auth mainly handled on client side (it's easier and faster do it now, to pass auth_token with cookies etc), in future move steo by step on server side
+- use delete insted descructure based on performance benchamrk: https://www.measurethat.net/Benchmarks/Show/5936/0/delete-vs-destructure-for-objects#latest_results_block

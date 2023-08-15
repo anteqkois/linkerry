@@ -1,7 +1,7 @@
 import { IStrategy_StaticMarket_CreateInput } from '@market-connector/types'
 import { Type } from 'class-transformer'
 import { IsArray, IsOptional, ValidateNested } from 'class-validator'
-import { CreateStrategyBuyStaticMarketDto } from '../../../strategies-buy/dro/staticMarket/create.dto'
+import { CreateStrategyBuyStaticMarketDto } from '../../../strategies-buy/dro/static-market/create.dto'
 import { CreateStrategyDto, StrategyStrategyBuyDto } from '../create.dto'
 
 

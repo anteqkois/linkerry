@@ -32,6 +32,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       exceptionFactory: exceptionFactoryDto,
+      whitelist: true
     }),
   )
 

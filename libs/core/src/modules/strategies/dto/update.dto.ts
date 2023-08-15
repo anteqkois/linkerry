@@ -1,10 +1,15 @@
-import { IStrategy_UpdateInput, Id, StrategyState } from '@market-connector/types'
+import { IStrategy_UpdateInput, StrategyState } from '@market-connector/types'
 import { CreateStrategyDto } from './create.dto'
+import { IsEnum, IsNumber, IsString } from 'class-validator'
 
 export class UpdateStrategyDto extends CreateStrategyDto implements IStrategy_UpdateInput {
-  _id: Id
+  @IsNumber()
   readonly triggeredTimes: number
+
+  @IsNumber()
   readonly validityUnix: number
-  readonly user: string
+
+  @IsString()
+  @IsEnum(StrategyState)
   readonly state: StrategyState
 }
