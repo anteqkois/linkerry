@@ -12,14 +12,24 @@ import {
 import { UpdateStrategyDto } from './dto/update.dto'
 import { StrategyStaticMarket } from './schemas/strategy-buy-static-market.schema'
 import { GetOneStrategyQueryDto } from './dto/get.dto'
+import { PatchStrategyStrategyBuyDto } from './dto/strategies-buy/patch.dto'
+import { CreateStrategyStrategyBuyDto } from './dto/strategies-buy/create.dto'
 
 @Injectable()
 export class StrategiesService {
   async #safeUpdateOne(dto: Partial<UpdateStrategyStaticMarketDto>, userId: Id, id: Id) {
-    if (dto.strategyBuy) dto.strategyBuy = await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
+    let parsedStrategyBuy: IStrategyStrategyBuy[] = []
+    if (dto.strategyBuy) parsedStrategyBuy = await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
+
+    delete dto._id
+    delete dto.strategyBuy
 
     const strategy = await this.strategyStaticMarketModel
-      .findOneAndUpdate({ _id: id, user: userId }, { $set: { ...dto, _id: undefined } }, { new: true })
+      .findOneAndUpdate(
+        { _id: id, user: userId },
+        { $set: { ...dto }, $push: { strategyBuy: { $each: parsedStrategyBuy } } },
+        { new: true },
+      )
       .exec()
     if (!strategy) throw new NotFoundException('Can not find strategy')
     return strategy
@@ -48,8 +58,6 @@ export class StrategiesService {
   ) {}
 
   async findOne(id: Id, userId: Id, query: GetOneStrategyQueryDto) {
-    console.log(query.expand);
-    
     return this.strategyStaticMarketModel
       .findOne({
         _id: id,
@@ -72,12 +80,42 @@ export class StrategiesService {
   }
 
   async update(dto: UpdateStrategyDto, userId: Id, id: Id) {
-    if (dto.strategyBuy) await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
     return this.#safeUpdateOne(dto, userId, id)
   }
 
   async patch(dto: PatchStrategyStaticMarketDto, userId: Id, id: Id) {
-    if (dto.strategyBuy) await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
     return this.#safeUpdateOne(dto, userId, id)
+  }
+
+  async createStrategyBuy(dto: CreateStrategyStrategyBuyDto, userId: Id, id: Id) {
+    const strategyBuy = await this.#safeStrategyBuyParse(
+      [
+        {
+          active: dto.active,
+          strategyBuyCreateInput: dto,
+        },
+      ],
+      userId,
+    )
+
+    const strategy = await this.strategyStaticMarketModel
+      .findOneAndUpdate({ _id: id, user: userId }, { $push: { strategyBuy: strategyBuy[0] } }, { new: true })
+      .exec()
+    if (!strategy) throw new NotFoundException('Can not find strategy')
+  }
+
+  async patchStrategyBuy(dto: PatchStrategyStrategyBuyDto, userId: Id, id: Id, strategyBuyId: Id) {
+    return this.strategyStaticMarketModel.findOneAndUpdate(
+      {
+        _id: id,
+        user: userId,
+        'strategyBuy._id': strategyBuyId,
+      },
+      {
+        $set: {
+          'strategyBuy.$': dto,
+        },
+      },
+    )
   }
 }

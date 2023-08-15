@@ -60,7 +60,8 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
       type: 'StrategyBuyNode',
       position: { x: 0, y: 450 },
       data: {
-        strategyBuy: sb.strategyBuy,
+        // strategyBuy: sb.strategyBuy,
+        strategyBuy: sb,
         strategyId: strategy._id,
       },
       parentNode: `Strategy_${strategy._id}`,
@@ -118,7 +119,7 @@ export default function Page({ params }: { params: { id: string } }) {
         type: 'StrategyNode',
         position: { x: 0, y: 0 },
         data: {
-          strategy: {},
+          strategy: undefined,
         },
       },
     ]

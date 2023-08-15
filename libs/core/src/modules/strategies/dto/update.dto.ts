@@ -2,7 +2,7 @@ import { IStrategy_UpdateInput, Id, StrategyState } from '@market-connector/type
 import { CreateStrategyDto } from './create.dto'
 
 export class UpdateStrategyDto extends CreateStrategyDto implements IStrategy_UpdateInput {
-  readonly _id: Id
+  _id: Id
   readonly triggeredTimes: number
   readonly validityUnix: number
   readonly user: string

@@ -1,21 +1,18 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { IStrategyBuy, StrategyBuyType, ValueOf } from '@market-connector/types'
+import { Id, StrategyBuyType, ValueOf } from '@market-connector/types'
 import { toast } from '@market-connector/ui-components/client'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { retriveServerHttpException } from '../../utils'
 import { StrategyBuyApi } from './api'
-import {
-  StrategyBuyCreateStaticMarketSchema,
-  StrategyBuyUpdateSchema,
-} from './validations'
+import { StrategyBuy_CreateSchema, StrategyBuy_UpdateSchema } from './validations'
 
 const createResloverSchemaGateway = {
-  [StrategyBuyType.StrategyBuyStaticMarket]: StrategyBuyCreateStaticMarketSchema,
-  [StrategyBuyType.StrategyBuyDynamicMarket]: StrategyBuyCreateStaticMarketSchema,
+  [StrategyBuyType.StrategyBuyStaticMarket]: StrategyBuy_CreateSchema,
+  [StrategyBuyType.StrategyBuyDynamicMarket]: StrategyBuy_CreateSchema,
 }
 
 // const updateResloverSchemaGateway = {
@@ -24,20 +21,15 @@ const createResloverSchemaGateway = {
 // }
 
 interface useStrategyBuyProps {
-  strategyBuy: Partial<IStrategyBuy>
+  strategyBuyId?: Id
 }
 
-export const useStrategyBuy = ({ strategyBuy }: useStrategyBuyProps) => {
+export const useStrategyBuy = ({ strategyBuyId }: useStrategyBuyProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const createForm = useForm<z.infer<ValueOf<typeof createResloverSchemaGateway>>>({
     resolver: async (data, context, options) =>
       zodResolver(createResloverSchemaGateway[data.type])(data, context, options),
-    defaultValues: {
-      type: strategyBuy?.type ?? StrategyBuyType.StrategyBuyStaticMarket,
-      name: strategyBuy?.name ?? '',
-      conditions: strategyBuy?.conditions ?? [],
-    },
   })
 
   const onSubmitCreate = async (values: z.infer<ValueOf<typeof createResloverSchemaGateway>>) => {
@@ -59,25 +51,17 @@ export const useStrategyBuy = ({ strategyBuy }: useStrategyBuyProps) => {
     }
   }
 
-  const updateForm = useForm<z.infer<typeof StrategyBuyUpdateSchema>>({
-    resolver: zodResolver(StrategyBuyUpdateSchema),
-    defaultValues: {
-      type: strategyBuy?.type ?? StrategyBuyType.StrategyBuyStaticMarket,
-      name: strategyBuy?.name ?? '',
-      conditions: strategyBuy?.conditions ?? [],
-      triggeredTimes: strategyBuy?.triggeredTimes,
-      validityUnix: strategyBuy?.validityUnix,
-      conditionMarketProvider: strategyBuy?.conditionMarketProvider,
-    },
+  const updateForm = useForm<z.infer<typeof StrategyBuy_UpdateSchema>>({
+    resolver: zodResolver(StrategyBuy_UpdateSchema),
   })
 
-  const onSubmitUpdate = async (values: z.infer<typeof StrategyBuyUpdateSchema>) => {
+  const onSubmitUpdate = async (values: z.infer<typeof StrategyBuy_UpdateSchema>) => {
     setIsLoading(true)
     try {
-      if (!strategyBuy?._id) throw Error('Missings strategy buy Id')
-      const res = await StrategyBuyApi.update(strategyBuy._id, values)
-      return res.data
+      if (!strategyBuyId) throw Error('Missings strategy buy Id')
+      const res = await StrategyBuyApi.update(strategyBuyId, values)
       setIsLoading(false)
+      return res.data
     } catch (error: any) {
       setIsLoading(false)
       const serverError = retriveServerHttpException(error)

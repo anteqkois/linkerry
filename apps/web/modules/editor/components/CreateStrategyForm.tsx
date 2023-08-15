@@ -1,4 +1,4 @@
-import { IStrategy_StaticMarket_CreateInput, StrategyType } from '@market-connector/types'
+import {  StrategyType } from '@market-connector/types'
 import {
   Form,
   FormControl,
@@ -22,9 +22,10 @@ import {
   CardTitle,
 } from '@market-connector/ui-components/server'
 import { UseFormReturn } from 'react-hook-form'
+import { IStrategy_StaticMarketCreateSchema } from '../../strategies/validations'
 
 export interface StrategyFormProps {
-  form: UseFormReturn<IStrategy_StaticMarket_CreateInput, any, undefined>
+  form: UseFormReturn<IStrategy_StaticMarketCreateSchema, any, undefined>
   onSubmit: any
   isLoading: boolean
 }

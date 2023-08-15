@@ -1,5 +1,5 @@
 import { DbTimestamp, IPaginationQuery, IResourceResponse, Id, Nullable } from '../../utils'
-import { IStrategyBuy, IStrategyBuy_CreateInput } from '../strategy-buy'
+import { IStrategyBuy, IStrategyBuy_CreateInput, IStrategyBuy_PatchInput } from '../strategy-buy'
 import { IUser } from '../user'
 import { Strategy_StaticMarket_Property } from './strategy-static-market'
 
@@ -89,3 +89,11 @@ export interface IStrategy_UpdateResponse extends IStrategy_CreateResponse {}
 // PATCH
 export interface IStrategy_PatchInput extends Partial<IStrategy_UpdateInput> {}
 export interface IStrategy_PatchResponse extends IStrategy_UpdateResponse {}
+
+// Strategy Buy
+export interface IStrategy_StrategyBuyCreateInput extends IStrategyBuy_CreateInput {
+  active: boolean
+}
+export interface IStrategy_StrategyBuyPatchInput extends Partial<IStrategyBuy_PatchInput> {
+  active?: boolean
+}

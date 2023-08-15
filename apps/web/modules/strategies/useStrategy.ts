@@ -1,11 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  IStrategy,
-  StrategyType,
-  ValueOf,
-} from '@market-connector/types'
+import { Id, StrategyType, ValueOf } from '@market-connector/types'
 import { toast } from '@market-connector/ui-components/client'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -13,38 +9,36 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { retriveServerHttpException } from '../../utils'
 import { StrategyApi } from './api'
-import { StrategyPatchSchema, StrategyStaticMarketCreateSchema, StrategyStaticMarketUpdateSchema } from './validations'
+import {
+  IStrategy_PatchSchema,
+  IStrategy_StrategyBuyCreateSchema,
+  IStrategy_StrategyBuyPatchSchema,
+  Strategy_PatchSchema,
+  Strategy_StaticMarketCreateSchema,
+  Strategy_StaticMarketUpdateSchema,
+  Strategy_StrategyBuyCreateSchema,
+  Strategy_StrategyBuyPatchSchema,
+} from './validations'
 
 const createStrategyResloverGateway = {
-  [StrategyType.StrategyStaticMarket]: StrategyStaticMarketCreateSchema,
-  [StrategyType.StrategyDynamicMarket]: StrategyStaticMarketCreateSchema,
+  [StrategyType.StrategyStaticMarket]: Strategy_StaticMarketCreateSchema,
+  [StrategyType.StrategyDynamicMarket]: Strategy_StaticMarketCreateSchema,
 }
 
 const updateStrategyResloverGateway = {
-  [StrategyType.StrategyStaticMarket]: StrategyStaticMarketUpdateSchema,
-  [StrategyType.StrategyDynamicMarket]: StrategyStaticMarketUpdateSchema,
+  [StrategyType.StrategyStaticMarket]: Strategy_StaticMarketUpdateSchema,
+  [StrategyType.StrategyDynamicMarket]: Strategy_StaticMarketUpdateSchema,
 }
 
 interface useStrategyProps {
-  strategy?: Partial<IStrategy>
+  strategyId?: Id
+  strategyBuyId?: Id
 }
 
-export const useStrategy = ({ strategy }: useStrategyProps) => {
+export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const pathname = usePathname()
   const { push } = useRouter()
-
-  // const strategyBlank: IStrategy = useMemo(() => {
-  //   const strategyBuy = strategy?.strategyBuy?.map((strategy) => {
-  //     if (typeof strategy.id === 'string') return strategy
-  //     return {
-  //       id: strategy.id,
-  //       active: strategy.active,
-  //       strategyBuy: strategy.id,
-  //     } as IStrategyStrategyBuy
-  //   })
-  //   return { ...strategy, strategyBuy } as IStrategy
-  // }, [strategy])
 
   const createForm = useForm<z.infer<ValueOf<typeof createStrategyResloverGateway>>>({
     resolver: async (data, context, options) =>
@@ -86,14 +80,13 @@ export const useStrategy = ({ strategy }: useStrategyProps) => {
   const updateForm = useForm<z.infer<ValueOf<typeof updateStrategyResloverGateway>>>({
     resolver: async (data, context, options) =>
       zodResolver(updateStrategyResloverGateway[data.type])(data, context, options),
-    defaultValues: strategy,
   })
 
   const onSubmitUpdate = async (values: z.infer<ValueOf<typeof updateStrategyResloverGateway>>) => {
     setIsLoading(true)
     try {
-      if (!strategy?._id) throw new Error('Missing strategy id')
-      const res = await StrategyApi.update(strategy?._id, values)
+      if (!strategyId) throw new Error('Missing strategy id')
+      const res = await StrategyApi.update(strategyId, values)
       setIsLoading(false)
       return res.data
     } catch (error: any) {
@@ -109,16 +102,64 @@ export const useStrategy = ({ strategy }: useStrategyProps) => {
     }
   }
 
-  const patchForm = useForm<z.infer<typeof StrategyPatchSchema>>({
-    resolver: zodResolver(StrategyPatchSchema),
-    defaultValues: strategy,
+  const patchForm = useForm<IStrategy_PatchSchema>({
+    resolver: zodResolver(Strategy_PatchSchema),
+    // defaultValues: strategy,
   })
 
-  const onSubmitPatch = async (values: z.infer<typeof StrategyPatchSchema>) => {
+  const onSubmitPatch = async (values: IStrategy_PatchSchema) => {
     setIsLoading(true)
     try {
-      if (!strategy?._id) throw new Error('Missing strategy id')
-      const res = await StrategyApi.patch(strategy?._id, values)
+      if (!strategyId) throw new Error('Missing strategy id')
+      const res = await StrategyApi.patch(strategyId, values)
+      setIsLoading(false)
+      return res.data
+    } catch (error: any) {
+      setIsLoading(false)
+      const serverError = retriveServerHttpException(error)
+      if (serverError)
+        toast({
+          title: "Strategy didn't saved",
+          description: serverError ? serverError.message : 'Saving strategy failed. Please try again.',
+          duration: 6000,
+          variant: 'destructive',
+        })
+    }
+  }
+
+  const patchStrategyBuyForm = useForm<IStrategy_StrategyBuyPatchSchema>({
+    resolver: zodResolver(Strategy_StrategyBuyPatchSchema),
+  })
+
+  const onSubmitStrategyBuyPatch = async (values: IStrategy_StrategyBuyPatchSchema) => {
+    setIsLoading(true)
+    try {
+      if (!strategyId || !strategyBuyId) throw new Error('Missing strategy id or strategy buy id')
+      const res = await StrategyApi.patchStrategyBuy(strategyId, strategyBuyId, values)
+      setIsLoading(false)
+      return res.data
+    } catch (error: any) {
+      setIsLoading(false)
+      const serverError = retriveServerHttpException(error)
+      if (serverError)
+        toast({
+          title: "Strategy didn't saved",
+          description: serverError ? serverError.message : 'Saving strategy failed. Please try again.',
+          duration: 6000,
+          variant: 'destructive',
+        })
+    }
+  }
+
+  const createStrategyBuyForm = useForm<IStrategy_StrategyBuyCreateSchema>({
+    resolver: zodResolver(Strategy_StrategyBuyCreateSchema),
+  })
+
+  const onSubmitStrategyBuyCreate = async (values: IStrategy_StrategyBuyCreateSchema) => {
+    setIsLoading(true)
+    try {
+      if (!strategyId) throw new Error('Missing strategy id')
+      const res = await StrategyApi.createStrategyBuy(strategyId, values)
       setIsLoading(false)
       return res.data
     } catch (error: any) {
@@ -142,6 +183,10 @@ export const useStrategy = ({ strategy }: useStrategyProps) => {
     updateForm,
     onSubmitUpdate,
     patchForm,
-    onSubmitPatch
+    onSubmitPatch,
+    patchStrategyBuyForm,
+    onSubmitStrategyBuyPatch,
+    createStrategyBuyForm,
+    onSubmitStrategyBuyCreate
   }
 }

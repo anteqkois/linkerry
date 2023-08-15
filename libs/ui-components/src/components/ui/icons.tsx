@@ -20,8 +20,6 @@ import {
   CaretSortIcon,
   CheckIcon,
   Cross2Icon,
-  CheckCircledIcon,
-  CrossCircledIcon,
   Pencil2Icon,
   TrashIcon,
 } from '@radix-ui/react-icons'

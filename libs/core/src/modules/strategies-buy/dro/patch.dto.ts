@@ -1,5 +1,5 @@
-import { IStrategyBuy_PatchInput} from '@market-connector/types'
-import { UpdateStrategyBuyDto } from './update.dto'
+import { IStrategyBuy_PatchInput } from '@market-connector/types'
 import { PartialType } from '@nestjs/mapped-types'
+import { UpdateStrategyBuyDto } from './update.dto'
 
-export class PatchStrategytDto extends PartialType(UpdateStrategyBuyDto) implements IStrategyBuy_PatchInput {}
+export class PatchStrategytBuyDto extends PartialType(UpdateStrategyBuyDto) implements IStrategyBuy_PatchInput {}

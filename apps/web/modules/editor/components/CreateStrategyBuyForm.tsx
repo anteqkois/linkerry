@@ -1,15 +1,8 @@
 import {
   IStrategyBuy,
-  IStrategyBuy_StaticMarket_CreateInput,
-  IStrategyBuy_StaticMarket_UpdateInput,
-  IStrategy_PatchInput,
-  StrategyBuyType,
+  StrategyBuyType
 } from '@market-connector/types'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
   Form,
   FormControl,
   FormField,
@@ -21,19 +14,20 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@market-connector/ui-components/server'
-import { UseFormReturn } from 'react-hook-form'
-import { IStrategyBuyNode } from '../nodes'
 import { useCallback } from 'react'
+import { UseFormReturn } from 'react-hook-form'
+import { IStrategy_StrategyBuyCreateSchema } from '../../strategies/validations'
+import { IStrategyBuyNode } from '../nodes'
 import { useEditor } from '../useEditor'
 
 export interface CreateStrategyBuyFormProps {
-  form: UseFormReturn<IStrategy_PatchInput, any, undefined>
+  form: UseFormReturn<IStrategy_StrategyBuyCreateSchema>
   onSubmit: any
   isLoading: boolean
-  baseStrategyBuy: Partial<IStrategyBuy>
+  baseStrategyBuy?: Partial<IStrategyBuy>
   nodeId: IStrategyBuyNode['id']
   // nodeId: CustomNodeId
 }

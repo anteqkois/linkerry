@@ -1,4 +1,4 @@
-import { IStrategyExpand, IStrategy_UpdateInput, IStrategy_UpdateResponse } from '@market-connector/types'
+import { IStrategyExpand, IStrategy_UpdateResponse } from '@market-connector/types'
 import {
   Form,
   FormControl,
@@ -29,12 +29,13 @@ import { Handle, Position } from 'reactflow'
 import { Property } from './Property'
 import { useEditor } from '../useEditor'
 import { CustomNodeId } from '../nodes'
+import { IStrategy_StaticMarketUpdateSchema } from '../../strategies/validations'
 
 export interface StrategyProps {
-  form: UseFormReturn<IStrategy_UpdateInput, any, undefined>
-  onSubmit: (data: any) => Promise<IStrategy_UpdateResponse | undefined>
+  form: UseFormReturn<IStrategy_StaticMarketUpdateSchema>
+  onSubmit: (data: IStrategy_StaticMarketUpdateSchema) => Promise<IStrategy_UpdateResponse | undefined>
   isLoading: boolean
-  strategy?: Partial<IStrategyExpand<'strategyBuy.strategyBuy'>>
+  strategy: IStrategyExpand<'strategyBuy.strategyBuy'>
   className?: string
   nodeId: CustomNodeId
 }
@@ -44,12 +45,12 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
   const { updateNode } = useEditor()
 
   const handleSubmit = useCallback(
-    async (formData: any) => {
+    async (formData: IStrategy_StaticMarketUpdateSchema) => {
       const res = await onSubmit(formData)
-      if (res?._id)
+      if (res)
         updateNode(nodeId, {
           data: {
-            strategy: {...res, strategyBuy: strategy?.strategyBuy},
+            strategy: { ...res, strategyBuy: strategy.strategyBuy },
           },
         })
       setShowEditForm(false)
@@ -76,7 +77,7 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
                 <span>Edit</span>
                 <Icons.edit />
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="flex gap-1 justify-between items-center focus:bg-destructive focus:text-destructive-foreground">
                 <span>Delete</span>
                 <Icons.delete />
               </DropdownMenuItem>
@@ -140,17 +141,9 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
                     </FormItem>
                   )}
                 />
-                <Button
-                type="submit"
-                className="w-full border-primary/50"
-                variant={'outline'}
-                loading={isLoading}
-              >
-                Save
-              </Button>
-                {/* <Button type="submit" className="w-full" loading={isLoading}>
+                <Button type="submit" className="w-full border-primary/50" variant={'outline'} loading={isLoading}>
                   Save
-                </Button> */}
+                </Button>
               </form>
             </Form>
           ) : (
