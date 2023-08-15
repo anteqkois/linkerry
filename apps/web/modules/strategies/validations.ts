@@ -1,7 +1,7 @@
 import {
   IStrategyBuy_StaticMarket_CreateInput,
-  IStrategyBuy_StaticMarket_UpdateInput,
   IStrategyBuy_UpdateInput,
+  IStrategy_PatchInput,
   IStrategy_StaticMarket_CreateInput,
   IStrategy_StaticMarket_UpdateInput,
   StrategyBuyType,
@@ -26,6 +26,7 @@ export const StrategyStaticMarketCreateSchema: ZodSchema<IStrategy_StaticMarket_
 })
 
 export const StrategyStaticMarketUpdateSchema: ZodSchema<IStrategy_StaticMarket_UpdateInput> = z.object({
+// export const StrategyStaticMarketUpdateSchema = z.object({
   validityUnix: z.number(),
   triggeredTimes: z.number(),
   state: z.nativeEnum(StrategyState, { invalid_type_error: 'Invalid strategy state' }),
@@ -41,6 +42,9 @@ export const StrategyStaticMarketUpdateSchema: ZodSchema<IStrategy_StaticMarket_
   strategyBuy: z.array(z.object({ id: mongoIdSchema, active: z.boolean(), strategyBuy: mongoIdSchema })),
 })
 
+// @ts-ignore
+export const StrategyPatchSchema: ZodSchema<IStrategy_PatchInput> = StrategyStaticMarketUpdateSchema.partial()
+
 // Strategy Buy
 export const StrategyBuyCreateStaticMarketSchema: ZodSchema<IStrategyBuy_StaticMarket_CreateInput> = z.object({
   type: z.nativeEnum(StrategyBuyType, { invalid_type_error: 'Invalid strategy buy type' }),
@@ -53,7 +57,7 @@ export const StrategyBuyCreateStaticMarketSchema: ZodSchema<IStrategyBuy_StaticM
   conditions: z.array(z.object({ id: mongoIdSchema, active: z.boolean(), condition: mongoIdSchema })),
 })
 
-export const StrategyBuyUpdateStaticMarketSchema: ZodSchema<IStrategyBuy_UpdateInput> = z.object({
+export const StrategyBuyUpdateSchema: ZodSchema<IStrategyBuy_UpdateInput> = z.object({
   // Dynamic Market
   conditionMarketProvider: mongoIdSchema.optional(),
   // Static Market

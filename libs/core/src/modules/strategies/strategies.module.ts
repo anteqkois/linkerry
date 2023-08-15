@@ -4,7 +4,7 @@ import { StrategiesController } from './strategies.controller';
 import { Strategy, StrategySchema } from './schemas/strategy.schema';
 import { StrategyStaticMarket, StrategyStaticMarketSchema } from './schemas/strategy-buy-static-market.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import { StrategiesBuyModule, StrategiesBuyService } from '../strategies-buy';
+import { StrategiesBuyModule } from '../strategies-buy';
 
 const STRATEGIES_MODELS = [
   {

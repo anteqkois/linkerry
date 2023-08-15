@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Icons } from '@market-connector/ui-components/server'
-import { Handle, Node, NodeProps, Position } from 'reactflow'
+import { Handle, NodeProps, Position } from 'reactflow'
 
 type AddStrategyBuyNodeProps = NodeProps<{ parentId: string }>
 

@@ -1,8 +1,7 @@
 import {
   IStrategyBuy,
-  IStrategyBuy_StaticMarket_UpdateInput,
   IStrategyBuy_UpdateInput,
-  StrategyBuyType
+  StrategyBuyType,
 } from '@market-connector/types'
 import {
   DropdownMenu,
@@ -23,22 +22,40 @@ import {
   SelectValue,
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@market-connector/ui-components/server'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { useEditor } from '../useEditor'
+import { IStrategyBuyNode } from '../nodes'
 
 export interface StrategyBuyProps {
   form: UseFormReturn<IStrategyBuy_UpdateInput, any, undefined>
   onSubmit: any
   isLoading: boolean
   strategyBuy: Partial<IStrategyBuy>
+  nodeId: IStrategyBuyNode['id']
 }
 
-export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy }: StrategyBuyProps) => {
-  const [showEditForm, setShowEditForm] = useState<boolean>(!strategyBuy)
+export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: StrategyBuyProps) => {
+  const [showEditForm, setShowEditForm] = useState<boolean>(false)
+  const { updateNode } = useEditor()
+
+  const handleSubmit = useCallback(
+    async (formData: any) => {
+      const res = await onSubmit(formData)
+      if (res?._id)
+        updateNode(nodeId, {
+          data: {
+            strategyBuy: res,
+          },
+        })
+      setShowEditForm(false)
+    },
+    [nodeId, updateNode, onSubmit],
+  )
 
   return (
     <div className="w-full h-full">
-      <Card>
+      <Card className="w-editor-element">
         {!showEditForm ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -65,13 +82,13 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy }: Strategy
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name of your startegy</FormLabel>
+                    <FormLabel>Name of your startegy buy</FormLabel>
                     <FormControl>
                       <Input placeholder="Fast dump" {...field} />
                     </FormControl>

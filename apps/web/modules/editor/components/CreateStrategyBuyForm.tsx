@@ -2,7 +2,8 @@ import {
   IStrategyBuy,
   IStrategyBuy_StaticMarket_CreateInput,
   IStrategyBuy_StaticMarket_UpdateInput,
-  StrategyBuyType
+  IStrategy_PatchInput,
+  StrategyBuyType,
 } from '@market-connector/types'
 import {
   DropdownMenu,
@@ -22,26 +23,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@market-connector/ui-components/client'
-import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@market-connector/ui-components/server'
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@market-connector/ui-components/server'
 import { UseFormReturn } from 'react-hook-form'
+import { IStrategyBuyNode } from '../nodes'
+import { useCallback } from 'react'
+import { useEditor } from '../useEditor'
 
 export interface CreateStrategyBuyFormProps {
-  form: UseFormReturn<IStrategyBuy_StaticMarket_CreateInput, any, undefined>
+  form: UseFormReturn<IStrategy_PatchInput, any, undefined>
   onSubmit: any
   isLoading: boolean
   baseStrategyBuy: Partial<IStrategyBuy>
+  nodeId: IStrategyBuyNode['id']
+  // nodeId: CustomNodeId
 }
 
-export const CreateStrategyBuyForm = ({ form, isLoading, onSubmit, baseStrategyBuy }: CreateStrategyBuyFormProps) => {
+export const CreateStrategyBuyForm = ({
+  form,
+  isLoading,
+  onSubmit,
+  nodeId,
+  baseStrategyBuy,
+}: CreateStrategyBuyFormProps) => {
+  const { updateNode } = useEditor()
+
+  const handleSubmit = useCallback(
+    async (formData: any) => {
+      const res = await onSubmit(formData)
+      if (res?._id)
+        updateNode(nodeId, {
+          id: `${nodeId.split('_')[0]}_${res?._id}` as IStrategyBuyNode['id'],
+          data: {
+            strategyBuy: res,
+          },
+        })
+    },
+    [nodeId, updateNode, onSubmit],
+  )
+
   return (
     <div className="w-full h-full">
-      <Card>
+      <Card className="w-editor-element">
         <CardHeader>
-          <CardTitle>Strategy Buy</CardTitle>
+          <CardTitle className="text-strategy-buy">Strategy Buy</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
                 name="name"

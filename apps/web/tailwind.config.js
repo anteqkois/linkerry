@@ -113,6 +113,7 @@ module.exports = {
         384: '96rem' /* 1536px */,
         448: '112rem' /* 1792px */,
         512: '128rem' /* 2048px */,
+        'editor-element': '24rem' /* w-96 */,
       },
       borderRadius: {
         lg: `var(--radius)`,

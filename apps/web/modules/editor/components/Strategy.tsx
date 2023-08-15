@@ -1,4 +1,4 @@
-import { IStrategy, IStrategy_StaticMarket_UpdateInput, IStrategy_UpdateResponse } from '@market-connector/types'
+import { IStrategyExpand, IStrategy_UpdateInput, IStrategy_UpdateResponse } from '@market-connector/types'
 import {
   Form,
   FormControl,
@@ -31,10 +31,10 @@ import { useEditor } from '../useEditor'
 import { CustomNodeId } from '../nodes'
 
 export interface StrategyProps {
-  form: UseFormReturn<IStrategy_StaticMarket_UpdateInput, any, undefined>
+  form: UseFormReturn<IStrategy_UpdateInput, any, undefined>
   onSubmit: (data: any) => Promise<IStrategy_UpdateResponse | undefined>
   isLoading: boolean
-  strategy?: Partial<IStrategy>
+  strategy?: Partial<IStrategyExpand<'strategyBuy.strategyBuy'>>
   className?: string
   nodeId: CustomNodeId
 }
@@ -49,17 +49,17 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
       if (res?._id)
         updateNode(nodeId, {
           data: {
-            strategy: res,
+            strategy: {...res, strategyBuy: strategy?.strategyBuy},
           },
         })
       setShowEditForm(false)
     },
-    [nodeId, updateNode, onSubmit],
+    [onSubmit, updateNode, nodeId, strategy?.strategyBuy],
   )
 
   return (
     <div className={cn('w-full h-full', className)}>
-      <Card className="w-96">
+      <Card className="w-editor-element">
         {!showEditForm ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -84,12 +84,13 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
           </DropdownMenu>
         ) : null}
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center">
+          <CardTitle className="flex gap-2 items-center text-primary">
             <Icons.strategy /> Strategy
           </CardTitle>
           <CardDescription>
-            You can build using sub-strategies such as <span className="text-strategy-buy">Buy Strategies</span>,{' '}
-            <span className="text-strategy-execution">Execution Strategies</span>
+            You can build using sub-strategies such as &apos;Buy Strategies&apos;, &apos;Execution Strategies&apos;.
+            {/* You can build using sub-strategies such as <span className="text-strategy-buy">Buy Strategies</span>,{' '}
+            <span className="text-strategy-execution">Execution Strategies</span> */}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -139,9 +140,17 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" loading={isLoading}>
+                <Button
+                type="submit"
+                className="w-full border-primary/50"
+                variant={'outline'}
+                loading={isLoading}
+              >
+                Save
+              </Button>
+                {/* <Button type="submit" className="w-full" loading={isLoading}>
                   Save
-                </Button>
+                </Button> */}
               </form>
             </Form>
           ) : (

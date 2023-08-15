@@ -1,9 +1,8 @@
-import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { AsyncModelFactory, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { Strategy } from './strategy.schema'
 import {
   IStrategy_StaticMarket,
-  Id,
   StrategyType,
 } from '@market-connector/types'
 

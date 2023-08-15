@@ -1,13 +1,12 @@
 'use client'
 
-import { IStrategy } from '@market-connector/types'
 import { useStrategy } from '../../../strategies/useStrategy'
 import { CreateStrategyForm, Strategy } from '../../components'
-import { CustomNodeProps } from '../types'
+import { CustomNodeProps, IStrategyNode } from '../types'
 
-type StrategyNodeProps = CustomNodeProps<{ strategy?: IStrategy }>
+type StrategyNodeProps = CustomNodeProps<IStrategyNode>
 
-export function StrategyNode({ data, xPos, yPos, id }: StrategyNodeProps) {
+export function StrategyNode({ data, id }: StrategyNodeProps) {
   const { createForm, isLoading, onSubmitCreate, updateForm, onSubmitUpdate } = useStrategy({ strategy: data.strategy })
 
   return data.strategy ? (

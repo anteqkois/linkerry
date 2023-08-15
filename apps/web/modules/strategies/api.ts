@@ -27,7 +27,12 @@ export class StrategyBuyApi {
 
 export class StrategyApi {
   static async get(id: Id, query?: IStrategy_GetOneQuery) {
-    return apiClient.get<IStrategy_GetOneResponse>(`/strategies/${id}`, { params: query })
+    return apiClient.get<IStrategy_GetOneResponse<'strategyBuy.strategyBuy'>>(`/strategies/${id}`, {
+      params: query,
+      paramsSerializer: {
+        indexes: null, // no brackets at all
+      },
+    })
   }
 
   static async create(input: IStrategy_CreateInput) {

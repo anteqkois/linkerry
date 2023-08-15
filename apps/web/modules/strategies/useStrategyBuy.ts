@@ -10,7 +10,7 @@ import { retriveServerHttpException } from '../../utils'
 import { StrategyBuyApi } from './api'
 import {
   StrategyBuyCreateStaticMarketSchema,
-  StrategyBuyUpdateStaticMarketSchema as StrategyBuyUpdateSchema,
+  StrategyBuyUpdateSchema,
 } from './validations'
 
 const createResloverSchemaGateway = {

@@ -11,6 +11,7 @@ import {
 } from './dto'
 import { UpdateStrategyDto } from './dto/update.dto'
 import { StrategyStaticMarket } from './schemas/strategy-buy-static-market.schema'
+import { GetOneStrategyQueryDto } from './dto/get.dto'
 
 @Injectable()
 export class StrategiesService {
@@ -46,11 +47,15 @@ export class StrategiesService {
     private readonly strategiesBuyService: StrategiesBuyService,
   ) {}
 
-  async findOne(id: Id, userId: Id) {
-    return this.strategyStaticMarketModel.findOne({
-      _id: id,
-      user: userId,
-    })
+  async findOne(id: Id, userId: Id, query: GetOneStrategyQueryDto) {
+    console.log(query.expand);
+    
+    return this.strategyStaticMarketModel
+      .findOne({
+        _id: id,
+        user: userId,
+      })
+      .populate(query.expand ? query.expand : [])
   }
 
   async findMany(userId: Id, query: IStrategy_GetQuery): Promise<IStrategy[]> {

@@ -1,55 +1,32 @@
 'use client'
 
-import { IStrategyBuy, IStrategyBuy_CreateResponse, IStrategyBuy_UpdateResponse } from '@market-connector/types'
-import { useCallback } from 'react'
-import { NodeProps } from 'reactflow'
 import { useStrategyBuy } from '../../../strategies/useStrategyBuy'
 import { CreateStrategyBuyForm } from '../../components/CreateStrategyBuyForm'
 import { StrategyBuy } from '../../components/StrategyBuy'
-import { useEditor } from '../../useEditor'
-import { CustomNodeId } from '../types'
+import { CustomNodeProps, IStrategyBuyNode } from '../types'
+import { useStrategy } from '../../../strategies/useStrategy'
 
-type StrategyBuyNodeProps = NodeProps<{ strategyBuy: Partial<IStrategyBuy> }> & { id: CustomNodeId }
+type StrategyBuyNodeProps = CustomNodeProps<IStrategyBuyNode>
 
 export function StrategyBuyNode({ data, id }: StrategyBuyNodeProps) {
-  const { createForm, updateForm, onSubmitUpdate, isLoading } = useStrategyBuy({
+  const { updateForm, onSubmitUpdate, isLoading } = useStrategyBuy({
     strategyBuy: data.strategyBuy,
   })
-  const { updateNode } = useEditor()
-  // const { patchStrtaegy } = useStrategy()
-
-  const updateStrategyBuyNode = useCallback(
-    (newStrategyBuy?: IStrategyBuy_CreateResponse | IStrategyBuy_UpdateResponse) => {
-      // Update React Flow
-      newStrategyBuy &&
-        updateNode(id, {
-          id: `StrategyBuy_${newStrategyBuy?._id}`,
-          data: {
-            strategyBuy: {
-              ...newStrategyBuy,
-            },
-          },
-        })
-    },
-    [],
-  )
+  const { patchForm, onSubmitPatch } = useStrategy({ strategy: { _id: data.strategyId } })
 
   return data.strategyBuy?._id ? (
     <StrategyBuy
+      nodeId={id}
       form={updateForm}
-      onSubmit={async (values: any) => {
-        updateStrategyBuyNode(await onSubmitUpdate(values))
-      }}
+      onSubmit={onSubmitUpdate}
       isLoading={isLoading}
       strategyBuy={data.strategyBuy}
     />
   ) : (
     <CreateStrategyBuyForm
-      form={createForm}
-      onSubmit={async (values: any) => {
-        console.log(values);
-        // updateStrategyBuyNode(await onSubmitCreate(values))
-      }}
+      nodeId={id}
+      form={patchForm}
+      onSubmit={onSubmitPatch}
       isLoading={isLoading}
       baseStrategyBuy={data.strategyBuy}
     />
