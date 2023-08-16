@@ -1,21 +1,21 @@
-import { IStrategyStrategyBuyExpanded, IStrategy_UpdateResponse, StrategyBuyType } from '@market-connector/types'
+import { IStrategy_StrategyBuyExpanded, IStrategy_UpdateResponse, StrategyBuyType } from '@market-connector/types'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    Input,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@market-connector/ui-components/server'
 import { useCallback, useState } from 'react'
@@ -29,7 +29,7 @@ export interface StrategyBuyProps {
   form: UseFormReturn<IStrategy_StrategyBuyPatchSchema, any, undefined>
   onSubmit: (formData: IStrategy_StrategyBuyPatchSchema) => Promise<IStrategy_UpdateResponse | undefined>
   isLoading: boolean
-  strategyBuy: IStrategyStrategyBuyExpanded
+  strategyBuy: IStrategy_StrategyBuyExpanded
   nodeId: IStrategyBuyNode['id']
 }
 

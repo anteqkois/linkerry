@@ -1,10 +1,10 @@
 'use client'
 
+import { IStrategy_StrategyBuy } from '@market-connector/types'
 import { useEffect } from 'react'
 import { useStrategy } from '../../../strategies/useStrategy'
 import { CreateStrategyForm, Strategy } from '../../components'
 import { CustomNodeProps, IStrategyNode } from '../types'
-import { IStrategyStrategyBuy, StrategyType } from '@market-connector/types'
 
 type StrategyNodeProps = CustomNodeProps<IStrategyNode>
 
@@ -14,9 +14,9 @@ export function StrategyNode({ data: { strategy }, id }: StrategyNodeProps) {
   })
 
   useEffect(() => {
-    const flattedStrategiesBuy: IStrategyStrategyBuy[] =
+    const flattedStrategiesBuy: IStrategy_StrategyBuy[] =
       strategy?.strategyBuy?.map((sb) => {
-        if (typeof sb.strategyBuy === 'string') return sb as unknown as IStrategyStrategyBuy
+        if (typeof sb.strategyBuy === 'string') return sb as unknown as IStrategy_StrategyBuy
         return {
           id: sb.id,
           active: sb.active,
@@ -37,9 +37,9 @@ export function StrategyNode({ data: { strategy }, id }: StrategyNodeProps) {
         })
       : createForm.reset({
           active: strategy?.active ?? true,
-          name: strategy?.name ?? 'My strategy',
+          name: strategy?.name,
           testMode: strategy?.testMode ?? false,
-          type: strategy?.type ?? StrategyType.StrategyStaticMarket,
+          type: strategy?.type,
           strategyBuy: flattedStrategiesBuy,
         })
   }, [])
@@ -47,6 +47,6 @@ export function StrategyNode({ data: { strategy }, id }: StrategyNodeProps) {
   return strategy ? (
     <Strategy form={updateForm} isLoading={isLoading} onSubmit={onSubmitUpdate} strategy={strategy} nodeId={id} />
   ) : (
-    <CreateStrategyForm form={createForm} isLoading={isLoading} onSubmit={onSubmitCreate} />
+    <CreateStrategyForm form={createForm} isLoading={isLoading} onSubmit={onSubmitCreate} nodeId={id} />
   )
 }

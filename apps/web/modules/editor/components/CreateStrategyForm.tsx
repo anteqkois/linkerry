@@ -1,4 +1,4 @@
-import {  StrategyType } from '@market-connector/types'
+import { IStrategy_CreateResponse, StrategyType } from '@market-connector/types'
 import {
   Form,
   FormControl,
@@ -23,14 +23,48 @@ import {
 } from '@market-connector/ui-components/server'
 import { UseFormReturn } from 'react-hook-form'
 import { IStrategy_StaticMarketCreateSchema } from '../../strategies/validations'
+import { useEditor } from '../useEditor'
+import { useCallback } from 'react'
+import { CustomNodeId } from '../nodes'
+import { usePathname, useRouter } from 'next/navigation'
 
 export interface StrategyFormProps {
-  form: UseFormReturn<IStrategy_StaticMarketCreateSchema, any, undefined>
-  onSubmit: any
+  form: UseFormReturn<IStrategy_StaticMarketCreateSchema>
+  onSubmit: (data: any) => Promise<IStrategy_CreateResponse | undefined>
   isLoading: boolean
+  nodeId: CustomNodeId
 }
 
-export const CreateStrategyForm = ({ form, isLoading, onSubmit }: StrategyFormProps) => {
+export const CreateStrategyForm = ({ form, isLoading, onSubmit, nodeId }: StrategyFormProps) => {
+  const pathname = usePathname()
+  const { push } = useRouter()
+  const { updateNode} = useEditor()
+
+  // const handleSubmit = useCallback(
+  //   async (formData: IStrategy_StaticMarketCreateSchema) => {
+  //     const res = await onSubmit(formData)
+  //     if (res)
+  //       updateNode(nodeId, {
+  //         data: {
+  //           strategy: { ...res, strategyBuy: [] },
+  //         },
+  //       })
+
+  //     const node = getNodeById(nodeId)
+
+  //     addNode(addBuyStrategyNodeFactory({ parentId: nodeId, x: node?.width ?? 0 / 2, y: node?.height ?? 0 + 20 }))
+  //   },
+  //   [onSubmit, updateNode],
+  // )
+  const handleSubmit = useCallback(
+    async (formData: IStrategy_StaticMarketCreateSchema) => {
+      const res = await onSubmit(formData)
+      if (res)
+      push(`${pathname}/${res._id}`)
+    },
+    [onSubmit, updateNode],
+  )
+
   return (
     <div className="w-full h-full">
       <Card>
@@ -40,7 +74,7 @@ export const CreateStrategyForm = ({ form, isLoading, onSubmit }: StrategyFormPr
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8 w-96">
               <FormField
                 control={form.control}
                 name="name"

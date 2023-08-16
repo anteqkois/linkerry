@@ -1,24 +1,24 @@
-import { IStrategy, IStrategyStrategyBuy, IStrategy_GetQuery, Id } from '@market-connector/types'
+import { IStrategy, IStrategy_GetQuery, IStrategy_StrategyBuy, Id } from '@market-connector/types'
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { StrategiesBuyService } from '../strategies-buy'
 import {
-  CreateStrategyDto,
-  PatchStrategyStaticMarketDto,
-  StrategyStrategyBuyStaticMarketDto,
-  UpdateStrategyStaticMarketDto,
+    CreateStrategyDto,
+    PatchStrategyStaticMarketDto,
+    StrategyStrategyBuyStaticMarketDto,
+    UpdateStrategyStaticMarketDto,
 } from './dto'
+import { GetOneStrategyQueryDto } from './dto/get.dto'
+import { CreateStrategyStrategyBuyDto } from './dto/strategies-buy/create.dto'
+import { PatchStrategyStrategyBuyDto } from './dto/strategies-buy/patch.dto'
 import { UpdateStrategyDto } from './dto/update.dto'
 import { StrategyStaticMarket } from './schemas/strategy-buy-static-market.schema'
-import { GetOneStrategyQueryDto } from './dto/get.dto'
-import { PatchStrategyStrategyBuyDto } from './dto/strategies-buy/patch.dto'
-import { CreateStrategyStrategyBuyDto } from './dto/strategies-buy/create.dto'
 
 @Injectable()
 export class StrategiesService {
   async #safeUpdateOne(dto: Partial<UpdateStrategyStaticMarketDto>, userId: Id, id: Id) {
-    let parsedStrategyBuy: IStrategyStrategyBuy[] = []
+    let parsedStrategyBuy: IStrategy_StrategyBuy[] = []
     if (dto.strategyBuy) parsedStrategyBuy = await this.#safeStrategyBuyParse(dto.strategyBuy, userId)
 
     delete dto.strategyBuy
@@ -35,7 +35,7 @@ export class StrategiesService {
   }
 
   async #safeStrategyBuyParse(strategyBuy: StrategyStrategyBuyStaticMarketDto[], userId: Id) {
-    const strategies: IStrategyStrategyBuy[] = []
+    const strategies: IStrategy_StrategyBuy[] = []
     for (const sb of strategyBuy) {
       if (sb.id) {
         strategies.push(sb)

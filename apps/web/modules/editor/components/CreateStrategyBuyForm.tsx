@@ -29,7 +29,6 @@ export interface CreateStrategyBuyFormProps {
   isLoading: boolean
   baseStrategyBuy?: Partial<IStrategyBuy>
   nodeId: IStrategyBuyNode['id']
-  // nodeId: CustomNodeId
 }
 
 export const CreateStrategyBuyForm = ({

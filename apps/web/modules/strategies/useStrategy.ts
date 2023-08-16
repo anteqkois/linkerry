@@ -37,9 +37,7 @@ interface useStrategyProps {
 
 export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => {
   const [isLoading, setIsLoading] = useState(false)
-  const pathname = usePathname()
-  const { push } = useRouter()
-
+  
   const createForm = useForm<z.infer<ValueOf<typeof createStrategyResloverGateway>>>({
     resolver: async (data, context, options) =>
       zodResolver(createStrategyResloverGateway[data.type])(data, context, options),
@@ -55,20 +53,20 @@ export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => 
   const onSubmitCreate = async (values: z.infer<ValueOf<typeof createStrategyResloverGateway>>) => {
     setIsLoading(true)
     try {
-      const response = await StrategyApi.create(values)
-      toast({
-        title: 'Strategy created',
-        description: `Your strategy has been created. You can now add sub-strategies to it, such as 'Buying Strategies'.`,
-        duration: 6000,
-        variant: 'success',
-      })
-      push(`${pathname}/${response.data._id}`)
+      const {data} = await StrategyApi.create(values)
+      // toast({
+      //   title: 'Strategy created',
+      //   description: `Your strategy has been created. You can now add sub-strategies to it, such as 'Buying Strategies'.`,
+      //   duration: 6000,
+      //   variant: 'success',
+      // })
       setIsLoading(false)
+      return data
     } catch (error: any) {
       setIsLoading(false)
       const serverError = retriveServerHttpException(error)
       if (serverError)
-        return toast({
+        toast({
           title: "Strategy didn't saved",
           description: serverError ? serverError.message : 'Saving strategy failed. Please try again.',
           duration: 6000,

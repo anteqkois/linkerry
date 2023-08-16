@@ -16,6 +16,7 @@ import {
 import { AddStrategyBuyNode } from '../../../../../modules/editor/nodes/shared/AddStrategyBuyNode'
 import { StrategyApi } from '../../../../../modules/strategies/api'
 import { LocalStorageKeys } from '../../../../../types'
+import { addBuyStrategyNodeFactory } from '../../../../../modules/editor/nodes/shared/nodeFactory'
 
 const nodeTypes = {
   StrategyNode: StrategyNode,
@@ -25,6 +26,7 @@ const nodeTypes = {
 }
 
 const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'>) => {
+  const nodes: CustomNode[] = []
   const strategyNode: IStrategyNode = {
     id: `Strategy_${strategy._id}`,
     type: 'StrategyNode',
@@ -32,6 +34,12 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
     data: {
       strategy,
     },
+  }
+  nodes.push(strategyNode)
+
+  if (!strategy.strategyBuy.length) {
+    // nodes.push(addBuyStrategyNodeFactory({ parentId: strategyNode.id, x: node?.width ?? 0 / 2, y: node?.height ?? 0 + 20 }))
+    nodes.push(addBuyStrategyNodeFactory({ parentNodeId: strategyNode.id, x: 123, y: 420 }))
   }
 
   // const addBuyStrategy: IAddStrategyBuyNode = {
@@ -54,23 +62,23 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
   //   },
   //   parentNode:'Strategy'
   // }
-  const strategyBuyNodes: IStrategyBuyNode[] = strategy.strategyBuy.map((sb) => {
-    return {
-      id: `StrategyBuy_${sb.id}`,
-      type: 'StrategyBuyNode',
-      position: { x: 0, y: 450 },
-      data: {
-        // strategyBuy: sb.strategyBuy,
-        strategyBuy: sb,
-        strategyId: strategy._id,
-      },
-      parentNode: `Strategy_${strategy._id}`,
-    }
-  })
+  // const strategyBuyNodes: IStrategyBuyNode[] = strategy.strategyBuy.map((sb) => {
+  //   return {
+  //     id: `StrategyBuy_${sb.id}`,
+  //     type: 'StrategyBuyNode',
+  //     position: { x: 0, y: 450 },
+  //     data: {
+  //       // strategyBuy: sb.strategyBuy,
+  //       strategyBuy: sb,
+  //       strategyId: strategy._id,
+  //     },
+  //     parentNode: `Strategy_${strategy._id}`,
+  //   }
+  // })
 
   // return [strategyNode, addBuyStrategy]
   // return [strategyNode, strategyBuyNode]
-  return [strategyNode, ...strategyBuyNodes]
+  return nodes
 }
 
 const renderStrategyEdges = (nodes: Node[]): Edge[] => {
@@ -104,7 +112,6 @@ export default function Page({ params }: { params: { id: string } }) {
       const { data } = await StrategyApi.get(id, {
         expand: ['strategyBuy.strategyBuy'],
       })
-      console.log(data)
       if (data && data._id === id) {
         const nodes = renderStrategyNodes(data)
         // set(nodes)

@@ -6,10 +6,12 @@ import { CustomNodeProps, IStrategyBuyNode } from '../types'
 import { useStrategy } from '../../../strategies/useStrategy'
 import { useEffect } from 'react'
 import { StrategyBuyType } from '@market-connector/types'
+import { useEditor } from '../../useEditor'
 
 type StrategyBuyNodeProps = CustomNodeProps<IStrategyBuyNode>
 
-export function StrategyBuyNode({ data: { strategyBuy, strategyId }, id }: StrategyBuyNodeProps) {
+export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodeProps) {
+  const { lastDbId } = useEditor()
   const {
     createStrategyBuyForm,
     onSubmitStrategyBuyCreate,
@@ -17,7 +19,7 @@ export function StrategyBuyNode({ data: { strategyBuy, strategyId }, id }: Strat
     onSubmitStrategyBuyPatch,
     isLoading,
   } = useStrategy({
-    strategyId: strategyId,
+    strategyId: lastDbId.StrategyNode,
   })
 
   useEffect(() => {
@@ -32,9 +34,9 @@ export function StrategyBuyNode({ data: { strategyBuy, strategyId }, id }: Strat
           validityUnix: strategyBuy.strategyBuy.validityUnix,
         })
       : createStrategyBuyForm.reset({
-          active: true,
-          conditions: [],
-          name: 'My fast strategy buy',
+          active: strategyBuy?.active ?? true,
+          conditions: strategyBuy?.strategyBuy?.conditions,
+          name: strategyBuy?.strategyBuy?.name,
           type: StrategyBuyType.StrategyBuyStaticMarket,
         })
   }, [])

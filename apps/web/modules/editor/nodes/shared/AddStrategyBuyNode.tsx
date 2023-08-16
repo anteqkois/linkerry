@@ -1,20 +1,25 @@
 'use client'
 
 import { Button, Icons } from '@market-connector/ui-components/server'
-import { Handle, NodeProps, Position } from 'reactflow'
+import { Handle, Position } from 'reactflow'
+import { CustomNodeProps, IAddStrategyBuyNode } from '../types'
+import { useEditor } from '../../useEditor'
+import { strategyBuyNodeFactory } from './nodeFactory'
 
-type AddStrategyBuyNodeProps = NodeProps<{ parentId: string }>
+type AddStrategyBuyNodeProps = CustomNodeProps<IAddStrategyBuyNode>
 
-export function AddStrategyBuyNode({ data, xPos, yPos, sourcePosition, targetPosition }: AddStrategyBuyNodeProps) {
-  // const { addNode, la } = useEditor()
+export function AddStrategyBuyNode({ data: { parentNodeId }, id }: AddStrategyBuyNodeProps) {
+  const { addNode } = useEditor()
 
   const addStrategyBuyNode = () => {
-    // addNode({
-    //   id:`strategyBuy`
-    // })
+    addNode(
+      strategyBuyNodeFactory({
+        strategyBuy: undefined,
+        parentNode: parentNodeId,
+      }),
+    )
   }
 
-  // console.log(getNodeById(data.parentId));
   return (
     <Button className="gap-1 text-strategy-buy border-strategy-buy/50" variant={'outline'} onClick={addStrategyBuyNode}>
       <Icons.plus />

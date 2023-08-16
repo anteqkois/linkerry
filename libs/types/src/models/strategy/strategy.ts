@@ -20,14 +20,14 @@ export enum StrategyType {
   StrategyStaticMarket = 'StrategyStaticMarket',
 }
 
-export interface IStrategyStrategyBuy {
+export interface IStrategy_StrategyBuy {
   active: boolean
   // For existing strategies buy
   id?: Id
   strategyBuy?: Id
 }
 
-export interface IStrategyStrategyBuyExpanded {
+export interface IStrategy_StrategyBuyExpanded {
   active: boolean
   // For existing strategies buy
   id: Id
@@ -47,7 +47,7 @@ export interface IStrategy extends Partial<Strategy_StaticMarket_Property>, DbTi
   active: boolean
   triggeredTimes: number
   state: StrategyState
-  strategyBuy: IStrategyStrategyBuy[]
+  strategyBuy: IStrategy_StrategyBuy[]
   // strategySell: Id[]
   // strategyExecution: Id[]
   // strategyPause: Id[]
@@ -56,7 +56,7 @@ export interface IStrategy extends Partial<Strategy_StaticMarket_Property>, DbTi
 export interface IStrategyExpand<E extends ExpandableKeys | undefined = undefined>
   extends Omit<IStrategy, 'strategyBuy' | 'user'> {
   user: E extends 'user' ? IUser : Id
-  strategyBuy: E extends 'strategyBuy.strategyBuy' ? IStrategyStrategyBuyExpanded[] : IStrategyStrategyBuy[]
+  strategyBuy: E extends 'strategyBuy.strategyBuy' ? IStrategy_StrategyBuyExpanded[] : IStrategy_StrategyBuy[]
 }
 
 // GET
@@ -76,7 +76,7 @@ export interface IStrategy_CreateInput {
   testMode: boolean
   active: boolean
   // For request to create strategy buy
-  strategyBuy: (IStrategyStrategyBuy & { strategyBuyCreateInput?: IStrategyBuy_CreateInput })[]
+  strategyBuy: (IStrategy_StrategyBuy & { strategyBuyCreateInput?: IStrategyBuy_CreateInput })[]
   // strategySell: Id[]
   // strategyPause: Id[]
 }
