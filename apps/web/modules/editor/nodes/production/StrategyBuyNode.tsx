@@ -26,6 +26,7 @@ export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodePr
   useEffect(() => {
     strategyBuy?.id
       ? patchStrategyBuyForm.reset({
+          strategyBuyId: strategyBuy.id,
           active: strategyBuy.active,
           conditionMarketProvider: strategyBuy.strategyBuy?.conditionMarketProvider,
           conditions: strategyBuy.strategyBuy.conditions,

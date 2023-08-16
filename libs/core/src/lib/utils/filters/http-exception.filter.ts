@@ -14,7 +14,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<FastifyRequest>()
 
     let status: HttpStatus
-    let errorCode: string = 'UNKNOWN_ERROR'
+    let errorCode = 'UNKNOWN_ERROR'
     let errorMessage: string
     let humanMessage: string
     let field: string | undefined

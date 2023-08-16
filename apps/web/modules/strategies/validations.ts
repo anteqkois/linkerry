@@ -84,7 +84,8 @@ export const Strategy_PatchSchema = Strategy_StaticMarketUpdateSchema.partial() 
 export interface IStrategy_PatchSchema extends z.infer<typeof Strategy_PatchSchema>{}
 
 export const Strategy_StrategyBuyPatchSchema = StrategyBuy_PatchSchema.extend({
-  active: z.boolean()
+  active: z.boolean(),
+  strategyBuyId: mongoIdSchema,
 }) satisfies z.ZodType<IStrategy_StrategyBuyPatchInput>
 export interface IStrategy_StrategyBuyPatchSchema extends z.infer<typeof Strategy_StrategyBuyPatchSchema>{}
 

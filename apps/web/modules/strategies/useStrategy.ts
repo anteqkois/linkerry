@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Id, StrategyBuyType, StrategyType, ValueOf } from '@market-connector/types'
 import { toast } from '@market-connector/ui-components/client'
-import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -32,10 +31,9 @@ const updateStrategyResloverGateway = {
 
 interface useStrategyProps {
   strategyId?: Id
-  strategyBuyId?: Id
 }
 
-export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => {
+export const useStrategy = ({ strategyId }: useStrategyProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const createForm = useForm<z.infer<ValueOf<typeof createStrategyResloverGateway>>>({
@@ -132,8 +130,8 @@ export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => 
   const onSubmitStrategyBuyPatch = async (values: IStrategy_StrategyBuyPatchSchema) => {
     setIsLoading(true)
     try {
-      if (!strategyId || !strategyBuyId) throw new Error('Missing strategy id or strategy buy id')
-      const res = await StrategyApi.patchStrategyBuy(strategyId, strategyBuyId, values)
+      if (!strategyId) throw new Error('Missing strategy id or strategy buy id')
+      const res = await StrategyApi.patchStrategyBuy(strategyId, values.strategyBuyId, values)
       setIsLoading(false)
       return res.data
     } catch (error: any) {

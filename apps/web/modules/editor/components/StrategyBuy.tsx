@@ -1,4 +1,4 @@
-import { IStrategy_StrategyBuyExpanded, IStrategy_UpdateResponse, StrategyBuyType } from '@market-connector/types'
+import { IStrategy_StrategyBuyExpanded, IStrategy_StrategyBuyPatchResponse } from '@market-connector/types'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +11,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Switch,
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@market-connector/ui-components/server'
 import { useCallback, useState } from 'react'
@@ -24,11 +20,10 @@ import { IStrategy_StrategyBuyPatchSchema } from '../../strategies/validations'
 import { IStrategyBuyNode } from '../nodes'
 import { useEditor } from '../useEditor'
 import { Property } from './Property'
-import { Handle, Position } from 'reactflow'
 
 export interface StrategyBuyProps {
   form: UseFormReturn<IStrategy_StrategyBuyPatchSchema, any, undefined>
-  onSubmit: (formData: IStrategy_StrategyBuyPatchSchema) => Promise<IStrategy_UpdateResponse | undefined>
+  onSubmit: (formData: IStrategy_StrategyBuyPatchSchema) => Promise<IStrategy_StrategyBuyPatchResponse | undefined>
   isLoading: boolean
   strategyBuy: IStrategy_StrategyBuyExpanded
   nodeId: IStrategyBuyNode['id']
@@ -36,7 +31,6 @@ export interface StrategyBuyProps {
 
 export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: StrategyBuyProps) => {
   const [showEditForm, setShowEditForm] = useState<boolean>(false)
-  const [isActive, setIsActive] = useState(form.getValues().active)
   const { updateNode } = useEditor()
 
   const handleSubmit = useCallback(
@@ -47,14 +41,7 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
       if (res) {
         updateNode(nodeId, {
           data: {
-            strategyBuy: {
-              active: formData.active,
-              id: strategyBuy.id,
-              strategyBuy: {
-                ...strategyBuy.strategyBuy,
-                ...formData,
-              },
-            },
+            strategyBuy: res,
           },
         })
       }
@@ -110,6 +97,33 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
                 />
                 <FormField
                   control={form.control}
+                  name="active"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border py-2 px-3">
+                      <div className="space-y-0.5">
+                        <FormLabel>Active</FormLabel>
+                      </div>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} aria-readonly />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                {/* <FormField
+                  control={form.control}
+                  name="validityUnix"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Buy event validity time</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
+                {/* <FormField
+                  control={form.control}
                   name="type"
                   render={({ field }) => (
                     <FormItem>
@@ -139,13 +153,8 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-                <Button
-                  type="submit"
-                  className="w-full text-strategy-buy border-strategy-buy/50"
-                  variant={'outline'}
-                  loading={isLoading}
-                >
+                /> */}
+                <Button type="submit" className="w-full" variant={'secondary'} loading={isLoading}>
                   Save Strategy Buy
                 </Button>
               </form>

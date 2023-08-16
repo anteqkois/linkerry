@@ -8,10 +8,10 @@ import {
   IStrategy_GetOneQuery,
   IStrategy_GetOneResponse,
   IStrategy_PatchInput,
-  IStrategy_PatchResponse,
   IStrategy_StrategyBuyCreateInput,
   IStrategy_StrategyBuyCreateResponse,
   IStrategy_StrategyBuyPatchInput,
+  IStrategy_StrategyBuyPatchResponse,
   IStrategy_UpdateInput,
   IStrategy_UpdateResponse,
   Id,
@@ -55,6 +55,6 @@ export class StrategyApi {
   }
 
   static async patchStrategyBuy(id: Id, sId:Id, input: IStrategy_StrategyBuyPatchInput) {
-    return apiClient.patch<IStrategy_UpdateResponse>(`/strategies/${id}/strategies-buy/${sId}`, input)
+    return apiClient.patch<IStrategy_StrategyBuyPatchResponse>(`/strategies/${id}/strategies-buy/${sId}`, input)
   }
 }

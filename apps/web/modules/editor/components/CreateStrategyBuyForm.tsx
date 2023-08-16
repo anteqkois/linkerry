@@ -12,6 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Switch,
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@market-connector/ui-components/server'
 import { useCallback } from 'react'
@@ -112,12 +113,21 @@ export const CreateStrategyBuyForm = ({
                   </FormItem>
                 )}
               />
-              <Button
-                type="submit"
-                className="w-full text-strategy-buy border-strategy-buy/50"
-                variant={'outline'}
-                loading={isLoading}
-              >
+              <FormField
+                control={form.control}
+                name="active"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border py-2 px-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Active</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} aria-readonly />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" variant={'secondary'} loading={isLoading}>
                 Create Strategy Buy
               </Button>
             </form>

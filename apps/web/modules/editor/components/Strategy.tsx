@@ -139,7 +139,7 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full border-primary/50" variant={'outline'} loading={isLoading}>
+                <Button type="submit" className="w-full" variant={'secondary'} loading={isLoading}>
                   Save
                 </Button>
               </form>
