@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Id, StrategyType, ValueOf } from '@market-connector/types'
+import { Id, StrategyBuyType, StrategyType, ValueOf } from '@market-connector/types'
 import { toast } from '@market-connector/ui-components/client'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -37,7 +37,7 @@ interface useStrategyProps {
 
 export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => {
   const [isLoading, setIsLoading] = useState(false)
-  
+
   const createForm = useForm<z.infer<ValueOf<typeof createStrategyResloverGateway>>>({
     resolver: async (data, context, options) =>
       zodResolver(createStrategyResloverGateway[data.type])(data, context, options),
@@ -53,7 +53,7 @@ export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => 
   const onSubmitCreate = async (values: z.infer<ValueOf<typeof createStrategyResloverGateway>>) => {
     setIsLoading(true)
     try {
-      const {data} = await StrategyApi.create(values)
+      const { data } = await StrategyApi.create(values)
       // toast({
       //   title: 'Strategy created',
       //   description: `Your strategy has been created. You can now add sub-strategies to it, such as 'Buying Strategies'.`,
@@ -151,6 +151,12 @@ export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => 
 
   const createStrategyBuyForm = useForm<IStrategy_StrategyBuyCreateSchema>({
     resolver: zodResolver(Strategy_StrategyBuyCreateSchema),
+    defaultValues: {
+      active: true,
+      conditions: [],
+      name: '',
+      type: StrategyBuyType.StrategyBuyStaticMarket,
+    },
   })
 
   const onSubmitStrategyBuyCreate = async (values: IStrategy_StrategyBuyCreateSchema) => {
@@ -158,6 +164,7 @@ export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => 
     try {
       if (!strategyId) throw new Error('Missing strategy id')
       const res = await StrategyApi.createStrategyBuy(strategyId, values)
+
       setIsLoading(false)
       return res.data
     } catch (error: any) {
@@ -185,6 +192,6 @@ export const useStrategy = ({ strategyId, strategyBuyId }: useStrategyProps) => 
     patchStrategyBuyForm,
     onSubmitStrategyBuyPatch,
     createStrategyBuyForm,
-    onSubmitStrategyBuyCreate
+    onSubmitStrategyBuyCreate,
   }
 }

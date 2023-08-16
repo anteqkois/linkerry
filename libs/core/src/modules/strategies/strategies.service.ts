@@ -4,10 +4,10 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { StrategiesBuyService } from '../strategies-buy'
 import {
-    CreateStrategyDto,
-    PatchStrategyStaticMarketDto,
-    StrategyStrategyBuyStaticMarketDto,
-    UpdateStrategyStaticMarketDto,
+  CreateStrategyDto,
+  PatchStrategyStaticMarketDto,
+  StrategyStrategyBuyStaticMarketDto,
+  UpdateStrategyStaticMarketDto,
 } from './dto'
 import { GetOneStrategyQueryDto } from './dto/get.dto'
 import { CreateStrategyStrategyBuyDto } from './dto/strategies-buy/create.dto'
@@ -99,9 +99,11 @@ export class StrategiesService {
 
     const strategy = await this.strategyStaticMarketModel
       .findOneAndUpdate({ _id: id, user: userId }, { $push: { strategyBuy: strategyBuy[0] } }, { new: true })
+      .populate(['strategyBuy.strategyBuy'])
       .exec()
     if (!strategy) throw new NotFoundException('Can not find strategy')
-    return strategy
+
+    return strategy.strategyBuy.find((sb) => sb.id?.toString() === strategyBuy[0].id?.toString())
   }
 
   async patchStrategyBuy(dto: PatchStrategyStrategyBuyDto, userId: Id, id: Id, strategyBuyId: Id) {
@@ -122,7 +124,7 @@ export class StrategiesService {
       )
       .exec()
 
-      console.log(strategy);
+    console.log(strategy)
 
     delete dto.active
 

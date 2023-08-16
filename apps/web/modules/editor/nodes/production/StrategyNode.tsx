@@ -1,6 +1,6 @@
 'use client'
 
-import { IStrategy_StrategyBuy } from '@market-connector/types'
+import { IStrategy_StrategyBuy, StrategyType } from '@market-connector/types'
 import { useEffect } from 'react'
 import { useStrategy } from '../../../strategies/useStrategy'
 import { CreateStrategyForm, Strategy } from '../../components'
@@ -37,9 +37,9 @@ export function StrategyNode({ data: { strategy }, id }: StrategyNodeProps) {
         })
       : createForm.reset({
           active: strategy?.active ?? true,
-          name: strategy?.name,
+          name: strategy?.name ?? '',
           testMode: strategy?.testMode ?? false,
-          type: strategy?.type,
+          type: strategy?.type ?? StrategyType.StrategyStaticMarket,
           strategyBuy: flattedStrategiesBuy,
         })
   }, [])

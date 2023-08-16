@@ -85,19 +85,25 @@ export const useEditor = create<IEditorState>((set, get) => ({
     return get().nodes.filter((node) => node.id === id)[0] as CustomNode
   },
   updateNode: (id: CustomNodeId, changes: Partial<CustomNode>) => {
+    let updated = false
     set({
       nodes: get().nodes.map((node) => {
         if (node.id !== id) return node
+        updated = true
         return { ...node, ...changes, data: { ...node.data, ...changes.data } }
       }),
     })
+    if (!updated) throw new Error(`Can not update node: ${id}, changes: ${changes}`)
   },
   updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => {
+    let updated = false
     set({
       edges: get().edges.map((edge) => {
         if (edge.id !== id) return edge
+        updated = true
         return { ...edge, ...changes, data: { ...edge.data, ...edge.data } }
       }),
     })
+    if (!updated) throw new Error(`Can not update egde: ${id}, changes: ${changes}`)
   },
 }))

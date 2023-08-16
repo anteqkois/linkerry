@@ -1,7 +1,4 @@
-import {
-  IStrategyBuy,
-  StrategyBuyType
-} from '@market-connector/types'
+import { IStrategyBuy, IStrategy_StrategyBuyCreateResponse, StrategyBuyType } from '@market-connector/types'
 import {
   Form,
   FormControl,
@@ -14,7 +11,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@market-connector/ui-components/server'
 import { useCallback } from 'react'
@@ -25,10 +22,11 @@ import { useEditor } from '../useEditor'
 
 export interface CreateStrategyBuyFormProps {
   form: UseFormReturn<IStrategy_StrategyBuyCreateSchema>
-  onSubmit: any
+  onSubmit: (data: any) => Promise<IStrategy_StrategyBuyCreateResponse | undefined>
   isLoading: boolean
   baseStrategyBuy?: Partial<IStrategyBuy>
   nodeId: IStrategyBuyNode['id']
+  parentNodeId: IStrategyBuyNode['id']
 }
 
 export const CreateStrategyBuyForm = ({
@@ -37,19 +35,25 @@ export const CreateStrategyBuyForm = ({
   onSubmit,
   nodeId,
   baseStrategyBuy,
+  parentNodeId,
 }: CreateStrategyBuyFormProps) => {
-  const { updateNode } = useEditor()
+  const { updateNode, updateEdge } = useEditor()
 
   const handleSubmit = useCallback(
     async (formData: any) => {
       const res = await onSubmit(formData)
-      if (res?._id)
+
+      if (res?.id) {
+        const newId = `${nodeId.split('_')[0]}_${res?.id}` as IStrategyBuyNode['id']
         updateNode(nodeId, {
-          id: `${nodeId.split('_')[0]}_${res?._id}` as IStrategyBuyNode['id'],
+          id: newId,
           data: {
             strategyBuy: res,
           },
         })
+
+        updateEdge(`${parentNodeId}-${nodeId}`, { id: `${parentNodeId}-${newId}`, target: newId })
+      }
     },
     [nodeId, updateNode, onSubmit],
   )

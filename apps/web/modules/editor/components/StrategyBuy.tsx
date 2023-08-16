@@ -74,7 +74,10 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem className="flex gap-1 justify-between items-center" onClick={() => setShowEditForm(true)}>
+            <DropdownMenuItem
+              className="flex gap-1 justify-between items-center"
+              onClick={() => setShowEditForm((prev) => !prev)}
+            >
               <span>{showEditForm ? 'Details' : 'Edit'}</span>
               {showEditForm ? null : <Icons.edit />}
             </DropdownMenuItem>

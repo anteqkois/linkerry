@@ -94,6 +94,9 @@ export interface IStrategy_PatchResponse extends IStrategy_UpdateResponse {}
 export interface IStrategy_StrategyBuyCreateInput extends IStrategyBuy_CreateInput {
   active: boolean
 }
+export interface IStrategy_StrategyBuyCreateResponse extends IStrategy_StrategyBuyExpanded {}
+
 export interface IStrategy_StrategyBuyPatchInput extends Partial<IStrategyBuy_PatchInput> {
   active?: boolean
 }
+export interface IStrategy_StrategyBuyPatchResponse extends IStrategy_StrategyBuyExpanded {}

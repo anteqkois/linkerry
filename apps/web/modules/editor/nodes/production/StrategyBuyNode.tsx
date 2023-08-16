@@ -12,7 +12,7 @@ import { Handle, Position } from 'reactflow'
 type StrategyBuyNodeProps = CustomNodeProps<IStrategyBuyNode>
 
 export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodeProps) {
-  const { lastDbId } = useEditor()
+  const { lastDbId, lastNodeId } = useEditor()
   const {
     createStrategyBuyForm,
     onSubmitStrategyBuyCreate,
@@ -36,9 +36,9 @@ export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodePr
         })
       : createStrategyBuyForm.reset({
           active: strategyBuy?.active ?? true,
-          conditions: strategyBuy?.strategyBuy?.conditions,
-          name: strategyBuy?.strategyBuy?.name,
-          type: StrategyBuyType.StrategyBuyStaticMarket,
+          conditions: strategyBuy?.strategyBuy?.conditions ?? [],
+          name: strategyBuy?.strategyBuy?.name ?? '',
+          type: StrategyBuyType.StrategyBuyStaticMarket ?? StrategyBuyType.StrategyBuyStaticMarket,
         })
   }, [])
 
@@ -60,6 +60,7 @@ export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodePr
           onSubmit={onSubmitStrategyBuyCreate}
           isLoading={isLoading}
           baseStrategyBuy={strategyBuy?.strategyBuy}
+          parentNodeId={lastNodeId.StrategyNode as IStrategyBuyNode['id']}
         />
       )}
     </>
