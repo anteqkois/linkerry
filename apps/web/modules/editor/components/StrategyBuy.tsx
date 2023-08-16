@@ -1,21 +1,21 @@
 import { IStrategy_StrategyBuyExpanded, IStrategy_UpdateResponse, StrategyBuyType } from '@market-connector/types'
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    Input,
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@market-connector/ui-components/server'
 import { useCallback, useState } from 'react'
@@ -24,6 +24,7 @@ import { IStrategy_StrategyBuyPatchSchema } from '../../strategies/validations'
 import { IStrategyBuyNode } from '../nodes'
 import { useEditor } from '../useEditor'
 import { Property } from './Property'
+import { Handle, Position } from 'reactflow'
 
 export interface StrategyBuyProps {
   form: UseFormReturn<IStrategy_StrategyBuyPatchSchema, any, undefined>
@@ -65,30 +66,25 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
   return (
     <div className="w-full h-full">
       <Card className="w-editor-element">
-        {!showEditForm ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size={'icon'} className="absolute top-2 right-2">
-                <span className="sr-only">Open menu</span>
-                <Icons.more className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                className="flex gap-1 justify-between items-center"
-                onClick={() => setShowEditForm(true)}
-              >
-                <span>Edit</span>
-                <Icons.edit />
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem>Move higher</DropdownMenuItem> */}
-              <DropdownMenuItem className="flex gap-1 justify-between items-center focus:bg-destructive focus:text-destructive-foreground">
-                <span>Delete</span>
-                <Icons.delete />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : null}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size={'icon'} className="absolute top-2 right-2">
+              <span className="sr-only">Open menu</span>
+              <Icons.more className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="flex gap-1 justify-between items-center" onClick={() => setShowEditForm(true)}>
+              <span>{showEditForm ? 'Details' : 'Edit'}</span>
+              {showEditForm ? null : <Icons.edit />}
+            </DropdownMenuItem>
+            {/* <DropdownMenuItem>Move higher</DropdownMenuItem> */}
+            <DropdownMenuItem className="flex gap-1 justify-between items-center focus:bg-destructive focus:text-destructive-foreground">
+              <span>Delete</span>
+              <Icons.delete />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <CardHeader>
           <CardTitle className="flex gap-2 items-center text-strategy-buy">Strategy Buy</CardTitle>
         </CardHeader>

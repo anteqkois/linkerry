@@ -2,13 +2,12 @@
 
 import { IStrategyExpand } from '@market-connector/types'
 import { useAsync, useLocalStorageValue } from '@react-hookz/web'
-import { useEffect, useMemo } from 'react'
-import { Edge, Node } from 'reactflow'
+import { useEffect } from 'react'
+import { Edge } from 'reactflow'
 import {
   ConditionNode,
   CustomNode,
   Editor,
-  IStrategyBuyNode,
   IStrategyNode,
   StrategyBuyNode,
   StrategyNode,
@@ -16,7 +15,13 @@ import {
 import { AddStrategyBuyNode } from '../../../../../modules/editor/nodes/shared/AddStrategyBuyNode'
 import { StrategyApi } from '../../../../../modules/strategies/api'
 import { LocalStorageKeys } from '../../../../../types'
-import { addBuyStrategyNodeFactory, nodeConfigs } from '../../../../../modules/editor/nodes/shared/nodeFactory'
+import {
+  addBuyStrategyNodeFactory,
+  nodeConfigs,
+  strategyBuyNodeFactory,
+  strategyNodeFactory,
+} from '../../../../../modules/editor/nodes/shared/nodeFactory'
+import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
 
 const nodeTypes = {
   StrategyNode: StrategyNode,
@@ -27,81 +32,59 @@ const nodeTypes = {
 
 const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'>) => {
   const nodes: CustomNode[] = []
-  const strategyNode: IStrategyNode = {
-    id: `Strategy_${strategy._id}`,
-    type: 'StrategyNode',
-    position: { x: 0, y: 0 },
-    data: {
-      strategy,
-    },
-  }
+  const edges: Edge[] = []
+
+  const strategyNode: IStrategyNode = strategyNodeFactory({ strategy })
   nodes.push(strategyNode)
 
+  // Add AddStrategyBuyNode if no Strategy Buy or render Strategy Buy and their edges
   if (!strategy.strategyBuy.length) {
-    nodes.push(
-      addBuyStrategyNodeFactory({
-        parentNodeId: strategyNode.id,
-        x: nodeConfigs.StrategyNode.width / 2 - nodeConfigs.AddStrategyBuyNode.width / 2,
-        y: nodeConfigs.StrategyNode.height + nodeConfigs.gap.y,
+    const AddStrategyBuyNode = addBuyStrategyNodeFactory({
+      parentNodeId: strategyNode.id,
+      x: nodeConfigs.StrategyNode.width / 2 - nodeConfigs.AddStrategyBuyNode.width / 2,
+      y: nodeConfigs.StrategyNode.height + nodeConfigs.gap.y,
+    })
+    nodes.push(AddStrategyBuyNode)
+
+    edges.push(
+      defaultEdgeFactory({
+        sourceNodeId: strategyNode.id,
+        targetNodeId: AddStrategyBuyNode.id,
       }),
     )
+  } else {
+    let yOffset = nodeConfigs.StrategyNode.height + nodeConfigs.gap.y
+    let edgeSource: CustomNode = strategyNode
+    for (const sb of strategy.strategyBuy) {
+      // Add custom group node with border and title
+      const strategyBuyNode = strategyBuyNodeFactory({
+        parentNode: strategyNode.id,
+        strategyBuy: sb,
+        x: 0,
+        y: yOffset,
+      })
+      yOffset += nodeConfigs.StrategyBuyNode.height + nodeConfigs.gap.y
+      nodes.push(strategyBuyNode)
+
+      // Add Edge
+      edges.push(
+        defaultEdgeFactory({
+          sourceNodeId: edgeSource.id,
+          targetNodeId: strategyBuyNode.id,
+        }),
+      )
+      edgeSource = strategyBuyNode
+    }
   }
 
-  // const addBuyStrategy: IAddStrategyBuyNode = {
-  //   id: 'AddStrategyBuy',
-  //   type: 'AddStrategyBuyNode',
-  //   position: { x: 218, y: 450 },
-  //   data: {
-  //     parentId: strategyNode.id,
-  //   },
-  //   parentNode: 'Strategy',
-  // }
-
-  // const strategyBuyNode: IStrategyBuyNode = {
-  //   id: 'StrategyBuy_1',
-  //   type: 'StrategyBuyNode',
-  //   position: { x: 0, y: 450 },
-  //   data: {
-  //     strategyBuy:{},
-  //     strategyId: strategy._id
-  //   },
-  //   parentNode:'Strategy'
-  // }
-  // const strategyBuyNodes: IStrategyBuyNode[] = strategy.strategyBuy.map((sb) => {
-  //   return {
-  //     id: `StrategyBuy_${sb.id}`,
-  //     type: 'StrategyBuyNode',
-  //     position: { x: 0, y: 450 },
-  //     data: {
-  //       // strategyBuy: sb.strategyBuy,
-  //       strategyBuy: sb,
-  //       strategyId: strategy._id,
-  //     },
-  //     parentNode: `Strategy_${strategy._id}`,
-  //   }
-  // })
-
-  // return [strategyNode, addBuyStrategy]
-  // return [strategyNode, strategyBuyNode]
-  return nodes
-}
-
-const renderStrategyEdges = (nodes: Node[]): Edge[] => {
-  return [
-    {
-      id: 'Strategy-AddStrategyBuy',
-      type: 'default',
-      source: 'Strategy',
-      target: 'AddStrategyBuyNode',
-    },
-  ]
+  return { nodes, edges }
 }
 
 // Always first node Should be strategy node with strategy id
 export default function Page({ params }: { params: { id: string } }) {
   const { value, remove } = useLocalStorageValue<CustomNode[]>(LocalStorageKeys.StrategyCache)
 
-  const [initialNodes, actions] = useAsync<CustomNode[]>(async () => {
+  const [initialData, actions] = useAsync<{ initialNodes: CustomNode[]; initialEdges: Edge[] }>(async () => {
     // Id from url
     const id = params?.id?.[0]
 
@@ -110,7 +93,7 @@ export default function Page({ params }: { params: { id: string } }) {
       (value && id && value[0].type === 'StrategyNode' && value[0].data?.strategy?._id === id) ||
       (value && value[0].type === 'StrategyNode' && !value[0].data?.strategy?._id)
     )
-      return value
+      return { initialNodes: value, initialEdges: [] }
 
     if (id) {
       // Fetch and render if exists
@@ -118,28 +101,18 @@ export default function Page({ params }: { params: { id: string } }) {
         expand: ['strategyBuy.strategyBuy'],
       })
       if (data && data._id === id) {
-        const nodes = renderStrategyNodes(data)
+        const { nodes, edges } = renderStrategyNodes(data)
         // set(nodes)
-        return nodes
+        return { initialNodes: nodes, initialEdges: edges }
       }
     }
 
     // Create new strategy
-    return [
-      {
-        id: 'Strategy_Temp',
-        type: 'StrategyNode',
-        position: { x: 0, y: 0 },
-        data: {
-          strategy: undefined,
-        },
-      },
-    ]
+    return {
+      initialNodes: [strategyNodeFactory({})],
+      initialEdges: [],
+    }
   })
-
-  const initialEdges = useMemo(() => {
-    return renderStrategyEdges(initialNodes.result ?? [])
-  }, [initialNodes.result])
 
   useEffect(() => {
     actions.execute()
@@ -149,7 +122,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Editor
-      initalData={{ edges: initialEdges, nodes: initialNodes.result ?? [] }}
+      initalData={{ edges: initialData.result?.initialEdges ?? [], nodes: initialData.result?.initialNodes ?? [] }}
       nodeTypes={nodeTypes}
       mode="production"
       limits={undefined}

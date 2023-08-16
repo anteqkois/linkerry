@@ -16,6 +16,7 @@ import {
 import { create } from 'zustand'
 import { CustomNode, CustomNodeId, CustomNodeType } from './nodes'
 import { Id } from '@market-connector/types'
+import { CustomEdge, CustomEdgeId } from './edges/types'
 
 type EditorNode = Node | CustomNode
 
@@ -26,10 +27,10 @@ interface IEditorState {
   setLastNodeId: (key: CustomNodeType, value: CustomNodeId) => void
   lastDbId: Record<CustomNodeType, Id | undefined>
   setLastDbId: (key: CustomNodeType, value: Id) => void
-  // nodes: (CustomNode | Node)[]
   nodes: EditorNode[]
   setNodes: (nodes: CustomNode[]) => void
   addNode: (node: CustomNode) => void
+  deleteNode: (nodeId: CustomNodeId) => void
   edges: Edge[]
   setEdges: (nodes: Edge[]) => void
   onNodesChange: OnNodesChange
@@ -37,7 +38,7 @@ interface IEditorState {
   onConnect: OnConnect
   getNodeById: (id: string) => CustomNode | undefined
   updateNode: (nodeId: CustomNodeId, changes: Partial<CustomNode>) => void
-  // handleAddNode: (node: IStrategyNode| IStrategyBuyNode ) => void
+  updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => void
 }
 
 export const useEditor = create<IEditorState>((set, get) => ({
@@ -59,6 +60,8 @@ export const useEditor = create<IEditorState>((set, get) => ({
   nodes: [],
   setNodes: (nodes: CustomNode[]) => set((state) => ({ nodes })),
   addNode: (node: CustomNode) => set((state) => ({ nodes: [...state.nodes, node] })),
+  // TODO add logic to rebuild edges
+  deleteNode: (nodeId: CustomNodeId) => set((state) => ({ nodes: state.nodes.filter((node) => node.id !== nodeId) })),
   edges: [],
   setEdges: (edges: Edge[]) => set((state) => ({ edges })),
   addEdge: (edge: Edge) => set((state) => ({ edges: [...state.edges, edge] })),
@@ -85,7 +88,15 @@ export const useEditor = create<IEditorState>((set, get) => ({
     set({
       nodes: get().nodes.map((node) => {
         if (node.id !== id) return node
-        return { ...node, changes, data: { ...node.data, ...changes.data } }
+        return { ...node, ...changes, data: { ...node.data, ...changes.data } }
+      }),
+    })
+  },
+  updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => {
+    set({
+      edges: get().edges.map((edge) => {
+        if (edge.id !== id) return edge
+        return { ...edge, ...changes, data: { ...edge.data, ...edge.data } }
       }),
     })
   },

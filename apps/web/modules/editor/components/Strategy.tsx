@@ -61,29 +61,27 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
   return (
     <div className={cn('w-full h-full', className)}>
       <Card className="w-editor-element">
-        {!showEditForm ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size={'icon'} className="absolute top-2 right-2">
-                <span className="sr-only">Open menu</span>
-                <Icons.more className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                className="flex gap-1 justify-between items-center"
-                onClick={() => setShowEditForm(true)}
-              >
-                <span>Edit</span>
-                <Icons.edit />
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex gap-1 justify-between items-center focus:bg-destructive focus:text-destructive-foreground">
-                <span>Delete</span>
-                <Icons.delete />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : null}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size={'icon'} className="absolute top-2 right-2">
+              <span className="sr-only">Open menu</span>
+              <Icons.more className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              className="flex gap-1 justify-between items-center"
+              onClick={() => setShowEditForm((prev) => !prev)}
+            >
+              <span>{showEditForm ? 'Details' : 'Edit'}</span>
+              {showEditForm ? null : <Icons.edit />}
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex gap-1 justify-between items-center focus:bg-destructive focus:text-destructive-foreground">
+              <span>Delete</span>
+              <Icons.delete />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <CardHeader>
           <CardTitle className="flex gap-2 items-center text-primary">
             <Icons.strategy /> Strategy

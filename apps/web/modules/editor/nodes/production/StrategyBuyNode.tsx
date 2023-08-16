@@ -7,6 +7,7 @@ import { useStrategy } from '../../../strategies/useStrategy'
 import { useEffect } from 'react'
 import { StrategyBuyType } from '@market-connector/types'
 import { useEditor } from '../../useEditor'
+import { Handle, Position } from 'reactflow'
 
 type StrategyBuyNodeProps = CustomNodeProps<IStrategyBuyNode>
 
@@ -41,21 +42,26 @@ export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodePr
         })
   }, [])
 
-  return strategyBuy?.id ? (
-    <StrategyBuy
-      nodeId={id}
-      form={patchStrategyBuyForm}
-      onSubmit={onSubmitStrategyBuyPatch}
-      isLoading={isLoading}
-      strategyBuy={strategyBuy}
-    />
-  ) : (
-    <CreateStrategyBuyForm
-      nodeId={id}
-      form={createStrategyBuyForm}
-      onSubmit={onSubmitStrategyBuyCreate}
-      isLoading={isLoading}
-      baseStrategyBuy={strategyBuy?.strategyBuy}
-    />
+  return (
+    <>
+      <Handle type="target" position={Position.Top} />
+      {strategyBuy?.id ? (
+        <StrategyBuy
+          nodeId={id}
+          form={patchStrategyBuyForm}
+          onSubmit={onSubmitStrategyBuyPatch}
+          isLoading={isLoading}
+          strategyBuy={strategyBuy}
+        />
+      ) : (
+        <CreateStrategyBuyForm
+          nodeId={id}
+          form={createStrategyBuyForm}
+          onSubmit={onSubmitStrategyBuyCreate}
+          isLoading={isLoading}
+          baseStrategyBuy={strategyBuy?.strategyBuy}
+        />
+      )}
+    </>
   )
 }
