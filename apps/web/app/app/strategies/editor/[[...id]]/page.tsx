@@ -16,7 +16,7 @@ import {
 import { AddStrategyBuyNode } from '../../../../../modules/editor/nodes/shared/AddStrategyBuyNode'
 import { StrategyApi } from '../../../../../modules/strategies/api'
 import { LocalStorageKeys } from '../../../../../types'
-import { addBuyStrategyNodeFactory } from '../../../../../modules/editor/nodes/shared/nodeFactory'
+import { addBuyStrategyNodeFactory, nodeConfigs } from '../../../../../modules/editor/nodes/shared/nodeFactory'
 
 const nodeTypes = {
   StrategyNode: StrategyNode,
@@ -38,8 +38,13 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
   nodes.push(strategyNode)
 
   if (!strategy.strategyBuy.length) {
-    // nodes.push(addBuyStrategyNodeFactory({ parentId: strategyNode.id, x: node?.width ?? 0 / 2, y: node?.height ?? 0 + 20 }))
-    nodes.push(addBuyStrategyNodeFactory({ parentNodeId: strategyNode.id, x: 123, y: 420 }))
+    nodes.push(
+      addBuyStrategyNodeFactory({
+        parentNodeId: strategyNode.id,
+        x: nodeConfigs.StrategyNode.width / 2 - nodeConfigs.AddStrategyBuyNode.width / 2,
+        y: nodeConfigs.StrategyNode.height + nodeConfigs.gap.y,
+      }),
+    )
   }
 
   // const addBuyStrategy: IAddStrategyBuyNode = {
