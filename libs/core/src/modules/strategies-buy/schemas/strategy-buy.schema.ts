@@ -1,15 +1,17 @@
 import { IStrategyBuy, IStrategyBuy_Condition, Id, StrategyBuyType } from '@market-connector/types'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import { Condition } from '../../conditions'
+import { User } from '../../users'
 
 export type StrategyBuyDocument = mongoose.HydratedDocument<StrategyBuy>
 
 @Schema({ _id: false })
 class StrategyBuyCondition implements IStrategyBuy_Condition {
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'conditions' })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: Condition.name })
   readonly id: Id
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'conditions' })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: Condition.name })
   readonly condition: Id
 
   @Prop({ required: true, type: Boolean })
@@ -23,7 +25,7 @@ export class StrategyBuy implements IStrategyBuy {
   _id: string
   type: StrategyBuyType
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name })
   user: string
 
   @Prop({ required: true, type: String })

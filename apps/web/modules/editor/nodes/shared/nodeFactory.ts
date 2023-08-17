@@ -29,6 +29,30 @@ export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: numbe
   },
 }
 
+export const addNodeFactory = ({
+  parentNodeId,
+  x,
+  y,
+  variant,
+  text,
+}: {
+  parentNodeId: CustomNodeId
+  x: number
+  y: number
+  variant: CustomNodeType
+  text: string
+}): IAddNode => ({
+  id: 'Add_Temp',
+  type: 'AddNode',
+  position: { x, y },
+  data: {
+    parentNodeId,
+    variant,
+    text,
+  },
+  parentNode: parentNodeId,
+})
+
 export const strategyNodeFactory = ({
   strategy,
 }: {
@@ -66,26 +90,24 @@ export const strategyBuyNodeFactory = ({
   }
 }
 
-export const addNodeFactory = ({
-  parentNodeId,
+export const conditionNodeFactory = ({
+  strategyBuy,
+  parentNode,
   x,
   y,
-  variant,
-  text,
 }: {
-  parentNodeId: CustomNodeId
+  strategyBuy?: IStrategy_StrategyBuyExpanded
+  parentNode: CustomNodeId
   x: number
   y: number
-  variant: CustomNodeType
-  text: string
-}): IAddNode => ({
-  id: 'Add_Temp',
-  type: 'AddNode',
-  position: { x, y },
-  data: {
-    parentNodeId,
-    variant,
-    text,
-  },
-  parentNode: parentNodeId,
-})
+}): IStrategyBuyNode => {
+  return {
+    id: `StrategyBuy_${strategyBuy?.id ?? 'Temp'}`,
+    type: 'StrategyBuyNode',
+    position: { x, y },
+    data: {
+      strategyBuy,
+    },
+    parentNode,
+  }
+}

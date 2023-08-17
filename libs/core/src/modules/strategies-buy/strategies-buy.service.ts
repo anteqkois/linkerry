@@ -7,6 +7,7 @@ import { CreateStrategyBuyDto, StrategyBuyConditionDto } from './dro/create.dto'
 import { UpdateStrategyBuyDto } from './dro/update.dto'
 import { StrategyBuyStaticMarket } from './schemas/strategy-buy-static-market.schema'
 import { PatchStrategytBuyDto } from './dro/patch.dto'
+import { CreateStrategyBuyConditionDto } from './dro/conditions/create.dto'
 
 @Injectable()
 export class StrategiesBuyService {
@@ -39,7 +40,7 @@ export class StrategiesBuyService {
         parsedConditions.push({ active: c.active, condition: newCondition._id, id: newCondition._id })
         continue
       }
-      throw new UnprocessableEntityException('Invalid Strategy Buy')
+      throw new UnprocessableEntityException('Invalid condition input')
     }
     return parsedConditions
   }
@@ -63,5 +64,26 @@ export class StrategiesBuyService {
 
   async patch(dto: PatchStrategytBuyDto, userId: Id, id: Id) {
     return this.#safeUpdateOne(dto, userId, id)
+  }
+
+  // Conditions
+  async createCondition(dto: CreateStrategyBuyConditionDto, userId: Id, id: Id) {
+    const conditions = await this.#safeConditionParse(
+      [
+        {
+          active: dto.active,
+          conditionCreateInput: dto,
+        },
+      ],
+      userId,
+    )
+
+    const strategyBuy = await this.strategyBuyStaticMarketModel
+      .findOneAndUpdate({ _id: id, user: userId }, { $push: { conditions: conditions[0] } }, { new: true })
+      .populate(['conditions.condition'])
+      .exec()
+    if (!strategyBuy) throw new NotFoundException('Can not find condition buy')
+
+    return strategyBuy.conditions.find((condition) => condition.id?.toString() === conditions[0].id?.toString())
   }
 }

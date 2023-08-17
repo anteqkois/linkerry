@@ -2,6 +2,8 @@ import {
   AlertProvider,
   ConditionOperator,
   ConditionType,
+  IStrategyBuy_ConditionCreateInput,
+  IStrategyBuy_ConditionCreateResponse,
   IStrategyBuy_CreateInput,
   IStrategyBuy_CreateResponse,
   IStrategyBuy_UpdateInput,
@@ -80,6 +82,10 @@ describe('POST /api/strategies-buy', () => {
 
     expect(status).toBe(200)
   })
+})
+
+describe('POST /api/strategies-buy/:id/conditions', () => {
+  let lastStrategyBuyData: IStrategyBuy_CreateResponse
 
   it('condition is created when strategy buy input include data for creating condition', async () => {
     const inputWithCondition: IStrategyBuy_CreateInput = {
@@ -113,5 +119,66 @@ describe('POST /api/strategies-buy', () => {
     expect(data.conditions[0].condition).toHaveLength(24)
     expect(data.conditions[0].id).toBeDefined()
     expect(data.conditions[0].id).toHaveLength(24)
+    lastStrategyBuyData = data
   })
+
+  it('condition can be created and added usign strategy buy endpoint', async () => {
+    const inputCondition: IStrategyBuy_ConditionCreateInput = {
+      active: true,
+      name: 'Added condition by strategies buy endpoint',
+      type: ConditionType.Alert,
+      isMarketProvider: false,
+      eventValidityUnix: 8473129749023,
+      operator: ConditionOperator.Crossing,
+      requiredValue: 1,
+      alert: {
+        provider: AlertProvider.TradingView,
+      },
+    }
+
+    const { status, data } = await axios.post<IStrategyBuy_ConditionCreateResponse>(
+      `/strategies-buy/${lastStrategyBuyData._id}/conditions`,
+      inputCondition,
+    )
+
+    expect(status).toBe(201)
+    expect(data.active).toBe(inputCondition.active)
+    expect(data.id).toBeDefined()
+    expect(data.id).toHaveLength(24)
+    expect(data.condition._id).toHaveLength(24)
+    expect(data.condition.alert.provider).toBe(inputCondition.alert.provider)
+    expect(data.condition.alert.handlerUrl).toBeDefined()
+    expect(data.condition.isMarketProvider).toBe(false)
+    expect(data.condition.name).toBe(inputCondition.name)
+    expect(data.condition.operator).toBe(inputCondition.operator)
+    expect(data.condition.requiredValue).toBe(inputCondition.requiredValue)
+    expect(data.condition.type).toBe(inputCondition.type)
+    expect(data.condition.triggeredTimes).toBe(0)
+  })
+
+  // it('strategy buy can be updated usign strategy endpoint', async () => {
+  //   const patchInputStrategyBuy: IStrategy_StrategyBuyPatchInput = {
+  //     active: false,
+  //     conditions: [],
+  //     name: 'Added startegy buy by strategies endpoint EDITED',
+  //     triggeredTimes: 5,
+  //   }
+
+  //   const { status, data } = await axios.patch<IStrategy_UpdateResponse>(
+  //     `/strategies/${lastStrategyData._id}/strategies-buy/${lastStrategyData.strategyBuy[1].id}`,
+  //     patchInputStrategyBuy,
+  //   )
+
+  //   expect(status).toBe(200)
+  //   expect(data.strategyBuy).toHaveLength(2)
+  //   // Check if other strategies buy are still the same
+  //   expect(data.strategyBuy[0]).toBeDefined()
+  //   expect(data.strategyBuy[0].active).toBe(lastStrategyData.strategyBuy[0].active)
+  //   expect(data.strategyBuy[0].strategyBuy).toBe(lastStrategyData.strategyBuy[0].strategyBuy)
+  //   expect(data.strategyBuy[0].id).toBe(lastStrategyData.strategyBuy[0].id)
+
+  //   expect(data.strategyBuy[1]).toBeDefined()
+  //   expect(data.strategyBuy[1].active).toBe(patchInputStrategyBuy.active)
+  //   lastStrategyData = data
+  // })
 })

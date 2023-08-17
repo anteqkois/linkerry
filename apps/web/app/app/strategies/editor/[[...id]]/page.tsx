@@ -42,7 +42,6 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
   if (!strategy.strategyBuy.length) {
     const AddNode = addNodeFactory({
       parentNodeId: strategyNode.id,
-      // x: nodeConfigs.StrategyNode.width / 2 - nodeConfigs.AddNode.width / 2,
       x: nodeConfigs.StrategyNode.width + nodeConfigs.gap.x,
       y: nodeConfigs.StrategyNode.height + nodeConfigs.gap.y,
       variant: CustomNodeType.StrategyBuyNode,
@@ -65,7 +64,7 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
       const strategyBuyNode = strategyBuyNodeFactory({
         parentNode: strategyNode.id,
         strategyBuy: sb,
-        x: 0,
+        x: nodeConfigs.StrategyNode.width / 2 + nodeConfigs.gap.x,
         y: yOffset,
       })
       yOffset += nodeConfigs.StrategyBuyNode.height + nodeConfigs.gap.y
@@ -80,21 +79,22 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
         }),
       )
       lastNode = strategyBuyNode
-      // TODO Generate Conditions !
 
+      // TODO Generate Conditions !
       if (index === strategy.strategyBuy.length) {
         // Add Add Node
         const AddNode = addNodeFactory({
           parentNodeId: lastNode.id,
-          x: nodeConfigs.StrategyBuyNode.width / 2,
+          x: nodeConfigs.StrategyBuyNode.width,
           y: nodeConfigs.StrategyBuyNode.height + nodeConfigs.gap.y,
           variant: CustomNodeType.ConditionNode,
           text: 'Condition',
         })
         nodes.push(AddNode)
+
         edges.push(
           defaultEdgeFactory({
-            sourceNodeId: strategyNode.id,
+            sourceNodeId: lastNode.id,
             targetNodeId: AddNode.id,
           }),
         )

@@ -5,6 +5,7 @@ import {
   IStrategy_PatchInput,
   IStrategy_PatchResponse,
   IStrategy_StrategyBuyCreateInput,
+  IStrategy_StrategyBuyCreateResponse,
   IStrategy_StrategyBuyPatchInput,
   IStrategy_UpdateInput,
   IStrategy_UpdateResponse,
@@ -139,6 +140,7 @@ describe('CRUD /api/strategies', () => {
 
 describe('CRUD /api/strategies/:id/strategies-buy', () => {
   let lastStrategyData: IStrategy_CreateResponse
+  let lastStrategyBuyData: IStrategy_StrategyBuyCreateResponse
 
   it('strategy buy is created when strategy input include data for creating strategy buy', async () => {
     const inputWithStrategyBuy: IStrategy_CreateInput = {
@@ -179,23 +181,25 @@ describe('CRUD /api/strategies/:id/strategies-buy', () => {
       type: StrategyBuyType.StrategyBuyStaticMarket,
     }
 
-    const { status, data } = await axios.post<IStrategy_UpdateResponse>(
+    const { status, data } = await axios.post<IStrategy_StrategyBuyCreateResponse>(
       `/strategies/${lastStrategyData._id}/strategies-buy`,
       inputStrategyBuy,
     )
 
     expect(status).toBe(201)
-    expect(data.strategyBuy[1]).toBeDefined()
-    expect(data.strategyBuy).toHaveLength(2)
-    expect(data.strategyBuy[1].active).toBe(inputStrategyBuy.active)
-    expect(data.strategyBuy[1].strategyBuy).toBeDefined()
-    expect(data.strategyBuy[1].strategyBuy).toHaveLength(24)
-    expect(data.strategyBuy[1].id).toBeDefined()
-    expect(data.strategyBuy[1].id).toHaveLength(24)
-    lastStrategyData = data
+    expect(data.active).toBe(inputStrategyBuy.active)
+    expect(data.id).toBeDefined()
+    expect(data.id).toHaveLength(24)
+    expect(data.strategyBuy).toBeDefined()
+    expect(data.strategyBuy._id).toHaveLength(24)
+    expect(data.strategyBuy.conditions).toStrictEqual([])
+    expect(data.strategyBuy.type).toBe(inputStrategyBuy.type)
+    expect(data.strategyBuy.conditionMarketProvider).toBeUndefined()
+    expect(data.strategyBuy.triggeredTimes).toBe(0)
+    lastStrategyBuyData = data
   })
 
-  it('strategy buy can be updated usign strategy endpoint', async () => {
+  it('strategy buy can be updated using strategy endpoint', async () => {
     const patchInputStrategyBuy: IStrategy_StrategyBuyPatchInput = {
       active: false,
       conditions: [],
@@ -203,21 +207,15 @@ describe('CRUD /api/strategies/:id/strategies-buy', () => {
       triggeredTimes: 5,
     }
 
-    const { status, data } = await axios.patch<IStrategy_UpdateResponse>(
-      `/strategies/${lastStrategyData._id}/strategies-buy/${lastStrategyData.strategyBuy[1].id}`,
+    const { status, data } = await axios.patch<IStrategy_StrategyBuyCreateResponse>(
+      `/strategies/${lastStrategyData._id}/strategies-buy/${lastStrategyBuyData.id}`,
       patchInputStrategyBuy,
     )
 
     expect(status).toBe(200)
-    expect(data.strategyBuy).toHaveLength(2)
-    // Check if other strategies buy are still the same
-    expect(data.strategyBuy[0]).toBeDefined()
-    expect(data.strategyBuy[0].active).toBe(lastStrategyData.strategyBuy[0].active)
-    expect(data.strategyBuy[0].strategyBuy).toBe(lastStrategyData.strategyBuy[0].strategyBuy)
-    expect(data.strategyBuy[0].id).toBe(lastStrategyData.strategyBuy[0].id)
-
-    expect(data.strategyBuy[1]).toBeDefined()
-    expect(data.strategyBuy[1].active).toBe(patchInputStrategyBuy.active)
-    lastStrategyData = data
+    expect(data.active).toBe(patchInputStrategyBuy.active)
+    expect(data.strategyBuy.name).toBe(patchInputStrategyBuy.name)
+    expect(data.strategyBuy.triggeredTimes).toBe(patchInputStrategyBuy.triggeredTimes)
+    lastStrategyBuyData = data
   })
 })

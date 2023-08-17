@@ -38,6 +38,8 @@
     /* --strategy-execution-foreground: 0 85.7% 97.3%; */
     --positive: 142.1 70.6% 45.3%;
     --positive-foreground: 210 20% 98%;
+    --condition: 24.6 95% 53.1%;
+    --condition-foreground: 60 9.1% 97.8%;
   }
 
   .dark {
@@ -70,6 +72,9 @@
     /* --strategy-execution-foreground: 0 85.7% 97.3%; */
     --positive: 142.1 70.6% 45.3%;
     --positive-foreground: 210 20% 98%;
+    /* --strategy-execution-foreground: 0 85.7% 97.3%; */
+    --condition: 20.5 90.2% 48.2%;
+    --condition-foreground: 60 9.1% 97.8%;
   }
 
   /* Purole from 08.08.2023 */

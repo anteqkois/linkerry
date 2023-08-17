@@ -6,15 +6,25 @@ import {
   StrategyBuyType
 } from '@market-connector/types'
 import { Type } from 'class-transformer'
-import { ArrayMaxSize, IsArray, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
+import { ArrayMaxSize, IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
+import { CreateConditionDto } from '../../conditions/dto/create-condition.dto'
 
 export class StrategyBuyConditionDto implements IStrategyBuy_Condition {
   @IsOptional()
   @IsMongoId()
   readonly id?: Id
+
+  @IsBoolean()
   readonly active: boolean
+
+  @IsOptional()
+  @IsMongoId()
   readonly condition?: string
-  readonly conditionCreateInput?: ICondition_CreateInput | undefined
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateConditionDto)
+  readonly conditionCreateInput?: ICondition_CreateInput
 }
 
 export class CreateStrategyBuyDto implements IStrategyBuy_CreateInput {

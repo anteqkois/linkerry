@@ -4,7 +4,7 @@ import { Button, Icons } from '@market-connector/ui-components/server'
 import { Handle, Position } from 'reactflow'
 import { useEditor } from '../../useEditor'
 import { CustomNode, CustomNodeProps, CustomNodeType, IAddNode } from '../types'
-import { strategyBuyNodeFactory } from './nodeFactory'
+import { nodeConfigs, strategyBuyNodeFactory } from './nodeFactory'
 import { cva } from 'class-variance-authority'
 import { cn } from '@market-connector/ui-components/utils'
 
@@ -14,6 +14,7 @@ const addButtonVariants = cva('gap-1', {
       AddNode: '',
       StrategyBuyNode: 'text-strategy-buy border-strategy-buy/50',
       StrategyNode: '',
+      ConditionNode: 'text-condition border-condition/50',
     } as Record<CustomNodeType, string>,
   },
   defaultVariants: {
@@ -27,6 +28,7 @@ const addButtonHandleVariants = cva('h-2 w-8 border-none rounded-sm', {
       AddNode: '',
       StrategyBuyNode: '!bg-strategy-buy',
       StrategyNode: '',
+      ConditionNode: '!bg-condition',
     } as Record<CustomNodeType, string>,
   },
   defaultVariants: {
@@ -48,9 +50,18 @@ export function AddNode({ data: { parentNodeId, variant, text }, id, xPos, yPos 
       case CustomNodeType.StrategyBuyNode:
         newNode = strategyBuyNodeFactory({
           parentNode: parentNodeId,
-          x: xPos,
+          x: parentNode.position.x + nodeConfigs.StrategyNode.width / 2 + nodeConfigs.gap.x,
+          // x: xPos,
           y: yPos,
-          // x: parentNode.position.x,
+          // y: (parentNode.height ?? 0) + nodeConfigs.gap.y,
+        })
+        break
+      case CustomNodeType.ConditionNode:
+        newNode = conditionNodeFactory({
+          parentNode: parentNodeId,
+          x: parentNode.position.x + nodeConfigs.StrategyNode.width / 2 + nodeConfigs.gap.x,
+          // x: xPos,
+          y: yPos,
           // y: (parentNode.height ?? 0) + nodeConfigs.gap.y,
         })
         break

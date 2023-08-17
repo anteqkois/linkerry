@@ -51,7 +51,7 @@ export class StrategiesService {
         strategies.push({ active: sb.active, id: newStrategyBuy._id, strategyBuy: newStrategyBuy._id })
         continue
       }
-      throw new UnprocessableEntityException('Invalid Strategy Buy')
+      throw new UnprocessableEntityException('Invalid strategy buy input')
     }
     return strategies
   }

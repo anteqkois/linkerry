@@ -70,6 +70,10 @@ module.exports = {
             foreground: 'hsl(var(--strategy-execution-foreground))',
           },
         },
+        condition:{
+          DEFAULT: 'hsl(var(--condition))',
+          foreground: 'hsl(var(--condition-foreground))',
+        },
         positive: {
           DEFAULT: 'hsl(var(--positive))',
           foreground: 'hsl(var(--positive-foreground))',

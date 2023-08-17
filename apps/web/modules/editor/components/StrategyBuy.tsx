@@ -13,13 +13,14 @@ import {
   Input,
   Switch,
 } from '@market-connector/ui-components/client'
-import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@market-connector/ui-components/server'
+import { Button, Card, CardContent, CardHeader, CardTitle, Icons, Muted } from '@market-connector/ui-components/server'
 import { useCallback, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { IStrategy_StrategyBuyPatchSchema } from '../../strategies/validations'
 import { IStrategyBuyNode } from '../nodes'
 import { useEditor } from '../useEditor'
 import { Property } from './Property'
+import { Handle, Position } from 'reactflow'
 
 export interface StrategyBuyProps {
   form: UseFormReturn<IStrategy_StrategyBuyPatchSchema, any, undefined>
@@ -164,7 +165,18 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
               <Property label="Name" value={strategyBuy.strategyBuy?.name} />
               <Property label="Type" value={strategyBuy.strategyBuy?.type} />
               <Property label="Active" value={strategyBuy.active} />
-              <Property label="Conditions Count" value={strategyBuy.strategyBuy?.conditions.length} />
+              <Property label="Conditions Count" clasaName="relative">
+                <Muted>
+                  {strategyBuy.strategyBuy?.conditions.length}
+                  <Handle
+                    type="source"
+                    id="condition"
+                    position={Position.Right}
+                    className="!bg-condition h-8 w-2 border-none rounded-sm -right-7"
+                    isConnectableStart={false}
+                  />
+                </Muted>
+              </Property>
               <Property label="Triggered Times" value={strategyBuy.strategyBuy?.triggeredTimes} />
               {strategyBuy.strategyBuy?.conditionMarketProvider ? (
                 <Property label="Triggered Times" value={strategyBuy.strategyBuy?.conditionMarketProvider} />

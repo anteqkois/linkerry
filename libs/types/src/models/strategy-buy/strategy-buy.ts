@@ -1,5 +1,5 @@
 import { Id } from '../../utils'
-import { ICondition_CreateInput } from '../condition'
+import { ICondition, ICondition_CreateInput } from '../condition'
 import { IStrategyBuy_DynamicMarket_Property } from './strategy-dynamic-market'
 import { StrategyBuy_StaticMarket_Property } from './strategy-static-market'
 
@@ -14,7 +14,15 @@ export interface IStrategyBuy_Condition {
   active: boolean
 }
 
-export interface IStrategyBuy extends Partial<StrategyBuy_StaticMarket_Property>, Partial<IStrategyBuy_DynamicMarket_Property> {
+export interface IStrategyBuy_ConditionExpand {
+  id?: Id
+  condition?: ICondition
+  active: boolean
+}
+
+export interface IStrategyBuy
+  extends Partial<StrategyBuy_StaticMarket_Property>,
+    Partial<IStrategyBuy_DynamicMarket_Property> {
   _id: Id
   user: Id
   type: StrategyBuyType
@@ -28,9 +36,9 @@ export interface IStrategyBuy extends Partial<StrategyBuy_StaticMarket_Property>
 export interface IStrategyBuy_CreateInput {
   type: StrategyBuyType
   name: string
-  conditions: (IStrategyBuy_Condition & {conditionCreateInput?: ICondition_CreateInput})[]
+  conditions: (IStrategyBuy_Condition & { conditionCreateInput?: ICondition_CreateInput })[]
 }
-export interface IStrategyBuy_CreateResponse extends IStrategyBuy{}
+export interface IStrategyBuy_CreateResponse extends IStrategyBuy {}
 
 // PUT
 export interface IStrategyBuy_UpdateInput extends Omit<IStrategyBuy, '_id' | 'user'> {}
@@ -39,3 +47,16 @@ export interface IStrategyBuy_UpdateResponse extends IStrategyBuy_CreateResponse
 // PATCH
 export interface IStrategyBuy_PatchInput extends Partial<IStrategyBuy_UpdateInput> {}
 export interface IStrategyBuy_PatchResponse extends IStrategyBuy_UpdateResponse {}
+
+// Conditions
+// POST
+export interface IStrategyBuy_ConditionCreateInput extends ICondition_CreateInput {
+  active: boolean
+}
+export interface IStrategyBuy_ConditionCreateResponse extends IStrategyBuy_ConditionExpand {}
+
+// PATCH
+export interface IStrategyBuy_ConditionPatchInput extends Partial<ICondition_CreateInput> {
+  active: boolean
+}
+export interface IStrategyBuy_ConditionPatchResponse extends IStrategyBuy_ConditionCreateResponse {}
