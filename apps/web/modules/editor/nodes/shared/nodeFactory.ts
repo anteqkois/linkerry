@@ -1,5 +1,5 @@
 import { IStrategyExpand, IStrategy_StrategyBuyExpanded } from '@market-connector/types'
-import { CustomNodeId, CustomNodeType, IAddStrategyBuyNode, IStrategyBuyNode, IStrategyNode } from '../types'
+import { CustomNodeId, CustomNodeType, IAddNode, IStrategyBuyNode, IStrategyNode } from '../types'
 
 type NodeConfig = {
   width: number
@@ -11,15 +11,19 @@ export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: numbe
     x: 40,
     y: 40,
   },
+  AddNode: {
+    width: 139,
+    height: 40,
+  },
   StrategyNode: {
     width: 384,
     height: 428,
   },
-  AddStrategyBuyNode: {
-    width: 139,
-    height: 40,
-  },
   StrategyBuyNode: {
+    width: 384,
+    height: 290,
+  },
+  ConditionNode: {
     width: 0,
     height: 0,
   },
@@ -62,20 +66,26 @@ export const strategyBuyNodeFactory = ({
   }
 }
 
-export const addBuyStrategyNodeFactory = ({
+export const addNodeFactory = ({
   parentNodeId,
   x,
   y,
+  variant,
+  text,
 }: {
   parentNodeId: CustomNodeId
   x: number
   y: number
-}): IAddStrategyBuyNode => ({
-  id: 'AddStrategyBuy_Temp',
-  type: 'AddStrategyBuyNode',
+  variant: CustomNodeType
+  text: string
+}): IAddNode => ({
+  id: 'Add_Temp',
+  type: 'AddNode',
   position: { x, y },
   data: {
-    parentNodeId: parentNodeId,
+    parentNodeId,
+    variant,
+    text,
   },
   parentNode: parentNodeId,
 })

@@ -21,6 +21,7 @@ import {
   CardHeader,
   CardTitle,
   Icons,
+  Muted,
 } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import { useCallback, useState } from 'react'
@@ -60,7 +61,7 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
 
   return (
     <div className={cn('w-full h-full', className)}>
-      <Card className="w-editor-element">
+      <Card className="w-editor-element border-primary/30">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size={'icon'} className="absolute top-2 right-2">
@@ -145,18 +146,30 @@ export const Strategy = ({ form, isLoading, onSubmit, className, strategy, nodeI
               </form>
             </Form>
           ) : (
-            <div className="flex flex-col ">
+            <div className="flex flex-col">
               <Property label="Name" value={strategy?.name} />
               <Property label="Type" value={strategy?.type} />
               <Property label="Active" value={strategy?.active} />
               <Property label="State" value={strategy?.state} />
               <Property label="Cycle Count" value={strategy?.triggeredTimes} />
               <Property label="Test Mode" value={strategy?.testMode} />
+              <Property label="Strategies buy" clasaName="relative">
+                <Muted>
+                  {/* ({strategy?.strategyBuy.filter((sb) => sb.active).length} active) {strategy?.strategyBuy.length} */}
+                  {strategy?.strategyBuy.length}
+                </Muted>
+                <Handle
+                  type="source"
+                  id="strategyBuy"
+                  className="!bg-strategy-buy h-8 w-2 border-none rounded-sm -right-7"
+                  position={Position.Right}
+                  isConnectableStart={false}
+                />
+              </Property>
             </div>
           )}
         </CardContent>
       </Card>
-      <Handle type="source" position={Position.Bottom} />
     </div>
   )
 }

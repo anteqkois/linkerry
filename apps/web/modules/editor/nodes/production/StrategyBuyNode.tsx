@@ -45,7 +45,7 @@ export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodePr
 
   return (
     <>
-      <Handle type="target" position={Position.Top} />
+      <Handle type="target" position={Position.Top} className='h-2 w-8 border-none rounded-sm !bg-strategy-buy' />
       {strategyBuy?.id ? (
         <StrategyBuy
           nodeId={id}

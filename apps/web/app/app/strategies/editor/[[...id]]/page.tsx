@@ -7,27 +7,28 @@ import { Edge } from 'reactflow'
 import {
   ConditionNode,
   CustomNode,
+  CustomNodeType,
   Editor,
   IStrategyNode,
   StrategyBuyNode,
   StrategyNode,
 } from '../../../../../modules/editor'
-import { AddStrategyBuyNode } from '../../../../../modules/editor/nodes/shared/AddStrategyBuyNode'
-import { StrategyApi } from '../../../../../modules/strategies/api'
-import { LocalStorageKeys } from '../../../../../types'
+import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
+import { AddNode } from '../../../../../modules/editor/nodes/shared/AddNode'
 import {
-  addBuyStrategyNodeFactory,
+  addNodeFactory,
   nodeConfigs,
   strategyBuyNodeFactory,
   strategyNodeFactory,
 } from '../../../../../modules/editor/nodes/shared/nodeFactory'
-import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
+import { StrategyApi } from '../../../../../modules/strategies/api'
+import { LocalStorageKeys } from '../../../../../types'
 
 const nodeTypes = {
   StrategyNode: StrategyNode,
   StrategyBuyNode: StrategyBuyNode,
   ConditionNode: ConditionNode,
-  AddStrategyBuyNode: AddStrategyBuyNode,
+  AddNode: AddNode,
 }
 
 const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'>) => {
@@ -37,24 +38,28 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
   const strategyNode: IStrategyNode = strategyNodeFactory({ strategy })
   nodes.push(strategyNode)
 
-  // Add AddStrategyBuyNode if no Strategy Buy or render Strategy Buy and their edges
+  // Add AddNode if no Strategy Buy or render Strategy Buy and their edges
   if (!strategy.strategyBuy.length) {
-    const AddStrategyBuyNode = addBuyStrategyNodeFactory({
+    const AddNode = addNodeFactory({
       parentNodeId: strategyNode.id,
-      x: nodeConfigs.StrategyNode.width / 2 - nodeConfigs.AddStrategyBuyNode.width / 2,
+      // x: nodeConfigs.StrategyNode.width / 2 - nodeConfigs.AddNode.width / 2,
+      x: nodeConfigs.StrategyNode.width + nodeConfigs.gap.x,
       y: nodeConfigs.StrategyNode.height + nodeConfigs.gap.y,
+      variant: CustomNodeType.StrategyBuyNode,
+      text: 'Strategy Buy',
     })
-    nodes.push(AddStrategyBuyNode)
+    nodes.push(AddNode)
 
     edges.push(
       defaultEdgeFactory({
         sourceNodeId: strategyNode.id,
-        targetNodeId: AddStrategyBuyNode.id,
+        targetNodeId: AddNode.id,
       }),
     )
   } else {
     let yOffset = nodeConfigs.StrategyNode.height + nodeConfigs.gap.y
-    let edgeSource: CustomNode = strategyNode
+    let lastNode: CustomNode = strategyNode
+    let index = 0
     for (const sb of strategy.strategyBuy) {
       // Add custom group node with border and title
       const strategyBuyNode = strategyBuyNodeFactory({
@@ -64,16 +69,36 @@ const renderStrategyNodes = (strategy: IStrategyExpand<'strategyBuy.strategyBuy'
         y: yOffset,
       })
       yOffset += nodeConfigs.StrategyBuyNode.height + nodeConfigs.gap.y
+      index++
       nodes.push(strategyBuyNode)
 
       // Add Edge
       edges.push(
         defaultEdgeFactory({
-          sourceNodeId: edgeSource.id,
+          sourceNodeId: lastNode.id,
           targetNodeId: strategyBuyNode.id,
         }),
       )
-      edgeSource = strategyBuyNode
+      lastNode = strategyBuyNode
+      // TODO Generate Conditions !
+
+      if (index === strategy.strategyBuy.length) {
+        // Add Add Node
+        const AddNode = addNodeFactory({
+          parentNodeId: lastNode.id,
+          x: nodeConfigs.StrategyBuyNode.width / 2,
+          y: nodeConfigs.StrategyBuyNode.height + nodeConfigs.gap.y,
+          variant: CustomNodeType.ConditionNode,
+          text: 'Condition',
+        })
+        nodes.push(AddNode)
+        edges.push(
+          defaultEdgeFactory({
+            sourceNodeId: strategyNode.id,
+            targetNodeId: AddNode.id,
+          }),
+        )
+      }
     }
   }
 
