@@ -7,7 +7,7 @@ import {
 } from '@market-connector/types'
 import { Type } from 'class-transformer'
 import { ArrayMaxSize, IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
-import { CreateConditionDto } from '../../conditions/dto/create-condition.dto'
+import { CreateConditionDto } from '../../conditions/dto/create.dto'
 
 export class StrategyBuyConditionDto implements IStrategyBuy_Condition {
   @IsOptional()

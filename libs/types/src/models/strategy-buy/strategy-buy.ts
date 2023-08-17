@@ -1,5 +1,5 @@
 import { Id } from '../../utils'
-import { ICondition, ICondition_CreateInput } from '../condition'
+import { ICondition, ICondition_CreateInput, ICondition_PatchInput } from '../condition'
 import { IStrategyBuy_DynamicMarket_Property } from './strategy-dynamic-market'
 import { StrategyBuy_StaticMarket_Property } from './strategy-static-market'
 
@@ -56,7 +56,7 @@ export interface IStrategyBuy_ConditionCreateInput extends ICondition_CreateInpu
 export interface IStrategyBuy_ConditionCreateResponse extends IStrategyBuy_ConditionExpand {}
 
 // PATCH
-export interface IStrategyBuy_ConditionPatchInput extends Partial<ICondition_CreateInput> {
+export interface IStrategyBuy_ConditionPatchInput extends Partial<ICondition_PatchInput> {
   active: boolean
 }
 export interface IStrategyBuy_ConditionPatchResponse extends IStrategyBuy_ConditionCreateResponse {}

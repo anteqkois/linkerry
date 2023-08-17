@@ -4,7 +4,7 @@ import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'
 import { AlertGateway } from './alerts/alerts.gateway'
 import { ConditionsService } from './conditions.service'
-import { CreateConditionDto } from './dto/create-condition.dto'
+import { CreateConditionDto } from './dto/create.dto'
 
 @Controller('conditions')
 export class ConditionsController {

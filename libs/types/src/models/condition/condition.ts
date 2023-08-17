@@ -41,7 +41,7 @@ export interface ICondition {
   indicator?: any
 }
 
-export interface ICondition_Populated extends Omit<ICondition, 'user'> {
+export interface IConditionExpanded extends Omit<ICondition, 'user'> {
   user: IUser
 }
 
@@ -60,5 +60,12 @@ export interface ICondition_CreateInput {
   // Indicator Condition fields
   // indicator?: any
 }
-
 export interface ICondition_CreateResponse extends ICondition {}
+
+// PUT
+export interface ICondition_UpdateInput extends Omit<ICondition, '_id' | 'user' | 'alert'> {}
+export interface ICondition_UpdateResponse extends ICondition {}
+
+// PATCH
+export interface ICondition_PatchInput extends Partial<ICondition_UpdateInput> {}
+export interface ICondition_PatchResponse extends ICondition {}

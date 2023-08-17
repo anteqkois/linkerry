@@ -8,6 +8,7 @@ import { UpdateStrategyBuyDto } from './dro/update.dto'
 import { StrategyBuyStaticMarket } from './schemas/strategy-buy-static-market.schema'
 import { PatchStrategytBuyDto } from './dro/patch.dto'
 import { CreateStrategyBuyConditionDto } from './dro/conditions/create.dto'
+import { PatchStrategyBuyConditionDto } from './dro/conditions/patch.dto'
 
 @Injectable()
 export class StrategiesBuyService {
@@ -85,5 +86,39 @@ export class StrategiesBuyService {
     if (!strategyBuy) throw new NotFoundException('Can not find condition buy')
 
     return strategyBuy.conditions.find((condition) => condition.id?.toString() === conditions[0].id?.toString())
+  }
+
+  async patchCondition(
+    dto: PatchStrategyBuyConditionDto,
+    userId: Id,
+    id: Id,
+    conditionId: Id,
+  ) {
+    const { active, ...restDto } = dto
+
+    // Update condition
+    const condition = await this.conditionsService.patch(restDto, userId, conditionId)
+
+    // Update strategy buy
+    const strategyBuy = await this.strategyBuyStaticMarketModel
+      .findOneAndUpdate(
+        {
+          _id: id,
+          user: userId,
+          'conditions.id': conditionId,
+        },
+        {
+          $set: {
+            'conditions.$.active': active,
+          },
+        },
+        { new: true },
+      )
+      .populate(['conditions.condition'])
+      .exec()
+
+    if (!strategyBuy) throw new NotFoundException(`Can not found strategy buy to update: ${id}`)
+
+    return strategyBuy.conditions.find((con) => con.id?.toString() === condition._id?.toString())
   }
 }

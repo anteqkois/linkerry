@@ -4,6 +4,8 @@ import {
   ConditionType,
   IStrategyBuy_ConditionCreateInput,
   IStrategyBuy_ConditionCreateResponse,
+  IStrategyBuy_ConditionPatchInput,
+  IStrategyBuy_ConditionPatchResponse,
   IStrategyBuy_CreateInput,
   IStrategyBuy_CreateResponse,
   IStrategyBuy_UpdateInput,
@@ -86,6 +88,7 @@ describe('POST /api/strategies-buy', () => {
 
 describe('POST /api/strategies-buy/:id/conditions', () => {
   let lastStrategyBuyData: IStrategyBuy_CreateResponse
+  let lastConditionData: IStrategyBuy_ConditionCreateResponse
 
   it('condition is created when strategy buy input include data for creating condition', async () => {
     const inputWithCondition: IStrategyBuy_CreateInput = {
@@ -154,31 +157,30 @@ describe('POST /api/strategies-buy/:id/conditions', () => {
     expect(data.condition.requiredValue).toBe(inputCondition.requiredValue)
     expect(data.condition.type).toBe(inputCondition.type)
     expect(data.condition.triggeredTimes).toBe(0)
+    lastConditionData = data
   })
 
-  // it('strategy buy can be updated usign strategy endpoint', async () => {
-  //   const patchInputStrategyBuy: IStrategy_StrategyBuyPatchInput = {
-  //     active: false,
-  //     conditions: [],
-  //     name: 'Added startegy buy by strategies endpoint EDITED',
-  //     triggeredTimes: 5,
-  //   }
+  it('condition can be updated usign strategy buy endpoint', async () => {
+    const patchInputCondition: IStrategyBuy_ConditionPatchInput = {
+      active: false,
+      name: 'EDITED condition by strategy buy',
+      requiredValue: 2,
+      operator: ConditionOperator.Equal,
+      triggeredTimes: 5
+    }
 
-  //   const { status, data } = await axios.patch<IStrategy_UpdateResponse>(
-  //     `/strategies/${lastStrategyData._id}/strategies-buy/${lastStrategyData.strategyBuy[1].id}`,
-  //     patchInputStrategyBuy,
-  //   )
+    const { status, data } = await axios.patch<IStrategyBuy_ConditionPatchResponse>(
+      `/strategies-buy/${lastStrategyBuyData._id}/conditions/${lastConditionData.id}`,
+      patchInputCondition,
+    )
 
-  //   expect(status).toBe(200)
-  //   expect(data.strategyBuy).toHaveLength(2)
-  //   // Check if other strategies buy are still the same
-  //   expect(data.strategyBuy[0]).toBeDefined()
-  //   expect(data.strategyBuy[0].active).toBe(lastStrategyData.strategyBuy[0].active)
-  //   expect(data.strategyBuy[0].strategyBuy).toBe(lastStrategyData.strategyBuy[0].strategyBuy)
-  //   expect(data.strategyBuy[0].id).toBe(lastStrategyData.strategyBuy[0].id)
-
-  //   expect(data.strategyBuy[1]).toBeDefined()
-  //   expect(data.strategyBuy[1].active).toBe(patchInputStrategyBuy.active)
-  //   lastStrategyData = data
-  // })
+    expect(status).toBe(200)
+    expect(data.active).toBe(patchInputCondition.active)
+    expect(data.id).toHaveLength(24)
+    expect(data.condition.name).toBe(patchInputCondition.name)
+    expect(data.condition.requiredValue).toBe(patchInputCondition.requiredValue)
+    expect(data.condition.operator).toBe(patchInputCondition.operator)
+    expect(data.condition.triggeredTimes).toBe(patchInputCondition.triggeredTimes)
+    lastConditionData = data
+  })
 })

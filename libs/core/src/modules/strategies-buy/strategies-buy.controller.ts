@@ -7,6 +7,7 @@ import { UpdateStrategyBuyDto } from './dro/update.dto'
 import { CreateStrategyBuyDto } from './dro/create.dto'
 import { PatchStrategytBuyDto } from './dro/patch.dto'
 import { CreateStrategyBuyConditionDto } from './dro/conditions/create.dto'
+import { PatchStrategyBuyConditionDto } from './dro/conditions/patch.dto'
 
 @UseJwtGuard()
 @Controller('strategies-buy')
@@ -36,5 +37,10 @@ export class StrategiesBuyController {
   // ): Promise<IStrategyBuy_ConditionCreateResponse> {
   ){
     return this.strategiesBuyService.createCondition(dto, user.id, id)
+  }
+
+  @Patch('/:id/conditions/:cId')
+  updateCondition(@ReqJwtUser() user: JwtUser, @Body() dto: PatchStrategyBuyConditionDto, @Param('id') id: Id, @Param('cId') cId: Id) {
+    return this.strategiesBuyService.patchCondition(dto, user.id, id, cId)
   }
 }

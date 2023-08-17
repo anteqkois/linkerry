@@ -7,7 +7,7 @@ import {
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { EventsService } from '../../../events/events.service'
-import { ConditionAlertDto } from '../../dto/create-condition.dto'
+import { ConditionAlertDto } from '../../dto/create.dto'
 import { AlertProviderGateway } from '../../gateways'
 import { TriggerAlertTradingViewDto } from './dto/trigger-trading-view.dto'
 
