@@ -4,7 +4,7 @@ import { Button, Icons } from '@market-connector/ui-components/server'
 import { Handle, Position } from 'reactflow'
 import { useEditor } from '../../useEditor'
 import { CustomNode, CustomNodeProps, CustomNodeType, IAddNode } from '../types'
-import { nodeConfigs, strategyBuyNodeFactory } from './nodeFactory'
+import { conditionNodeFactory, nodeConfigs, strategyBuyNodeFactory } from './nodeFactory'
 import { cva } from 'class-variance-authority'
 import { cn } from '@market-connector/ui-components/utils'
 

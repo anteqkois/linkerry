@@ -91,12 +91,17 @@ export interface IStrategy_PatchInput extends Partial<IStrategy_UpdateInput> {}
 export interface IStrategy_PatchResponse extends IStrategy_UpdateResponse {}
 
 // Strategy Buy
+// POST
 export interface IStrategy_StrategyBuyCreateInput extends IStrategyBuy_CreateInput {
   active: boolean
 }
 export interface IStrategy_StrategyBuyCreateResponse extends IStrategy_StrategyBuyExpanded {}
 
+// PATCH
 export interface IStrategy_StrategyBuyPatchInput extends Partial<IStrategyBuy_PatchInput> {
   active?: boolean
 }
 export interface IStrategy_StrategyBuyPatchResponse extends IStrategy_StrategyBuyExpanded {}
+
+// DELETE
+export interface IStrategy_StrategyBuyDeleteResponse extends IStrategy_UpdateResponse {}

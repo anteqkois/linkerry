@@ -1,27 +1,25 @@
 'use client'
 
+import { StrategyBuyType } from '@market-connector/types'
+import { useEffect } from 'react'
+import { Handle, Position } from 'reactflow'
+import { useStrategy } from '../../../strategies/useStrategy'
 import { CreateStrategyBuyForm } from '../../components/CreateStrategyBuyForm'
 import { StrategyBuy } from '../../components/StrategyBuy'
-import { CustomNodeProps, IStrategyBuyNode } from '../types'
-import { useStrategy } from '../../../strategies/useStrategy'
-import { useEffect } from 'react'
-import { StrategyBuyType } from '@market-connector/types'
 import { useEditor } from '../../useEditor'
-import { Handle, Position } from 'reactflow'
+import { CustomNodeProps, IStrategyBuyNode } from '../types'
 
 type StrategyBuyNodeProps = CustomNodeProps<IStrategyBuyNode>
 
 export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodeProps) {
-  const { lastDbId, lastNodeId } = useEditor()
+  const { strategyId } = useEditor()
   const {
     createStrategyBuyForm,
     onSubmitStrategyBuyCreate,
     patchStrategyBuyForm,
     onSubmitStrategyBuyPatch,
     isLoading,
-  } = useStrategy({
-    strategyId: lastDbId.StrategyNode,
-  })
+  } = useStrategy({ strategyId })
 
   useEffect(() => {
     strategyBuy?.id
@@ -45,7 +43,7 @@ export function StrategyBuyNode({ data: { strategyBuy }, id }: StrategyBuyNodePr
 
   return (
     <>
-      <Handle type="target" position={Position.Top} className='h-2 w-8 border-none rounded-sm !bg-strategy-buy' />
+      <Handle type="target" position={Position.Top} className="h-2 w-8 border-none rounded-sm !bg-strategy-buy" />
       {strategyBuy?.id ? (
         <StrategyBuy
           nodeId={id}

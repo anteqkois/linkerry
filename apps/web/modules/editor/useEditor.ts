@@ -14,7 +14,7 @@ import {
   applyNodeChanges,
 } from 'reactflow'
 import { create } from 'zustand'
-import { CustomNode, CustomNodeId, CustomNodeType } from './nodes'
+import { CustomNode, CustomNodeId } from './nodes'
 import { Id } from '@market-connector/types'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 
@@ -23,10 +23,8 @@ type EditorNode = Node | CustomNode
 interface IEditorState {
   isLoading: boolean
   setIsLoading: (value: boolean) => void
-  lastNodeId: Record<CustomNodeType, CustomNodeId | undefined>
-  setLastNodeId: (key: CustomNodeType, value: CustomNodeId) => void
-  lastDbId: Record<CustomNodeType, Id | undefined>
-  setLastDbId: (key: CustomNodeType, value: Id) => void
+  strategyId?: Id
+  setStrategyId: (id: Id) => void
   nodes: EditorNode[]
   setNodes: (nodes: CustomNode[]) => void
   addNode: (node: CustomNode) => void
@@ -44,19 +42,8 @@ interface IEditorState {
 export const useEditor = create<IEditorState>((set, get) => ({
   isLoading: false,
   setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
-  lastNodeId: {
-    AddStrategyBuyNode: undefined,
-    StrategyBuyNode: undefined,
-    StrategyNode: undefined,
-  },
-  setLastNodeId: (key: CustomNodeType, value: CustomNodeId) =>
-    set(({ lastNodeId }) => ({ lastNodeId: { ...lastNodeId, [key]: value } })),
-  lastDbId: {
-    AddStrategyBuyNode: undefined,
-    StrategyBuyNode: undefined,
-    StrategyNode: undefined,
-  },
-  setLastDbId: (key: CustomNodeType, value: Id) => set(({ lastDbId }) => ({ lastDbId: { ...lastDbId, [key]: value } })),
+  strategyId: undefined,
+  setStrategyId: (id: Id) => set(({ strategyId }) => ({ strategyId: id })),
   nodes: [],
   setNodes: (nodes: CustomNode[]) => set((state) => ({ nodes })),
   addNode: (node: CustomNode) => set((state) => ({ nodes: [...state.nodes, node] })),

@@ -59,7 +59,7 @@ export const strategyNodeFactory = ({
   strategy?: IStrategyExpand<'strategyBuy.strategyBuy'>
 }): IStrategyNode => {
   return {
-    id: `Strategy_${strategy?._id ?? 'Temp'}`,
+    id: `Strategy_${strategy?._id ?? 'temp'}`,
     type: 'StrategyNode',
     position: { x: 0, y: 0 },
     data: {
@@ -80,7 +80,7 @@ export const strategyBuyNodeFactory = ({
   y: number
 }): IStrategyBuyNode => {
   return {
-    id: `StrategyBuy_${strategyBuy?.id ?? 'Temp'}`,
+    id: `StrategyBuy_${strategyBuy?.id ?? 'temp'}`,
     type: 'StrategyBuyNode',
     position: { x, y },
     data: {
@@ -102,7 +102,7 @@ export const conditionNodeFactory = ({
   y: number
 }): IStrategyBuyNode => {
   return {
-    id: `StrategyBuy_${strategyBuy?.id ?? 'Temp'}`,
+    id: `StrategyBuy_${strategyBuy?.id ?? 'temp'}`,
     type: 'StrategyBuyNode',
     position: { x, y },
     data: {

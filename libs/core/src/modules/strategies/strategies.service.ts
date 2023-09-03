@@ -1,9 +1,4 @@
-import {
-  IStrategy,
-  IStrategy_GetQuery,
-  IStrategy_StrategyBuy,
-  Id,
-} from '@market-connector/types'
+import { IStrategy, IStrategy_GetQuery, IStrategy_StrategyBuy, Id } from '@market-connector/types'
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
@@ -111,12 +106,7 @@ export class StrategiesService {
     return strategy.strategyBuy.find((sb) => sb.id?.toString() === strategyBuy[0].id?.toString())
   }
 
-  async patchStrategyBuy(
-    dto: PatchStrategyStrategyBuyDto,
-    userId: Id,
-    id: Id,
-    strategyBuyId: Id,
-  ) {
+  async patchStrategyBuy(dto: PatchStrategyStrategyBuyDto, userId: Id, id: Id, strategyBuyId: Id) {
     const { active, ...restDto } = dto
 
     // Update strategy buy
@@ -143,5 +133,17 @@ export class StrategiesService {
     if (!strategy) throw new NotFoundException(`Can not found strategy to update: ${id}`)
 
     return strategy.strategyBuy.find((sb) => sb.id?.toString() === strategyBuy.id?.toString())
+  }
+
+  async removeStrategyBuy(userId: Id, id: Id, strategyBuyId: Id) {
+    const strategy = await this.strategyStaticMarketModel
+      .findOneAndUpdate(
+        { _id: id, user: userId },
+        { $pull: { strategyBuy: { id: strategyBuyId } } },
+        { new: true },
+      )
+      .exec()
+    if (!strategy) throw new NotFoundException('Can not find strategy')
+    return !!strategy
   }
 }

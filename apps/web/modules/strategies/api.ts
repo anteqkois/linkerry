@@ -10,6 +10,7 @@ import {
   IStrategy_PatchInput,
   IStrategy_StrategyBuyCreateInput,
   IStrategy_StrategyBuyCreateResponse,
+  IStrategy_StrategyBuyDeleteResponse,
   IStrategy_StrategyBuyPatchInput,
   IStrategy_StrategyBuyPatchResponse,
   IStrategy_UpdateInput,
@@ -56,5 +57,9 @@ export class StrategyApi {
 
   static async patchStrategyBuy(id: Id, sId:Id, input: IStrategy_StrategyBuyPatchInput) {
     return apiClient.patch<IStrategy_StrategyBuyPatchResponse>(`/strategies/${id}/strategies-buy/${sId}`, input)
+  }
+
+  static async removeStrategyBuy(id: Id, sId:Id) {
+    return apiClient.delete<IStrategy_StrategyBuyDeleteResponse>(`/strategies/${id}/strategies-buy/${sId}`)
   }
 }

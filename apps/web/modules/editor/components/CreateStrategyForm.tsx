@@ -12,6 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Switch,
 } from '@market-connector/ui-components/client'
 import {
   Button,
@@ -38,7 +39,7 @@ export interface StrategyFormProps {
 export const CreateStrategyForm = ({ form, isLoading, onSubmit, nodeId }: StrategyFormProps) => {
   const pathname = usePathname()
   const { push } = useRouter()
-  const { updateNode} = useEditor()
+  const { updateNode } = useEditor()
 
   // const handleSubmit = useCallback(
   //   async (formData: IStrategy_StaticMarketCreateSchema) => {
@@ -59,15 +60,14 @@ export const CreateStrategyForm = ({ form, isLoading, onSubmit, nodeId }: Strate
   const handleSubmit = useCallback(
     async (formData: IStrategy_StaticMarketCreateSchema) => {
       const res = await onSubmit(formData)
-      if (res)
-      push(`${pathname}/${res._id}`)
+      if (res) push(`${pathname}/${res._id}`)
     },
     [onSubmit, updateNode],
   )
 
   return (
     <div className="w-full h-full">
-      <Card>
+      <Card className="border-primary/30">
         <CardHeader>
           <CardTitle>Strategy</CardTitle>
           <CardDescription>Every strategy creation starts with giving a name 🚀.</CardDescription>
@@ -113,6 +113,34 @@ export const CreateStrategyForm = ({ form, isLoading, onSubmit, nodeId }: Strate
                       </SelectContent>
                     </Select>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="active"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border py-2 px-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Active</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} aria-readonly />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="testMode"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border py-2 px-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Test Mode</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} aria-readonly />
+                    </FormControl>
                   </FormItem>
                 )}
               />

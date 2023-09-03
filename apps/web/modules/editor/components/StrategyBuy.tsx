@@ -12,15 +12,17 @@ import {
   FormMessage,
   Input,
   Switch,
+  useToast,
 } from '@market-connector/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons, Muted } from '@market-connector/ui-components/server'
 import { useCallback, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import { Handle, Position } from 'reactflow'
+import { StrategyApi } from '../../strategies/api'
 import { IStrategy_StrategyBuyPatchSchema } from '../../strategies/validations'
 import { IStrategyBuyNode } from '../nodes'
 import { useEditor } from '../useEditor'
 import { Property } from './Property'
-import { Handle, Position } from 'reactflow'
 
 export interface StrategyBuyProps {
   form: UseFormReturn<IStrategy_StrategyBuyPatchSchema, any, undefined>
@@ -51,6 +53,33 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
     [nodeId, updateNode, onSubmit],
   )
 
+  const handleRemoveStrategyBuy = async () => {
+    // try {
+    //   if (!lastDbId.StrategyNode) {
+    //     toast({
+    //       variant: 'destructive',
+    //       content: 'Can not find strategy id. Refresh page and try again.',
+    //     })
+    //     return
+    //   }
+    //   // Remove form db
+    //   const { status } = await StrategyApi.removeStrategyBuy(lastDbId.StrategyNode[0], strategyBuy.id)
+    //   if (status !== 200) throw new Error('Invalid delete response')
+
+    //   // Remove Strategy Buy Node
+    //   console.log(nodeId)
+    //   deleteNode(nodeId)
+    //   // Remove Strategy Buy Edges
+    //   // Remove Add Condition Node/Edges
+    // } catch (error) {
+    //   console.log(error)
+    //   toast({
+    //     variant: 'destructive',
+    //     content: 'Something get wrong.',
+    //   })
+    // }
+  }
+
   return (
     <div className="w-full h-full">
       <Card className="w-editor-element">
@@ -70,8 +99,11 @@ export const StrategyBuy = ({ form, isLoading, onSubmit, strategyBuy, nodeId }: 
               {showEditForm ? null : <Icons.edit />}
             </DropdownMenuItem>
             {/* <DropdownMenuItem>Move higher</DropdownMenuItem> */}
-            <DropdownMenuItem className="flex gap-1 justify-between items-center focus:bg-destructive focus:text-destructive-foreground">
-              <span>Delete</span>
+            <DropdownMenuItem
+              className="flex gap-1 justify-between items-center focus:bg-destructive focus:text-destructive-foreground"
+              onClick={handleRemoveStrategyBuy}
+            >
+              <span>Remove</span>
               <Icons.delete />
             </DropdownMenuItem>
           </DropdownMenuContent>

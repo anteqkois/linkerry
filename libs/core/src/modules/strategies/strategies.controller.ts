@@ -1,5 +1,5 @@
 import { IStrategy_CreateResponse, IStrategy_GetOneResponse, Id, JwtUser } from '@market-connector/types'
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UsePaginatedResourceInterceptor } from '../../lib/utils'
 import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'
@@ -54,5 +54,10 @@ export class StrategiesController {
   @Patch('/:id/strategies-buy/:sId')
   updateStrategyBuy(@ReqJwtUser() user: JwtUser, @Body() dto: PatchStrategyStrategyBuyDto, @Param('id') id: Id, @Param('sId') sId: Id) {
     return this.strategiesService.patchStrategyBuy(dto, user.id, id, sId)
+  }
+
+  @Delete('/:id/strategies-buy/:sId')
+  removeStrategyBuy(@ReqJwtUser() user: JwtUser, @Param('id') id: Id, @Param('sId') sId: Id) {
+    return this.strategiesService.removeStrategyBuy(user.id, id, sId)
   }
 }

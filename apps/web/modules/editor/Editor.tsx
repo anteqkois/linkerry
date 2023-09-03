@@ -20,16 +20,14 @@ interface EditorProps {
 }
 
 export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
-  const { nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange, onConnect, setLastDbId, setLastNodeId } =
-    useEditor()
+  const { nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange, onConnect, setStrategyId } = useEditor()
   const reactFlowWrapper = useRef(null)
 
   useEffect(() => {
     // setup inital editor state
     setNodes(initalData.nodes)
 
-    setLastDbId('StrategyNode', initalData.nodes[0]?.id?.split('_')?.[1])
-    setLastNodeId('StrategyNode', initalData.nodes[0]?.id)
+    setStrategyId(initalData.nodes[0]?.id)
     // TODO add some kind of guard to prevent lost state
     // return () => {}
   }, [initalData.nodes])
