@@ -15,10 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@market-connector/connectors-framework": ["libs/connectors/framework/src/index.ts"],
       "@market-connector/core": ["libs/core/src/index.ts"],
+      "@market-connector/shared": ["libs/shared/src/index.ts"],
       "@market-connector/tools": ["tools/index.ts"],
       "@market-connector/types": ["libs/types/src/index.ts"],
-      // "@market-connector/ui-components": ["libs/ui-components/src/index.ts"],
       "@market-connector/ui-components/*": ["libs/ui-components/src/*"]
     }
   },
