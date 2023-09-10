@@ -1,1 +1,2 @@
-export * from './lib/connectors-framework'
+export * from './lib/connectors';
+
