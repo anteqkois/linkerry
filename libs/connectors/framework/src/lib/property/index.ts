@@ -1,5 +1,5 @@
 import { BasicAuthProperty } from './base-auth'
-import { DropdownProperty } from './dropdown'
+import { DropdownProperty, DropdownValue } from './dropdown'
 import { TextProperty } from './text'
 
 export enum PropertyType {
@@ -58,28 +58,32 @@ export type ConnectorAuthProperty = BasicAuthProperty<boolean>
 // | OAuth2Property<boolean, OAuth2Props>
 // | SecretTextProperty<boolean>
 
-export type ConnectorProperty = TextProperty<boolean> | DropdownProperty
+export type ConnectorProperty = TextProperty | DropdownProperty
 
 export interface ConnectorPropertyMap {
   [name: string]: ConnectorProperty
 }
 
-export type PropertyConfig<S, T extends PropertyType, R extends boolean> = Omit<BaseProperty & PropertyValue<S, T, R>, 'type' | 'valueSchema'>
-
 // export type ConnectorPropValueSchema<T extends ConnectorProperty | ConnectorAuthProperty> =
 export type ConnectorPropValueSchema<T extends ConnectorProperty> = T extends undefined
-  ? undefined
-  : T extends { required: true }
-  ? T['valueSchema']
-  : T['valueSchema'] | undefined
+? undefined
+: T extends { required: true }
+? T['valueSchema']
+: T['valueSchema'] | undefined
 
 export type StaticPropsValue<T extends ConnectorPropertyMap> = {
   [P in keyof T]: ConnectorPropValueSchema<T[P]>
 }
 
+type Properties<T> = Omit<T, "valueSchema" | "type">;
+
 export const Property = {
-  Text<R extends boolean>(config: PropertyConfig<string, PropertyType.Text, R>): R extends true ? TextProperty<true> : TextProperty<false> {
+  // Text<R extends boolean>(config: PropertyConfig<string, PropertyType.Text, R>): R extends true ? TextProperty<true> : TextProperty<false> {
+  Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
     return { ...config, type: PropertyType.Text } as unknown as R extends true ? TextProperty<true> : TextProperty<false>
+  },
+  Dropdown<R extends boolean, V extends DropdownValue>(config: Properties<DropdownProperty<R, V>>): R extends true ? DropdownProperty<true, V> : DropdownProperty<false, V> {
+    return { ...config, type: PropertyType.Dropdown } as unknown as R extends true ? DropdownProperty<true, V> : DropdownProperty<false, V>
   },
 }
 

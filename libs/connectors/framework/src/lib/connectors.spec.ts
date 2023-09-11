@@ -14,11 +14,22 @@ describe('connector', () => {
           name: 'minutes',
           displayName: 'Minutes',
           required: true,
-          description:''
-        })
+          description: '',
+        }),
+        timezone: Property.Dropdown({
+          description: '',
+          displayName: 'Time Zone',
+          name: 'timezone',
+          required: true,
+          options: [
+            { label: 'First option', value: 3 },
+            { label: 'Second option', value: 12 },
+          ],
+        }),
       },
       onEnable: async (ctx) => {
         ctx.propsValue.minutes
+        ctx.propsValue.timezone = 1
         // register schedulde
         // const cronExpression = `*/${ctx.propsValue.minutes} * * * *`
         // ctx.setSchedule({
