@@ -1,0 +1,240 @@
+{
+  "directoryName": "store",
+  "displayName": "Storage",
+  "logoUrl": "https://cdn.activepieces.com/pieces/store.png",
+  "actions": {
+    "get": {
+      "name": "get",
+      "displayName": "Get",
+      "description": "Get a value from storage",
+      "props": {
+        "key": {
+          "displayName": "Key",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "defaultValue": {
+          "displayName": "Default Value",
+          "required": false,
+          "type": "SHORT_TEXT"
+        },
+        "store_scope": {
+          "displayName": "Store Scope",
+          "description": "The storage scope of the value.",
+          "required": true,
+          "options": {
+            "options": [
+              {
+                "label": "Project",
+                "value": "COLLECTION"
+              },
+              {
+                "label": "Flow",
+                "value": "FLOW"
+              }
+            ]
+          },
+          "defaultValue": "COLLECTION",
+          "type": "STATIC_DROPDOWN"
+        }
+      },
+      "requireAuth": true
+    },
+    "put": {
+      "name": "put",
+      "displayName": "Put",
+      "description": "Put a value in storage",
+      "props": {
+        "key": {
+          "displayName": "Key",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "value": {
+          "displayName": "Value",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "store_scope": {
+          "displayName": "Store Scope",
+          "description": "The storage scope of the value.",
+          "required": true,
+          "options": {
+            "options": [
+              {
+                "label": "Project",
+                "value": "COLLECTION"
+              },
+              {
+                "label": "Flow",
+                "value": "FLOW"
+              }
+            ]
+          },
+          "defaultValue": "COLLECTION",
+          "type": "STATIC_DROPDOWN"
+        }
+      },
+      "requireAuth": true
+    },
+    "append": {
+      "name": "append",
+      "displayName": "Append",
+      "description": "Append to a value in storage",
+      "props": {
+        "key": {
+          "displayName": "Key",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "value": {
+          "displayName": "Value",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "separator": {
+          "displayName": "Separator",
+          "description": "Separator between added values, use \\n for newlines",
+          "required": false,
+          "type": "SHORT_TEXT"
+        },
+        "store_scope": {
+          "displayName": "Store Scope",
+          "description": "The storage scope of the value.",
+          "required": true,
+          "options": {
+            "options": [
+              {
+                "label": "Project",
+                "value": "COLLECTION"
+              },
+              {
+                "label": "Flow",
+                "value": "FLOW"
+              }
+            ]
+          },
+          "defaultValue": "COLLECTION",
+          "type": "STATIC_DROPDOWN"
+        }
+      },
+      "requireAuth": true
+    },
+    "remove_value": {
+      "name": "remove_value",
+      "displayName": "Remove",
+      "description": "Remove a value from storage",
+      "props": {
+        "key": {
+          "displayName": "Key",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "store_scope": {
+          "displayName": "Store Scope",
+          "description": "The storage scope of the value.",
+          "required": true,
+          "options": {
+            "options": [
+              {
+                "label": "Project",
+                "value": "COLLECTION"
+              },
+              {
+                "label": "Flow",
+                "value": "FLOW"
+              }
+            ]
+          },
+          "defaultValue": "COLLECTION",
+          "type": "STATIC_DROPDOWN"
+        }
+      },
+      "requireAuth": true
+    },
+    "add_to_list": {
+      "name": "add_to_list",
+      "displayName": "Add To List",
+      "description": "Add Item to a list",
+      "props": {
+        "key": {
+          "displayName": "Key",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "value": {
+          "displayName": "Value",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "ignore_if_exists": {
+          "displayName": "Ignore if value exists",
+          "required": false,
+          "type": "CHECKBOX"
+        },
+        "store_scope": {
+          "displayName": "Store Scope",
+          "description": "The storage scope of the value.",
+          "required": true,
+          "options": {
+            "options": [
+              {
+                "label": "Project",
+                "value": "COLLECTION"
+              },
+              {
+                "label": "Flow",
+                "value": "FLOW"
+              }
+            ]
+          },
+          "defaultValue": "COLLECTION",
+          "type": "STATIC_DROPDOWN"
+        }
+      },
+      "requireAuth": true
+    },
+    "remove_from_list": {
+      "name": "remove_from_list",
+      "displayName": "Remove from List",
+      "description": "Remove Item from a list",
+      "props": {
+        "key": {
+          "displayName": "Key",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "value": {
+          "displayName": "Value",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "store_scope": {
+          "displayName": "Store Scope",
+          "description": "The storage scope of the value.",
+          "required": true,
+          "options": {
+            "options": [
+              {
+                "label": "Project",
+                "value": "COLLECTION"
+              },
+              {
+                "label": "Flow",
+                "value": "FLOW"
+              }
+            ]
+          },
+          "defaultValue": "COLLECTION",
+          "type": "STATIC_DROPDOWN"
+        }
+      },
+      "requireAuth": true
+    }
+  },
+  "triggers": {},
+  "description": "Store or retrieve data from activepieces key/value database",
+  "minimumSupportedRelease": "0.5.0",
+  "name": "@activepieces/piece-store",
+  "version": "0.4.0"
+}

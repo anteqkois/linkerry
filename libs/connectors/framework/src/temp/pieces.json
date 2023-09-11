@@ -1,0 +1,270 @@
+[
+  {
+    "name": "@activepieces/piece-approval",
+    "displayName": "Approval",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/approval.svg",
+    "version": "0.1.0",
+    "minimumSupportedRelease": "0.5.4",
+    "actions": 2,
+    "triggers": 0
+  },
+  {
+    "name": "@activepieces/piece-clickup",
+    "displayName": "Clickup",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/clickup.png",
+    "version": "0.4.0",
+    "auth": {
+      "description": "",
+      "authUrl": "https://app.clickup.com/api",
+      "tokenUrl": "https://app.clickup.com/api/v2/oauth/token",
+      "required": true,
+      "scope": [],
+      "type": "OAUTH2",
+      "displayName": "Connection"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 10,
+    "triggers": 6
+  },
+  {
+    "name": "@activepieces/piece-delay",
+    "displayName": "Delay",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/delay.png",
+    "version": "0.3.1",
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 2,
+    "triggers": 0
+  },
+  {
+    "name": "@activepieces/piece-discord",
+    "displayName": "Discord",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/discord.png",
+    "version": "0.3.2",
+    "auth": {
+      "displayName": "Bot Token",
+      "description": "\nTo obtain a token, follow these steps:\n1. Go to https://discord.com/developers/applications\n2. Click on Application (or create one if you don't have one)\n3. Click on Bot\n4. Copy the token\n",
+      "required": true,
+      "type": "SECRET_TEXT"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 2,
+    "triggers": 1
+  },
+  {
+    "name": "@activepieces/piece-github",
+    "displayName": "Github",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/github.png",
+    "version": "0.3.2",
+    "auth": {
+      "required": true,
+      "authUrl": "https://github.com/login/oauth/authorize",
+      "tokenUrl": "https://github.com/login/oauth/access_token",
+      "scope": ["admin:repo_hook", "admin:org", "repo"],
+      "type": "OAUTH2",
+      "displayName": "Connection"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 1,
+    "triggers": 3
+  },
+  {
+    "name": "@activepieces/piece-google-sheets",
+    "displayName": "Google Sheets",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/google-sheets.png",
+    "version": "0.6.8",
+    "auth": {
+      "description": "",
+      "authUrl": "https://accounts.google.com/o/oauth2/auth",
+      "tokenUrl": "https://oauth2.googleapis.com/token",
+      "required": true,
+      "scope": ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive.readonly"],
+      "type": "OAUTH2",
+      "displayName": "Connection"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 6,
+    "triggers": 1
+  },
+  {
+    "name": "@activepieces/piece-google-tasks",
+    "displayName": "Google Tasks",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/google-tasks.png",
+    "version": "0.3.2",
+    "auth": {
+      "description": "",
+      "authUrl": "https://accounts.google.com/o/oauth2/auth",
+      "tokenUrl": "https://oauth2.googleapis.com/token",
+      "required": true,
+      "scope": ["https://www.googleapis.com/auth/tasks"],
+      "type": "OAUTH2",
+      "displayName": "Connection"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 1,
+    "triggers": 1
+  },
+  {
+    "name": "@activepieces/piece-hackernews",
+    "displayName": "Hacker News",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/hackernews.png",
+    "version": "0.3.0",
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 1,
+    "triggers": 0
+  },
+  {
+    "name": "@activepieces/piece-linear",
+    "displayName": "Linear",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/linear.png",
+    "version": "0.0.1",
+    "auth": {
+      "displayName": "API Key",
+      "required": true,
+      "description": "\nTo obtain your API key, follow these steps:\n\n1. Go to settings by clicking your profile-pic (top-left)\n2. Go to API section inside My Account.\n3. On Personal API keys, give label and press create key.",
+      "type": "SECRET_TEXT"
+    },
+    "minimumSupportedRelease": "0.7.1",
+    "actions": 2,
+    "triggers": 0
+  },
+  {
+    "name": "@activepieces/piece-schedule",
+    "displayName": "Schedule",
+    "description": "Trigger flow with fixed schedule",
+    "logoUrl": "https://cdn.activepieces.com/pieces/schedule.png",
+    "version": "0.1.1",
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 0,
+    "triggers": 6
+  },
+  {
+    "name": "@activepieces/piece-sendfox",
+    "displayName": "Sendfox",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/sendfox.png",
+    "version": "0.0.1",
+    "auth": {
+      "displayName": "API Key",
+      "description": "To obtain your personal token, follow these steps:\n1. Log in to your SendFox account.\n2. Visit https://sendfox.com/account/oauth to create one\n3. From OAuth Apps click on Create New Token.\n4. Enter any name you want then click create.\n5. Copy and paste your token here.",
+      "required": true,
+      "type": "SECRET_TEXT"
+    },
+    "minimumSupportedRelease": "0.7.1",
+    "actions": 3,
+    "triggers": 0
+  },
+  {
+    "name": "@activepieces/piece-slack",
+    "displayName": "Slack",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/slack.png",
+    "version": "0.3.6",
+    "auth": {
+      "description": "",
+      "authUrl": "https://slack.com/oauth/authorize",
+      "tokenUrl": "https://slack.com/api/oauth.access",
+      "required": true,
+      "scope": ["channels:read", "channels:write", "channels:history", "chat:write:bot", "groups:read", "reactions:read", "mpim:read", "users:read"],
+      "type": "OAUTH2",
+      "displayName": "Connection"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 6,
+    "triggers": 2
+  },
+  {
+    "name": "@activepieces/piece-store",
+    "displayName": "Storage",
+    "description": "Store or retrieve data from activepieces key/value database",
+    "logoUrl": "https://cdn.activepieces.com/pieces/store.png",
+    "version": "0.4.0",
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 6,
+    "triggers": 0
+  },
+  {
+    "name": "@activepieces/piece-twitter",
+    "displayName": "Twitter",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/twitter.png",
+    "version": "0.1.4",
+    "auth": {
+      "description": "\nThe steps to obtain the required credentials:\n\n1. Go to [https://developer.twitter.com/en/portal/projects-and-apps](https://developer.twitter.com/en/portal/projects-and-apps) and create a new app.\n\n2. Make sure your app is placed in a project (it won't work otherwise).\n\n3. In your app, go to Settings -> User authentication set up -> Update permission to **Read and Write** -> Fill **https://activepieces.com/redirect** in Redirect / Website Url.\n\n4. Go to Keys and tokens tab.\n\n5. Copy the following values from the **Keys and tokens** tab:\n\n    - Click on **API key and secret** and copy the following values:\n\n        **Api Key**\n\n        **Api Key Secret**\n\n    - Click on **Access token and secret** and copy the following values:\n\n        **Access Token**\n\n        **Access Token Secret**\n",
+      "props": {
+        "consumerKey": {
+          "displayName": "Api Key",
+          "description": "The api key",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "consumerSecret": {
+          "displayName": "Api Key Secret",
+          "description": "The api key secret",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "accessToken": {
+          "displayName": "Access Token",
+          "description": "The access token",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "accessTokenSecret": {
+          "displayName": "Access Token Secret",
+          "description": "The access token secret",
+          "required": true,
+          "type": "SHORT_TEXT"
+        }
+      },
+      "required": true,
+      "type": "CUSTOM_AUTH",
+      "displayName": "Connection"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 1,
+    "triggers": 0
+  },
+  {
+    "name": "@activepieces/piece-wordpress",
+    "displayName": "Wordpress",
+    "description": "",
+    "logoUrl": "https://cdn.activepieces.com/pieces/wordpress.png",
+    "version": "0.3.5",
+    "auth": {
+      "description": "\n** Enable Basic Authentication: **\n\n1. Download the plugin from: https://github.com/WP-API/Basic-Auth (Click on Code -> Download Zip)\n2. Log in to your Wordpress dashboard.\n3. Go to \"Plugins\" and click \"Add New.\"\n4. Choose \"Upload Plugin\" and select the downloaded file.\n5. Install and activate the plugin.\n",
+      "required": true,
+      "props": {
+        "username": {
+          "displayName": "Username",
+          "required": true,
+          "type": "SHORT_TEXT"
+        },
+        "password": {
+          "displayName": "Password",
+          "required": true,
+          "type": "SECRET_TEXT"
+        },
+        "website_url": {
+          "displayName": "Website URL",
+          "required": true,
+          "description": "URL of the wordpress url i.e https://www.example-website.com",
+          "type": "SHORT_TEXT"
+        }
+      },
+      "type": "CUSTOM_AUTH",
+      "displayName": "Connection"
+    },
+    "minimumSupportedRelease": "0.5.0",
+    "actions": 2,
+    "triggers": 1
+  }
+]

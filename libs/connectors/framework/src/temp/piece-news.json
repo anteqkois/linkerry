@@ -1,0 +1,31 @@
+{
+  "directoryName": "hackernews",
+  "displayName": "Hacker News",
+  "logoUrl": "https://cdn.activepieces.com/pieces/hackernews.png",
+  "actions": {
+    "fetch_top_stories": {
+      "name": "fetch_top_stories",
+      "displayName": "Fetch Top Stories",
+      "description": "Fetch top stories from hackernews",
+      "props": {
+        "number_of_stories": {
+          "displayName": "Number of Stories",
+          "required": true,
+          "defaultProcessors": [null],
+          "defaultValidators": [
+            {
+              "type": "NUMBER"
+            }
+          ],
+          "type": "NUMBER"
+        }
+      },
+      "requireAuth": true
+    }
+  },
+  "triggers": {},
+  "description": "",
+  "minimumSupportedRelease": "0.5.0",
+  "name": "@activepieces/piece-hackernews",
+  "version": "0.3.0"
+}

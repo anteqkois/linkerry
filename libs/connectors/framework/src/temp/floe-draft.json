@@ -1,0 +1,126 @@
+{
+  "id": "L4lAubiLIa19bVbPguiwL",
+  "created": "2023-09-09T19:24:32.323Z",
+  "updated": "2023-09-09T19:24:32.323Z",
+  "projectId": "yqmigdvWXbup0k1zfggbT",
+  "folderId": null,
+  "version": {
+    "id": "IzQZHXBFLt4edjKEhnivT",
+    "created": "2023-09-09T19:24:32.353Z",
+    "updated": "2023-09-09T20:05:25.174Z",
+    "flowId": "L4lAubiLIa19bVbPguiwL",
+    "displayName": "Untitled",
+    "trigger": {
+      "name": "trigger",
+      "type": "PIECE_TRIGGER",
+      "valid": true,
+      "settings": {
+        "input": {
+          "minutes": "1"
+        },
+        "pieceName": "@activepieces/piece-schedule",
+        "inputUiInfo": {
+          "currentSelectedData": ""
+        },
+        "triggerName": "every_x_minutes",
+        "pieceVersion": "~0.1.1"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "type": "PIECE",
+        "valid": true,
+        "settings": {
+          "input": {
+            "number_of_stories": "10"
+          },
+          "pieceName": "@activepieces/piece-hackernews",
+          "actionName": "fetch_top_stories",
+          "inputUiInfo": {
+            "customizedInputs": {}
+          },
+          "pieceVersion": "~0.3.0"
+        },
+        "nextAction": {
+          "name": "step_2",
+          "type": "PIECE",
+          "valid": true,
+          "settings": {
+            "input": {
+              "key": "{{trigger}}",
+              "value": "{{trigger}}",
+              "store_scope": "COLLECTION"
+            },
+            "pieceName": "@activepieces/piece-store",
+            "actionName": "put",
+            "inputUiInfo": {
+              "customizedInputs": {}
+            },
+            "pieceVersion": "~0.4.0"
+          },
+          "nextAction": {
+            "name": "step_3",
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "number_of_stories": "{{trigger}}"
+              },
+              "pieceName": "@activepieces/piece-hackernews",
+              "actionName": "fetch_top_stories",
+              "inputUiInfo": {
+                "customizedInputs": {}
+              },
+              "pieceVersion": "~0.3.0"
+            },
+            "nextAction": {
+              "name": "step_5",
+              "type": "PIECE",
+              "valid": true,
+              "settings": {
+                "input": {
+                  "key": "testnazwa",
+                  "store_scope": "COLLECTION",
+                  "defaultValue": "23r32r"
+                },
+                "pieceName": "@activepieces/piece-store",
+                "actionName": "get",
+                "inputUiInfo": {
+                  "customizedInputs": {}
+                },
+                "pieceVersion": "~0.4.0"
+              },
+              "nextAction": {
+                "name": "step_4",
+                "type": "BRANCH",
+                "valid": false,
+                "settings": {
+                  "conditions": [
+                    [
+                      {
+                        "operator": "TEXT_EXACTLY_MATCHES",
+                        "firstValue": "",
+                        "secondValue": "",
+                        "caseSensitive": false
+                      }
+                    ]
+                  ],
+                  "inputUiInfo": {}
+                },
+                "displayName": "Branch"
+              },
+              "displayName": "Get"
+            },
+            "displayName": "Fetch Top Stories"
+          },
+          "displayName": "Put"
+        },
+        "displayName": "Fetch Top Stories"
+      },
+      "displayName": "Every X Minutes"
+    },
+    "updatedBy": "obe7OcRUg8aEYQBeAYd5q",
+    "valid": false,
+    "state": "DRAFT"
+  },
+  "status": "UNPUBLISHED"
+}
