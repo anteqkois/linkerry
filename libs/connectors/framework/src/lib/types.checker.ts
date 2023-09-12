@@ -24,8 +24,8 @@ const trigger = createTrigger({
   name: 'every_x_minutes',
   displayName: 'Every x minutes',
   description: 'Call trigger every x minutes',
-  requireAuth: true,
   auth: authStrategy,
+  requireAuth: false,
   props: {
     minutes: Property.Text({
       name: 'minutes',
@@ -47,7 +47,7 @@ const trigger = createTrigger({
   onEnable: async (ctx) => {
     ctx.propsValue.minutes
     ctx.propsValue.timezone = 1
-    // ctx.auth.
+    ctx.auth.password
     // register schedulde
     // const cronExpression = `*/${ctx.propsValue.minutes} * * * *`
     // ctx.setSchedule({
@@ -76,6 +76,7 @@ const connector = createConnector({
   displayName: 'Schedulde',
   description: 'Schedulde connector',
   auth: authStrategy,
+  requiredAuth: false,
   logoUrl: '',
   triggers: [trigger],
   actions: [],

@@ -73,11 +73,11 @@ export const Property = {
 }
 
 export const ConnectorAuth = {
-  SecretText(config: Properties<SecretTextProperty<true>>): SecretTextProperty<true> {
-    return { ...config } as SecretTextProperty<true>
+  SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
+    return { ...config } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
   },
-  BasicAuth(config: Properties<BasicAuthProperty<true>>): BasicAuthProperty<true> {
-    return { ...config } as BasicAuthProperty<true>
+  BasicAuth<R extends boolean>(config: Properties<BasicAuthProperty<R>>): R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false> {
+    return { ...config } as unknown as R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false>
   },
 }
 
