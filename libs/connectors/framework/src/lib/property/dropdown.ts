@@ -1,4 +1,5 @@
-import { BaseProperty, PropertyType, PropertyValue } from '.';
+import { BaseProperty, PropertyValue } from '.';
+import { PropertyType } from './base';
 
 export type DropdownValue = string | number
 

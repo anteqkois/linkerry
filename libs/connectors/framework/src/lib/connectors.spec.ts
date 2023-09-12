@@ -1,5 +1,5 @@
 import { createConnector } from './connectors'
-import { Property } from './property'
+import { ConnectorAuth, Property } from './property'
 import { TriggerStrategy, createTrigger } from './trigger/trigger'
 
 describe('connector', () => {
@@ -30,6 +30,7 @@ describe('connector', () => {
       onEnable: async (ctx) => {
         ctx.propsValue.minutes
         ctx.propsValue.timezone = 1
+        ctx.auth
         // register schedulde
         // const cronExpression = `*/${ctx.propsValue.minutes} * * * *`
         // ctx.setSchedule({
@@ -58,6 +59,12 @@ describe('connector', () => {
       displayName: 'Schedulde',
       description: 'Schedulde connector',
       logoUrl: '',
+      auth: ConnectorAuth.SecretText({
+        description: '',
+        displayName: '',
+        name: '',
+        required: true,
+      }),
       triggers: [trigger],
       actions: [],
     })

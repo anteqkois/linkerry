@@ -1,8 +1,8 @@
 import { Action } from './action/action'
-import { ConnectorAuth } from './property/auth'
-import { Trigger} from './trigger/trigger'
+import { ConnectorAuthProperty } from './property'
+import { Trigger } from './trigger/trigger'
 
-export class Connector {
+export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty> {
   private readonly _actions: Record<string, Action> = {}
   private readonly _triggers: Record<string, Trigger> = {}
 
@@ -11,10 +11,10 @@ export class Connector {
     public readonly displayName: string,
     public readonly logoUrl: string,
     public readonly description: string,
-    triggers: Trigger[],
-    actions: Action[],
-    public readonly auth: ConnectorAuth | undefined,
+    triggers: Trigger<ConnectorAuth>[],
+    actions: Action<ConnectorAuth>[],
     public readonly requiredAith: boolean,
+    public readonly auth?: ConnectorAuth,
   ) {
     actions.forEach((action) => (this._actions[action.name] = action))
     triggers.forEach((trigger) => (this._triggers[trigger.name] = trigger))
@@ -50,21 +50,21 @@ export class Connector {
   }
 }
 
-type CreateConnectorParams = {
+type CreateConnectorParams<ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty> = {
   name: string
   displayName: string
   logoUrl: string
   description: string
-  auth?: ConnectorAuth
+  auth: ConnectorAuth
   requiredAuth?: boolean
   // events?: ConnectorEventProcessors
   // minimumSupportedRelease?: string
   // maximumSupportedRelease?: string
-  actions: Action[]
-  triggers: Trigger[]
+  actions: Action<ConnectorAuth>[]
+  triggers: Trigger<ConnectorAuth>[]
 }
 
-export const createConnector = (params: CreateConnectorParams): Connector => {
+export const createConnector = <ConnectorAuth extends ConnectorAuthProperty>(params: CreateConnectorParams<ConnectorAuth>) => {
   return new Connector(
     params.name,
     params.displayName,
@@ -72,7 +72,7 @@ export const createConnector = (params: CreateConnectorParams): Connector => {
     params.description,
     params.triggers,
     params.actions,
-    params.auth,
     params.requiredAuth ?? false,
+    params.auth,
   )
 }

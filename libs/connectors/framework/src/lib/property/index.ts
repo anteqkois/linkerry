@@ -1,28 +1,8 @@
+import { PropertyType } from './base'
 import { BasicAuthProperty } from './base-auth'
 import { DropdownProperty, DropdownValue } from './dropdown'
+import { SecretTextProperty } from './secretText'
 import { TextProperty } from './text'
-
-export enum PropertyType {
-  Text = 'ShortText',
-  LongText = 'LongText',
-  // Markdown = 'Markdown',
-  Dropdown = 'Dropdown',
-  // StaticDropdown = "StaticDropdown",
-  Number = 'Number',
-  Checkbox = 'Checkbox',
-  // OAuth2 = 'OAuth2',
-  SecretText = 'SecretText',
-  // Array = 'Array',
-  // Object = 'Object',
-  // BasicAuth = "BasicAuth",
-  // JSON = 'JSON',
-  // MultiSelectDropdown = 'MultiSelectDropdown',
-  // StaticMultiSelectDropdown = 'StaticMultiSelectDropdown',
-  // Dynamic = "Dynamic",
-  // CustomAuth = "CustomAuth",
-  // DateTime = "DateTime",
-  // File = "File"
-}
 
 export type BaseProperty = {
   name: string
@@ -53,7 +33,9 @@ export type PropertyValue<S, T extends PropertyType, R extends boolean> = {
     : unknown
 }
 
-export type ConnectorAuthProperty = BasicAuthProperty<boolean>
+export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty
+// export type ConnectorAuthProperty = SecretTextProperty
+// export type ConnectorAuthProperty = BasicAuthProperty
 // | CustomAuthProperty<boolean, any>
 // | OAuth2Property<boolean, OAuth2Props>
 // | SecretTextProperty<boolean>
@@ -64,26 +46,38 @@ export interface ConnectorPropertyMap {
   [name: string]: ConnectorProperty
 }
 
-// export type ConnectorPropValueSchema<T extends ConnectorProperty | ConnectorAuthProperty> =
-export type ConnectorPropValueSchema<T extends ConnectorProperty> = T extends undefined
-? undefined
-: T extends { required: true }
-? T['valueSchema']
-: T['valueSchema'] | undefined
+export type ConnectorPropValueSchema<T extends ConnectorProperty | ConnectorAuthProperty> = T extends undefined
+  ? undefined
+  : T extends { required: true }
+  ? T['valueSchema']
+  : T['valueSchema'] | undefined
 
 export type StaticPropsValue<T extends ConnectorPropertyMap> = {
   [P in keyof T]: ConnectorPropValueSchema<T[P]>
 }
 
-type Properties<T> = Omit<T, "valueSchema" | "type">;
+type Properties<T> = Omit<T, 'valueSchema' | 'type'>
 
 export const Property = {
-  // Text<R extends boolean>(config: PropertyConfig<string, PropertyType.Text, R>): R extends true ? TextProperty<true> : TextProperty<false> {
   Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
     return { ...config, type: PropertyType.Text } as unknown as R extends true ? TextProperty<true> : TextProperty<false>
   },
-  Dropdown<R extends boolean, V extends DropdownValue>(config: Properties<DropdownProperty<R, V>>): R extends true ? DropdownProperty<true, V> : DropdownProperty<false, V> {
+  SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
+    return { ...config, type: PropertyType.Text } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
+  },
+  Dropdown<R extends boolean, V extends DropdownValue>(
+    config: Properties<DropdownProperty<R, V>>,
+  ): R extends true ? DropdownProperty<true, V> : DropdownProperty<false, V> {
     return { ...config, type: PropertyType.Dropdown } as unknown as R extends true ? DropdownProperty<true, V> : DropdownProperty<false, V>
+  },
+}
+
+export const ConnectorAuth = {
+  SecretText(config: Properties<SecretTextProperty<true>>): SecretTextProperty<true> {
+    return { ...config } as SecretTextProperty<true>
+  },
+  BasicAuth(config: Properties<BasicAuthProperty<true>>): BasicAuthProperty<true> {
+    return { ...config } as BasicAuthProperty<true>
   },
 }
 

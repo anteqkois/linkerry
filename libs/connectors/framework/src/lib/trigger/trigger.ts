@@ -31,17 +31,13 @@ export enum TriggerStrategy {
   APP_WEBHOOK = 'APP_WEBHOOK',
 }
 
-export class TriggerInstance<
-  TS extends TriggerStrategy,
-  ConnectorAuth extends ConnectorAuthProperty,
-  TriggerProps extends ConnectorPropertyMap,
-> {
+export class TriggerInstance<TS extends TriggerStrategy, ConnectorAuth extends ConnectorAuthProperty, TriggerProps extends ConnectorPropertyMap> {
   constructor(
     public readonly name: string,
     public readonly displayName: string,
     public readonly description: string,
     public readonly props: TriggerProps,
-    public readonly type: TriggerStrategy,
+    public readonly type: TS,
     public readonly handshakeConfiguration: WebhookHandshakeConfiguration,
     public readonly onEnable: (ctx: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<void>,
     public readonly onHandshake: (ctx: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<WebhookResponse>,
@@ -59,16 +55,38 @@ export type Trigger<
   S extends TriggerStrategy = TriggerStrategy,
 > = TriggerInstance<S, ConnectorAuth, TriggerProps>
 
-type CreateTriggerParams<
-  TS extends TriggerStrategy,
-  ConnectorAuth extends ConnectorAuthProperty,
-  TriggerProps extends ConnectorPropertyMap,
-> = {
+
+// type CreateTriggerParams<
+//   PieceAuth extends PieceAuthProperty,
+//   TriggerProps extends NonAuthPiecePropertyMap,
+//   TS extends TriggerStrategy,
+// > = {
+//   /**
+//    * A dummy parameter used to infer {@code PieceAuth} type
+//    */
+//   name: string
+//   displayName: string
+//   description: string
+//   auth?: PieceAuth
+//   props: TriggerProps
+//   type: TS
+//   handshakeConfiguration?: WebhookHandshakeConfiguration,
+//   onEnable: (context: TriggerHookContext<PieceAuth, TriggerProps, TS>) => Promise<void>
+//   onHandshake?: (context: TriggerHookContext<PieceAuth, TriggerProps, TS>) => Promise<WebhookResponse>
+//   onDisable: (context: TriggerHookContext<PieceAuth, TriggerProps, TS>) => Promise<void>
+//   run: (context: TestOrRunHookContext<PieceAuth, TriggerProps, TS>) => Promise<unknown[]>
+//   test?: (context: TestOrRunHookContext<PieceAuth, TriggerProps, TS>) => Promise<unknown[]>
+//   requireAuth?: boolean
+//   sampleData: unknown
+// }
+
+type CreateTriggerParams<TS extends TriggerStrategy, ConnectorAuth extends ConnectorAuthProperty, TriggerProps extends ConnectorPropertyMap> = {
   name: string
   displayName: string
   description: string
   props: TriggerProps
-  type: TriggerStrategy
+  type: TS
+  auth?: ConnectorAuth
   handshakeConfiguration?: WebhookHandshakeConfiguration
   onEnable: (context: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<void>
   onHandshake?: (context: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<WebhookResponse>
@@ -79,11 +97,7 @@ type CreateTriggerParams<
   sampleData: unknown
 }
 
-export const createTrigger = <
-  TS extends TriggerStrategy,
-  ConnectorAuth extends ConnectorAuthProperty,
-  TriggerProps extends ConnectorPropertyMap,
->(
+export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends ConnectorAuthProperty, TriggerProps extends ConnectorPropertyMap>(
   params: CreateTriggerParams<TS, ConnectorAuth, TriggerProps>,
 ) => {
   return new TriggerInstance(

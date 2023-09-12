@@ -1,9 +1,9 @@
 import { Id } from '@market-connector/shared'
-import { ConnectorAuthProperty, ConnectorPropertyMap, StaticPropsValue } from './property'
+import { ConnectorAuthProperty, ConnectorPropValueSchema, ConnectorPropertyMap, StaticPropsValue } from './property'
 import { TriggerStrategy } from './trigger/trigger'
 
 type BaseContext<ConnectorAuth extends ConnectorAuthProperty, Props extends ConnectorPropertyMap> = {
-  auth: ConnectorAuth
+  auth: ConnectorPropValueSchema<ConnectorAuth>
   propsValue: StaticPropsValue<Props>
   store: Store
 }
