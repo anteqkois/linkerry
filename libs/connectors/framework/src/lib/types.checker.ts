@@ -8,7 +8,7 @@ const secretString = ConnectorAuth.SecretText({
   displayName:'',
   name:'',
   required: true,
-}),
+})
 
 const basicStrategy = ConnectorAuth.BasicAuth({
   description:'',
@@ -48,12 +48,6 @@ const trigger = createTrigger({
     ctx.propsValue.minutes
     ctx.propsValue.timezone = 1
     ctx.auth.password
-    // register schedulde
-    // const cronExpression = `*/${ctx.propsValue.minutes} * * * *`
-    // ctx.setSchedule({
-    //     cronExpression: cronExpression,
-    //     timezone: 'UTC'
-    // });
   },
   onDisable: async () => {
     // remove schedulde jobs
