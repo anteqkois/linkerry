@@ -1,6 +1,7 @@
 import { PropertyType } from './base'
 import { BasicAuthProperty } from './base-auth'
 import { DropdownProperty, DropdownValue } from './dropdown'
+import { NumberProperty } from './number'
 import { SecretTextProperty } from './secretText'
 import { TextProperty } from './text'
 
@@ -40,7 +41,7 @@ export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty
 // | OAuth2Property<boolean, OAuth2Props>
 // | SecretTextProperty<boolean>
 
-export type ConnectorProperty = TextProperty | DropdownProperty
+export type ConnectorProperty = TextProperty | NumberProperty | DropdownProperty
 
 export interface ConnectorPropertyMap {
   [name: string]: ConnectorProperty
@@ -62,6 +63,9 @@ export const Property = {
   Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
     return { ...config, type: PropertyType.Text } as unknown as R extends true ? TextProperty<true> : TextProperty<false>
   },
+  Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
+    return { ...config, type: PropertyType.Number } as unknown as R extends true ? NumberProperty<true> : NumberProperty<false>
+  },
   SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
     return { ...config, type: PropertyType.Text } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
   },
@@ -78,6 +82,9 @@ export const ConnectorAuth = {
   },
   BasicAuth<R extends boolean>(config: Properties<BasicAuthProperty<R>>): R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false> {
     return { ...config } as unknown as R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false>
+  },
+  None() {
+    return undefined
   },
 }
 

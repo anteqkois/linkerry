@@ -1,0 +1,5 @@
+{
+  "name": "@market-connector/connectors/coingecko",
+  "version": "0.0.1",
+  "type": "commonjs"
+}

@@ -55,7 +55,7 @@ type CreateConnectorParams<ConnectorAuth extends ConnectorAuthProperty = Connect
   displayName: string
   logoUrl: string
   description: string
-  auth: ConnectorAuth
+  auth: ConnectorAuth | undefined
   requiredAuth?: boolean
   // events?: ConnectorEventProcessors
   // minimumSupportedRelease?: string
