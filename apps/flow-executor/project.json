@@ -1,0 +1,64 @@
+{
+  "name": "flow-executor",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/flow-executor/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/flow-executor",
+        "main": "apps/flow-executor/src/main.ts",
+        "tsConfig": "apps/flow-executor/tsconfig.app.json",
+        "assets": ["apps/flow-executor/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/flow-executor/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "flow-executor:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "flow-executor:build:development"
+        },
+        "production": {
+          "buildTarget": "flow-executor:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/flow-executor/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/flow-executor/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}
