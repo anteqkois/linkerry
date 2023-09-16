@@ -4,6 +4,7 @@ import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/utils'
 import { ConfigModule } from '@nestjs/config'
 import { MongodbModule } from './lib/mongodb'
 import { CronModule } from './lib/cron/cron.module';
+import { ConnectorsModule } from './modules/connectors/connectors.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CronModule } from './lib/cron/cron.module';
     }),
     MongodbModule,
     CronModule,
+    ConnectorsModule,
   ],
   controllers: [],
   providers: [
