@@ -1,10 +1,9 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common'
-import { APP_FILTER } from '@nestjs/core'
-import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/utils'
 import { ConfigModule } from '@nestjs/config'
+import { APP_FILTER } from '@nestjs/core'
+// import { CronModule } from './lib/cron/cron.module'
 import { MongodbModule } from './lib/mongodb'
-import { CronModule } from './lib/cron/cron.module';
-import { ConnectorsModule } from './modules/connectors/connectors.module';
+import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/utils'
 
 @Module({
   imports: [
@@ -12,8 +11,7 @@ import { ConnectorsModule } from './modules/connectors/connectors.module';
       isGlobal: true,
     }),
     MongodbModule,
-    CronModule,
-    ConnectorsModule,
+    // CronModule,
   ],
   controllers: [],
   providers: [

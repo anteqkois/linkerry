@@ -1,3 +1,3 @@
-export const NEXT_TOKENS = {
+export const NEST_TOKENS = {
   FLOW_EXECUTOR: 'FLOW_EXECUTOR',
 }

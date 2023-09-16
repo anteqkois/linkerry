@@ -4,7 +4,7 @@ describe('GET /api/connectors', () => {
   it('should return a connector metadata', async () => {
     const res = await axios.get(`/connectors/metadata/test`)
 
-    console.log(res.data);
+    console.dir(res.data, { depth: null })
 
     expect(res.status).toBe(200)
     expect(res.data).toBeDefined()

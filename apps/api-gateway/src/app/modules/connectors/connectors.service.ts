@@ -1,18 +1,19 @@
-import { NEXT_TOKENS } from '@market-connector/shared'
+import { NEST_TOKENS } from '@market-connector/shared'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 
 @Injectable()
 export class ConnectorsService {
-  constructor(@Inject(NEXT_TOKENS.FLOW_EXECUTOR) private readonly flowExecutorClient: ClientProxy) {}
+  constructor(@Inject(NEST_TOKENS.FLOW_EXECUTOR) private readonly flowExecutorClient: ClientProxy) {}
 
   async getMetadata(name: string) {
-    return this.flowExecutorClient.send(
-      {
-        role: 'metadata',
-        cmd: 'get',
-      },
-      name,
-    )
+    return this.flowExecutorClient.send('metadata', { connecotr: name })
+  }
+
+  async triggerValidate(name: string, triggerName: string) {
+    return this.flowExecutorClient.send('trigger.validate', {
+      connector: name,
+      trigger: triggerName,
+    })
   }
 }

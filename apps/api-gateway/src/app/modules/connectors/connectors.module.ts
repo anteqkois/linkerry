@@ -1,4 +1,4 @@
-import { NEXT_TOKENS } from '@market-connector/shared'
+import { NEST_TOKENS } from '@market-connector/shared'
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { ConnectorsController } from './connectors.controller'
@@ -8,7 +8,7 @@ import { ConnectorsService } from './connectors.service'
   imports: [
     ClientsModule.register([
       {
-        name: NEXT_TOKENS.FLOW_EXECUTOR,
+        name: NEST_TOKENS.FLOW_EXECUTOR,
         transport: Transport.TCP,
         options: {
           host: '127.0.0.1',
