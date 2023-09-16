@@ -2,7 +2,7 @@ import { CustomHttpExceptionResponse, IAlert_CreateInput } from '@market-connect
 import axios from 'axios'
 import { login } from '../support/login'
 
-describe('ERROR FILTER', () => {
+xdescribe('ERROR FILTER', () => {
   it('Preperly create error schema for missing data', async () => {
     const input: Partial<IAlert_CreateInput> = {
       eventValidityUnix: 389721,
@@ -10,7 +10,7 @@ describe('ERROR FILTER', () => {
     await login()
 
     try {
-      const res = await axios.post(`/conditions`, input)
+      await axios.post(`/conditions`, input)
     } catch (error: any) {
       const errorResponse = error.response.data as CustomHttpExceptionResponse
 

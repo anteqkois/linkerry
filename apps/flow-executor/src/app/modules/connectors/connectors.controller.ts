@@ -7,7 +7,7 @@ export class ConnectorsController {
   constructor(private readonly connectorsService: ConnectorsService) {}
 
   @MessagePattern('metadata')
-  getMetadata({ name }: { name: string }) {
-    return this.connectorsService.getMetadata(name)
+  getMetadata({ connector }: { connector: string }) {
+    return this.connectorsService.getMetadata(connector)
   }
 }

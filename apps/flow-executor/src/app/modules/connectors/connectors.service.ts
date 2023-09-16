@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common'
-import { coingecko } from '@market-connector/connectors/coingecko'
 import { Connector } from '@market-connector/connectors-framework'
+import { coingecko } from '@market-connector/connectors/coingecko'
+import { Injectable } from '@nestjs/common'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class ConnectorsService {
@@ -9,7 +10,9 @@ export class ConnectorsService {
   }
 
   getConnector(name: string): Connector {
-    return this.connectors[name]
+    const connector = this.connectors[name]
+    if (!connector) throw new RpcException('Connector not found')
+    return connector
   }
 
   getMetadata(name: string) {

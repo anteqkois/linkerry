@@ -23,10 +23,11 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
   metadata() {
     return {
       displayName: this.displayName,
+      name: this.name,
+      description: this.description,
       logoUrl: this.logoUrl,
       actions: this._actions,
       triggers: this._triggers,
-      description: this.description,
       auth: this.auth,
       // minimumSupportedRelease: this.minimumSupportedRelease,
       // maximumSupportedRelease: this.maximumSupportedRelease,

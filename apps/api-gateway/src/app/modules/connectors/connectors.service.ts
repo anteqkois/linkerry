@@ -7,7 +7,7 @@ export class ConnectorsService {
   constructor(@Inject(NEST_TOKENS.FLOW_EXECUTOR) private readonly flowExecutorClient: ClientProxy) {}
 
   async getMetadata(name: string) {
-    return this.flowExecutorClient.send('metadata', { connecotr: name })
+    return this.flowExecutorClient.send('metadata', { connector: name })
   }
 
   async triggerValidate(name: string, triggerName: string) {
