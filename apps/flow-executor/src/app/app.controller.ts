@@ -1,13 +1,14 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller } from '@nestjs/common'
 
 import { AppService } from './app.service'
+import { MessagePattern } from '@nestjs/microservices'
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getData() {
-    return this.appService.getData()
+  @MessagePattern({ role: 'metadata', cmd: 'get' })
+  createItem(name: string) {
+    return this.appService.getMetadata(name)
   }
 }
