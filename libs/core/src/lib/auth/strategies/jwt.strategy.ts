@@ -1,4 +1,4 @@
-import { Cookies, JwtToken } from '@market-connector/types'
+import { Cookies, JwtToken } from '@market-connector/shared'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'

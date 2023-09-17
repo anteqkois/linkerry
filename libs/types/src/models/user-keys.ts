@@ -1,6 +1,6 @@
-import { DbTimestamp, IResourceResponse, Id } from '../utils'
+import { DbTimestamp, IResourceResponse, Id } from '@market-connector/shared'
 import { ExchangeCode, IExchange } from './exchange'
-import { User } from './user'
+import { User } from '@market-connector/shared'
 
 type PrivateFields = 'aKey' | 'sKey' | 'kv' | 'salt'
 

@@ -1,4 +1,4 @@
-import { Id } from '../../utils'
+import { Id } from '@market-connector/shared'
 import { ICondition, ICondition_CreateInput, ICondition_PatchInput } from '../condition'
 import { IStrategyBuy_DynamicMarket_Property } from './strategy-dynamic-market'
 import { StrategyBuy_StaticMarket_Property } from './strategy-static-market'

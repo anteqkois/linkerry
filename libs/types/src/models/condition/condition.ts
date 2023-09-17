@@ -1,4 +1,4 @@
-import { User } from '../user'
+import { User } from '@market-connector/shared'
 import { AlertProvider, IAlertTradingView, IAlertUnknown } from './alert'
 
 export enum ConditionType {

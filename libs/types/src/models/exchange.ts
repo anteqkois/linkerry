@@ -1,4 +1,4 @@
-import { IPaginationQuery, IResourceResponse, Id } from '../utils'
+import { IPaginationQuery, IResourceResponse, Id } from '@market-connector/shared'
 
 export enum TimeFrameCode {
   '1m' = '1m',

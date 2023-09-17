@@ -1,4 +1,4 @@
-import { Id } from '../../utils'
+import { Id } from '@market-connector/shared'
 import { IExchange } from '../exchange'
 import { IStrategyExecution_StaticMarket_Property } from './strategy-execution-static-market'
 

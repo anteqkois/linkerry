@@ -1,4 +1,4 @@
-import { IPaginationQuery, IResourceResponse, Id } from '../utils'
+import { IPaginationQuery, IResourceResponse, Id } from '@market-connector/shared'
 import { IExchange } from './exchange'
 
 export enum MarketType {

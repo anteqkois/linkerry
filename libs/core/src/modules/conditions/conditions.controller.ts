@@ -1,4 +1,5 @@
-import { ConditionType, ICondition_CreateResponse, JwtUser } from '@market-connector/types'
+import { ConditionType, ICondition_CreateResponse } from '@market-connector/types'
+import { JwtUser } from '@market-connector/shared'
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'

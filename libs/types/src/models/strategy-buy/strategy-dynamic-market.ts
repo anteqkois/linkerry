@@ -1,4 +1,4 @@
-import { Id } from "../../utils"
+import { Id } from '@market-connector/shared'
 import { ICondition } from "../condition"
 import { IStrategyBuy, StrategyBuyType } from "./strategy-buy"
 

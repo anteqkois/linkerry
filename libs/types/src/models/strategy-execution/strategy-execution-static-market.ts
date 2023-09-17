@@ -1,4 +1,4 @@
-import { Id } from '../../utils'
+import { Id } from '@market-connector/shared'
 import { IStrategyExecution, IStrategyExecution_CreateInput, StrategyExecutionType } from './strategy-execution'
 
 export interface IStrategyExecution_StaticMarket

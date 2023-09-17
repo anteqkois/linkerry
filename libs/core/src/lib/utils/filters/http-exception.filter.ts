@@ -2,7 +2,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { DtoException } from '../pipes'
-import { CustomHttpExceptionResponse, HttpExceptionResponse } from '@market-connector/types'
+import { CustomHttpExceptionResponse, HttpExceptionResponse } from '@market-connector/shared'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
