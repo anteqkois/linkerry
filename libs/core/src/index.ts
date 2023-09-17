@@ -12,6 +12,8 @@ export * from './modules/markets';
 export * from './modules/strategies-buy';
 export * from './modules/strategies';
 export * from './modules/user-keys';
+export * from './modules/flows';
+export * from './modules/flow-versions';
 // export * from './modules/languages';
 // export * from './modules/strategies-sell';
 

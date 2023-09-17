@@ -1,4 +1,5 @@
-import { CustomHttpExceptionResponse, IAlert_CreateInput } from '@market-connector/types'
+import { CustomHttpExceptionResponse } from '@market-connector/shared'
+import { IAlert_CreateInput } from '@market-connector/types'
 import axios from 'axios'
 import { login } from '../support/login'
 

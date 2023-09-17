@@ -1,7 +1,7 @@
-import { Flow, FlowStatus, Id } from '@market-connector/shared'
+import { Flow, FlowStatus, FlowVersion, Id } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { FlowVersionModel, FlowVersionSchema } from '../../flow-versions/schemas/flow-version.schema'
+import { FlowVersionSchema } from '../../flow-versions/schemas/flow-version.schema'
 import { UserModel } from '../../users'
 
 export type FlowDocument = mongoose.HydratedDocument<Flow>
@@ -17,7 +17,7 @@ export class FlowModel implements Flow {
   status: FlowStatus
 
   @Prop({ required: true, type: FlowVersionSchema })
-  version: FlowVersionModel
+  version: FlowVersion
 }
 
 export const FlowSchema = SchemaFactory.createForClass(FlowModel)
