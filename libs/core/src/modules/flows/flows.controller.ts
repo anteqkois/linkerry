@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common'
 import { FlowsService } from './flows.service'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
-import { JwtUser } from '@market-connector/types'
+import { JwtUser } from '@market-connector/shared'
 import { CreateFlowDto } from './dto/create.dto'
 
 @Controller('flows')

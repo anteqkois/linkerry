@@ -1,4 +1,4 @@
-import { Language } from '@market-connector/types';
+import { Language } from '@market-connector/shared'
 import { Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, IsString, Length, MaxLength, MinLength, ValidateNested } from 'class-validator';
 

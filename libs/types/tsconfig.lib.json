@@ -5,6 +5,6 @@
     "declaration": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../shared/src/lib/modules/user/user-settings.ts", "../shared/src/lib/utils/auth.ts"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

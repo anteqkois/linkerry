@@ -15,8 +15,8 @@ import {
   IStrategy_StrategyBuyPatchResponse,
   IStrategy_UpdateInput,
   IStrategy_UpdateResponse,
-  Id,
 } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class StrategyBuyApi {

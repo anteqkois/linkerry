@@ -1,4 +1,5 @@
-import { IStrategy_CreateInput, IStrategy_StrategyBuy, Id, StrategyType } from '@market-connector/types'
+import { IStrategy_CreateInput, IStrategy_StrategyBuy, StrategyType } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { Type } from 'class-transformer'
 import { IsArray, IsBoolean, IsDefined, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
 import { CreateStrategyBuyStaticMarketDto } from '../../strategies-buy/dro/static-market/create.dto'

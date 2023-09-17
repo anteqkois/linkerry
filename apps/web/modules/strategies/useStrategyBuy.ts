@@ -1,7 +1,8 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Id, StrategyBuyType, ValueOf } from '@market-connector/types'
+import { StrategyBuyType } from '@market-connector/types'
+import { Id , ValueOf} from '@market-connector/shared'
 import { toast } from '@market-connector/ui-components/client'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'

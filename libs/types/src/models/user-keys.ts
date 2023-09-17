@@ -1,6 +1,6 @@
 import { DbTimestamp, IResourceResponse, Id } from '../utils'
 import { ExchangeCode, IExchange } from './exchange'
-import { IUser } from './user'
+import { User } from './user'
 
 type PrivateFields = 'aKey' | 'sKey' | 'kv' | 'salt'
 
@@ -21,7 +21,7 @@ export interface IUserKeys extends DbTimestamp {
 
 export interface IUserKeysPupulated extends Omit<IUserKeys, 'exchange' | 'user'> {
   exchange: IExchange
-  user: IUser
+  user: User
 }
 
 // GET

@@ -1,18 +1,19 @@
-import { IUser, IUserMetadata, Language, UserRole } from '@market-connector/types';
+import { User, UserMetadata, UserRole } from '@market-connector/shared';
+import { Language } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
-export type UserDocument = mongoose.HydratedDocument<IUser>;
+export type UserDocument = mongoose.HydratedDocument<User>;
 
-class UserMetadata implements IUserMetadata {
+class UserMetadataModel implements UserMetadata {
   @Prop({ required: false, type: Boolean})
   earlyAdopter?: boolean;
 }
 
-export const UserMetadataSchema = SchemaFactory.createForClass(UserMetadata);
+export const UserMetadataSchema = SchemaFactory.createForClass(UserMetadataModel);
 
 @Schema({ timestamps: true, autoIndex: true })
-export class UserModel implements IUser {
+export class UserModel implements User {
   _id: string;
 
   @Prop({ required: true, type: String, unique: true, index: true })
@@ -23,12 +24,6 @@ export class UserModel implements IUser {
 
   @Prop({ required: false, type: String })
   phone: string;
-
-  // @Prop({ required: false, type: String })
-  // telegramId: string;
-
-  // @Prop({ required: true, type: Boolean, default: false })
-  // telegramBotConnected: boolean;
 
   @Prop({ required: true, type: String, unique: true })
   email!: string;
@@ -69,7 +64,7 @@ export class UserModel implements IUser {
   referrer: string;
 
   @Prop({required: false, type:UserMetadataSchema})
-  metadata?: UserMetadata
+  metadata?: UserMetadataModel
   // remember_token             String?   @db.VarChar(100)
   // subscription_expired_at    DateTime? @db.Date
   // current_plan_id            BigInt?   @db.UnsignedBigInt

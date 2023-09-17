@@ -1,4 +1,5 @@
-import { ExchangeCode, IUserKeys, IUserKeys_CreateResponse, Id } from '@market-connector/types'
+import { ExchangeCode, IUserKeys, IUserKeys_CreateResponse} from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'

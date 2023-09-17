@@ -1,4 +1,5 @@
-import { IStrategy, IStrategy_GetQuery, IStrategy_StrategyBuy, Id } from '@market-connector/types'
+import { IStrategy, IStrategy_GetQuery, IStrategy_StrategyBuy } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'

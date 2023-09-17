@@ -1,4 +1,4 @@
-import { IUser, JwtToken, UserRole } from '@market-connector/types'
+import { JwtToken, User, UserRole } from '@market-connector/types'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
@@ -49,7 +49,7 @@ export class AuthService {
     }
   }
 
-  async login(user: IUser) {
+  async login(user: User) {
     const payload = this.createJWTPayload(user)
     const secret = this.configService.get('JWT_SECRET')
 

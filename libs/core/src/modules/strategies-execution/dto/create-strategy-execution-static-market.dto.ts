@@ -1,9 +1,9 @@
 import {
   IStrategyExecution_StaticMarket_Input,
   IStrategyExecution_StaticMarket_MarketsInput,
-  Id,
   StrategyExecutionType,
 } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { CreateStrategyExecutionDto } from './create-strategy-execution.dto'
 import { IsInt, IsMongoId, IsString, Max, MaxLength, Min, MinLength, ValidateNested } from 'class-validator'
 import { Transform, Type } from 'class-transformer'

@@ -1,5 +1,4 @@
 import {
-  DeepPartial,
   IStrategy_CreateInput,
   IStrategy_CreateResponse,
   IStrategy_PatchInput,
@@ -13,6 +12,7 @@ import {
   StrategyState,
   StrategyType,
 } from '@market-connector/types'
+import { DeepPartial } from '@market-connector/shared'
 import axios from 'axios'
 import { login } from '../support/login'
 import { alwaysExistingStrategyBuyStaticMarket, alwaysExistingUser } from 'tools/models.mock'
@@ -61,10 +61,7 @@ describe('CRUD /api/strategies', () => {
       state: StrategyState.OpenPosition,
     }
 
-    const { status, data } = await axios.put<IStrategy_UpdateResponse>(
-      `/strategies/${lastStrategyData._id}`,
-      secondInput,
-    )
+    const { status, data } = await axios.put<IStrategy_UpdateResponse>(`/strategies/${lastStrategyData._id}`, secondInput)
 
     expect(status).toBe(200)
     expect(data._id).toBe(lastStrategyData._id)
@@ -118,10 +115,7 @@ describe('CRUD /api/strategies', () => {
       ],
     }
 
-    const { status, data } = await axios.patch<IStrategy_PatchResponse>(
-      `/strategies/${lastStrategyData._id}`,
-      patchInput,
-    )
+    const { status, data } = await axios.patch<IStrategy_PatchResponse>(`/strategies/${lastStrategyData._id}`, patchInput)
 
     expect(status).toBe(200)
     expect(data._id).toBe(lastStrategyData._id)

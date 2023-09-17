@@ -5,8 +5,8 @@ import {
   IAuthLoginResponse,
   IAuthLogoutResponse,
   IAuthSignUpResponse,
-  IUser,
-} from '@market-connector/types'
+  User,
+} from '@market-connector/shared'
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { FastifyReply } from 'fastify'
@@ -43,7 +43,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@ReqJwtUser() user: IUser, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLoginResponse> {
+  async login(@ReqJwtUser() user: User, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLoginResponse> {
     const { access_token, user: userRes } = await this.authService.login(user)
     const expireDateUnix = +this.configService.get('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 

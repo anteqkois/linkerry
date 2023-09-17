@@ -1,6 +1,6 @@
 import { DbTimestamp, IPaginationQuery, IResourceResponse, Id, Nullable } from '../../utils'
 import { IStrategyBuy, IStrategyBuy_CreateInput, IStrategyBuy_PatchInput } from '../strategy-buy'
-import { IUser } from '../user'
+import { User } from '../user'
 import { Strategy_StaticMarket_Property } from './strategy-static-market'
 
 export enum StrategyState {
@@ -55,7 +55,7 @@ export interface IStrategy extends Partial<Strategy_StaticMarket_Property>, DbTi
 
 export interface IStrategyExpand<E extends ExpandableKeys | undefined = undefined>
   extends Omit<IStrategy, 'strategyBuy' | 'user'> {
-  user: E extends 'user' ? IUser : Id
+  user: E extends 'user' ? User : Id
   strategyBuy: E extends 'strategyBuy.strategyBuy' ? IStrategy_StrategyBuyExpanded[] : IStrategy_StrategyBuy[]
 }
 

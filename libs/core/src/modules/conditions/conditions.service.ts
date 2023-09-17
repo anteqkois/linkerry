@@ -1,4 +1,5 @@
-import { ConditionType, Id } from '@market-connector/types'
+import { ConditionType } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'

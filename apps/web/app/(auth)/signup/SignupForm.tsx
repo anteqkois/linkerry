@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Language } from '@market-connector/types'
+import { Language } from '@market-connector/shared'
 import {  Input, Label, toast } from '@market-connector/ui-components/client'
 import { cn } from '@market-connector/ui-components/utils'
 import { useRouter } from 'next/navigation'

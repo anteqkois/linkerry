@@ -1,4 +1,4 @@
-import { IPaginationQuery } from '@market-connector/types'
+import { IPaginationQuery } from '@market-connector/shared'
 import { Transform } from 'class-transformer'
 import { IsInt, IsOptional, Max } from 'class-validator'
 

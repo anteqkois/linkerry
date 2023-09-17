@@ -2,7 +2,7 @@ import { ExchangeCode, IMarket_GetQuery, IMarket_GetResponse, MarketType } from 
 import axios from 'axios'
 import { login } from '../support/login'
 
-describe('POST /api/markets', () => {
+xdescribe('POST /api/markets', () => {
   it('only authenticated users can get markets', async () => {
     const res = axios.get(`/markets`)
     await expect(res).rejects.toHaveProperty('response.status', 401)

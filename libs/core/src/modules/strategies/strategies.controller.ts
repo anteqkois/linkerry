@@ -1,4 +1,5 @@
-import { IStrategy_CreateResponse, IStrategy_GetOneResponse, Id, JwtUser } from '@market-connector/types'
+import { IStrategy_CreateResponse, IStrategy_GetOneResponse} from '@market-connector/types'
+import { Id, JwtUser} from '@market-connector/shared'
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UsePaginatedResourceInterceptor } from '../../lib/utils'

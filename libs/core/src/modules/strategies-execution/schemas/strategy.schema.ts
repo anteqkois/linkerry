@@ -1,9 +1,9 @@
 import {
   IStrategyBuy,
   IStrategyBuy_Condition,
-  Id,
   StrategyBuyType
 } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 

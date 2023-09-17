@@ -1,4 +1,4 @@
-import { Language } from './language'
+import { Language } from "../language"
 
 export enum UserRole {
   Customer = 'Customer',
@@ -12,7 +12,7 @@ export enum UserRole {
 //   TESTER = 'tester',
 // }
 
-export interface IUser {
+export interface User {
   _id: string
   name: string
   roles: UserRole[]
@@ -35,6 +35,6 @@ export interface IUser {
   // remember_token
 }
 
-export interface IUserMetadata {
+export interface UserMetadata {
   earlyAdopter?: boolean
 }

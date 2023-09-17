@@ -1,4 +1,4 @@
-import { JwtUser } from '@market-connector/types';
+import { JwtUser } from '@market-connector/shared';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator';
 import { JwtAuthGuard } from '../../lib/auth/guards/jwt-auth.guard';

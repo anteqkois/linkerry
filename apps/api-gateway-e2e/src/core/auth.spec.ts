@@ -1,18 +1,19 @@
 import { testAuthUser } from '@market-connector/tools'
-import { IAuthSignUpResponse, Language, UserRole } from '@market-connector/types'
+import { IAuthSignUpResponse, UserRole } from '@market-connector/shared'
+import { Language } from '@market-connector/shared'
 import axios from 'axios'
 
 describe('POST /api/auth', () => {
-  it('user hasn\'t access to protected routes', async () => {
+  it("user hasn't access to protected routes", async () => {
     const res = axios.get(`/users`)
-    await expect(res).rejects.toHaveProperty("response.status", 401);
+    await expect(res).rejects.toHaveProperty('response.status', 401)
   })
 
   it('user can sign up and create account', async () => {
     const signUpRes = await axios.post<IAuthSignUpResponse>(`/auth/signup`, testAuthUser)
     expect(signUpRes.status).toBe(201)
     expect(signUpRes.data.user.roles).toEqual([UserRole.Customer])
-    axios.defaults.headers.Cookie = signUpRes.headers['set-cookie'][0];
+    axios.defaults.headers.Cookie = signUpRes.headers['set-cookie'][0]
   })
 
   it('user has access to protected routes after login', async () => {
@@ -24,9 +25,9 @@ describe('POST /api/auth', () => {
 
   it('user lost privilages after log out (delete jwt token)', async () => {
     delete axios.defaults.headers.Cookie
-    axios.defaults.headers.authorization = ``;
+    axios.defaults.headers.authorization = ``
     const res = axios.get(`/users`)
-    await expect(res).rejects.toHaveProperty("response.status", 401);
+    await expect(res).rejects.toHaveProperty('response.status', 401)
   })
 
   it('user can login', async () => {
@@ -35,10 +36,10 @@ describe('POST /api/auth', () => {
     expect(loginRes.data.user.name).toBe(testAuthUser.name)
     expect(loginRes.data.user.email).toBe(testAuthUser.email)
     expect(loginRes.data.user.password).toBeUndefined()
-    axios.defaults.headers.Cookie = loginRes.headers['set-cookie'][0];
+    axios.defaults.headers.Cookie = loginRes.headers['set-cookie'][0]
   })
 
-  it('can\'t signup using existing email', async () => {
+  it("can't signup using existing email", async () => {
     const res = axios.post(`/auth/signup`, {
       consents: {
         test1: true,
@@ -49,10 +50,10 @@ describe('POST /api/auth', () => {
       name: 'anteq849012384',
       password: 'antekkoisA1',
     })
-    await expect(res).rejects.toHaveProperty("response.status", 422);
+    await expect(res).rejects.toHaveProperty('response.status', 422)
   })
 
-  it('can\'t signup using existing name', async () => {
+  it("can't signup using existing name", async () => {
     const res = axios.post(`/auth/signup`, {
       consents: {
         test1: true,
@@ -63,6 +64,6 @@ describe('POST /api/auth', () => {
       name: testAuthUser.name,
       password: 'antekkoisA2',
     })
-    await expect(res).rejects.toHaveProperty("response.status", 422);
+    await expect(res).rejects.toHaveProperty('response.status', 422)
   })
 })

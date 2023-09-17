@@ -15,7 +15,7 @@ import {
 } from 'reactflow'
 import { create } from 'zustand'
 import { CustomNode, CustomNodeId } from './nodes'
-import { Id } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 
 type EditorNode = Node | CustomNode

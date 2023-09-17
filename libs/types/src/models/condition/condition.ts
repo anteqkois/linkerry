@@ -1,4 +1,4 @@
-import { IUser } from '../user'
+import { User } from '../user'
 import { AlertProvider, IAlertTradingView, IAlertUnknown } from './alert'
 
 export enum ConditionType {
@@ -42,7 +42,7 @@ export interface ICondition {
 }
 
 export interface IConditionExpanded extends Omit<ICondition, 'user'> {
-  user: IUser
+  user: User
 }
 
 export interface ICondition_CreateInput {

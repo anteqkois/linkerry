@@ -1,4 +1,5 @@
-import { IStrategyBuy_ConditionCreateResponse, Id, JwtUser } from '@market-connector/types'
+import { IStrategyBuy_ConditionCreateResponse} from '@market-connector/types'
+import { Id , JwtUser} from '@market-connector/shared'
 import { Body, Controller, Param, Patch, Post, Put } from '@nestjs/common'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { UseJwtGuard } from '../../lib/utils/decorators/jwt-auth-guard.decorator'

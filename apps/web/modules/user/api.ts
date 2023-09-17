@@ -1,10 +1,4 @@
-import {
-    IAuthLoginInput,
-    IAuthLoginResponse,
-    IAuthLogoutResponse,
-    IAuthSignUpInput,
-    IAuthSignUpResponse,
-} from '@market-connector/types'
+import { IAuthLoginInput, IAuthLoginResponse, IAuthLogoutResponse, IAuthSignUpInput, IAuthSignUpResponse } from '@market-connector/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class AuthApi {

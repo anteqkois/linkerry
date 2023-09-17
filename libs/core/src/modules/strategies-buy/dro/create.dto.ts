@@ -2,9 +2,9 @@ import {
   ICondition_CreateInput,
   IStrategyBuy_Condition,
   IStrategyBuy_CreateInput,
-  Id,
   StrategyBuyType
 } from '@market-connector/types'
+import { Id } from '@market-connector/shared'
 import { Type } from 'class-transformer'
 import { ArrayMaxSize, IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator'
 import { CreateConditionDto } from '../../conditions/dto/create.dto'

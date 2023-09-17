@@ -1,4 +1,4 @@
-import { isCustomHttpException } from '@market-connector/types'
+import { isCustomHttpException } from '@market-connector/shared'
 import { isAxiosError } from 'axios'
 
 export const absoluteUrl = (path: string) => {

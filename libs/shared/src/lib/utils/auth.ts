@@ -1,4 +1,4 @@
-import { Language } from '../models/language'
+import { Language } from '../modules/language'
 
 export interface IAuthSignUpInput {
   email: string
