@@ -2,7 +2,7 @@ import { IStrategyBuy, IStrategyBuy_Condition, Id, StrategyBuyType } from '@mark
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { Condition } from '../../conditions'
-import { User } from '../../users'
+import { UserModel } from '../../users'
 
 export type StrategyBuyDocument = mongoose.HydratedDocument<StrategyBuy>
 
@@ -25,7 +25,7 @@ export class StrategyBuy implements IStrategyBuy {
   _id: string
   type: StrategyBuyType
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })
   user: string
 
   @Prop({ required: true, type: String })

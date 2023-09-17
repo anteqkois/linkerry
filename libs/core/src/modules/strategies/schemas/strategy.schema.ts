@@ -2,7 +2,7 @@ import { IStrategy, IStrategy_StrategyBuy, Id, StrategyState, StrategyType } fro
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { StrategyBuy } from '../../strategies-buy/schemas/strategy-buy.schema'
-import { User } from '../../users'
+import { UserModel } from '../../users'
 
 export type StrategyDocument = mongoose.HydratedDocument<Strategy>
 
@@ -26,7 +26,7 @@ export class Strategy implements IStrategy {
   // @Prop({requiredL: true, type: String, enum: StrategyType})
   type: StrategyType
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })
   user: string
 
   @Prop({ required: true, type: String })

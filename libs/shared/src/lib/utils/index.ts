@@ -1,4 +1,4 @@
-export type Id = string
+import { Id } from "../common/database"
 
 export type ProjectId = Id
 

@@ -12,7 +12,7 @@ class UserMetadata implements IUserMetadata {
 export const UserMetadataSchema = SchemaFactory.createForClass(UserMetadata);
 
 @Schema({ timestamps: true, autoIndex: true })
-export class User implements IUser {
+export class UserModel implements IUser {
   _id: string;
 
   @Prop({ required: true, type: String, unique: true, index: true })
@@ -75,12 +75,12 @@ export class User implements IUser {
   // current_plan_id            BigInt?   @db.UnsignedBigInt
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(UserModel);
 UserSchema.index({ phone: 1 }, { unique: true, sparse: true })
 UserSchema.index({ cryptoWallet: 1 }, { unique: true, sparse: true })
 
 export const userModelFactory: AsyncModelFactory = {
-  name: User.name,
+  name: UserModel.name,
   imports: [],
   useFactory: () => {
     const schema = UserSchema;
