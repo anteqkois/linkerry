@@ -27,4 +27,4 @@ export class TriggerConnectorModel extends BaseStepModel implements TriggerConne
   @Prop({ required: true, type: ConnectorSettingsSchema })
   settings: BaseConnectorSettings
 }
-export const TriggerConnectorchema = SchemaFactory.createForClass(TriggerConnectorModel)
+export const TriggerConnectorSchema = SchemaFactory.createForClass(TriggerConnectorModel)

@@ -2,7 +2,8 @@ import { DbTimestamp, Id } from '../../common/database'
 import { Trigger } from './trigger'
 
 export enum FlowStatus {
-  Published = 'Published',
+  Active = 'Active',
+  Inactive = 'Inactive',
   Unpublished = 'Unpublished',
 }
 

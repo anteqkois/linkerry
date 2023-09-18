@@ -1,6 +1,5 @@
 import { Action, ActionType, BaseConnectorSettings, BaseStep, SampleData, TriggerType } from '@market-connector/shared'
 import { Prop, SchemaFactory } from '@nestjs/mongoose'
-import { ActionConnectorSchema } from './action.schema'
 
 export class SampleDataModel implements SampleData {
   @Prop({ required: false, type: Object })
@@ -43,6 +42,6 @@ export class BaseStepModel implements BaseStep {
   @Prop({ required: true, type: Boolean, default: false })
   valid: boolean
 
-  @Prop({ required: true, type: ActionConnectorSchema })
+  @Prop({ required: false, type: {} })
   nextAction?: Action | undefined
 }

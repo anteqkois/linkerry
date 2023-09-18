@@ -1,12 +1,11 @@
 import { Flow, FlowStatus, FlowVersion, Id } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { FlowVersionSchema } from '../../flow-versions/schemas/flow-version.schema'
 import { UserModel } from '../../users'
 
 export type FlowDocument = mongoose.HydratedDocument<Flow>
 
-@Schema({ timestamps: true, autoIndex: true })
+@Schema({ timestamps: true, autoIndex: true, collection: 'flows' })
 export class FlowModel implements Flow {
   _id: string
 
@@ -16,7 +15,7 @@ export class FlowModel implements Flow {
   @Prop({ required: true, type: String, enum: FlowStatus, default: FlowStatus.Unpublished })
   status: FlowStatus
 
-  @Prop({ required: true, type: FlowVersionSchema })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flow-versions' })
   version: FlowVersion
 }
 
