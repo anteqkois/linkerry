@@ -9,7 +9,7 @@ describe('GET /api/connectors', () => {
   })
 
   it('should throw error when unknown connector', async () => {
-    const res = axios.get(`/connectors/coingecko/metadata`)
+    const res = axios.get(`/connectors/coingecko2/metadata`)
 
     expect(res).rejects.toHaveProperty('response.status', 500)
   })

@@ -2,6 +2,7 @@ import { User, UserMetadata, UserRole } from '@market-connector/shared'
 import { Language } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import { UserSettingsModel } from '../../user-settings/schemas/user-settings.schema'
 
 export type UserDocument = mongoose.HydratedDocument<User>
 
@@ -56,7 +57,7 @@ export class UserModel implements User {
   consents: Record<string, boolean>
 
   // Shoulde be created almost one when user was created
-  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'UserSettings' })
+  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: UserSettingsModel.name })
   settings: any
 
   @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })

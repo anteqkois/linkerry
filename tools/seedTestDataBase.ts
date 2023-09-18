@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import { database } from './database'
 import { alwaysExistingConditionAlert, alwaysExistingStrategyBuyStaticMarket, alwaysExistingStrategyStaticMarket, alwaysExistingUser } from './models.mock'
 
-const collectionToDelete = ['users', 'conditions', 'user-keys', 'strategies', 'strategies-buy']
+const collectionToDelete = ['users', 'conditions', 'user-keys', 'strategies', 'strategies-buy', 'flows', 'flow-versions']
 
 export const seedDatabase = async () => {
   const db = await database

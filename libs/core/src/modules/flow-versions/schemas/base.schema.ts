@@ -1,6 +1,7 @@
 import { Action, ActionType, BaseConnectorSettings, BaseStep, SampleData, TriggerType } from '@market-connector/shared'
-import { Prop, SchemaFactory } from '@nestjs/mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
+@Schema({ _id: false })
 export class SampleDataModel implements SampleData {
   @Prop({ required: false, type: Object })
   currentSelectedData: unknown
@@ -11,6 +12,7 @@ export class SampleDataModel implements SampleData {
 
 export const SampleDataSchema = SchemaFactory.createForClass(SampleDataModel)
 
+@Schema({ _id: false })
 export class ConnectorSettingsModel implements BaseConnectorSettings {
   @Prop({ required: true, type: String })
   connectorName: string

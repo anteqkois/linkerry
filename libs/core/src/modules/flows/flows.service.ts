@@ -1,10 +1,10 @@
+import { Id } from '@market-connector/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { FlowModel } from './schemas/flow.schema'
 import { Model } from 'mongoose'
-import { Id } from '@market-connector/shared'
-import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { generateId } from '../../lib/mongodb'
+import { FlowVersionsService } from '../flow-versions/flow-versions.service'
+import { FlowModel } from './schemas/flow.schema'
 
 @Injectable()
 export class FlowsService {
@@ -14,10 +14,12 @@ export class FlowsService {
     const flowId = generateId()
     const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString())
 
-    return this.flowModel.create({
-      _id: flowId,
-      user: userId,
-      version: emptyFlowVersion.id,
-    })
+    return (
+      await this.flowModel.create({
+        _id: flowId,
+        user: userId,
+        version: emptyFlowVersion.id,
+      })
+    ).populate(['version'])
   }
 }
