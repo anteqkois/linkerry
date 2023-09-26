@@ -4,7 +4,12 @@
   "packageManager": "pnpm@7.15.0",
   "license": "MIT",
   "scripts": {
-    "commit": "cz"
+    "commit": "cz",
+    "api-gateway": "nx serve api-gateway",
+    "web": "nx serve web",
+    "flow-executor": "nx serve flow-executor",
+    "nx-dev": "npx nx run-many -t serve -p api-gateway web flow-executor",
+    "dev": "concurrently -p \"[{name}]\" -n \"api-gateway,web\" -c \"bgBlue.bold,bgGreen.bold,bgCyan.bold\" \"npm:api-gateway\" \"npm:web\" \"npm:flow-executor\""
   },
   "private": true,
   "devDependencies": {
@@ -39,6 +44,7 @@
     "@typescript-eslint/parser": "^5.60.1",
     "autoprefixer": "^10.4.14",
     "babel-jest": "^29.6.1",
+    "concurrently": "^8.2.1",
     "cypress": "^12.16.0",
     "cz-conventional-changelog": "^3.3.0",
     "esbuild": "^0.17.17",
