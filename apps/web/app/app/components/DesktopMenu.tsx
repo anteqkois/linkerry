@@ -1,16 +1,14 @@
 import {
   Menubar,
   MenubarContent,
-  MenubarGroup,
   MenubarItem,
-  MenubarLabel,
   MenubarMenu,
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
 } from '@market-connector/ui-components/client'
-import Link from 'next/link'
 import { Icons } from '@market-connector/ui-components/server'
+import Link from 'next/link'
 
 interface DesktopProps {
   children?: React.ReactNode
@@ -21,88 +19,62 @@ export function DesktopMenu({ children }: DesktopProps) {
     <nav className="hidden sm:block fixed top-1 left-1/2 -translate-x-1/2">
       <Menubar>
         <MenubarMenu>
-          <MenubarTrigger>Strategies</MenubarTrigger>
+          <MenubarTrigger>Flows</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              <Link href="/app/strategies/editor" prefetch={false}>
+              <Link href="/app/flows/editor" prefetch={false}>
                 Create New
               </Link>
               <MenubarShortcut>
-                <Icons.plus/>
+                <Icons.plus />
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
-              Edit Strategy
+              Edit Flow
               <MenubarShortcut>
                 <Icons.update />
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
-              <Link href="/app/strategies/list" prefetch={false}>
-                All Strategies
+              <Link href="/app/flows/list" prefetch={false}>
+                All Flows
               </Link>
             </MenubarItem>
-            <MenubarItem>Analysis</MenubarItem>
             <MenubarSeparator />
             <MenubarItem disabled>
-              Create First Strategy
+              Create First Flow
               <MenubarShortcut>
-                <Icons.article/>
+                <Icons.article />
               </MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger>Conditions</MenubarTrigger>
+          <MenubarTrigger>History</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              Create New
-              <MenubarShortcut>
-                <Icons.plus/>
-              </MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Edit Condition
-              <MenubarShortcut>
-                <Icons.update />
-              </MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>All Conditions</MenubarItem>
-            <MenubarSeparator />
-            <MenubarGroup>
-              <MenubarLabel>Condition Types</MenubarLabel>
-              <MenubarItem>Alerts</MenubarItem>
-              <MenubarItem disabled>Indicators</MenubarItem>
-            </MenubarGroup>
-            <MenubarSeparator />
-            <MenubarItem disabled>
-              Create First Condition
-              <MenubarShortcut>
-                <Icons.article/>
-              </MenubarShortcut>
+              Runs Hisory
+              <MenubarShortcut>{/* <Icons.plus /> */}</MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger>Exchanges</MenubarTrigger>
+          <MenubarTrigger>Connectors</MenubarTrigger>
           <MenubarContent>
-            <Link href="/app/user-keys/create" prefetch={false}>
+            <Link href="/app/connectors" prefetch={false}>
               <MenubarItem>
-                Add API Keys
-                <MenubarShortcut>
-                  <Icons.plus/>
-                </MenubarShortcut>
+                All Connectors
+                <MenubarShortcut>{/* <Icons.plus /> */}</MenubarShortcut>
               </MenubarItem>
             </Link>
-            <Link href="/app/user-keys/list" prefetch={false}>
-            <MenubarItem>My API keys</MenubarItem>
+            <Link href="/app/connecotrs/connections" prefetch={false}>
+              <MenubarItem>Your Connected Apps</MenubarItem>
             </Link>
-            <MenubarItem>Avaible Exchanges</MenubarItem>
             <MenubarSeparator />
             <MenubarItem disabled>
               Security
               <MenubarShortcut>
-                <Icons.article/>
+                <Icons.article />
               </MenubarShortcut>
             </MenubarItem>
           </MenubarContent>

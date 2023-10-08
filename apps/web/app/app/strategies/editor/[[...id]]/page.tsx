@@ -14,13 +14,13 @@ import {
   StrategyNode,
 } from '../../../../../modules/editor'
 import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
-import { AddNode } from '../../../../../modules/editor/nodes/shared/AddNode'
+import { AddNode } from '../../../../../modules/editor/nodes/components/AddNode'
 import {
   addNodeFactory,
   nodeConfigs,
   strategyBuyNodeFactory,
   strategyNodeFactory,
-} from '../../../../../modules/editor/nodes/shared/nodeFactory'
+} from '../../../../../modules/editor/nodes/components/nodeFactory'
 import { StrategyApi } from '../../../../../modules/strategies/api'
 import { LocalStorageKeys } from '../../../../../types'
 

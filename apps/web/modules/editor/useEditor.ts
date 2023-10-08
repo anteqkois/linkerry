@@ -1,5 +1,6 @@
 'use client'
 
+import { Id } from '@market-connector/shared'
 import {
   Connection,
   Edge,
@@ -14,17 +15,18 @@ import {
   applyNodeChanges,
 } from 'reactflow'
 import { create } from 'zustand'
-import { CustomNode, CustomNodeId } from './nodes'
-import { Id } from '@market-connector/shared'
 import { CustomEdge, CustomEdgeId } from './edges/types'
+import { CustomNode, CustomNodeId } from './nodes'
 
 type EditorNode = Node | CustomNode
 
 interface IEditorState {
+  showDrawer: boolean
+  setShowDrawer: (value: boolean) => void
   isLoading: boolean
   setIsLoading: (value: boolean) => void
-  strategyId?: Id
-  setStrategyId: (id: Id) => void
+  flowId?: Id
+  setFlowId: (id: Id) => void
   nodes: EditorNode[]
   setNodes: (nodes: CustomNode[]) => void
   addNode: (node: CustomNode) => void
@@ -42,8 +44,10 @@ interface IEditorState {
 export const useEditor = create<IEditorState>((set, get) => ({
   isLoading: false,
   setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
-  strategyId: undefined,
-  setStrategyId: (id: Id) => set(({ strategyId }) => ({ strategyId: id })),
+  showDrawer: false,
+  setShowDrawer: (value: boolean) => set((state) => ({ showDrawer: value })),
+  flowId: undefined,
+  setFlowId: (id: Id) => set(() => ({ flowId: id })),
   nodes: [],
   setNodes: (nodes: CustomNode[]) => set((state) => ({ nodes })),
   addNode: (node: CustomNode) => set((state) => ({ nodes: [...state.nodes, node] })),

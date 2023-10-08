@@ -7,19 +7,19 @@ import {
   IAuthLogoutResponse,
   IAuthSignUpInput,
   IAuthSignUpResponse,
-  IUser,
-} from '@market-connector/types'
+  User,
+} from '@market-connector/shared'
+import { useRouter } from 'next/navigation'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext } from 'react'
 import { useCookie } from '../../hooks/useCookie'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { AuthApi } from './api'
-import { useRouter } from 'next/navigation'
 
 type ReturnType = {
   authStatus: AuthStatus
   setAuthStatus: Dispatch<SetStateAction<AuthStatus>>
-  user: IUser
-  setUser: Dispatch<SetStateAction<IUser>>
+  user: User
+  setUser: Dispatch<SetStateAction<User>>
   signUp: (data: IAuthSignUpInput) => Promise<IAuthSignUpResponse>
   login: (data: IAuthLoginInput) => Promise<IAuthLoginResponse>
   logout: () => Promise<IAuthLogoutResponse>
@@ -29,7 +29,7 @@ const Context = createContext<ReturnType>({} as ReturnType)
 
 export function UserProvider({ children }: PropsWithChildren) {
   const [authStatus, setAuthStatus] = useCookie<AuthStatus>(Cookies.AUTH_STATUS, AuthStatus.LOADING)
-  const [user, setUser] = useLocalStorage('user-data', {} as IUser)
+  const [user, setUser] = useLocalStorage('user-data', {} as User)
   const { push } = useRouter()
 
   const signUp = useCallback(async (data: IAuthSignUpInput) => {
@@ -54,7 +54,7 @@ export function UserProvider({ children }: PropsWithChildren) {
   const logout = useCallback(async () => {
     const response = await AuthApi.logout()
 
-    setUser({} as IUser)
+    setUser({} as User)
     setAuthStatus(AuthStatus.UNAUTHENTICATED)
     // if(response.data.error) // TODO handle error
     push('/')

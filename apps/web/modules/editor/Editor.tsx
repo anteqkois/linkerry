@@ -3,8 +3,9 @@ import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, Controls, Edge, ReactFlowProvider } from 'reactflow'
-import { useEditor } from './useEditor'
+import { Drawer } from '../../components/Drawer/Index'
 import { CustomNode } from './nodes'
+import { useEditor } from './useEditor'
 
 interface EditorProps {
   limits: undefined // How many strategies buy can be etc.
@@ -20,7 +21,18 @@ interface EditorProps {
 }
 
 export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
-  const { nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange, onConnect, setStrategyId } = useEditor()
+  const {
+    nodes,
+    setNodes,
+    onNodesChange,
+    edges,
+    setEdges,
+    onEdgesChange,
+    onConnect,
+    setFlowId: setStrategyId,
+    showDrawer,
+    setShowDrawer,
+  } = useEditor()
   const reactFlowWrapper = useRef(null)
 
   useEffect(() => {
@@ -58,6 +70,7 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
           <Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
         </ReactFlow>
       </div>
+      <Drawer show={showDrawer} setShow={setShowDrawer} />
     </ReactFlowProvider>
   )
 }

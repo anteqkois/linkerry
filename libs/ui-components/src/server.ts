@@ -1,8 +1,8 @@
 // Only server side compoenents
 
-export * from './components/ui/icons'
 export * from './components/ui/button'
 export * from './components/ui/card'
+export * from './components/ui/icons'
 export * from './components/ui/table'
 
 export * from './components/ui/typography/h1'

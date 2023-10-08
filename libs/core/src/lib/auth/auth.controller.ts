@@ -1,11 +1,11 @@
 import '@fastify/cookie'
 import {
-  AuthStatus,
-  Cookies,
-  IAuthLoginResponse,
-  IAuthLogoutResponse,
-  IAuthSignUpResponse,
-  User,
+    AuthStatus,
+    Cookies,
+    IAuthLoginResponse,
+    IAuthLogoutResponse,
+    IAuthSignUpResponse,
+    User,
 } from '@market-connector/shared'
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -63,7 +63,7 @@ export class AuthController {
 
   // @UseGuards(JwtAuthGuard)
   @Post('logout')
-  // async logut(@ReqJWTUser() user: IUser, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
+  // async logut(@ReqJWTUser() user: User, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
   async logut(@Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
     res.clearCookie(Cookies.ACCESS_TOKEN, {
       path: '/',

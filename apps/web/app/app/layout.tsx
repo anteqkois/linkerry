@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className="min-h-screen bg-background-page">
       <UserProvider>
-        <div className="fixed z-50">
+        <div className="fixed z-40">
           <MobileMenu />
           <DesktopMenu />
           <div className="fixed top-1 right-12">

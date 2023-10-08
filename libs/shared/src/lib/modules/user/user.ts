@@ -31,7 +31,7 @@ export interface User {
   consents: Record<string, boolean>
   settings: any
   referrer?: string
-  // referrer?: IUser;
+  // referrer?: User;
   // remember_token
 }
 

@@ -1,5 +1,4 @@
-import { User, UserMetadata, UserRole } from '@market-connector/shared'
-import { Language } from '@market-connector/shared'
+import { Language, User, UserMetadata, UserRole } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { UserSettingsModel } from '../../user-settings/schemas/user-settings.schema'
@@ -61,7 +60,7 @@ export class UserModel implements User {
   settings: any
 
   @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
-  // referrer: IUser;
+  // referrer: User;
   referrer: string
 
   @Prop({ required: false, type: UserMetadataSchema })
