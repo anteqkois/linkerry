@@ -20,7 +20,19 @@
       },
       "configurations": {
         "development": {},
-        "production": {}
+        "production": {},
+        "repl": {
+          "main": "apps/api-gateway/src/repl.ts",
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/project/src/environments/environment.ts",
+              "with": "apps/project/src/environments/environment.prod.ts"
+            }
+          ]
+        }
       }
     },
     "serve": {
@@ -35,6 +47,9 @@
         },
         "production": {
           "buildTarget": "api-gateway:build:production"
+        },
+        "repl": {
+          "buildTarget": "api-gateway:build:repl"
         }
       }
     },
