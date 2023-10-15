@@ -1,8 +1,11 @@
 import { Action } from './action/action'
+import { ConnectorBase } from './metadata'
 import { ConnectorAuthProperty } from './property'
 import { Trigger } from './trigger/trigger'
 
-export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty> {
+export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty>
+  implements Omit<ConnectorBase, 'version' | 'name' | 'minimumSupportedRelease' | 'maximumSupportedRelease'>
+{
   private readonly _actions: Record<string, Action> = {}
   private readonly _triggers: Record<string, Trigger> = {}
 

@@ -1,4 +1,5 @@
 import { ActionContext } from '../context'
+import { ActionBase } from '../metadata'
 import { ConnectorAuthProperty, ConnectorPropertyMap, } from '../property'
 
 export type ActionRunner<ConnectorAuth extends ConnectorAuthProperty, ActionProps extends ConnectorPropertyMap> =
@@ -6,7 +7,7 @@ export type ActionRunner<ConnectorAuth extends ConnectorAuthProperty, ActionProp
 
 export interface ActionProps extends ConnectorPropertyMap {}
 
-export class ActionInstance<ConnectorAuth extends ConnectorAuthProperty, ActionProps extends ConnectorPropertyMap> {
+export class ActionInstance<ConnectorAuth extends ConnectorAuthProperty, ActionProps extends ConnectorPropertyMap> implements ActionBase {
   constructor(
     public readonly name: string,
     public readonly displayName: string,

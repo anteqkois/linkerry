@@ -6,6 +6,7 @@ import ReactFlow, { Background, BackgroundVariant, Controls, Edge, ReactFlowProv
 import { Drawer } from '../../components/Drawer/Index'
 import { CustomNode } from './nodes'
 import { useEditor } from './useEditor'
+import { SelectTrigger } from './components/SelectTrigger'
 
 interface EditorProps {
   limits: undefined // How many strategies buy can be etc.
@@ -70,7 +71,9 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
           <Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
         </ReactFlow>
       </div>
-      <Drawer show={showDrawer} setShow={setShowDrawer} />
+      <Drawer show={showDrawer} setShow={setShowDrawer}>
+        <SelectTrigger/>
+      </Drawer>
     </ReactFlowProvider>
   )
 }

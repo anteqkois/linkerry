@@ -25,6 +25,7 @@ interface IEditorState {
   setShowDrawer: (value: boolean) => void
   isLoading: boolean
   setIsLoading: (value: boolean) => void
+  connectorsMetadata: any
   flowId?: Id
   setFlowId: (id: Id) => void
   nodes: EditorNode[]
