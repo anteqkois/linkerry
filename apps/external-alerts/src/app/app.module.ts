@@ -1,9 +1,8 @@
-import { AllExceptionsFilter, CoreModule, KafkaModule } from '@market-connector/core';
+import { CoreModule, KafkaModule } from '@market-connector/nest-core';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { APP_FILTER } from '@nestjs/core';
 // import { MongodbModule } from './common/mongodb/mongodb.module';
 // import { ExternalAlertsModule } from './modules/external-alerts/external-alerts.module';
 

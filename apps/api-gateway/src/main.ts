@@ -1,5 +1,5 @@
 import fastifyCookie from '@fastify/cookie'
-import { exceptionFactoryDto } from '@market-connector/core'
+import { exceptionFactoryDto } from '@market-connector/nest-core'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'

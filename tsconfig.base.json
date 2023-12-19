@@ -17,7 +17,7 @@
     "paths": {
       "@market-connector/connectors-framework": ["libs/connectors/framework/src/index.ts"],
       "@market-connector/connectors/coingecko": ["libs/connectors/coingecko/src/index.ts"],
-      "@market-connector/core": ["libs/core/src/index.ts"],
+      "@market-connector/nest-core": ["libs/nest-core/src/index.ts"],
       "@market-connector/engine": ["libs/engine/src/index.ts"],
       "@market-connector/shared": ["libs/shared/src/index.ts"],
       "@market-connector/tools": ["tools/index.ts"],

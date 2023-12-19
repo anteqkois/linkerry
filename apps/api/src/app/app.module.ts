@@ -1,4 +1,4 @@
-import { AuthModule, ConditionsModule, CoreModule, ExchangesModule, StrategiesBuyModule, StrategiesModule, UserKeysModule, UsersModule } from '@market-connector/core'
+import { AuthModule, ConditionsModule, CoreModule, ExchangesModule, StrategiesBuyModule, StrategiesModule, UserKeysModule, UsersModule } from '@market-connector/nest-core'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AppController } from './app.controller'

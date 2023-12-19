@@ -1,6 +1,6 @@
+import { ProcessAlertTradinViewDto } from '@market-connector/nest-core';
+import { alwaysExistingAlert } from '@market-connector/tools';
 import axios from 'axios';
-import { ProcessAlertTradinViewDto } from '@market-connector/core'
-import { alwaysExistingAlert } from '@market-connector/tools'
 
 describe('POST /trading-view', () => {
   it('should reject proccess alert when invalid data', async () => {
