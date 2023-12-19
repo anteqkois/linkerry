@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 
 export type ConnectorMetadataDocument = mongoose.HydratedDocument<ConnectorMetadata>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'flows' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'connectors_metadata' })
 export class ConnectorMetadataModel implements ConnectorMetadata {
   _id: string
 

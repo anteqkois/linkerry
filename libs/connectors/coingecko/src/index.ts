@@ -2,11 +2,12 @@ import { ConnectorAuth, createConnector } from '@market-connector/connectors-fra
 import { fetchTopHundred } from './lib/triggers/fetch-top-hundred'
 
 export const coingecko = createConnector({
-  name: 'coingecko',
+  name: '@market-connector/connectors/coingecko',
   displayName: 'Coingecko',
   logoUrl: '',
   triggers: [fetchTopHundred],
   description: 'Coingecko connector for cryptocurrency data',
+  minimumSupportedRelease: '0.0.0',
   actions: [],
   auth: ConnectorAuth.None(),
 })

@@ -5,7 +5,7 @@ import { TriggerConnectorSchema, TriggerEmptySchema, TriggerWebhookSchema } from
 
 export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 
-@Schema({ timestamps: true, autoIndex: true , collection: 'flow-versions'})
+@Schema({ timestamps: true, autoIndex: true , collection: 'flow_versions'})
 export class FlowVersionModel implements FlowVersion {
   _id: string
 

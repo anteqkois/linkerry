@@ -1,5 +1,5 @@
-import { TriggerStrategy, WebhookHandshakeConfiguration } from './trigger/trigger'
 import { ConnectorAuthProperty, ConnectorPropertyMap } from './property'
+import { TriggerStrategy, WebhookHandshakeConfiguration } from './trigger/trigger'
 
 export type ConnectorBase = {
   _id?: string

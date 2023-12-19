@@ -14,6 +14,8 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
     public readonly displayName: string,
     public readonly logoUrl: string,
     public readonly description: string,
+    public readonly minimumSupportedRelease: string,
+    public readonly maximumSupportedRelease: string,
     triggers: Trigger<ConnectorAuth>[],
     actions: Action<ConnectorAuth>[],
     public readonly requiredAith: boolean,
@@ -32,8 +34,8 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
       actions: this._actions,
       triggers: this._triggers,
       auth: this.auth,
-      // minimumSupportedRelease: this.minimumSupportedRelease,
-      // maximumSupportedRelease: this.maximumSupportedRelease,
+      minimumSupportedRelease: this.minimumSupportedRelease,
+      maximumSupportedRelease: this.maximumSupportedRelease,
     }
   }
 
@@ -59,11 +61,11 @@ type CreateConnectorParams<ConnectorAuth extends ConnectorAuthProperty = Connect
   displayName: string
   logoUrl: string
   description: string
+  minimumSupportedRelease: string
+  maximumSupportedRelease?: string
   auth: ConnectorAuth | undefined
   requiredAuth?: boolean
   // events?: ConnectorEventProcessors
-  // minimumSupportedRelease?: string
-  // maximumSupportedRelease?: string
   actions: Action<ConnectorAuth>[]
   triggers: Trigger<ConnectorAuth>[]
 }
@@ -74,6 +76,8 @@ export const createConnector = <ConnectorAuth extends ConnectorAuthProperty>(par
     params.displayName,
     params.logoUrl,
     params.description,
+    params.minimumSupportedRelease,
+    params.maximumSupportedRelease ?? '9999.9999.9999',
     params.triggers,
     params.actions,
     params.requiredAuth ?? false,
