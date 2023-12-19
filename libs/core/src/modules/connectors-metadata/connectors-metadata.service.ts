@@ -1,17 +1,16 @@
-import { Injectable } from '@nestjs/common'
-import { CreateDto } from './dto/create.dto'
-import { UpdateDto } from './dto/update.dto'
-import { Id } from '@market-connector/shared'
-import { Model } from 'mongoose'
-import { ConnectorMetadataModel } from './schemas/connector.schema'
-import { InjectModel } from '@nestjs/mongoose'
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@market-connector/connectors-framework'
+import { Id } from '@market-connector/shared'
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { CreateDto } from './dto/create.dto'
+import { ConnectorMetadataModel } from './schemas/connector.schema'
 
 @Injectable()
 export class ConnectorsMetadataService {
   constructor(@InjectModel(ConnectorMetadataModel.name) private readonly connectorMetadataModel: Model<ConnectorMetadataModel>) {}
 
-  toSummaryMetadata(connectorMetadata: ConnectorMetadata): ConnectorMetadataSummary {
+  connectorToSummaryMetadata(connectorMetadata: ConnectorMetadata): ConnectorMetadataSummary {
     return {
       ...connectorMetadata,
       actions: Object.keys(connectorMetadata.actions).length,
@@ -21,19 +20,13 @@ export class ConnectorsMetadataService {
 
   async create(createDto: CreateDto) {
     return this.connectorMetadataModel.create({
-      ...CreateDto,
-    })
-  }
-
-  async seed(createDto: CreateDto) {
-    return this.connectorMetadataModel.create({
-      ...CreateDto,
+      ...createDto,
     })
   }
 
   async findAll() {
     const connectors = await this.connectorMetadataModel.find()
-    return connectors.map((connector) => this.toSummaryMetadata(connector))
+    return connectors.map((connector) => this.connectorToSummaryMetadata(connector))
   }
 
   async findOne(id: Id) {
@@ -41,12 +34,4 @@ export class ConnectorsMetadataService {
       _id: id,
     })
   }
-
-  // async update(id: number, updateConnectorsMetadatumDto: UpdateDto) {
-  //   return `This action updates a #${id} connectorsMetadatum`
-  // }
-
-  // async remove(id: number) {
-  //   return `This action removes a #${id} connectorsMetadatum`
-  // }
 }

@@ -101,17 +101,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     request: FastifyRequest & { user?: any },
     exception: unknown,
   ): string => {
-    const { statusCode, error } = errorResponse
+    const { statusCode } = errorResponse
     const { method, url } = request
     const errorLog = `[${method}] ${url} - ${statusCode}
     ${humanMessage}
     User: ${JSON.stringify(request.user ?? 'Not signed in')}`
     return errorLog
-    // const errorLog = `[${ method }] ${ url } - ${ statusCode }
-    // ${ JSON.stringify(errorResponse) }
-    // User: ${ JSON.stringify(request.user ?? 'Not signed in') }
-    // ${ exception instanceof HttpException ? exception.stack : error }`;
-    // return errorLog;
   }
 
   // private writeErrorLogToFile = (errorLog: string): void => {

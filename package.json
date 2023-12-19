@@ -126,6 +126,7 @@
     "rxjs": "^7.8.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.6",
+    "tsconfig-paths": "^4.2.0",
     "tslib": "^2.6.0",
     "zod": "^3.21.4",
     "zustand": "^4.4.1"

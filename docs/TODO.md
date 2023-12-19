@@ -1,0 +1,2 @@
+- migrate to use Nestia https://nestia.io/docs/ for controllers validation etc. or https://ts-rest.com/ (probably secodn option would be better)
+- migrate to use https://github.com/fabian-hiller/valibot insted zod
