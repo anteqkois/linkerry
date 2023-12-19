@@ -1,2 +1,5 @@
 export * from './api'
 export * from './database'
+export * from './auth'
+export * from './error'
+export * from './types-and-resolvers'

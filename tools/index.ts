@@ -1,3 +1,3 @@
 export * from './database'
 export * from './models.mock'
-export * from './wait'
+export * from './common/wait'

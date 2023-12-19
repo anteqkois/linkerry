@@ -1,6 +1,5 @@
 'use client'
 
-import { IStrategy } from '@market-connector/types'
 import { ColumnDef } from '@tanstack/react-table'
 
 import {
@@ -13,11 +12,11 @@ import {
   DropdownMenuTrigger,
 } from '@market-connector/ui-components/client'
 import { Button, Icons, TableCellContent } from '@market-connector/ui-components/server'
+import Link from 'next/link'
 import { TableColumnHeader } from '../../../../components/Table/TableColumnHeader'
 import { dayjs } from '../../../../libs/dayjs'
-import Link from 'next/link'
 
-export const columns: ColumnDef<IStrategy>[] = [
+export const columns: ColumnDef<any>[] = [
   {
     id: 'select',
     header: ({ table }) => (

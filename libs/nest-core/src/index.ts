@@ -1,20 +1,10 @@
 export * from './core.module';
 export * from './lib/auth';
-export * from './modules/conditions';
-export * from './modules/users';
-// export * from './lib/user-settings';
 export * from './lib/kafka';
 export * from './lib/utils';
 export * from './modules/connectors-metadata';
 export * from './modules/events';
-export * from './modules/exchanges';
 export * from './modules/flow-versions';
 export * from './modules/flows';
-export * from './modules/indicators';
-export * from './modules/markets';
-export * from './modules/strategies';
-export * from './modules/strategies-buy';
-export * from './modules/user-keys';
-// export * from './modules/languages';
-// export * from './modules/strategies-sell';
+export * from './modules/users';
 
