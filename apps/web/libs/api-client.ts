@@ -22,7 +22,8 @@ apiClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config
-    if (error.response.status == 401 && error.config && !error.config._isRetry) {
+
+    if (error?.response?.status == 401 && error?.config && !error?.config?._isRetry) {
       originalRequest._isRetry = true
       try {
         const response = await axios.get<{ success: boolean }>(`${API_URL}/api/auth/refresh`, {
@@ -36,7 +37,6 @@ apiClient.interceptors.response.use(
         redirect('/login')
       } catch (e) {
         redirect('/login')
-        console.log({ e })
       }
     }
     throw error

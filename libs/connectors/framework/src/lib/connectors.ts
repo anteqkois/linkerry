@@ -1,6 +1,7 @@
 import { Action } from './action/action'
 import { ConnectorBase } from './metadata'
 import { ConnectorAuthProperty } from './property'
+import { ConnectorTag } from './tags'
 import { Trigger } from './trigger/trigger'
 
 export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty>
@@ -16,6 +17,7 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
     public readonly description: string,
     public readonly minimumSupportedRelease: string,
     public readonly maximumSupportedRelease: string,
+    public readonly tags: ConnectorTag[],
     triggers: Trigger<ConnectorAuth>[],
     actions: Action<ConnectorAuth>[],
     public readonly requiredAith: boolean,
@@ -36,6 +38,7 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
       auth: this.auth,
       minimumSupportedRelease: this.minimumSupportedRelease,
       maximumSupportedRelease: this.maximumSupportedRelease,
+      tags: this.tags
     }
   }
 
@@ -68,6 +71,7 @@ type CreateConnectorParams<ConnectorAuth extends ConnectorAuthProperty = Connect
   // events?: ConnectorEventProcessors
   actions: Action<ConnectorAuth>[]
   triggers: Trigger<ConnectorAuth>[]
+  tags: ConnectorTag[]
 }
 
 export const createConnector = <ConnectorAuth extends ConnectorAuthProperty>(params: CreateConnectorParams<ConnectorAuth>) => {
@@ -78,6 +82,7 @@ export const createConnector = <ConnectorAuth extends ConnectorAuthProperty>(par
     params.description,
     params.minimumSupportedRelease,
     params.maximumSupportedRelease ?? '9999.9999.9999',
+    params.tags,
     params.triggers,
     params.actions,
     params.requiredAuth ?? false,

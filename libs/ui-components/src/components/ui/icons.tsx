@@ -31,6 +31,7 @@ type IconProps = React.HTMLAttributes<SVGElement>
 type RadixIconProps = React.HTMLAttributes<SVGElement> & { children?: undefined }
 
 export const Icons = {
+  check: (props: RadixIconProps) => <CheckIcon {...props} />,
   delete: (props: RadixIconProps) => <TrashIcon {...props} />,
   warn: (props: RadixIconProps) => <ExclamationTriangleIcon {...props} />,
   valid: (props: RadixIconProps) => <CheckCircledIcon {...props} />,

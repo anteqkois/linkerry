@@ -2,7 +2,6 @@
 
 import { ConnectorMetadata } from '@market-connector/connectors-framework'
 import {
-  Checkbox,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -10,51 +9,89 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@market-connector/ui-components/client'
-import { Button, Icons } from '@market-connector/ui-components/server'
-import { Column, ColumnDef } from '@tanstack/react-table'
+import { Badge, Button, Icons } from '@market-connector/ui-components/server'
+import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
-
-function TableColumnHeader<TColumn>({ column, title, sortable = false }: { column: Column<TColumn>; title: string; sortable?: boolean }) {
-  return sortable ? (
-    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-      {title}
-      <Icons.sort className="ml-2 h-4 w-4" />
-    </Button>
-  ) : (
-    <div className="text-right">{title}</div>
-  )
-}
+import { TableColumnHeader } from '../../../shared/components/Table/TableColumnHeader'
 
 export const columns: ColumnDef<ConnectorMetadata>[] = [
+  // todo add like/saved field
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={table.getIsAllPageRowsSelected()}
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'displayName',
-    header: ({ column }) => <TableColumnHeader column={column} title="Connector" sortable />,
+    accessorKey: 'logoUrl',
     cell: ({ row }) => {
       return (
         <div className="font-medium pl-4">
-          <Image src={row.getValue('logoUrl')} alt={row.getValue('displayName')} />
-          {row.getValue('displayName')}
+          <Image width={26} height={26} src={row.getValue('logoUrl')} alt={row.getValue('displayName')} />
         </div>
       )
     },
   },
   {
-    id: 'actions',
+    accessorKey: 'displayName',
+    header: ({ column }) => <TableColumnHeader column={column} title="Name" sortable />,
     cell: ({ row }) => {
-      const exchange = row.original
+      return <div className="font-medium pl-4">{row.getValue('displayName')}</div>
+    },
+  },
+  {
+    accessorKey: 'tags',
+    filterFn: 'arrIncludesSome',
+    header: ({ column }) => <TableColumnHeader column={column} title="Tags" />,
+    cell: ({ row }) => {
+      return (
+        <div className="font-medium flex gap-1 flex-wrap max-w-md">
+          {(row.getValue('tags') as string[]).map((tag) => (
+            <Badge key={tag} variant={'outline'}>
+              #{tag}
+            </Badge>
+          ))}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'description',
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue('description')}</div>
+    },
+  },
+  {
+    accessorKey: 'triggers',
+    header: ({ column }) => <TableColumnHeader column={column} title="Triggers" sortable />,
+    cell: ({ row }) => {
+      return <div className="font-medium text-center">{row.getValue('triggers')}</div>
+    },
+  },
+  {
+    accessorKey: 'actions',
+    header: ({ column }) => <TableColumnHeader column={column} title="Actions" sortable />,
+    cell: ({ row }) => {
+      return <div className="font-medium text-center">{row.getValue('actions')}</div>
+    },
+  },
+  {
+    accessorKey: 'version',
+    cell: ({ row }) => {
+      return <div className="font-medium text-center">{row.getValue('version')}</div>
+    },
+  },
+  {
+    id: 'buttons',
+    cell: ({ row }) => {
+      // const connector = row.original
 
       return (
         <DropdownMenu>
@@ -70,8 +107,7 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
               Copy exchange name
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View exchange info</DropdownMenuItem>
-            <DropdownMenuItem>Deleye keys</DropdownMenuItem>
+            <DropdownMenuItem>Show details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

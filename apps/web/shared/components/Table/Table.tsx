@@ -1,29 +1,51 @@
 'use client'
 
 import {
+  ColumnDef,
+  ColumnFiltersState,
   SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@market-connector/ui-components/server'
-import { useState } from 'react'
-import { DataTableProps } from '../../../types'
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@market-connector/ui-components/server'
+import { cn } from '@market-connector/ui-components/utils'
+import { useEffect, useState } from 'react'
+import { usePredefinedMediaQuery } from '../../hooks/usePredefinedMediaQuery'
+import { DataTableToolbarProps, TableToolbar } from './Toolbar'
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<any, TValue>[]
+  data: TData[]
+  filterAccessor?: keyof TData
+  chooseFilters?: DataTableToolbarProps<TData, TValue>['chooseFilters']
+  className?: string
+  mobileHiddenColumns?: (keyof TData | 'buttons')[]
+}
+
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  filterAccessor,
+  chooseFilters,
+  className,
+  mobileHiddenColumns,
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    logoUrl: false,
+  })
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const { isMobile } = usePredefinedMediaQuery()
+
   const table = useReactTable({
     data,
     columns,
@@ -35,11 +57,37 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     state: {
       sorting,
       rowSelection,
+      columnVisibility,
+      columnFilters,
     },
+    enableRowSelection: true,
+    enableHiding: !!mobileHiddenColumns?.length,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
+  useEffect(() => {
+    if (!mobileHiddenColumns?.length) return
+
+    if (isMobile)
+      table.setColumnVisibility(() => {
+        return mobileHiddenColumns.reduce((prev, curr) => {
+          prev[curr] = false
+          return prev
+        }, {} as any) as VisibilityState
+      })
+    else {
+      table.resetColumnVisibility()
+    }
+  }, [isMobile])
+
   return (
-    <div>
+    <div className={cn('space-y-4 w-full', className)}>
+      {isMobile}
+      {filterAccessor || chooseFilters ? <TableToolbar table={table} filterAccessor={filterAccessor} chooseFilters={chooseFilters} /> : null}
       <div className="rounded-md border w-full overflow-auto bg-card">
         <Table>
           <TableHeader>
@@ -76,8 +124,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 pl-3 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-          selected.
+          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           Previous

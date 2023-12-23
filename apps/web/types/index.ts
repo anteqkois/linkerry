@@ -1,5 +1,4 @@
 import { Icons } from '@market-connector/ui-components/server'
-import { ColumnDef } from '@tanstack/react-table'
 
 export type NavItem = {
   title: string
@@ -54,12 +53,6 @@ export type SubscriptionPlan = {
   name: string
   description: string
   stripePriceId: string
-}
-
-export interface DataTableProps<TData, TValue> {
-  // columns: ColumnDef<TData, TValue>[]
-  columns: ColumnDef<any, TValue>[]
-  data: TData[]
 }
 
 export enum LocalStorageKeys {

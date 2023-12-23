@@ -7,7 +7,9 @@ export default async function Page() {
 
   return (
     <PageContainer>
-      <ConnectorsTable data={res.data} />
+      <div className="w-full max-w-7xl">
+        <ConnectorsTable data={res.data} />
+      </div>
     </PageContainer>
   )
 }

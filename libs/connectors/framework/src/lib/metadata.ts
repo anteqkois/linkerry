@@ -1,4 +1,5 @@
 import { ConnectorAuthProperty, ConnectorPropertyMap } from './property'
+import { ConnectorTag } from './tags'
 import { TriggerStrategy, WebhookHandshakeConfiguration } from './trigger/trigger'
 
 export type ConnectorBase = {
@@ -11,6 +12,7 @@ export type ConnectorBase = {
   version: string
   minimumSupportedRelease: string
   maximumSupportedRelease: string
+  tags: ConnectorTag[],
 }
 
 export type ActionBase = {
