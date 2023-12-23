@@ -6,12 +6,12 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { Input, Label } from '@market-connector/ui-components/client'
+import { Button, Icons } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useUser } from '../../../modules/user/useUser'
-import { retriveServerHttpException } from '../../../utils'
+import { retriveServerHttpException } from '../../../shared/utils'
 import { userAuthSchema } from '../validations'
-import {Button, Icons } from '@market-connector/ui-components/server'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 

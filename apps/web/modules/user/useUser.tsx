@@ -11,8 +11,8 @@ import {
 } from '@market-connector/shared'
 import { useRouter } from 'next/navigation'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext } from 'react'
-import { useCookie } from '../../hooks/useCookie'
-import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { useCookie } from '../../shared/hooks/useCookie'
+import { useLocalStorage } from '../../shared/hooks/useLocalStorage'
 import { AuthApi } from './api'
 
 type ReturnType = {

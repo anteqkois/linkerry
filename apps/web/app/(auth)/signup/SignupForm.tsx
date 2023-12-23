@@ -2,16 +2,16 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Language } from '@market-connector/shared'
-import {  Input, Label, toast } from '@market-connector/ui-components/client'
+import { Input, Label, toast } from '@market-connector/ui-components/client'
+import { Button, Icons } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { useUser } from '../../../modules/user/useUser'
-import { retriveServerHttpException } from '../../../utils'
+import { retriveServerHttpException } from '../../../shared/utils'
 import { userAuthSchema } from '../validations'
-import { Button, Icons } from '@market-connector/ui-components/server'
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>
 

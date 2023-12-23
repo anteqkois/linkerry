@@ -13,8 +13,8 @@ import {
 } from '@market-connector/ui-components/client'
 import { Button, Icons, TableCellContent } from '@market-connector/ui-components/server'
 import Link from 'next/link'
-import { TableColumnHeader } from '../../../../components/Table/TableColumnHeader'
 import { dayjs } from '../../../../libs/dayjs'
+import { TableColumnHeader } from '../../../../shared/components/Table/TableColumnHeader'
 
 export const columns: ColumnDef<any>[] = [
   {

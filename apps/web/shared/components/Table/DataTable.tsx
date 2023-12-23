@@ -19,7 +19,7 @@ import {
   TableRow,
 } from '@market-connector/ui-components/server'
 import { useState } from 'react'
-import { DataTableProps } from '../../types'
+import { DataTableProps } from '../../../types'
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])

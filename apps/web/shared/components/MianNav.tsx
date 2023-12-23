@@ -6,8 +6,8 @@ import * as React from "react"
 
 import { Icons } from "@market-connector/ui-components/server"
 import { cn } from "@market-connector/ui-components/utils"
-import { siteConfig } from "../app/webConfig"
-import { MainNavItem } from "../types"
+import { siteConfig } from "../../app/webConfig"
+import { MainNavItem } from "../../types"
 import { MobileNav } from "./MobileNav"
 
 interface MainNavProps {

@@ -3,10 +3,10 @@ import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, Controls, Edge, ReactFlowProvider } from 'reactflow'
-import { Drawer } from '../../components/Drawer/Index'
+import { Drawer } from '../../shared/components/Drawer/Index'
+import { SelectTrigger } from './components/SelectTrigger'
 import { CustomNode } from './nodes'
 import { useEditor } from './useEditor'
-import { SelectTrigger } from './components/SelectTrigger'
 
 interface EditorProps {
   limits: undefined // How many strategies buy can be etc.

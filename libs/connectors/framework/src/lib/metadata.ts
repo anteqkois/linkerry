@@ -7,8 +7,6 @@ export type ConnectorBase = {
   displayName: string
   logoUrl: string
   description: string
-  // projectId?: ProjectId;
-  // directoryName?: string;
   auth?: ConnectorAuthProperty
   version: string
   minimumSupportedRelease: string
