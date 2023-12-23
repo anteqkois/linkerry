@@ -9,7 +9,7 @@ export const loadConnectorModule = async ({ connectorName, connectorVersion }: L
   // const module = await import(`${packageName}`)
   // const packageName = 'coingecko'
   // const module = await import(`@market-connector/connectors/${packageName}`)
-  const module = await import('@market-connector/connectors/coingecko')
+  const module = await import('@market-connector/coingecko')
   if (!module) throw new Error(`Can not load module ${packageName}`)
 
   return module

@@ -3,7 +3,8 @@ import { Id } from '@market-connector/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { CreateDto } from './dto/create.dto'
+import { MongoFilter } from '../../lib/mongodb/decorators/filter.decorator'
+import { GetConnectorMetadataQueryDto } from './dto/get.dto'
 import { ConnectorMetadataModel } from './schemas/connector.schema'
 
 @Injectable()
@@ -13,20 +14,15 @@ export class ConnectorsMetadataService {
   connectorToSummaryMetadata(connectorMetadata: ConnectorMetadata): ConnectorMetadataSummary {
     return {
       ...connectorMetadata,
-      actions: Object.keys(connectorMetadata.actions).length,
-      triggers: Object.keys(connectorMetadata.triggers).length,
+      actions: Object.keys(connectorMetadata?.actions ?? {}).length,
+      triggers: Object.keys(connectorMetadata?.triggers ?? {}).length,
     }
   }
 
-  async create(createDto: CreateDto) {
-    return this.connectorMetadataModel.create({
-      ...createDto,
-    })
-  }
-
-  async findAll() {
-    const connectors = await this.connectorMetadataModel.find()
-    return connectors.map((connector) => this.connectorToSummaryMetadata(connector))
+  async findAll(filter: MongoFilter<GetConnectorMetadataQueryDto>) {
+    console.log(filter);
+    const connectors = await this.connectorMetadataModel.find(filter)
+    return connectors.map((connector) => this.connectorToSummaryMetadata(connector.toObject()))
   }
 
   async findOne(id: Id) {

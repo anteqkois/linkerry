@@ -1,6 +1,6 @@
 import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
 
-function IsArrayLiteral(literalEntities: string[], validationOptions?: ValidationOptions) {
+export function IsArrayLiteral(literalEntities: string[], validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'isArrayLiteral',

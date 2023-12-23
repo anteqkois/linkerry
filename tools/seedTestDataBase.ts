@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
-import { database } from './database'
+import { getDb } from './database'
 import { alwaysExistingUser } from './models.mock'
 
 const collectionToDelete = ['users', 'flows', 'flow-versions']
 
 export const seedDatabase = async () => {
-  const db = await database
+  const db = await getDb()
 
   // DELETE COLLECTION
   const collectionNames = (await db.connection.db.listCollections().toArray()).map(collection => collection.name)
@@ -31,5 +31,6 @@ export const seedDatabase = async () => {
   console.log('[ Database seeded ]');
 
   console.log('[ Wait secure time buffor ]');
+  await db.disconnect()
   await new Promise(r => r(setTimeout(r, 2000)))
 }

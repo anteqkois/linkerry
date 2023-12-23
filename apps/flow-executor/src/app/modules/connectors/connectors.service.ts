@@ -1,5 +1,5 @@
+import { coingecko } from '@market-connector/coingecko'
 import { Connector } from '@market-connector/connectors-framework'
-import { coingecko } from '@market-connector/connectors/coingecko'
 import { Injectable } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
 
