@@ -51,6 +51,8 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
     // return () => {}
   }, [initalData.edges])
 
+  console.log(showDrawer)
+
   return (
     <ReactFlowProvider>
       <div style={{ width: '100vw', height: '100vh', border: '4px dotted black' }} ref={reactFlowWrapper}>
@@ -72,7 +74,8 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
         </ReactFlow>
       </div>
       <Drawer show={showDrawer} setShow={setShowDrawer}>
-        <SelectTrigger/>
+        {JSON.stringify(showDrawer)}
+        <SelectTrigger />
       </Drawer>
     </ReactFlowProvider>
   )

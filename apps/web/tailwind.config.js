@@ -10,7 +10,7 @@ module.exports = {
     // './components/**/*.{ts,tsx}',
     // './app/**/*.{ts,tsx}',
     // './src/**/*.{ts,tsx}',
-    join(__dirname, '{src,pages,components,app,modules}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
+    join(__dirname, '{src,pages,components,app,modules,shared}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {

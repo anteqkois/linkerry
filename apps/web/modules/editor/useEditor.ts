@@ -1,6 +1,7 @@
 'use client'
 
 import { Id } from '@market-connector/shared'
+import { Dispatch, SetStateAction } from 'react'
 import {
   Connection,
   Edge,
@@ -22,10 +23,11 @@ type EditorNode = Node | CustomNode
 
 interface IEditorState {
   showDrawer: boolean
-  setShowDrawer: (value: boolean) => void
+  // setShowDrawer: (value: boolean) => void
+  setShowDrawer: Dispatch<SetStateAction<boolean>>
   isLoading: boolean
   setIsLoading: (value: boolean) => void
-  connectorsMetadata: any
+  // connectorsMetadata: any
   flowId?: Id
   setFlowId: (id: Id) => void
   nodes: EditorNode[]
@@ -46,7 +48,11 @@ export const useEditor = create<IEditorState>((set, get) => ({
   isLoading: false,
   setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
   showDrawer: false,
-  setShowDrawer: (value: boolean) => set((state) => ({ showDrawer: value })),
+  // setShowDrawer: (value: boolean) => set((state) => ({ showDrawer: value })),
+  setShowDrawer: (value: SetStateAction<boolean>) => {
+    if (typeof value === 'function') set((state) => ({ showDrawer: value(state.showDrawer) }))
+    else set((state) => ({ showDrawer: value }))
+  },
   flowId: undefined,
   setFlowId: (id: Id) => set(() => ({ flowId: id })),
   nodes: [],
