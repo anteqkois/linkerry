@@ -1,28 +1,30 @@
 'use client'
 
 import { ConnectorMetadata, connectorsTag } from '@market-connector/connectors-framework'
+import { ColumnDef } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
 import { DataTable } from '../../../shared/components/Table/Table'
 import { useConnectorMetadataClientQuery } from '../useConnectorsMetadataQuery'
-import { columns } from './columns'
+import { columns } from './defaultColumns'
 
 type ColumnKey = keyof ConnectorMetadata | 'buttons'
 
 export interface ConnectorsTableProps extends HTMLAttributes<HTMLElement> {
-  collumns?: ColumnKey[]
+  onlyColumns?: ColumnKey[]
+  customColums: ColumnDef<ConnectorMetadata>[]
   mobileCollumns?: ColumnKey[]
   desktopCollumns?: ColumnKey[]
 }
 
 const defaultMobileColumns: ColumnKey[] = ['logoUrl', 'displayName', 'tags']
 
-export const ConnectorsTable = ({ collumns, mobileCollumns, desktopCollumns }: ConnectorsTableProps) => {
+export const ConnectorsTable = ({ onlyColumns, mobileCollumns, desktopCollumns, customColums }: ConnectorsTableProps) => {
   const { data } = useConnectorMetadataClientQuery()
 
   return (
     <DataTable
       data={data}
-      columns={columns}
+      columns={columns.concat(customColums)}
       filterAccessor="displayName"
       chooseFilters={[
         {
@@ -36,7 +38,7 @@ export const ConnectorsTable = ({ collumns, mobileCollumns, desktopCollumns }: C
       ]}
       mobileColumns={mobileCollumns || defaultMobileColumns}
       desktopColumns={desktopCollumns}
-      onlyColumns={collumns || []}
+      onlyColumns={onlyColumns || []}
     />
   )
 }

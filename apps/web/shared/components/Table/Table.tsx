@@ -1,9 +1,10 @@
 'use client'
 
 import {
-  ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
+  TableOptions,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -12,7 +13,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  useReactTable
 } from '@tanstack/react-table'
 
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@market-connector/ui-components/server'
@@ -21,8 +22,8 @@ import { useEffect, useState } from 'react'
 import { usePredefinedMediaQuery } from '../../hooks/usePredefinedMediaQuery'
 import { DataTableToolbarProps, TableToolbar } from './Toolbar'
 
-export interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<any, TValue>[]
+export interface DataTableProps<TData, TValue> extends Omit<TableOptions<TData>, 'getCoreRowModel' | 'data'> {
+  // columns: ColumnDef<any, TValue>[]
   data?: TData[]
   filterAccessor?: keyof TData
   chooseFilters?: DataTableToolbarProps<TData, TValue>['chooseFilters']
@@ -30,6 +31,9 @@ export interface DataTableProps<TData, TValue> {
   onlyColumns?: (keyof TData | 'buttons')[]
   mobileColumns?: (keyof TData | 'buttons')[]
   desktopColumns?: (keyof TData | 'buttons')[]
+  onClickRow?: (row: Row<TData>) => any
+  // overideOptions: TableOptions<TData>
+  // getRowId: (originalRow: TData, index: number, parent?: Row<TData>) => string;
 }
 
 const getInitialCollumns = (onlyColumns: any[], allColumns: any[]): VisibilityState => {
@@ -53,8 +57,10 @@ export function DataTable<TData, TValue>({
   chooseFilters,
   className,
   onlyColumns = [],
-  desktopColumns,
-  mobileColumns,
+  desktopColumns = [],
+  mobileColumns = [],
+  onClickRow,
+  ...rest
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
@@ -68,6 +74,7 @@ export function DataTable<TData, TValue>({
   const { isMobile } = usePredefinedMediaQuery()
 
   const table = useReactTable({
+    ...rest,
     data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -82,6 +89,11 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
     enableRowSelection: true,
+    // getRowId
+    // getRowId: (originalRow: TData, index: number) => {
+    //   console.log(originalRow);
+    //   return originalRow?._id ?? index
+    // },
     // enableHiding: !!mobileColumns?.length || !!desktopColumns?.length,
     enableHiding: true,
     onColumnFiltersChange: setColumnFilters,
@@ -153,7 +165,7 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow onClick={() => onClickRow?.(row)} key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}

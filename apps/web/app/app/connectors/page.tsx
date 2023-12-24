@@ -1,5 +1,5 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
-import { ConnectorsTable } from '../../../modules/connectors-metadata/List/Table'
+import { ConnectorsTable } from '../../../modules/connectors-metadata/Table/Table'
 import { useConnectorMetadataServerQuery } from '../../../modules/connectors-metadata/useConnectorsMetadataQuery'
 import { PageContainer } from '../components/PageContainer'
 

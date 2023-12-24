@@ -3,7 +3,7 @@ import { ConnectorTag } from './tags'
 import { TriggerStrategy, WebhookHandshakeConfiguration } from './trigger/trigger'
 
 export type ConnectorBase = {
-  _id?: string
+  _id: string
   name: string
   displayName: string
   logoUrl: string

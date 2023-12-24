@@ -5,7 +5,7 @@ import { ConnectorTag } from './tags'
 import { Trigger } from './trigger/trigger'
 
 export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty>
-  implements Omit<ConnectorBase, 'version' | 'name' | 'minimumSupportedRelease' | 'maximumSupportedRelease'>
+  implements Omit<ConnectorBase, 'version' | 'name' | 'minimumSupportedRelease' | 'maximumSupportedRelease' | '_id'>
 {
   private readonly _actions: Record<string, Action> = {}
   private readonly _triggers: Record<string, Trigger> = {}
