@@ -1,15 +1,18 @@
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
 import { ConnectorsTable } from '../../../modules/connectors-metadata/List/Table'
-import { ConnectorsMetadataApi } from '../../../modules/connectors-metadata/api'
+import { useConnectorMetadataServerQuery } from '../../../modules/connectors-metadata/useConnectorsMetadataQuery'
 import { PageContainer } from '../components/PageContainer'
 
 export default async function Page() {
-  const res = await ConnectorsMetadataApi.get()
+  const { queryClient } = await useConnectorMetadataServerQuery()
 
   return (
     <PageContainer>
-      <div className="w-full max-w-7xl">
-        <ConnectorsTable data={res.data} />
-      </div>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className="w-full max-w-7xl">
+          <ConnectorsTable />
+        </div>
+      </HydrationBoundary>
     </PageContainer>
   )
 }

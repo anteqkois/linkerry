@@ -30,6 +30,7 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
   //   enableHiding: false,
   // },
   {
+    id: 'logoUrl',
     accessorKey: 'logoUrl',
     cell: ({ row }) => {
       return (
@@ -40,6 +41,7 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
     },
   },
   {
+    id: 'displayName',
     accessorKey: 'displayName',
     header: ({ column }) => <TableColumnHeader column={column} title="Name" sortable />,
     cell: ({ row }) => {
@@ -47,9 +49,9 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
     },
   },
   {
+    id: 'tags',
     accessorKey: 'tags',
     filterFn: 'arrIncludesSome',
-    header: ({ column }) => <TableColumnHeader column={column} title="Tags" />,
     cell: ({ row }) => {
       return (
         <div className="font-medium flex gap-1 flex-wrap max-w-md">
@@ -63,12 +65,14 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
     },
   },
   {
+    id: 'description',
     accessorKey: 'description',
     cell: ({ row }) => {
       return <div className="font-medium">{row.getValue('description')}</div>
     },
   },
   {
+    id: 'triggers',
     accessorKey: 'triggers',
     header: ({ column }) => <TableColumnHeader column={column} title="Triggers" sortable />,
     cell: ({ row }) => {
@@ -76,6 +80,7 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
     },
   },
   {
+    id: 'actions',
     accessorKey: 'actions',
     header: ({ column }) => <TableColumnHeader column={column} title="Actions" sortable />,
     cell: ({ row }) => {
@@ -83,6 +88,7 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
     },
   },
   {
+    id: 'version',
     accessorKey: 'version',
     cell: ({ row }) => {
       return <div className="font-medium text-center">{row.getValue('version')}</div>

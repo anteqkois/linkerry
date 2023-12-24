@@ -2,7 +2,7 @@
 import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
-import ReactFlow, { Background, BackgroundVariant, Controls, Edge, ReactFlowProvider } from 'reactflow'
+import ReactFlow, { Background, BackgroundVariant, Edge, ReactFlowProvider } from 'reactflow'
 import { Drawer } from '../../shared/components/Drawer/Index'
 import { SelectTrigger } from './components/SelectTrigger'
 import { CustomNode } from './nodes'
@@ -51,8 +51,6 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
     // return () => {}
   }, [initalData.edges])
 
-  console.log(showDrawer)
-
   return (
     <ReactFlowProvider>
       <div style={{ width: '100vw', height: '100vh', border: '4px dotted black' }} ref={reactFlowWrapper}>
@@ -68,13 +66,12 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
           maxZoom={1}
           defaultViewport={{ x: 1, y: 1, zoom: 0.1 }}
         >
-          <Controls />
+          {/* <Controls /> */}
           {/* <MiniMap /> */}
           <Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
         </ReactFlow>
       </div>
       <Drawer show={showDrawer} setShow={setShowDrawer}>
-        {JSON.stringify(showDrawer)}
         <SelectTrigger />
       </Drawer>
     </ReactFlowProvider>

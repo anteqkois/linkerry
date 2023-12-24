@@ -1,13 +1,24 @@
+'use client'
+
 import { ConnectorMetadata, connectorsTag } from '@market-connector/connectors-framework'
 import { HTMLAttributes } from 'react'
 import { DataTable } from '../../../shared/components/Table/Table'
+import { useConnectorMetadataClientQuery } from '../useConnectorsMetadataQuery'
 import { columns } from './columns'
 
+type ColumnKey = keyof ConnectorMetadata | 'buttons'
+
 export interface ConnectorsTableProps extends HTMLAttributes<HTMLElement> {
-  data: ConnectorMetadata[]
+  collumns?: ColumnKey[]
+  mobileCollumns?: ColumnKey[]
+  desktopCollumns?: ColumnKey[]
 }
 
-export const ConnectorsTable = ({ data }: ConnectorsTableProps) => {
+const defaultMobileColumns: ColumnKey[] = ['logoUrl', 'displayName', 'tags']
+
+export const ConnectorsTable = ({ collumns, mobileCollumns, desktopCollumns }: ConnectorsTableProps) => {
+  const { data } = useConnectorMetadataClientQuery()
+
   return (
     <DataTable
       data={data}
@@ -23,7 +34,9 @@ export const ConnectorsTable = ({ data }: ConnectorsTableProps) => {
           })),
         },
       ]}
-      mobileHiddenColumns={['actions', 'description', 'triggers', 'version', 'buttons']}
+      mobileColumns={mobileCollumns || defaultMobileColumns}
+      desktopColumns={desktopCollumns}
+      onlyColumns={collumns || []}
     />
   )
 }
