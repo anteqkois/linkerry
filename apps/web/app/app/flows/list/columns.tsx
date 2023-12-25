@@ -14,7 +14,7 @@ import {
 import { Button, Icons, TableCellContent } from '@market-connector/ui-components/server'
 import Link from 'next/link'
 import { dayjs } from '../../../../libs/dayjs'
-import { TableColumnHeader } from '../../../../shared/components/Table/TableColumnHeader'
+import { TableColumnHeader } from '../../../../shared/components/table/TableColumnHeader'
 
 export const columns: ColumnDef<any>[] = [
   {

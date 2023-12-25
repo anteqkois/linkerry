@@ -12,7 +12,7 @@ import {
 import { Badge, Button, Icons } from '@market-connector/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
-import { TableColumnHeader } from '../../../shared/components/Table/TableColumnHeader'
+import { TableColumnHeader } from '../../../shared/components/table/TableColumnHeader'
 
 export const columns: ColumnDef<ConnectorMetadata>[] = [
   // todo add like/saved field
@@ -32,6 +32,7 @@ export const columns: ColumnDef<ConnectorMetadata>[] = [
   {
     id: 'logoUrl',
     accessorKey: 'logoUrl',
+    header: 'Logo',
     cell: ({ row }) => {
       return (
         <div className="font-medium pl-4">

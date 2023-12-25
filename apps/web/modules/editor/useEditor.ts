@@ -16,20 +16,28 @@ import {
   applyNodeChanges,
 } from 'reactflow'
 import { create } from 'zustand'
+import { EditorDrawer } from '../connectors-metadata/types'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 import { CustomNode, CustomNodeId } from './nodes'
 
 type EditorNode = Node | CustomNode
 
+const editorDrawers: EditorDrawer[] = [
+  {
+    name: 'select_trigger',
+    title: 'Select Trigger',
+  },
+]
+
 interface IEditorState {
   showDrawer: boolean
-  // setShowDrawer: (value: boolean) => void
   setShowDrawer: Dispatch<SetStateAction<boolean>>
   isLoading: boolean
   setIsLoading: (value: boolean) => void
   // connectorsMetadata: any
   flowId?: Id
   setFlowId: (id: Id) => void
+  drawer: EditorDrawer
   nodes: EditorNode[]
   setNodes: (nodes: CustomNode[]) => void
   addNode: (node: CustomNode) => void
@@ -48,36 +56,23 @@ export const useEditor = create<IEditorState>((set, get) => ({
   isLoading: false,
   setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
   showDrawer: false,
-  // setShowDrawer: (value: boolean) => set((state) => ({ showDrawer: value })),
   setShowDrawer: (value: SetStateAction<boolean>) => {
     if (typeof value === 'function') set((state) => ({ showDrawer: value(state.showDrawer) }))
     else set((state) => ({ showDrawer: value }))
   },
   flowId: undefined,
   setFlowId: (id: Id) => set(() => ({ flowId: id })),
+  drawer: editorDrawers[0],
+  setDrawer: (drawerName: EditorDrawer['name']) => {
+    const newDrawer = editorDrawers.find((drawer) => (drawer.name = drawerName))
+    set(() => ({ drawer: newDrawer }))
+  },
+  // NODES
   nodes: [],
   setNodes: (nodes: CustomNode[]) => set((state) => ({ nodes })),
   addNode: (node: CustomNode) => set((state) => ({ nodes: [...state.nodes, node] })),
   // TODO add logic to rebuild edges
   deleteNode: (nodeId: CustomNodeId) => set((state) => ({ nodes: state.nodes.filter((node) => node.id !== nodeId) })),
-  edges: [],
-  setEdges: (edges: Edge[]) => set((state) => ({ edges })),
-  addEdge: (edge: Edge) => set((state) => ({ edges: [...state.edges, edge] })),
-  onNodesChange: (changes: NodeChange[]) => {
-    set({
-      nodes: applyNodeChanges<CustomNode['data']>(changes, get().nodes),
-    })
-  },
-  onEdgesChange: (changes: EdgeChange[]) => {
-    set({
-      edges: applyEdgeChanges(changes, get().edges),
-    })
-  },
-  onConnect: (connection: Connection) => {
-    set({
-      edges: addEdge(connection, get().edges),
-    })
-  },
   getNodeById: (id: string) => {
     // TODO change it in fitire to map to not using filter (performance)?
     return get().nodes.filter((node) => node.id === id)[0] as CustomNode
@@ -93,6 +88,20 @@ export const useEditor = create<IEditorState>((set, get) => ({
     })
     if (!updated) throw new Error(`Can not update node: ${id}, changes: ${changes}`)
   },
+  // EDGES
+  edges: [],
+  setEdges: (edges: Edge[]) => set((state) => ({ edges })),
+  addEdge: (edge: Edge) => set((state) => ({ edges: [...state.edges, edge] })),
+  onNodesChange: (changes: NodeChange[]) => {
+    set({
+      nodes: applyNodeChanges<CustomNode['data']>(changes, get().nodes),
+    })
+  },
+  onEdgesChange: (changes: EdgeChange[]) => {
+    set({
+      edges: applyEdgeChanges(changes, get().edges),
+    })
+  },
   updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => {
     let updated = false
     set({
@@ -103,5 +112,10 @@ export const useEditor = create<IEditorState>((set, get) => ({
       }),
     })
     if (!updated) throw new Error(`Can not update egde: ${id}, changes: ${changes}`)
+  },
+  onConnect: (connection: Connection) => {
+    set({
+      edges: addEdge(connection, get().edges),
+    })
   },
 }))

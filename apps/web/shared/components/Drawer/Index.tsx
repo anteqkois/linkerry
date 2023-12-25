@@ -1,4 +1,4 @@
-import { Button, Icons } from '@market-connector/ui-components/server'
+import { Button, H5, Icons } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import { cva } from 'class-variance-authority'
 import { Dispatch, HTMLAttributes, SetStateAction } from 'react'
@@ -6,9 +6,10 @@ import { Dispatch, HTMLAttributes, SetStateAction } from 'react'
 export interface DrawerProps extends HTMLAttributes<HTMLElement> {
   show: boolean
   setShow: Dispatch<SetStateAction<boolean>>
+  title: string
 }
 
-const variants = cva('w-full h-full fixed top-0 right-0 z-40 bg-popover lg:w-108 border-l p-2 ease-out duration-300 pt-6', {
+const variants = cva('w-full h-full fixed top-0 right-0 z-40 bg-popover lg:w-108 border-l p-2 ease-out duration-300', {
   variants: {
     state: {
       true: 'translate-x-0',
@@ -20,12 +21,15 @@ const variants = cva('w-full h-full fixed top-0 right-0 z-40 bg-popover lg:w-108
   },
 })
 
-export const Drawer = ({ show, setShow, children }: DrawerProps) => {
+export const Drawer = ({ show, setShow, children, title }: DrawerProps) => {
   return (
     <aside className={cn(variants({ state: show }))}>
-      <Button size={'sm'} variant={'ghost'} className="fixed top-1 right-1" onClick={() => setShow((prev) => !prev)}>
-        <Icons.close />
-      </Button>
+      <header className="flex justify-between items-center pb-3">
+        <H5>{title}</H5>
+        <Button size={'sm'} variant={'ghost'} onClick={() => setShow((prev) => !prev)}>
+          <Icons.close />
+        </Button>
+      </header>
       {children}
     </aside>
   )

@@ -1,9 +1,8 @@
 import { connectorsTag } from '@market-connector/connectors-framework'
-import { H5 } from '@market-connector/ui-components/server'
 import { HTMLAttributes } from 'react'
-import { DataTable } from '../../../shared/components/Table/Table'
-import { columns } from '../../connectors-metadata/Table/defaultColumns'
-import { useConnectorMetadataClientQuery } from '../../connectors-metadata/useConnectorsMetadataQuery'
+import { DataTable } from '../../../../shared/components/table/Table'
+import { columns } from '../../../connectors-metadata/table/defaultColumns'
+import { useConnectorMetadataClientQuery } from '../../../connectors-metadata/useConnectorsMetadataQuery'
 
 export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
 
@@ -14,7 +13,6 @@ export const SelectTrigger = () => {
 
   return (
     <div>
-      <H5 className="pb-3">Select Trigger</H5>
       <DataTable
         getRowId={(row) => row._id}
         onClickRow={(row) => console.log(row.id)}
@@ -32,6 +30,7 @@ export const SelectTrigger = () => {
           },
         ]}
         onlyColumns={['logoUrl', 'displayName']}
+        clickable
       />
     </div>
   )

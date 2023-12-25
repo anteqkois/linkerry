@@ -1,5 +1,5 @@
 import { apiServerClient } from '../../../../libs/api-server-client'
-import { DataTable } from '../../../../shared/components/Table/Table'
+import { DataTable } from '../../../../shared/components/table/Table'
 import { PageContainer } from '../../components/PageContainer'
 import { columns } from './columns'
 

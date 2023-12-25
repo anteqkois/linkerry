@@ -3,7 +3,7 @@
 import { ConnectorMetadata, connectorsTag } from '@market-connector/connectors-framework'
 import { ColumnDef } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
-import { DataTable } from '../../../shared/components/Table/Table'
+import { DataTable } from '../../../shared/components/table/Table'
 import { useConnectorMetadataClientQuery } from '../useConnectorsMetadataQuery'
 import { columns } from './defaultColumns'
 

@@ -3,8 +3,8 @@ import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, Edge, ReactFlowProvider } from 'reactflow'
-import { Drawer } from '../../shared/components/Drawer/Index'
-import { SelectTrigger } from './components/SelectTrigger'
+import { Drawer } from '../../shared/components/drawer/Index'
+import { SelectTrigger } from './components/drawers/SelectTrigger'
 import { CustomNode } from './nodes'
 import { useEditor } from './useEditor'
 
@@ -33,6 +33,7 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
     setFlowId: setStrategyId,
     showDrawer,
     setShowDrawer,
+    drawer
   } = useEditor()
   const reactFlowWrapper = useRef(null)
 
@@ -71,7 +72,7 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
           <Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
         </ReactFlow>
       </div>
-      <Drawer show={showDrawer} setShow={setShowDrawer}>
+      <Drawer show={showDrawer} setShow={setShowDrawer} title={drawer.title} >
         <SelectTrigger />
       </Drawer>
     </ReactFlowProvider>
