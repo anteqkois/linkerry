@@ -1,5 +1,6 @@
 import { PropertyType } from './base'
 import { BasicAuthProperty } from './base-auth'
+import { CheckboxProperty } from './checkbox'
 import { DynamicDropdownProperty } from './dynamic-dropdown'
 import { NumberProperty } from './number'
 import { SecretTextProperty } from './secretText'
@@ -42,7 +43,7 @@ export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty
 // | OAuth2Property<boolean, OAuth2Props>
 // | SecretTextProperty<boolean>
 
-export type ConnectorProperty = TextProperty | NumberProperty | StaticDropdownProperty | DynamicDropdownProperty<any, boolean>
+export type ConnectorProperty = TextProperty | NumberProperty | CheckboxProperty | StaticDropdownProperty | DynamicDropdownProperty<any, boolean>
 
 export interface ConnectorPropertyMap {
   [name: string]: ConnectorProperty
@@ -67,15 +68,20 @@ export const Property = {
   Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
     return { ...config, type: PropertyType.Number } as unknown as R extends true ? NumberProperty<true> : NumberProperty<false>
   },
+  Checkbox<R extends boolean>(request: Properties<CheckboxProperty<R>>): R extends true ? CheckboxProperty<true> : CheckboxProperty<false> {
+    return { ...request, valueSchema: undefined, type: PropertyType.Checkbox } as unknown as R extends true
+      ? CheckboxProperty<true>
+      : CheckboxProperty<false>
+  },
   SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
     return { ...config, type: PropertyType.Text } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
   },
-  StaticDropdown<R extends boolean, V extends StaticDropdownValue>(
-    config: Properties<StaticDropdownProperty<R, V>>,
-  ): R extends true ? StaticDropdownProperty<true, V> : StaticDropdownProperty<false, V> {
+  StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
+    config: Properties<StaticDropdownProperty<T, R>>,
+  ): R extends true ? StaticDropdownProperty<T, true> : StaticDropdownProperty<T, false> {
     return { ...config, type: PropertyType.StaticDropdown } as unknown as R extends true
-      ? StaticDropdownProperty<true, V>
-      : StaticDropdownProperty<false, V>
+      ? StaticDropdownProperty<T, true>
+      : StaticDropdownProperty<T, false>
   },
   DynamicDropdown<T, R extends boolean = boolean>(
     config: Properties<DynamicDropdownProperty<T, R>>,

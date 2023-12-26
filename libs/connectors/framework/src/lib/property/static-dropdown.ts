@@ -3,8 +3,19 @@ import { PropertyType } from './base';
 
 export type StaticDropdownValue = string | number
 
-type StaticDropdownProps<V extends StaticDropdownValue> = { options: { label: string; value: V }[] }
+export type StaticDropdownState<T> = {
+	disabled?: boolean;
+	placeholder?: string;
+	options: StaticDropdownOption<T>[];
+}
 
-export type StaticDropdownProperty<R extends boolean = boolean, V extends StaticDropdownValue = StaticDropdownValue> = BaseProperty &
-  StaticDropdownProps<V> &
-  PropertyValue<V, PropertyType.StaticDropdown, R>
+export type StaticDropdownOption<T> = {
+	label: string;
+	value: T;
+};
+
+type StaticDropdownProps<T extends StaticDropdownValue> = { options: StaticDropdownState<T>; }
+
+export type StaticDropdownProperty<T extends StaticDropdownValue = StaticDropdownValue , R extends boolean = boolean> = BaseProperty &
+  StaticDropdownProps<T> &
+  PropertyValue<T, PropertyType.StaticDropdown, R>

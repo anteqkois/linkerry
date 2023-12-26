@@ -14,7 +14,15 @@ export interface WebhookHandshakeConfiguration {
   paramName?: string
 }
 
-export interface TestOrRunHookContext {}
+// export interface TestOrRunHookContext {}
+export type TestOrRunHookContext<
+  ConnectorAuth extends ConnectorAuthProperty,
+  TriggerProps extends ConnectorPropertyMap,
+  S extends TriggerStrategy,
+> = TriggerHookContext<ConnectorAuth, TriggerProps, S> & {
+  // todo add file service
+  // files: FilesService
+}
 
 export interface WebhookResponse {
   status: number
@@ -32,7 +40,9 @@ export enum TriggerStrategy {
   APP_WEBHOOK = 'APP_WEBHOOK',
 }
 
-export class TriggerInstance<TS extends TriggerStrategy, ConnectorAuth extends ConnectorAuthProperty, TriggerProps extends ConnectorPropertyMap> implements TriggerBase{
+export class TriggerInstance<TS extends TriggerStrategy, ConnectorAuth extends ConnectorAuthProperty, TriggerProps extends ConnectorPropertyMap>
+  implements TriggerBase
+{
   constructor(
     public readonly name: string,
     public readonly displayName: string,
@@ -43,8 +53,8 @@ export class TriggerInstance<TS extends TriggerStrategy, ConnectorAuth extends C
     public readonly onEnable: (ctx: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<void>,
     public readonly onHandshake: (ctx: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<WebhookResponse>,
     public readonly onDisable: (ctx: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<void>,
-    public readonly run: (ctx: TestOrRunHookContext) => Promise<unknown[]>,
-    public readonly test: (ctx: TestOrRunHookContext) => Promise<unknown[]>,
+    public readonly run: (ctx: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<unknown[]>,
+    public readonly test: (ctx: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<unknown[]>,
     public readonly requireAuth: boolean,
     public sampleData: unknown,
   ) {}
@@ -67,8 +77,9 @@ type CreateTriggerParams<TS extends TriggerStrategy, ConnectorAuth extends Conne
   onEnable: (context: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<void>
   onHandshake?: (context: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<WebhookResponse>
   onDisable: (context: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<void>
-  run: (context: TestOrRunHookContext) => Promise<unknown[]>
-  test?: (context: TestOrRunHookContext) => Promise<unknown[]>
+  // run: (context: TestOrRunHookContext) => Promise<unknown[]>
+  run: (context: TestOrRunHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<unknown[]>
+  test?: (context: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<unknown[]>
   requireAuth?: boolean
   sampleData: unknown
 }

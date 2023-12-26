@@ -1,0 +1,27 @@
+{
+  "name": "connectors-schedule",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/schedule/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/schedule",
+        "main": "libs/connectors/schedule/src/index.ts",
+        "tsConfig": "libs/connectors/schedule/tsconfig.lib.json",
+        "assets": ["libs/connectors/schedule/*.md"],
+        "generatePackageJson": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/connectors/schedule/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
