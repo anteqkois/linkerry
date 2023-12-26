@@ -1,5 +1,6 @@
-import { Action, ActionType, BaseConnectorSettings, BaseStep, SampleData, TriggerType } from '@market-connector/shared'
+import { ActionType, BaseConnectorSettings, BaseStep, SampleData, TriggerType } from '@market-connector/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Types } from 'mongoose'
 
 @Schema({ _id: false })
 export class SampleDataModel implements SampleData {
@@ -15,10 +16,13 @@ export const SampleDataSchema = SchemaFactory.createForClass(SampleDataModel)
 @Schema({ _id: false })
 export class ConnectorSettingsModel implements BaseConnectorSettings {
   @Prop({ required: true, type: String })
-  connectorName: string
+  connectorId: string
 
   @Prop({ required: true, type: String })
-  name: string
+  connectorName: string
+
+  // @Prop({ required: true, type: String })
+  // name: string
 
   @Prop({ required: true, type: Object })
   input: Record<string, any> & { auth?: string | undefined }
@@ -27,7 +31,7 @@ export class ConnectorSettingsModel implements BaseConnectorSettings {
   sampleData: SampleData
 
   @Prop({ required: true, type: String })
-  version: string
+  connectorVersion: string
 }
 export const ConnectorSettingsSchema = SchemaFactory.createForClass(ConnectorSettingsModel)
 
@@ -35,8 +39,8 @@ export class BaseStepModel implements BaseStep {
   @Prop({ required: true, type: String })
   displayName: string
 
-  @Prop({ required: true, type: String })
-  name: string
+  @Prop({ required: true, type: Types.ObjectId })
+  id: string
 
   @Prop({ required: true, type: String })
   type: ActionType | TriggerType
@@ -44,6 +48,8 @@ export class BaseStepModel implements BaseStep {
   @Prop({ required: true, type: Boolean, default: false })
   valid: boolean
 
-  @Prop({ required: false, type: {} })
-  nextAction?: Action | undefined
+  @Prop({ required: false, type: String })
+  nextActionId?: string | undefined
+  // @Prop({ required: false, type: {} })
+  // nextAction?: Action | undefined
 }

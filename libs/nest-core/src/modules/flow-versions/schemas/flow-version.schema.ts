@@ -5,12 +5,15 @@ import { TriggerConnectorSchema, TriggerEmptySchema, TriggerWebhookSchema } from
 
 export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 
-@Schema({ timestamps: true, autoIndex: true , collection: 'flow_versions'})
+@Schema({ timestamps: true, autoIndex: true, collection: 'flow_versions' })
 export class FlowVersionModel implements FlowVersion {
   _id: string
 
   @Prop({ required: true, type: String })
   displayName: string
+
+  @Prop({ required: true, type: Number })
+  stepsCount: number
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flow' })
   flow: Id

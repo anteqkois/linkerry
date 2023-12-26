@@ -4,14 +4,21 @@ import 'reactflow/dist/style.css'
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, Edge, ReactFlowProvider } from 'reactflow'
 import { Drawer } from '../../shared/components/drawer/Index'
-import { SelectTrigger } from './components/drawers/SelectTrigger'
+import { TriggerNodeElement } from './components'
+import { editorDrawers } from './components/drawers'
 import { CustomNode } from './nodes'
+import { SelectTriggerNodeElement } from './nodes/components/SelectTriggerNode'
 import { useEditor } from './useEditor'
+
+const nodeTypes = {
+  SelectTriggerNode: SelectTriggerNodeElement,
+  TriggerNode: TriggerNodeElement,
+}
 
 interface EditorProps {
   limits: undefined // How many strategies buy can be etc.
   mode: 'demo' | 'production'
-  nodeTypes: Record<string, (...props: any) => JSX.Element>
+  // nodeTypes: Record<string, (...props: any) => JSX.Element>
   initalData: {
     nodes: CustomNode[]
     edges: Edge[]
@@ -21,7 +28,7 @@ interface EditorProps {
   }
 }
 
-export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
+export const Editor = ({ initalData }: EditorProps) => {
   const {
     nodes,
     setNodes,
@@ -33,7 +40,7 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
     setFlowId: setStrategyId,
     showDrawer,
     setShowDrawer,
-    drawer
+    drawer,
   } = useEditor()
   const reactFlowWrapper = useRef(null)
 
@@ -51,6 +58,8 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
     setEdges(initalData.edges)
     // return () => {}
   }, [initalData.edges])
+
+  const EditorDrawer = editorDrawers[drawer.name]
 
   return (
     <ReactFlowProvider>
@@ -72,8 +81,8 @@ export const Editor = ({ initalData, nodeTypes }: EditorProps) => {
           <Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
         </ReactFlow>
       </div>
-      <Drawer show={showDrawer} setShow={setShowDrawer} title={drawer.title} >
-        <SelectTrigger />
+      <Drawer show={showDrawer} setShow={setShowDrawer} title={drawer.title}>
+        <EditorDrawer />
       </Drawer>
     </ReactFlowProvider>
   )

@@ -1,10 +1,11 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@market-connector/connectors-framework'
 import { Id } from '@market-connector/shared'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { MongoFilter } from '../../lib/mongodb/decorators/filter.decorator'
-import { GetConnectorMetadataQueryDto } from './dto/get.dto'
+import { ConnectorMetadataGetManyQueryDto } from './dto/getMany.dto'
+import { ConnectorMetadataGetOneQueryDto } from './dto/getOne.dto'
 import { ConnectorMetadataModel } from './schemas/connector.schema'
 
 @Injectable()
@@ -19,15 +20,22 @@ export class ConnectorsMetadataService {
     }
   }
 
-  async findAll(filter: MongoFilter<GetConnectorMetadataQueryDto>) {
-    console.log(filter);
-    const connectors = await this.connectorMetadataModel.find(filter)
-    return connectors.map((connector) => this.connectorToSummaryMetadata(connector.toObject()))
+  async findAll(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
+    const connectors = (await this.connectorMetadataModel.find(filter)).map((connector) => connector.toObject())
+
+    return query.summary ? connectors.map((connector) => this.connectorToSummaryMetadata(connector)) : connectors
   }
 
-  async findOne(id: Id) {
-    return this.connectorMetadataModel.findOne({
-      _id: id,
-    })
+  async findOne(id: Id, query: ConnectorMetadataGetOneQueryDto) {
+    const connector = (
+      await this.connectorMetadataModel.findOne({
+        _id: id,
+      })
+    )?.toObject()
+
+    if (!connector) throw new UnprocessableEntityException(`Can not find conector metadata based on id: ${id}`)
+
+    console.log(connector)
+    return query.summary ? this.connectorToSummaryMetadata(connector) : connector
   }
 }

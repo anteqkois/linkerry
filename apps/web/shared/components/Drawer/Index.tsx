@@ -13,7 +13,7 @@ const variants = cva('w-full h-full fixed top-0 right-0 z-40 bg-popover lg:w-108
   variants: {
     state: {
       true: 'translate-x-0',
-      false: 'translate-x-108',
+      false: 'translate-x-full',
     },
   },
   defaultVariants: {

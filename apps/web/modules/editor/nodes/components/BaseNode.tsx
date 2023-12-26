@@ -1,10 +1,10 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@market-connector/ui-components/client'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Icons } from '@market-connector/ui-components/server'
+import { Card, CardContent, Icons } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HTMLAttributes } from 'react'
 
-const baseNodeVariants = cva('w-editor-element border-2 border-primary/50 cursor-pointer flex flex-row relative hover:', {
+const baseNodeVariants = cva('w-editor-element border-2 border-primary/50 cursor-pointer', {
   variants: {
     valid: {
       true: '',
@@ -30,18 +30,17 @@ interface BaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'color'>, Varia
 export const BaseNodeElement = ({ children, title, onClick, valid, invalidMessage, color }: BaseProps) => {
   return (
     <Card className={cn(baseNodeVariants({ valid, color }), 'hover:outline outline-2 hover:border-solid')} onClick={onClick}>
-      <CardHeader>
-        <CardTitle className="flex gap-2 items-center text-primary">
-          <Icons.strategy /> {title}
-        </CardTitle>
-        <CardDescription>{children}</CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
+      {/* {title && (
+        <CardHeader>
+          <CardTitle className="flex gap-2 items-center text-primary">{title}</CardTitle>
+        </CardHeader>
+      )} */}
+      <CardContent className='p-6'>{children}</CardContent>
       {!valid && (
         <TooltipProvider delayDuration={100}>
           <Tooltip>
-            <TooltipTrigger>
-              <Icons.warn className="text-destructive absolute bottom-2 right-3" />
+            <TooltipTrigger className="text-destructive absolute bottom-2 right-3">
+              <Icons.warn />
             </TooltipTrigger>
             <TooltipContent side="bottom" align="start" asChild>
               <p>{invalidMessage}</p>

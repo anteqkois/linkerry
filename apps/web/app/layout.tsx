@@ -2,8 +2,8 @@ import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
 import './global.css'
 
+import { ThemeProvider, Toaster } from '@market-connector/ui-components/client'
 import { TailwindIndicator } from '@market-connector/ui-components/server'
-import { Toaster, ThemeProvider } from '@market-connector/ui-components/client'
 import { cn } from '@market-connector/ui-components/utils'
 import { siteConfig } from './webConfig'
 // import { Analytics } from "@/components/analytics"
@@ -68,7 +68,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable, fontHeading.variable)}>
+      <body
+        className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable, fontHeading.variable)}
+        suppressHydrationWarning={true}
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           {/* <Analytics /> */}

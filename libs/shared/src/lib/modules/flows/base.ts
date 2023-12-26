@@ -1,5 +1,5 @@
-import { Action, ActionType } from "./action"
-import { TriggerType } from "./trigger"
+import { ActionType } from './action'
+import { TriggerType } from './trigger'
 
 export type SampleData = {
   currentSelectedData: unknown
@@ -8,17 +8,19 @@ export type SampleData = {
 }
 
 export interface BaseStep {
-  name: string
+  id: string
   valid: boolean
   displayName: string
   type: ActionType | TriggerType
-  nextAction?: Action
+  nextActionId?: string
 }
 
 export interface BaseConnectorSettings {
-  connectorName: string // '@market-connecotr/connector/binance'
-  name: string // name of trigger or action
-  version: string,
+  connectorId: string
+  connectorName: string // '@market-connecotr/binance'
+  // name: string // name of trigger or action
+  // index: number
+  connectorVersion: string
   input: Record<string, any> & { auth?: string }
-  sampleData: SampleData,
+  sampleData: SampleData
 }

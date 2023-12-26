@@ -1,7 +1,7 @@
 import { FlowState, Id, TriggerEmpty, TriggerType } from '@market-connector/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { Model, Types } from 'mongoose'
 import { FlowVersionModel } from './schemas/flow-version.schema'
 
 @Injectable()
@@ -11,7 +11,7 @@ export class FlowVersionsService {
   async createEmpty(flowId: Id) {
     const emptyTrigger: TriggerEmpty = {
       displayName: 'Select trigger',
-      name: 'trigger_one',
+      id: new Types.ObjectId().toString(),
       type: TriggerType.Empty,
       valid: false,
     }
@@ -21,7 +21,8 @@ export class FlowVersionsService {
       state: FlowState.Draft,
       flow: flowId,
       valid: false,
-      triggers: [ emptyTrigger ],
+      stepsCount: 1,
+      triggers: [emptyTrigger],
     })
   }
 }

@@ -8,7 +8,7 @@ export class ActionConnectorModel extends BaseStepModel implements ActionConnect
   override type: ActionType.Connector
 }
 export const ActionConnectorSchema = SchemaFactory.createForClass(ActionConnectorModel)
-ActionConnectorSchema.add({
-  // @ts-ignore
-  nextAction: ActionConnectorSchema,
-})
+// ActionConnectorSchema.add({
+//   // @ts-ignore
+//   nextAction: ActionConnectorSchema,
+// })

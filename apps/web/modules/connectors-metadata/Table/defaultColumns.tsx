@@ -1,6 +1,6 @@
 'use client'
 
-import { ConnectorMetadata } from '@market-connector/connectors-framework'
+import { ConnectorMetadataSummary } from '@market-connector/connectors-framework'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
 import { TableColumnHeader } from '../../../shared/components/table/TableColumnHeader'
 
-export const columns: ColumnDef<ConnectorMetadata>[] = [
+export const columns: ColumnDef<ConnectorMetadataSummary>[] = [
   // todo add like/saved field
   // {
   //   id: 'select',

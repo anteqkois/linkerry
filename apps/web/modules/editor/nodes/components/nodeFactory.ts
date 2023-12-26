@@ -1,5 +1,6 @@
+import { ConnectorMetadataSummary } from '@market-connector/connectors-framework'
 import { Trigger } from '@market-connector/shared'
-import { AddNodeProps, CustomNodeId, CustomNodeType, TriggerNodeProps } from '../types'
+import { CustomNodeType, SelectTriggerNodeProps, TriggerNodeProps } from '../types'
 
 type NodeConfig = {
   width: number
@@ -11,9 +12,9 @@ export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: numbe
     x: 40,
     y: 40,
   },
-  AddNode: {
-    width: 139,
-    height: 40,
+  SelectTriggerNode: {
+    width: 384,
+    height: 428,
   },
   TriggerNode: {
     width: 384,
@@ -21,37 +22,28 @@ export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: numbe
   },
 }
 
-export const addNodeFactory = ({
-  parentNodeId,
-  x,
-  y,
-  variant,
-  text,
-}: {
-  parentNodeId: CustomNodeId
-  x: number
-  y: number
-  variant: CustomNodeType
-  text: string
-}): AddNodeProps => ({
-  id: 'Add_Temp',
-  type: 'AddNode',
-  position: { x, y },
-  data: {
-    parentNodeId,
-    variant,
-    text,
-  },
-  parentNode: parentNodeId,
-})
-
-export const TriggerNodeFactory = ({ trigger }: { trigger: Trigger }): TriggerNodeProps => {
+export const selectTriggerNodeFactory = ({ trigger }: { trigger: Trigger }): SelectTriggerNodeProps => {
   return {
-    id: `Trigger_${trigger.name}`,
+    // id: `SelectTrigger_${trigger.name}`,
+    id: trigger.id,
+    type: 'SelectTriggerNode',
+    position: { x: 0, y: 0 },
+    data: {
+      trigger,
+    },
+    draggable: false,
+  }
+}
+
+export const triggerNodeFactory = ({ trigger, connectorMetadata }: { trigger: Trigger; connectorMetadata: ConnectorMetadataSummary }): TriggerNodeProps => {
+  return {
+    // id: `Trigger_${trigger.name}`,
+    id: trigger.id,
     type: 'TriggerNode',
     position: { x: 0, y: 0 },
     data: {
       trigger,
+      connectorMetadata,
     },
     draggable: false,
   }

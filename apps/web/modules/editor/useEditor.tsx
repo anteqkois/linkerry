@@ -1,6 +1,6 @@
 'use client'
 
-import { Id } from '@market-connector/shared'
+import { Action, Id, Trigger } from '@market-connector/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
   Connection,
@@ -27,9 +27,15 @@ const editorDrawers: EditorDrawer[] = [
     name: 'select_trigger',
     title: 'Select Trigger',
   },
+  {
+    name: 'trigger',
+    title: 'Trigger',
+  },
 ]
 
 interface IEditorState {
+  drawer: EditorDrawer
+  setDrawer: (name: EditorDrawer['name']) => void
   showDrawer: boolean
   setShowDrawer: Dispatch<SetStateAction<boolean>>
   isLoading: boolean
@@ -37,19 +43,26 @@ interface IEditorState {
   // connectorsMetadata: any
   flowId?: Id
   setFlowId: (id: Id) => void
-  drawer: EditorDrawer
+  // NODES
   nodes: EditorNode[]
   setNodes: (nodes: CustomNode[]) => void
   addNode: (node: CustomNode) => void
   deleteNode: (nodeId: CustomNodeId) => void
-  edges: Edge[]
-  setEdges: (nodes: Edge[]) => void
   onNodesChange: OnNodesChange
-  onEdgesChange: OnEdgesChange
-  onConnect: OnConnect
   getNodeById: (id: string) => CustomNode | undefined
   updateNode: (nodeId: CustomNodeId, changes: Partial<CustomNode>) => void
+  // EDGES
+  edges: Edge[]
+  setEdges: (nodes: Edge[]) => void
+  onEdgesChange: OnEdgesChange
+  onConnect: OnConnect
   updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => void
+  // TRIGGERS
+  editedTrigger: Trigger | null
+  setEditedTrigger: (trigger: Trigger) => void
+  // ACTIONS
+  editedAction: Action | null
+  setEditedAction: (action: Action) => void
 }
 
 export const useEditor = create<IEditorState>((set, get) => ({
@@ -63,8 +76,8 @@ export const useEditor = create<IEditorState>((set, get) => ({
   flowId: undefined,
   setFlowId: (id: Id) => set(() => ({ flowId: id })),
   drawer: editorDrawers[0],
-  setDrawer: (drawerName: EditorDrawer['name']) => {
-    const newDrawer = editorDrawers.find((drawer) => (drawer.name = drawerName))
+  setDrawer: (name: EditorDrawer['name']) => {
+    const newDrawer = editorDrawers.find((drawer) => (drawer.name = name))
     set(() => ({ drawer: newDrawer }))
   },
   // NODES
@@ -118,4 +131,16 @@ export const useEditor = create<IEditorState>((set, get) => ({
       edges: addEdge(connection, get().edges),
     })
   },
+  // TRIGGERS
+  editedTrigger: null,
+  setEditedTrigger: (trigger: Trigger) =>
+    set({
+      editedTrigger: trigger,
+    }),
+  // ACTIONS
+  editedAction: null,
+  setEditedAction: (action: Action) =>
+    set({
+      editedAction: action,
+    }),
 }))
