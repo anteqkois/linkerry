@@ -1,0 +1,27 @@
+{
+  "name": "connectors-props",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/props/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/props",
+        "main": "libs/connectors/props/src/index.ts",
+        "tsConfig": "libs/connectors/props/tsconfig.lib.json",
+        "assets": ["libs/connectors/props/*.md"],
+        "generatePackageJson": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/connectors/props/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
