@@ -16,7 +16,7 @@ import {
   applyNodeChanges,
 } from 'reactflow'
 import { create } from 'zustand'
-import { EditorDrawer } from '../connectors-metadata/types'
+import { EditorDrawer } from '../../shared/components/drawer/types'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 import { CustomNode, CustomNodeId } from './nodes'
 
@@ -77,7 +77,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
   setFlowId: (id: Id) => set(() => ({ flowId: id })),
   drawer: editorDrawers[0],
   setDrawer: (name: EditorDrawer['name']) => {
-    const newDrawer = editorDrawers.find((drawer) => (drawer.name = name))
+    const newDrawer = editorDrawers.find((drawer) => drawer.name === name)
     set(() => ({ drawer: newDrawer }))
   },
   // NODES
