@@ -1,4 +1,5 @@
 import { ConnectorAuth, createConnector } from '@market-connector/connectors-framework'
+import { fetchCoin } from './lib/actions/fetch-coin'
 import { fetchMarktecap } from './lib/actions/fetch-marketcap'
 import { fetchById } from './lib/triggers/fetch-by-id'
 import { fetchTopHundred } from './lib/triggers/fetch-top-hundred'
@@ -11,7 +12,7 @@ export const coingecko = createConnector({
   triggers: [fetchTopHundred, fetchById],
   description: 'Coingecko connector for cryptocurrency data',
   minimumSupportedRelease: '0.0.0',
-  actions: [fetchMarktecap],
+  actions: [fetchMarktecap, fetchCoin],
   auth: ConnectorAuth.None(),
   tags: ['cryptocurrency', 'data feed'],
 })

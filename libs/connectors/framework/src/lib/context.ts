@@ -116,3 +116,14 @@ export enum StoreScope {
   PROJECT = 'PROJECT',
   FLOW = 'FLOW',
 }
+
+
+export type PropertyContext = {
+	server: ServerContext
+}
+
+export type ServerContext = {
+    apiUrl: string,
+    publicUrl: string,
+    token: string
+}

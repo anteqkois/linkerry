@@ -3,8 +3,7 @@ export enum PropertyType {
   Text = 'ShortText',
   LongText = 'LongText',
   // Markdown = 'Markdown',
-  Dropdown = 'Dropdown',
-  // StaticDropdown = "StaticDropdown",
+  StaticDropdown = 'StaticDropdown',
   Number = 'Number',
   Checkbox = 'Checkbox',
   // OAuth2 = 'OAuth2',
@@ -15,7 +14,7 @@ export enum PropertyType {
   // JSON = 'JSON',
   // MultiSelectDropdown = 'MultiSelectDropdown',
   // StaticMultiSelectDropdown = 'StaticMultiSelectDropdown',
-  // Dynamic = "Dynamic",
+  DynamicDropdown = "DynamicDropdown",
   // CustomAuth = "CustomAuth",
   // DateTime = "DateTime",
   // File = "File"
@@ -40,7 +39,7 @@ export type PropertyValue<S, T extends PropertyType, R extends boolean> = {
     ? string
     : T extends PropertyType.LongText
     ? string
-    : T extends PropertyType.Dropdown
+    : T extends PropertyType.StaticDropdown
     ? unknown
     : T extends PropertyType.Number
     ? number

@@ -33,7 +33,7 @@ const trigger = createTrigger({
       required: true,
       description: '',
     }),
-    timezone: Property.Dropdown({
+    timezone: Property.StaticDropdown({
       description: '',
       displayName: 'Time Zone',
       name: 'timezone',
