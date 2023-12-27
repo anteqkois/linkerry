@@ -1,8 +1,10 @@
-import { ConnectorMetadata, ConnectorProperty, TriggerBase } from '@market-connector/connectors-framework'
+import { ConnectorMetadata, ConnectorProperty, PropertyType, TriggerBase } from '@market-connector/connectors-framework'
 import { TriggerType } from '@market-connector/shared'
 import {
+  Checkbox,
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,10 +16,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@market-connector/ui-components/client'
-import { Button, H5 } from '@market-connector/ui-components/server'
+import { Button, H5, Icons } from '@market-connector/ui-components/server'
 import Image from 'next/image'
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, useEffect } from 'react'
 import { UseFormReturn, useForm } from 'react-hook-form'
+import { useClientQuery } from '../../../../libs/react-query'
+import { connectorsMetadataQueryConfig } from '../../../connectors-metadata/api/query-configs'
 import { useEditor } from '../../useEditor'
 
 export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
@@ -100,33 +104,75 @@ const connectorMetadata = {
 } as unknown as ConnectorMetadata
 
 const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; property: ConnectorProperty }) => {
-  return (
-    <FormField
-      control={form.control}
-      name="name"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{property.displayName}</FormLabel>
-          <FormControl>
-            <Input placeholder={property.displayName} {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  )
+  if (property.defaultValue) form.setValue(property.name, property.defaultValue)
+
+  switch (property.type) {
+    case PropertyType.Text:
+      return (
+        <FormField
+          control={form.control}
+          name={property.name}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{property.displayName}</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )
+    case PropertyType.Checkbox:
+      return (
+        <FormField
+          control={form.control}
+          name={property.name}
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">
+              <FormControl>
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>{property.displayName}</FormLabel>
+                <FormDescription>{property.description}</FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+        // <FormField
+        //   control={form.control}
+        //   name={property.name}
+        //   render={({ field }) => (
+        //     <FormItem>
+        //       <FormLabel>{property.displayName}</FormLabel>
+        //       <FormControl>
+        //         <Input {...field} />
+        //       </FormControl>
+        //       <FormMessage />
+        //     </FormItem>
+        //   )}
+        // />
+      )
+
+    default:
+      break
+  }
 }
 
 // export const SelectTrigger = ({}: SelectTriggerProps) => {
 export const TriggerDrawer = () => {
-  const { editedTrigger } = useEditor()
+  const { editedTrigger, updateEditedTrigger } = useEditor()
   if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
-  // const { data: connectorMetadata, isFetching } = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
+  const { data: connectorMetadata, isFetching } = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
 
   const triggerForm = useForm<{ trigger: TriggerBase }>({})
 
-  const watcher = triggerForm.watch()
+  const triggerWatcher = triggerForm.watch('trigger')
+  useEffect(() => {
+    if (triggerWatcher?.displayName) updateEditedTrigger({ displayName: triggerWatcher.displayName })
+  }, [triggerWatcher])
 
   // const handleSelectTrigger = (row: Row<ConnectorMetadata>) => {
   //   if(!editedTrigger) throw new Error('Can not retrive editTrigger data')
@@ -136,7 +182,7 @@ export const TriggerDrawer = () => {
   // }
 
   if (!connectorMetadata) return <div>Can not find connector details</div>
-  // if (isFetching) return <Icons.spinner />
+  if (isFetching) return <Icons.spinner />
 
   const handleOnSubmit = (data: any) => {
     console.log(data)
@@ -189,8 +235,8 @@ export const TriggerDrawer = () => {
               </FormItem>
             )}
           />
-          {watcher.trigger
-            ? Object.values(watcher.trigger.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)
+          {triggerWatcher
+            ? Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)
             : null}
           {/* <FormField
             control={createForm.control}
@@ -239,7 +285,6 @@ export const TriggerDrawer = () => {
           </div>
         </form>
       </Form>
-      {JSON.stringify(watcher)}
     </div>
   )
 }

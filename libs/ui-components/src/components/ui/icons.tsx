@@ -33,6 +33,8 @@ type IconProps = React.HTMLAttributes<SVGElement>
 type RadixIconProps = React.HTMLAttributes<SVGElement> & { children?: undefined }
 
 export const Icons = {
+  change: (props: RadixIconProps) => <UpdateIcon {...props} />,
+  update: (props: RadixIconProps) => <UpdateIcon {...props} />,
   questionMarkCircle: (props: RadixIconProps) => <QuestionMarkCircledIcon {...props} />,
   questionMark: (props: RadixIconProps) => <QuestionMarkIcon {...props} />,
   check: (props: RadixIconProps) => <CheckIcon {...props} />,

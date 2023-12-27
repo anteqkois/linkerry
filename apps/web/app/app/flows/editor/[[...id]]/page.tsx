@@ -13,7 +13,7 @@ import { useClientQuery } from '../../../../../libs/react-query'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/connectors-metadata/api/query-configs'
 import { FlowApi } from '../../../../../modules/flows/api'
 
-const mockFlowVersion : Flow = {
+const mockFlowVersion: Flow = {
   _id: '658b054d1908ebfe99ba298e',
   user: '000000000000000000000000',
   status: 'Unpublished',
@@ -79,20 +79,19 @@ export default function Page({ params }: { params: { id: string } }) {
   // const { value, remove } = useLocalStorageValue<CustomNode[]>(LocalStorageKeys.StrategyCache)
   const { push } = useRouter()
 
-  const [initialData, actions] = useAsync<{ initialNodes: CustomNode[]; initialEdges: Edge[] }>(async () => {
+  const [renderingState, actions] = useAsync<{ initialNodes: CustomNode[]; initialEdges: Edge[] }>(async () => {
     if (!connectorsMetadata?.length) throw new Error('Can not retrive connectors metadata')
     const id = params?.id?.[0]
 
     // Fetch and render if exists
     if (id) {
-      // const { data } = await FlowApi.get(id)
-      // if (data && data._id === id) {
-      //   const { nodes, edges } = renderFlow(data.version, connectorsMetadata)
-      //   return { initialNodes: nodes, initialEdges: edges }
-      // }
-        const { nodes, edges } = renderFlow(mockFlowVersion.version, connectorsMetadata)
+      const { data } = await FlowApi.get(id)
+      if (data && data._id === id) {
+        const { nodes, edges } = renderFlow(data.version, connectorsMetadata)
         return { initialNodes: nodes, initialEdges: edges }
-
+      }
+      // const { nodes, edges } = renderFlow(mockFlowVersion.version, connectorsMetadata)
+      // return { initialNodes: nodes, initialEdges: edges }
     }
     // Create new flow
     const { data } = await FlowApi.create()
@@ -104,6 +103,13 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   })
 
+  if (renderingState.error) {
+    const err = new Error(renderingState.error.message)
+    err.stack = renderingState.error.stack
+    err.name = renderingState.error.name
+    throw err
+  }
+
   useEffect(() => {
     if (status === 'success') actions.execute()
     // Clean cache
@@ -112,7 +118,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Editor
-      initalData={{ edges: initialData.result?.initialEdges ?? [], nodes: initialData.result?.initialNodes ?? [] }}
+      initalData={{ edges: renderingState.result?.initialEdges ?? [], nodes: renderingState.result?.initialNodes ?? [] }}
       mode="production"
       limits={undefined}
       cache={{ saveState: undefined }}

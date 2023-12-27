@@ -7,35 +7,6 @@ import { SecretTextProperty } from './secretText'
 import { StaticDropdownProperty, StaticDropdownValue } from './static-dropdown'
 import { TextProperty } from './text'
 
-export type BaseProperty = {
-  name: string
-  displayName: string
-  description: string
-}
-
-export type PropertyValue<S, T extends PropertyType, R extends boolean> = {
-  valueSchema: S
-  type: T
-  required: R
-  defaultTransformers?: any[]
-  transformers?: any[]
-  validators?: any[]
-  defaultValidators?: any[]
-  defaultValue?: T extends PropertyType.Text
-    ? string
-    : T extends PropertyType.LongText
-    ? string
-    : T extends PropertyType.StaticDropdown
-    ? unknown
-    : T extends PropertyType.Number
-    ? number
-    : T extends PropertyType.SecretText
-    ? string
-    : T extends PropertyType.Checkbox
-    ? boolean
-    : unknown
-}
-
 export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty
 // export type ConnectorAuthProperty = SecretTextProperty
 // export type ConnectorAuthProperty = BasicAuthProperty

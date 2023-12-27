@@ -63,7 +63,7 @@ export const Editor = ({ initalData }: EditorProps) => {
 
   return (
     <ReactFlowProvider>
-      <div style={{ width: '100vw', height: '100vh', border: '4px dotted black' }} ref={reactFlowWrapper}>
+      <div style={{ width: '100vw', height: '100vh' }} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -81,7 +81,7 @@ export const Editor = ({ initalData }: EditorProps) => {
           <Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
         </ReactFlow>
       </div>
-      <Drawer show={showDrawer} setShow={setShowDrawer} title={drawer.title}>
+      <Drawer show={showDrawer} setShow={setShowDrawer}>
         <EditorDrawer />
       </Drawer>
     </ReactFlowProvider>

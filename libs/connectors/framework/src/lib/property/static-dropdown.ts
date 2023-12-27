@@ -1,5 +1,4 @@
-import { BaseProperty, PropertyValue } from '.';
-import { PropertyType } from './base';
+import { PropertyValue, BaseProperty, PropertyType } from './base';
 
 export type StaticDropdownValue = string | number
 

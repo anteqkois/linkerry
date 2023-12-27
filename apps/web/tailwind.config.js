@@ -118,7 +118,7 @@ module.exports = {
         384: '96rem',
         448: '112rem',
         512: '128rem',
-        'editor-element': '22rem',
+        'editor-element': '20rem',
       },
       translate: {
         100: '25rem',

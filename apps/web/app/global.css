@@ -227,6 +227,10 @@
     @apply bg-background text-foreground;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
+
+  .center {
+    @apply flex justify-center items-center;
+  }
 }
 
 /* html {

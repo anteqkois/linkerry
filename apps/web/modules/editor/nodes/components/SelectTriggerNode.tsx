@@ -6,9 +6,10 @@ import { BaseNodeElement } from './BaseNode'
 type SelectTriggerProps = CustomNodeProps<SelectTriggerNodeProps>
 
 export const SelectTriggerNodeElement = ({ data: { trigger } }: SelectTriggerProps) => {
-  const { setShowDrawer, showDrawer, setEditedTrigger } = useEditor()
+  const { setShowDrawer, showDrawer, setEditedTrigger, setDrawer } = useEditor()
 
   const handleOnClick = () => {
+    setDrawer('select_trigger')
     setEditedTrigger(trigger)
     setShowDrawer(!showDrawer)
   }

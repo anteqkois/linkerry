@@ -1,12 +1,11 @@
 'use client'
 
-import { Action, Id, Trigger } from '@market-connector/shared'
+import { Action, Id, Trigger, deepMerge, generateEmptyTrigger } from '@market-connector/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
   Connection,
   Edge,
   EdgeChange,
-  Node,
   NodeChange,
   OnConnect,
   OnEdgesChange,
@@ -19,8 +18,10 @@ import { create } from 'zustand'
 import { EditorDrawer } from '../../shared/components/drawer/types'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 import { CustomNode, CustomNodeId } from './nodes'
+import { selectTriggerNodeFactory } from './nodes/components/nodeFactory'
 
-type EditorNode = Node | CustomNode
+// type EditorNode = Node | CustomNode
+type EditorNode = CustomNode
 
 const editorDrawers: EditorDrawer[] = [
   {
@@ -60,6 +61,8 @@ interface IEditorState {
   // TRIGGERS
   editedTrigger: Trigger | null
   setEditedTrigger: (trigger: Trigger) => void
+  updateEditedTrigger: (update: Partial<Trigger>) => void
+  resetTrigger: (triggerId: Id) => void
   // ACTIONS
   editedAction: Action | null
   setEditedAction: (action: Action) => void
@@ -97,7 +100,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
         if (node.id !== id) return node
         updated = true
         return { ...node, ...changes, data: { ...node.data, ...changes.data } }
-      }),
+      }) as CustomNode[],
     })
     if (!updated) throw new Error(`Can not update node: ${id}, changes: ${changes}`)
   },
@@ -107,7 +110,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
   addEdge: (edge: Edge) => set((state) => ({ edges: [...state.edges, edge] })),
   onNodesChange: (changes: NodeChange[]) => {
     set({
-      nodes: applyNodeChanges<CustomNode['data']>(changes, get().nodes),
+      nodes: applyNodeChanges<CustomNode['data']>(changes, get().nodes) as CustomNode[],
     })
   },
   onEdgesChange: (changes: EdgeChange[]) => {
@@ -137,6 +140,23 @@ export const useEditor = create<IEditorState>((set, get) => ({
     set({
       editedTrigger: trigger,
     }),
+  updateEditedTrigger: (update: Partial<Trigger>) => {
+    const editedTrigger = get().editedTrigger
+    if (!editedTrigger) throw new Error('editedTrigger can not be empty duruing update')
+    set({
+      editedTrigger: deepMerge(editedTrigger, update),
+    })
+  },
+  resetTrigger: (triggerId: Id) => {
+    set({
+      nodes: get().nodes.map((node: CustomNode) => {
+        if (node.id !== triggerId) return node as CustomNode
+
+        const emptyNode = selectTriggerNodeFactory({ trigger: generateEmptyTrigger(node.data.trigger.id) })
+        return emptyNode
+      }),
+    })
+  },
   // ACTIONS
   editedAction: null,
   setEditedAction: (action: Action) =>

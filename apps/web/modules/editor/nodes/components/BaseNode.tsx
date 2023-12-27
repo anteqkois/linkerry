@@ -27,15 +27,15 @@ interface BaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'color'>, Varia
   onClick: NonNullable<HTMLAttributes<HTMLDivElement>['onClick']>
 }
 
-export const BaseNodeElement = ({ children, title, onClick, valid, invalidMessage, color }: BaseProps) => {
+export const BaseNodeElement = ({ children, title, onClick, valid, invalidMessage, color , className}: BaseProps) => {
   return (
-    <Card className={cn(baseNodeVariants({ valid, color }), 'hover:outline outline-2 hover:border-solid')} onClick={onClick}>
+    <Card className={cn(baseNodeVariants({ valid, color }), 'hover:outline outline-2 hover:border-solid', className)} onClick={onClick}>
       {/* {title && (
         <CardHeader>
           <CardTitle className="flex gap-2 items-center text-primary">{title}</CardTitle>
         </CardHeader>
       )} */}
-      <CardContent className='p-6'>{children}</CardContent>
+      <CardContent className='p-4'>{children}</CardContent>
       {!valid && (
         <TooltipProvider delayDuration={100}>
           <Tooltip>
