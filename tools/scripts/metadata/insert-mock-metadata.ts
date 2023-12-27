@@ -4,7 +4,7 @@ import { insertMetadata } from './insert-metadata';
 const lorem =
   'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere molestias tempore debitis in reprehenderit. Sunt, reiciendis. Ullam nisi eos quo molestias, dicta et dolorum velit rem hic debitis natus cumque. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, quia porro. Illum laboriosam iusto vel omnis corrupti quis dolorum repellat dicta provident inventore tempora sint rem facilis dolores, eos fugiat.'
 
-const connectorsMetadata: (Omit<ConnectorMetadata, 'triggers' | 'acrtions'> & { triggers: any; actions: any })[] = [
+const connectorsMetadata: (Omit<ConnectorMetadata, 'triggers' | 'acrtions' | '_id'> & { triggers: any; actions: any })[] = [
   {
     displayName: 'Trading View test',
     name: '@market-connector/trading-view',

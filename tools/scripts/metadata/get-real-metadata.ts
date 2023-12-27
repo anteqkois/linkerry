@@ -7,7 +7,7 @@ export const getRealMetadata = async () => {
   const names = await getAvailableConnectorNames()
   console.log(`found ${names.length} connectors`)
 
-  const connectorsMetadata: ConnectorMetadata[] = []
+  const connectorsMetadata: Omit<ConnectorMetadata, '_id'>[] = []
   for (const packageName of names) {
     const packagePath = `libs/connectors/${packageName}`
 
@@ -17,7 +17,7 @@ export const getRealMetadata = async () => {
     const { name: connectorName, version: connectorVersion } = packageJson
     const connector = extractConnectorFromModule({ module })
 
-    const metadata: ConnectorMetadata = {
+    const metadata: Omit<ConnectorMetadata, '_id'> = {
       ...connector.metadata(),
       name: connectorName,
       version: connectorVersion,
