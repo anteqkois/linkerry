@@ -2,6 +2,7 @@ import { FlowState, Id, generateEmptyTrigger } from '@market-connector/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, Types } from 'mongoose'
+import { UpdateTriggerDto } from './dto/update-trigger.dto'
 import { FlowVersionModel } from './schemas/flow-version.schema'
 
 @Injectable()
@@ -19,5 +20,17 @@ export class FlowVersionsService {
       stepsCount: 1,
       triggers: [emptyTrigger],
     })
+  }
+
+  // triggers
+  async updateTrigger(id: Id, userId: Id, dto: UpdateTriggerDto) {
+    await this.flowVersionModel.updateOne(
+      {
+        _id: id,
+        user: userId,
+        'triggers.id': dto.id,
+      },
+      dto,
+    )
   }
 }

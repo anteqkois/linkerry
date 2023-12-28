@@ -1,6 +1,6 @@
 'use client'
 
-import { Action, Id, Trigger, deepMerge, generateEmptyTrigger } from '@market-connector/shared'
+import { Action, Id, Trigger, TriggerEmpty, deepMerge, generateEmptyTrigger } from '@market-connector/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
   Connection,
@@ -148,13 +148,23 @@ export const useEditor = create<IEditorState>((set, get) => ({
     })
   },
   resetTrigger: (triggerId: Id) => {
-    set({
-      nodes: get().nodes.map((node: CustomNode) => {
-        if (node.id !== triggerId) return node as CustomNode
+    let emptyTrigger: TriggerEmpty | undefined = undefined
 
-        const emptyNode = selectTriggerNodeFactory({ trigger: generateEmptyTrigger(node.data.trigger.id) })
-        return emptyNode
-      }),
+    const newNodes = get().nodes.map((node: CustomNode) => {
+      if (node.id !== triggerId) return node as CustomNode
+
+      emptyTrigger = generateEmptyTrigger(node.data.trigger.id)
+      const emptyNode = selectTriggerNodeFactory({ trigger: emptyTrigger })
+      return emptyNode
+    })
+
+    if (!emptyTrigger) throw new Error(`Can not generate empty trigger`)
+
+    set({
+      nodes: newNodes,
+      showDrawer: true,
+      drawer: editorDrawers.find((entry) => entry.name === 'select_trigger'),
+      editedTrigger: emptyTrigger,
     })
   },
   // ACTIONS

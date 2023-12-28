@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { generateId } from '../../lib/mongodb'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
-import { CreateFlowDto } from './dto/create.dto'
 import { FlowModel } from './schemas/flow.schema'
 
 @Injectable()
@@ -20,7 +19,7 @@ export class FlowsService {
       .populate(['version'])
   }
 
-  async createEmpty(userId: Id, dto: CreateFlowDto) {
+  async createEmpty(userId: Id) {
     const flowId = generateId()
     const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString())
 

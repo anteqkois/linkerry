@@ -15,6 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Separator,
 } from '@market-connector/ui-components/client'
 import { Button, H5, Icons } from '@market-connector/ui-components/server'
 import Image from 'next/image'
@@ -129,12 +130,12 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
           control={form.control}
           name={property.name}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pl-1">
               <FormControl>
                 <Checkbox checked={field.value} onCheckedChange={field.onChange} />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>{property.displayName}</FormLabel>
+                <FormLabel className="cursor-pointer">{property.displayName}</FormLabel>
                 <FormDescription>{property.description}</FormDescription>
               </div>
             </FormItem>
@@ -162,7 +163,7 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
 
 // export const SelectTrigger = ({}: SelectTriggerProps) => {
 export const TriggerDrawer = () => {
-  const { editedTrigger, updateEditedTrigger } = useEditor()
+  const { editedTrigger, updateEditedTrigger, resetTrigger } = useEditor()
   if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
   const { data: connectorMetadata, isFetching } = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
@@ -174,15 +175,13 @@ export const TriggerDrawer = () => {
     if (triggerWatcher?.displayName) updateEditedTrigger({ displayName: triggerWatcher.displayName })
   }, [triggerWatcher])
 
-  // const handleSelectTrigger = (row: Row<ConnectorMetadata>) => {
-  //   if(!editedTrigger) throw new Error('Can not retrive editTrigger data')
-  //   // fetch conector ? or better in node and to show info use metadata
-  //   // replace current node to trigger node
-  //   updateNode(editedTrigger.id, triggerNodeFactory({trigger: editedTrigger, connectorMetadata: row.original}))
-  // }
-
   if (!connectorMetadata) return <div>Can not find connector details</div>
-  if (isFetching) return <Icons.spinner />
+  if (isFetching)
+    return (
+      <div className="center">
+        <Icons.spinner />
+      </div>
+    )
 
   const handleOnSubmit = (data: any) => {
     console.log(data)
@@ -196,6 +195,10 @@ export const TriggerDrawer = () => {
           <H5>{connectorMetadata.displayName}</H5>
         </div>
       </div>
+      <Button className="w-full mt-5" variant={'outline'} onClick={() => resetTrigger(editedTrigger.id)}>
+        Change trigger
+      </Button>
+      <Separator className="mt-5 mb-4" />
       <Form {...triggerForm}>
         <form onSubmit={triggerForm.handleSubmit(handleOnSubmit)} className="space-y-5">
           <FormField
@@ -238,49 +241,10 @@ export const TriggerDrawer = () => {
           {triggerWatcher
             ? Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)
             : null}
-          {/* <FormField
-            control={createForm.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Keys Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Binance bot keys..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={createForm.control}
-            name="aKey"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Access Key</FormLabel>
-                <FormControl>
-                  <Input placeholder="Dc290z..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={createForm.control}
-            name="sKey"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Secret Key</FormLabel>
-                <FormControl>
-                  <Input placeholder="Shj20z..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
           <div className="flex justify-end">
             {/* <Button type="submit" loading={isLoading} className="w-full"> */}
             <Button type="submit" className="w-full">
-              Create
+              Save
             </Button>
           </div>
         </form>

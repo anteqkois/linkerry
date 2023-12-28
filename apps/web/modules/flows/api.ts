@@ -20,8 +20,4 @@ export class FlowApi {
   static async create() {
     return apiClient.post<Flow>('/flows')
   }
-
-  // static async update(id: Id, input: IStrategyBuy_StaticMarket_UpdateInput) {
-  //   return apiClient.put<IStrategyBuy_StaticMarket_UpdateResponse>(`/strategies-buy/${id}`, input)
-  // }
 }
