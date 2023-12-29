@@ -9,6 +9,9 @@ export enum TriggerType {
 export interface TriggerEmpty extends BaseStep {
   type: TriggerType.Empty
 }
+export const isEmptyTrigger = (trigger: Trigger): trigger is TriggerEmpty => {
+  return trigger.type === TriggerType.Empty
+}
 
 export interface TriggerWebhook extends BaseStep {
   type: TriggerType.Webhook
@@ -16,10 +19,16 @@ export interface TriggerWebhook extends BaseStep {
     sampleData: SampleData
   }
 }
+export const isWebhookTrigger = (trigger: Trigger): trigger is TriggerWebhook => {
+  return trigger.type === TriggerType.Webhook
+}
 
 export interface TriggerConnector extends BaseStep {
   type: TriggerType.Connector
   settings: BaseConnectorSettings
+}
+export const isConnectorTrigger = (trigger: Trigger): trigger is TriggerConnector => {
+  return trigger.type === TriggerType.Connector
 }
 
 export type Trigger = TriggerEmpty | TriggerWebhook | TriggerConnector

@@ -21,7 +21,7 @@ export class FlowsService {
 
   async createEmpty(userId: Id) {
     const flowId = generateId()
-    const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString())
+    const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString(), userId)
 
     return (
       await this.flowModel.create({

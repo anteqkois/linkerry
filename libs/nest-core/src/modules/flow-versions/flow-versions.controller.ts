@@ -12,7 +12,7 @@ export class FlowVersionsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Patch('triggers/:id')
   updateFlowTrigger(@ReqJwtUser() user: JwtUser,  @Param('id') id: Id, @Body() dto: UpdateTriggerDto) {
     return this.flowVersionsService.updateTrigger(id, user.id, dto)
   }

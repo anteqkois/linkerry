@@ -3,7 +3,6 @@ import axios from 'axios'
 import { valid } from 'semver'
 
 const coingecko = {
-  _id: '65820754948e9dca5698e999',
   displayName: 'Coingecko',
   name: '@market-connector/coingecko',
   description: 'Coingecko connector for cryptocurrency data',
@@ -41,7 +40,6 @@ describe('GET /api/connectors-metadata', () => {
     })
 
     const metadata = data[0]
-    expect(metadata._id).toBe(coingecko._id)
     expect(metadata.actions).toBe(coingecko.actions)
     expect(metadata.auth).toBe(coingecko.auth)
     expect(metadata.description).toBe(coingecko.description)

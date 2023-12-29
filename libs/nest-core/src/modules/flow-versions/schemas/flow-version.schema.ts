@@ -1,4 +1,4 @@
-import { FlowState, FlowVersion, Id, TriggerConnector, TriggerEmpty, TriggerWebhook } from '@market-connector/shared'
+import { FlowState, FlowVersion, Id, TriggerConnector, TriggerEmpty, TriggerWebhook, User } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { TriggerConnectorSchema, TriggerEmptySchema, TriggerWebhookSchema } from './trigger.schema'
@@ -8,6 +8,9 @@ export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow_versions' })
 export class FlowVersionModel implements FlowVersion {
   _id: string
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'user' })
+  user: User
 
   @Prop({ required: true, type: String })
   displayName: string

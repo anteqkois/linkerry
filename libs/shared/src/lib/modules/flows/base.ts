@@ -22,5 +22,5 @@ export interface BaseConnectorSettings {
   // index: number
   connectorVersion: string
   input: Record<string, any> & { auth?: string }
-  sampleData: SampleData
+  sampleData?: SampleData
 }

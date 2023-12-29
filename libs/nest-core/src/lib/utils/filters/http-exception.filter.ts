@@ -1,8 +1,8 @@
 // import * as fs from 'fs';
+import { CustomHttpExceptionResponse, HttpExceptionResponse } from '@market-connector/shared'
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { DtoException } from '../pipes'
-import { CustomHttpExceptionResponse, HttpExceptionResponse } from '@market-connector/shared'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -105,7 +105,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { method, url } = request
     const errorLog = `[${method}] ${url} - ${statusCode}
     ${humanMessage}
-    User: ${JSON.stringify(request.user ?? 'Not signed in')}`
+    User: ${JSON.stringify(request.user ?? 'unknown')}`
     return errorLog
   }
 

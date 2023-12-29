@@ -9,10 +9,11 @@ import { FlowVersionModel } from './schemas/flow-version.schema'
 export class FlowVersionsService {
   constructor(@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>) {}
 
-  async createEmpty(flowId: Id) {
+  async createEmpty(flowId: Id, userId: Id) {
     const emptyTrigger = generateEmptyTrigger(new Types.ObjectId().toString())
 
     return this.flowVersionModel.create({
+      user: userId,
       displayName: 'Untitled',
       state: FlowState.Draft,
       flow: flowId,
@@ -24,13 +25,20 @@ export class FlowVersionsService {
 
   // triggers
   async updateTrigger(id: Id, userId: Id, dto: UpdateTriggerDto) {
-    await this.flowVersionModel.updateOne(
-      {
-        _id: id,
-        user: userId,
-        'triggers.id': dto.id,
-      },
-      dto,
-    )
+    return (
+      await this.flowVersionModel.findOneAndUpdate(
+        {
+          _id: id,
+          user: userId,
+          'triggers.id': dto.id,
+        },
+        {
+          $set: {
+            'triggers.$': dto,
+          },
+        },
+        { new: true },
+      )
+    )?.toObject()
   }
 }
