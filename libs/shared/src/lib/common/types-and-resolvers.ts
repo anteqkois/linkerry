@@ -41,14 +41,16 @@ export type DeepPartialObject<Thing> = {
   [Key in keyof Thing]?: DeepPartial<Thing[Key]>
 }
 
-export type Nullable<T> = T | undefined | null;
+export type Nullable<T> = T | undefined | null
 
 export type DeepNullable<T> = {
-  [P in keyof T]: T[P] | null;
-};
+  [P in keyof T]: T[P] | null
+}
 
-export type ValueOf<T> = Required<T>[keyof T];
+export type ValueOf<T> = Required<T>[keyof T]
 
 export type Prettify<T> = {
   [K in keyof T]: T[K]
 } & {}
+
+export type WithoutId<T> = Omit<T, '_id' | 'id'>

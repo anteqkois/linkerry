@@ -1,4 +1,4 @@
-import { ConnectorMetadataSummary, connectorsTag } from '@market-connector/connectors-framework'
+import { ConnectorMetadataSummary, connectorTag } from '@market-connector/connectors-framework'
 import { TriggerConnector, TriggerType } from '@market-connector/shared'
 import { Row } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
@@ -14,12 +14,12 @@ export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
 // export const SelectTrigger = ({}: SelectTriggerProps) => {
 export const SelectTriggerDrawer = () => {
   const { data } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
-  const { updateNode, editedTrigger, setDrawer, setEditedTrigger } = useEditor()
+  const { updateNode, editedTrigger, setDrawer, setEditedTrigger, updateEditedTrigger } = useEditor()
 
-  const handleSelectTrigger = (row: Row<ConnectorMetadataSummary>) => {
+  const handleSelectTrigger = async (row: Row<ConnectorMetadataSummary>) => {
     if (!editedTrigger) throw new Error('Can not retrive editTrigger data')
 
-    const triggerConector: TriggerConnector = {
+    const newTrigger: TriggerConnector = {
       displayName: row.original.displayName,
       id: editedTrigger.id,
       type: TriggerType.Connector,
@@ -29,12 +29,12 @@ export const SelectTriggerDrawer = () => {
         connectorName: row.original.name,
         input: {},
         connectorVersion: row.original.version,
-        sampleData: { currentSelectedData: {}, lastTestDate: new Date() },
       },
     }
 
-    setEditedTrigger(triggerConector)
-    updateNode(editedTrigger.id, triggerNodeFactory({ trigger: triggerConector, connectorMetadata: row.original }))
+    await updateEditedTrigger(newTrigger)
+    setEditedTrigger(newTrigger)
+    updateNode(editedTrigger.id, triggerNodeFactory({ trigger: newTrigger, connectorMetadata: row.original }))
     setDrawer('trigger')
   }
 
@@ -50,7 +50,7 @@ export const SelectTriggerDrawer = () => {
           {
             accessor: 'tags',
             title: 'Tags',
-            options: connectorsTag.map((tag) => ({
+            options: connectorTag.map((tag) => ({
               label: tag,
               value: tag,
             })),

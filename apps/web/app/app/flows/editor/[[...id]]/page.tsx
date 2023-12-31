@@ -1,9 +1,8 @@
 'use client'
 
-import { useAsync } from '@react-hookz/web'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
-import { CustomNode, Editor } from '../../../../../modules/editor'
+import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../../../../../modules/editor/nodes/components/nodeFactory'
 // import { LocalStorageKeys } from '../../../../../types'
 import { ConnectorMetadataSummary } from '@market-connector/connectors-framework'
@@ -76,52 +75,39 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 
 export default function Page({ params }: { params: { id: string } }) {
   const { data: connectorsMetadata, status } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
-  // const { value, remove } = useLocalStorageValue<CustomNode[]>(LocalStorageKeys.StrategyCache)
+  const { loadFlow, setFlow, setEdges, setNodes } = useEditor()
   const { push } = useRouter()
 
-  const [renderingState, actions] = useAsync<{ initialNodes: CustomNode[]; initialEdges: Edge[] }>(async () => {
+  const initEditor = useCallback(async () => {
     if (!connectorsMetadata?.length) throw new Error('Can not retrive connectors metadata')
     const id = params?.id?.[0]
 
     // Fetch and render if exists
     if (id) {
-      const { data } = await FlowApi.get(id)
-      if (data && data._id === id) {
-        const { nodes, edges } = renderFlow(data.version, connectorsMetadata)
-        return { initialNodes: nodes, initialEdges: edges }
+      const flow = await loadFlow(id)
+      if (flow) {
+        const { nodes, edges } = renderFlow(flow.version, connectorsMetadata)
+        setNodes(nodes)
+        setEdges(edges)
+        return
       }
-      // const { nodes, edges } = renderFlow(mockFlowVersion.version, connectorsMetadata)
-      // return { initialNodes: nodes, initialEdges: edges }
     }
     // Create new flow
     const { data } = await FlowApi.create()
+    setFlow(data)
+
     push(`/app/flows/editor/${data._id}`)
 
-    return {
-      initialNodes: [selectTriggerNodeFactory({ trigger: data.version.triggers[0] })],
-      initialEdges: [],
-    }
-  })
-
-  if (renderingState.error) {
-    const err = new Error(renderingState.error.message)
-    err.stack = renderingState.error.stack
-    err.name = renderingState.error.name
-    throw err
-  }
+    setNodes([selectTriggerNodeFactory({ trigger: data.version.triggers[0] })])
+    setEdges([])
+  }, [params.id, connectorsMetadata])
 
   useEffect(() => {
-    if (status === 'success') actions.execute()
-    // Clean cache
-    // return remove()
-  }, [actions, status])
+    if (status !== 'success') return
+    ;(async () => {
+      await initEditor()
+    })()
+  }, [status])
 
-  return (
-    <Editor
-      initalData={{ edges: renderingState.result?.initialEdges ?? [], nodes: renderingState.result?.initialNodes ?? [] }}
-      mode="production"
-      limits={undefined}
-      cache={{ saveState: undefined }}
-    />
-  )
+  return <Editor mode="production" limits={undefined} cache={{ saveState: undefined }} />
 }

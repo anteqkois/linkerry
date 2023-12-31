@@ -20,25 +20,34 @@ export class FlowVersionsService {
       valid: false,
       stepsCount: 1,
       triggers: [emptyTrigger],
+      actions: [],
     })
   }
 
   // triggers
   async updateTrigger(id: Id, userId: Id, dto: UpdateTriggerDto) {
-    return (
-      await this.flowVersionModel.findOneAndUpdate(
-        {
-          _id: id,
-          user: userId,
-          'triggers.id': dto.id,
+    console.log({
+      _id: id,
+      user: userId,
+      'triggers.id': dto.id,
+    })
+
+    const result = await this.flowVersionModel.findOneAndUpdate(
+      {
+        _id: id,
+        user: userId,
+        'triggers.id': dto.id,
+      },
+      {
+        $set: {
+          'triggers.$': dto,
         },
-        {
-          $set: {
-            'triggers.$': dto,
-          },
-        },
-        { new: true },
-      )
-    )?.toObject()
+      },
+      { new: true },
+    )
+
+    console.log(result)
+    if (!result) return null
+    return result.toObject()
   }
 }

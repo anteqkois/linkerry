@@ -15,7 +15,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Separator,
 } from '@market-connector/ui-components/client'
 import { Button, H5, Icons } from '@market-connector/ui-components/server'
 import Image from 'next/image'
@@ -105,7 +104,7 @@ const connectorMetadata = {
 } as unknown as ConnectorMetadata
 
 const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; property: ConnectorProperty }) => {
-  if (property.defaultValue) form.setValue(property.name, property.defaultValue)
+  // form.setValue(property.name, property.defaultValue)
 
   switch (property.type) {
     case PropertyType.Text:
@@ -161,31 +160,58 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
   }
 }
 
-// export const SelectTrigger = ({}: SelectTriggerProps) => {
 export const TriggerDrawer = () => {
   const { editedTrigger, updateEditedTrigger, resetTrigger } = useEditor()
   if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
   const { data: connectorMetadata, isFetching } = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
 
-  const triggerForm = useForm<{ trigger: TriggerBase }>({})
-
+  const triggerForm = useForm<{ trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({})
   const triggerWatcher = triggerForm.watch('trigger')
+
   useEffect(() => {
-    if (triggerWatcher?.displayName) updateEditedTrigger({ displayName: triggerWatcher.displayName })
-  }, [triggerWatcher])
+    console.log(editedTrigger)
+  }, [])
+
+  // useEffect(() => {
+  //   // save default values
+  //   if (triggerWatcher?.props) {
+  //     Object.entries(triggerWatcher.props).map(([key, value]) => {
+  //       if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+  //     })
+  //   }
+
+  //   console.log(triggerForm.getValues())
+  //   if (triggerWatcher?.displayName) updateEditedTrigger({ displayName: triggerWatcher.displayName })
+  // }, [triggerWatcher])
+
+  const handleOnSubmit = (data: any) => {
+    console.log(data)
+  }
 
   if (!connectorMetadata) return <div>Can not find connector details</div>
+
+  const onChangeTrigger = (triggerName: string) => {
+    const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === triggerName)
+    if (!selectedTrigger) return
+    triggerForm.setValue('trigger', selectedTrigger)
+
+    if(selectedTrigger.type === )
+
+      Object.entries(selectedTrigger.props).map(([key, value]) => {
+        if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+      })
+
+    console.log(triggerForm.getValues())
+    if (selectedTrigger.displayName) updateEditedTrigger({ displayName: triggerWatcher.displayName, })
+  }
+
   if (isFetching)
     return (
       <div className="center">
         <Icons.spinner />
       </div>
     )
-
-  const handleOnSubmit = (data: any) => {
-    console.log(data)
-  }
 
   return (
     <div>
@@ -195,25 +221,22 @@ export const TriggerDrawer = () => {
           <H5>{connectorMetadata.displayName}</H5>
         </div>
       </div>
-      <Button className="w-full mt-5" variant={'outline'} onClick={() => resetTrigger(editedTrigger.id)}>
+      <Button className="w-full mt-5" variant={'secondary'} onClick={() => resetTrigger(editedTrigger.id)}>
         Change trigger
       </Button>
-      <Separator className="mt-5 mb-4" />
+      {/* <Separator className="mt-5 mb-4" /> */}
       <Form {...triggerForm}>
-        <form onSubmit={triggerForm.handleSubmit(handleOnSubmit)} className="space-y-5">
+        <form onSubmit={triggerForm.handleSubmit(handleOnSubmit)} className="space-y-5 mt-6">
           <FormField
             control={triggerForm.control}
-            name="trigger"
+            name="triggerName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Trigger</FormLabel>
                 <Select
                   onValueChange={(v) => {
                     field.onChange(v)
-                    // const selectedExchange = exchanges.find((exchange) => exchange.code === v)
-                    const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === v)
-                    if (!selectedTrigger) return
-                    triggerForm.setValue('trigger', selectedTrigger)
+                    onChangeTrigger(v)
                   }}
                   // defaultValue={field.value}
                 >

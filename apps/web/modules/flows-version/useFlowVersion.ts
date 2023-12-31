@@ -1,13 +1,17 @@
-import { Trigger } from '@market-connector/shared'
-import { FlowVersionApi } from './api'
 
 export const useFlowVersion = () => {
-  const updateTrigger = async (trigger: Partial<Trigger>) => {
-    //
-    await FlowVersionApi.updateTrigger(trigger)
-  }
+  // const patch = async (id: Id, flowVersion: Partial<Omit<FlowVersion, 'triggers' | 'actions'>>) => {
+  //   const { data } = await FlowVersionApi.patch(id, flowVersion)
+  //   return data
+  // }
+
+  // const patchTrigger = async (id: Id, trigger: Partial<Trigger> & { id: Id }) => {
+  //   const { data } = await FlowVersionApi.patchTrigger(id, trigger)
+  //   return data
+  // }
 
   return {
-    updateTrigger,
+    // patchTrigger,
+    // patch,
   }
 }

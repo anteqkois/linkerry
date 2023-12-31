@@ -35,7 +35,6 @@ export class ConnectorsMetadataService {
 
     if (!connector) throw new UnprocessableEntityException(`Can not find conector metadata based on id: ${id}`)
 
-    console.log(connector)
     return query.summary ? this.connectorToSummaryMetadata(connector) : connector
   }
 }

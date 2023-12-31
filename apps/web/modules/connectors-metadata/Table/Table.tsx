@@ -1,6 +1,6 @@
 'use client'
 
-import { ConnectorMetadataSummary, connectorsTag } from '@market-connector/connectors-framework'
+import { ConnectorMetadataSummary, connectorTag } from '@market-connector/connectors-framework'
 import { ColumnDef } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
 import { useClientQuery } from '../../../libs/react-query'
@@ -31,7 +31,7 @@ export const ConnectorsTable = ({ onlyColumns, mobileCollumns, desktopCollumns, 
         {
           accessor: 'tags',
           title: 'Tags',
-          options: connectorsTag.map((tag) => ({
+          options: connectorTag.map((tag) => ({
             label: tag,
             value: tag,
           })),

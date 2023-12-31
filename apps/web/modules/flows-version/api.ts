@@ -1,4 +1,4 @@
-import { Trigger } from '@market-connector/shared'
+import { FlowVersion, Id, Trigger } from '@market-connector/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class FlowVersionApi {
@@ -10,7 +10,11 @@ export class FlowVersionApi {
   //   })
   // }
 
-  static async updateTrigger(data: Partial<Trigger>) {
-    return apiClient.put('/flow-versions/triggers', data)
+  static async patch(id: Id, data: Partial<FlowVersion>) {
+    return apiClient.patch<FlowVersion | undefined>(`/flow-versions/${id}`, data)
+  }
+
+  static async updateTrigger(id: Id, data: Partial<Trigger> & { id: Id }) {
+    return apiClient.patch<FlowVersion | undefined>(`/flow-versions/${id}/triggers`, data)
   }
 }

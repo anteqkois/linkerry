@@ -20,4 +20,8 @@ export class FlowApi {
   static async create() {
     return apiClient.post<Flow>('/flows')
   }
+
+  static async patch(id: Id, flow: Partial<Omit<Flow, 'version'>>) {
+    return apiClient.patch<Flow>(`/flows/${id}`)
+  }
 }

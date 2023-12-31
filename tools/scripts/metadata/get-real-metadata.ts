@@ -1,7 +1,11 @@
 import { readdir } from 'fs/promises'
 import { Connector, ConnectorMetadata } from 'libs/connectors/framework/src'
+import { ConnectorGroup, ConnectorVisibility } from 'libs/shared/src'
 import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
+
+const customConnectors = []
+const coreConnectors = ['@market-connector/schedule']
 
 export const getRealMetadata = async () => {
   const names = await getAvailableConnectorNames()
@@ -19,6 +23,8 @@ export const getRealMetadata = async () => {
 
     const metadata: Omit<ConnectorMetadata, '_id'> = {
       ...connector.metadata(),
+      visibility: customConnectors.includes(connector.name) ? ConnectorVisibility.Custom : ConnectorVisibility.Official,
+      group: coreConnectors.includes(connector.name) ? ConnectorGroup.Core : ConnectorGroup.App,
       name: connectorName,
       version: connectorVersion,
       minimumSupportedRelease: connector.minimumSupportedRelease,

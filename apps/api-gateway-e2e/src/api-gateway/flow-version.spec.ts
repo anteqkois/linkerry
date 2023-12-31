@@ -113,7 +113,7 @@ describe('POST /api/flows-version', () => {
       },
     }
 
-    const { data } = await axios.patch<FlowVersion>(`/flow-versions/triggers/${flowVersion._id}`, input)
+    const { data } = await axios.patch<FlowVersion>(`/flow-versions/${flowVersion._id}/triggers`, input)
     flowVersion = data
     const updatedTrigger = data.triggers[0]
 
@@ -136,7 +136,7 @@ describe('POST /api/flows-version', () => {
     input.settings.input.expression = newExpression
     input.settings.input.timezone = newTimezone
 
-    const { data } = await axios.patch<FlowVersion>(`/flow-versions/triggers/${flowVersion._id}`, input)
+    const { data } = await axios.patch<FlowVersion>(`/flow-versions/${flowVersion._id}/triggers`, input)
     flowVersion = data
     const updatedTrigger = data.triggers[0]
 

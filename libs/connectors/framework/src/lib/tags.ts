@@ -1,4 +1,4 @@
-export const connectorsTag = [
+export const connectorTag = [
   'cryptocurrency',
   'trading',
   'alerts',
@@ -11,4 +11,4 @@ export const connectorsTag = [
   'plan',
   'connector',
 ] as const
-export type ConnectorTag = typeof connectorsTag[number]
+export type ConnectorTag = typeof connectorTag[number]

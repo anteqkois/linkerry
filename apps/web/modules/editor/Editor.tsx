@@ -2,11 +2,10 @@
 import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
-import ReactFlow, { Background, BackgroundVariant, Edge, ReactFlowProvider } from 'reactflow'
+import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'reactflow'
 import { Drawer } from '../../shared/components/drawer/Index'
 import { TriggerNodeElement } from './components'
 import { editorDrawers } from './components/drawers'
-import { CustomNode } from './nodes'
 import { SelectTriggerNodeElement } from './nodes/components/SelectTriggerNode'
 import { useEditor } from './useEditor'
 
@@ -19,45 +18,23 @@ interface EditorProps {
   limits: undefined // How many strategies buy can be etc.
   mode: 'demo' | 'production'
   // nodeTypes: Record<string, (...props: any) => JSX.Element>
-  initalData: {
-    nodes: CustomNode[]
-    edges: Edge[]
-  }
+  // initalData: {
+  //   nodes: CustomNode[]
+  //   edges: Edge[],
+  // }
   cache: {
     saveState: undefined
   }
 }
 
-export const Editor = ({ initalData }: EditorProps) => {
-  const {
-    nodes,
-    setNodes,
-    onNodesChange,
-    edges,
-    setEdges,
-    onEdgesChange,
-    onConnect,
-    setFlowId: setStrategyId,
-    showDrawer,
-    setShowDrawer,
-    drawer,
-  } = useEditor()
+export const Editor = ({ mode }: EditorProps) => {
+  const renders = useRef(0)
+  const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showDrawer, setShowDrawer, drawer } = useEditor()
   const reactFlowWrapper = useRef(null)
 
   useEffect(() => {
-    // setup inital editor state
-    setNodes(initalData.nodes)
-
-    setStrategyId(initalData.nodes[0]?.id)
-    // TODO add some kind of guard to prevent lost state
-    // return () => {}
-  }, [initalData.nodes])
-
-  useEffect(() => {
-    // setup inital editor state
-    setEdges(initalData.edges)
-    // return () => {}
-  }, [initalData.edges])
+    console.log(`Editor mode: ${mode}; ${(renders.current += renders.current)}`)
+  }, [])
 
   const EditorDrawer = editorDrawers[drawer.name]
 

@@ -1,5 +1,6 @@
 import { DbTimestamp, Id } from '../../common/database'
 import { User } from '../user'
+import { Action } from './action'
 import { Trigger } from './trigger'
 
 export enum FlowStatus {
@@ -28,6 +29,7 @@ export interface FlowVersion extends DbTimestamp {
   displayName: string
   flow: Id
   triggers: Trigger[]
+  actions: Action[]
   valid: boolean
   state: FlowState
 }
