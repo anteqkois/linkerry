@@ -16,12 +16,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@market-connector/ui-components/client'
-import { Button, H5, Icons } from '@market-connector/ui-components/server'
+import { Button, H5 } from '@market-connector/ui-components/server'
+import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
 import { HTMLAttributes, useEffect } from 'react'
 import { UseFormReturn, useForm } from 'react-hook-form'
 import { useClientQuery } from '../../../../libs/react-query'
 import { ErrorInfo } from '../../../../shared/components/ErrorInfo'
+import { Spinner } from '../../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../../connectors-metadata/api/query-configs'
 import { useEditor } from '../../useEditor'
 
@@ -141,28 +143,90 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
 						</FormItem>
 					)}
 				/>
-				// <FormField
-				//   control={form.control}
-				//   name={property.name}
-				//   render={({ field }) => (
-				//     <FormItem>
-				//       <FormLabel>{property.displayName}</FormLabel>
-				//       <FormControl>
-				//         <Input {...field} />
-				//       </FormControl>
-				//       <FormMessage />
-				//     </FormItem>
-				//   )}
-				// />
 			)
+		case PropertyType.StaticDropdown:
+			return (
+				<FormField
+					control={form.control}
+					name={`_temp_field_name_${property.name}`}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>{property.displayName}</FormLabel>
+							<Select onValueChange={field.onChange}>
+								<FormControl>
+									<SelectTrigger ref={field.ref}>
+										<SelectValue placeholder={property.displayName} />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent position="popper">
+									{property.options.options.slice(0, 30).map((option) => {
+										return (
+											// use labesl, becouse SelectItem can't handle non string primitives as a value
+											<SelectItem value={option.value as string} key={option.value}>
+												<span className="flex gap-2 items-center">
+													<p>{option.label}</p>
+												</span>
+											</SelectItem>
+										)
+									})}
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			)
+
+		// case PropertyType.StaticDropdown:
+		// 	return (
+		// 		<FormField
+		// 			control={form.control}
+		// 			name={`_temp_field_name_${property.name}`}
+		// 			render={({ field }) => (
+		// 				<FormItem>
+		// 					<FormLabel>{property.displayName}</FormLabel>
+		// 					<Select
+		// 						onValueChange={(v) => {
+		// 							field.onChange(v)
+		// 							const value = property.options.options.find((option) => option.label === v)
+		// 							form.setValue(property.name, value)
+		// 						}}
+		// 					>
+		// 						<FormControl>
+		// 							<SelectTrigger ref={field.ref}>
+		// 								<SelectValue placeholder={property.displayName} />
+		// 							</SelectTrigger>
+		// 						</FormControl>
+		// 						<SelectContent position="popper">
+		// 							{property.options.options.map((option) => {
+		// 								return (
+		// 									// use labesl, becouse SelectItem can't handle non string primitives as a value
+		// 									<SelectItem value={option.label} key={option.value}>
+		// 										<span className="flex gap-2 items-center">
+		// 											<p>{option.label}</p>
+		// 										</span>
+		// 									</SelectItem>
+		// 								)
+		// 							})}
+		// 						</SelectContent>
+		// 					</Select>
+		// 					<FormMessage />
+		// 				</FormItem>
+		// 			)}
+		// 		/>
+		// 	)
 
 		default:
 			break
 	}
 }
 
+const handleOnSubmit = (data: any) => {
+	console.log(data)
+}
+
 export const TriggerDrawer = () => {
-	const { editedTrigger, patchEditedTriggerConnector, resetTrigger } = useEditor()
+	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
 	const {
@@ -187,18 +251,30 @@ export const TriggerDrawer = () => {
 		})
 	}, [isFetching])
 
-	const handleOnSubmit = (data: any) => {
-		console.log(data)
-	}
+	const handleWatcher = useDebouncedCallback(
+		(value, { name, type }) => {
+			if (!type || !name) return
+			if (name === 'trigger' || name === 'triggerName' || name.includes('_temp_field_name_')) return
+			patchEditedTriggerConnector({
+				settings: {
+					input: {
+						[name]: value[name],
+					},
+				},
+			})
+		},
+		[],
+		2000,
+	)
 
+	useEffect(() => {
+		const subscription = triggerForm.watch(handleWatcher)
+		return () => subscription.unsubscribe()
+	}, [])
+
+	if (isFetching) return <Spinner />
 	if (error) return <ErrorInfo errorObject={error} />
 	if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
-	if (isFetching)
-		return (
-			<div className="center">
-				<Icons.spinner />
-			</div>
-		)
 
 	const onChangeTrigger = (triggerName: string) => {
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === triggerName)
@@ -211,7 +287,10 @@ export const TriggerDrawer = () => {
 			input[key] = value.defaultValue
 		})
 
-		patchEditedTriggerConnector({
+		updateEditedTrigger({
+			id: editedTrigger.id,
+			valid: false,
+			nextActionId: editedTrigger.nextActionId,
 			displayName: selectedTrigger.displayName,
 			type: TriggerType.Connector,
 			settings: {
@@ -232,10 +311,9 @@ export const TriggerDrawer = () => {
 					<H5>{connectorMetadata.displayName}</H5>
 				</div>
 			</div>
-			<Button className="w-full mt-5" variant={'secondary'} onClick={() => resetTrigger(editedTrigger.id)}>
+			{/* <Button className="w-full mt-5" variant={'secondary'} onClick={() => resetTrigger(editedTrigger.id)}>
 				Change trigger
-			</Button>
-			{/* <Separator className="mt-5 mb-4" /> */}
+			</Button> */}
 			<Form {...triggerForm}>
 				<form onSubmit={triggerForm.handleSubmit(handleOnSubmit)} className="space-y-5 mt-6">
 					<FormField
@@ -249,7 +327,6 @@ export const TriggerDrawer = () => {
 										field.onChange(v)
 										onChangeTrigger(v)
 									}}
-									// defaultValue={field.value}
 								>
 									<FormControl>
 										<SelectTrigger ref={field.ref}>
@@ -278,7 +355,7 @@ export const TriggerDrawer = () => {
 					<div className="flex justify-end">
 						{/* <Button type="submit" loading={isLoading} className="w-full"> */}
 						<Button type="submit" className="w-full">
-							Save
+							Test
 						</Button>
 					</div>
 				</form>

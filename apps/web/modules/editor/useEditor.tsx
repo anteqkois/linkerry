@@ -3,6 +3,7 @@
 import {
 	Action,
 	CustomError,
+	DeepPartial,
 	Flow,
 	FlowState,
 	FlowStatus,
@@ -97,7 +98,7 @@ interface IEditorState {
 	setEditedTrigger: (trigger: Trigger) => void
 	patchEditedTrigger: (update: Partial<WithoutId<Trigger>>) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
-	patchEditedTriggerConnector: (update: Partial<WithoutId<TriggerConnector>>) => Promise<void>
+	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
 	resetTrigger: (triggerId: Id) => Promise<void>
 	// ACTIONS
 	editedAction: Action | null
@@ -235,7 +236,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 		localStorage.setItem('flow', JSON.stringify(newFlow))
 	},
-	patchEditedTriggerConnector: async (update: Partial<TriggerConnector>) => {
+	patchEditedTriggerConnector: async (update: DeepPartial<TriggerConnector>) => {
 		const { editedTrigger, flow } = get()
 		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update')
 
