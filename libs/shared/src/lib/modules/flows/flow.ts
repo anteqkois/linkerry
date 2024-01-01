@@ -32,4 +32,5 @@ export interface FlowVersion extends DbTimestamp {
   actions: Action[]
   valid: boolean
   state: FlowState
+	stepsCount: number,
 }

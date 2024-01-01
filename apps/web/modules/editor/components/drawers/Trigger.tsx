@@ -162,7 +162,7 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
 }
 
 export const TriggerDrawer = () => {
-	const { editedTrigger, updateEditedTriggerConnector, resetTrigger } = useEditor()
+	const { editedTrigger, patchEditedTriggerConnector, resetTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
 	const {
@@ -211,7 +211,7 @@ export const TriggerDrawer = () => {
 			input[key] = value.defaultValue
 		})
 
-		updateEditedTriggerConnector({
+		patchEditedTriggerConnector({
 			displayName: selectedTrigger.displayName,
 			type: TriggerType.Connector,
 			settings: {
