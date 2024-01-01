@@ -1,5 +1,5 @@
 import { ConnectorMetadata, ConnectorProperty, PropertyType, TriggerBase } from '@market-connector/connectors-framework'
-import { CustomError, TriggerType } from '@market-connector/shared'
+import { TriggerType } from '@market-connector/shared'
 import {
 	Checkbox,
 	Form,
@@ -21,7 +21,6 @@ import Image from 'next/image'
 import { HTMLAttributes, useEffect } from 'react'
 import { UseFormReturn, useForm } from 'react-hook-form'
 import { useClientQuery } from '../../../../libs/react-query'
-import { ErrorInfo } from '../../../../shared/components/ErrorInfo'
 import { connectorsMetadataQueryConfig } from '../../../connectors-metadata/api/query-configs'
 import { useEditor } from '../../useEditor'
 
@@ -162,67 +161,55 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
 }
 
 export const TriggerDrawer = () => {
-	const { editedTrigger, updateEditedTriggerConnector, resetTrigger } = useEditor()
+	const { editedTrigger, updateEditedTrigger, resetTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
-	const {
-		data: connectorMetadata,
-		isFetching,
-		error,
-	} = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
+	const { data: connectorMetadata, isFetching } = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
 
 	const triggerForm = useForm<{ trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({})
 	const triggerWatcher = triggerForm.watch('trigger')
 
 	useEffect(() => {
-		if (isFetching || editedTrigger.type !== TriggerType.Connector || editedTrigger.settings.triggerName === '') return
-		if (!connectorMetadata) throw new CustomError('Can not find connector metadata')
+		console.log(editedTrigger)
+	}, [])
 
-		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
-		if (!selectedTrigger) return
+	// useEffect(() => {
+	//   // save default values
+	//   if (triggerWatcher?.props) {
+	//     Object.entries(triggerWatcher.props).map(([key, value]) => {
+	//       if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+	//     })
+	//   }
 
-		triggerForm.setValue('trigger', selectedTrigger)
-		Object.entries(selectedTrigger.props).map(([key, value]) => {
-			if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
-		})
-	}, [isFetching])
+	//   console.log(triggerForm.getValues())
+	//   if (triggerWatcher?.displayName) updateEditedTrigger({ displayName: triggerWatcher.displayName })
+	// }, [triggerWatcher])
 
 	const handleOnSubmit = (data: any) => {
 		console.log(data)
 	}
 
-	if (error) return <ErrorInfo errorObject={error} />
-	if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
-	if (isFetching)
-		return (
-			<div className="center">
-				<Icons.spinner />
-			</div>
-		)
+	if (!connectorMetadata) return <div>Can not find connector details</div>
 
 	const onChangeTrigger = (triggerName: string) => {
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === triggerName)
 		if (!selectedTrigger) return
 		triggerForm.setValue('trigger', selectedTrigger)
 
-		const input: Record<string, any> = {}
 		Object.entries(selectedTrigger.props).map(([key, value]) => {
 			if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
-			input[key] = value.defaultValue
 		})
 
-		updateEditedTriggerConnector({
-			displayName: selectedTrigger.displayName,
-			type: TriggerType.Connector,
-			settings: {
-				connectorId: connectorMetadata._id,
-				connectorName: connectorMetadata.name,
-				connectorVersion: connectorMetadata.version,
-				triggerName: selectedTrigger.name,
-				input,
-			},
-		})
+		console.log(triggerForm.getValues())
+		if (selectedTrigger.displayName) updateEditedTrigger({ displayName: triggerWatcher.displayName })
 	}
+
+	if (isFetching)
+		return (
+			<div className="center">
+				<Icons.spinner />
+			</div>
+		)
 
 	return (
 		<div>

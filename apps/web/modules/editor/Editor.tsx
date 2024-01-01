@@ -18,22 +18,17 @@ interface EditorProps {
   limits: undefined // How many strategies buy can be etc.
   mode: 'demo' | 'production'
   // nodeTypes: Record<string, (...props: any) => JSX.Element>
-  // initalData: {
-  //   nodes: CustomNode[]
-  //   edges: Edge[],
-  // }
   cache: {
     saveState: undefined
   }
 }
 
 export const Editor = ({ mode }: EditorProps) => {
-  const renders = useRef(0)
   const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showDrawer, setShowDrawer, drawer } = useEditor()
   const reactFlowWrapper = useRef(null)
 
   useEffect(() => {
-    console.log(`Editor mode: ${mode}; ${(renders.current += renders.current)}`)
+    console.log(`Editor mode: ${mode}`)
   }, [])
 
   const EditorDrawer = editorDrawers[drawer.name]

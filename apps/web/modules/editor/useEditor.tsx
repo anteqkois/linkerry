@@ -1,18 +1,18 @@
 'use client'
 
-import { Action, Flow, Id, Trigger, TriggerEmpty, WithoutId, deepMerge, generateEmptyTrigger } from '@market-connector/shared'
+import { Action, Flow, Id, Trigger, TriggerConnector, TriggerEmpty, WithoutId, deepMerge, generateEmptyTrigger } from '@market-connector/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
-  Connection,
-  Edge,
-  EdgeChange,
-  NodeChange,
-  OnConnect,
-  OnEdgesChange,
-  OnNodesChange,
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
+	Connection,
+	Edge,
+	EdgeChange,
+	NodeChange,
+	OnConnect,
+	OnEdgesChange,
+	OnNodesChange,
+	addEdge,
+	applyEdgeChanges,
+	applyNodeChanges,
 } from 'reactflow'
 import { create } from 'zustand'
 import { EditorDrawer } from '../../shared/components/drawer/types'
@@ -69,6 +69,7 @@ interface IEditorState {
   editedTrigger: Trigger | null
   setEditedTrigger: (trigger: Trigger) => void
   updateEditedTrigger: (update: Partial<WithoutId<Trigger>>) => Promise<void>
+  updateEditedTriggerConnector: (update: Partial<WithoutId<TriggerConnector>>) => Promise<void>
   resetTrigger: (triggerId: Id) => Promise<void>
   // ACTIONS
   editedAction: Action | null
@@ -171,6 +172,26 @@ export const useEditor = create<IEditorState>((set, get) => ({
       editedTrigger: trigger,
     }),
   updateEditedTrigger: async (update: Partial<Trigger>) => {
+    const { editedTrigger, flow } = get()
+    if (!flow) throw new Error('flow can not be empty during update')
+    if (!editedTrigger) throw new Error('editedTrigger can not be empty during update')
+
+    const newTrigger = deepMerge(editedTrigger, update)
+    const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
+    if (!data) throw new Error(`Can not update flow trigger. No flowVersion in response`)
+
+    const newFlow: Flow = {
+      ...flow,
+      version: data,
+    }
+
+    set({
+      editedTrigger: newTrigger,
+      flow: newFlow,
+    })
+    localStorage.setItem('flow', JSON.stringify(newFlow))
+  },
+  updateEditedTriggerConnector: async (update: Partial<TriggerConnector>) => {
     const { editedTrigger, flow } = get()
     if (!flow) throw new Error('flow can not be empty during update')
     if (!editedTrigger) throw new Error('editedTrigger can not be empty during update')

@@ -60,23 +60,13 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        strategy: {
-          buy: {
-            DEFAULT: 'hsl(var(--strategy-buy))',
-            foreground: 'hsl(var(--strategy-buy-foreground))',
-          },
-          execution: {
-            DEFAULT: 'hsl(var(--strategy-execution))',
-            foreground: 'hsl(var(--strategy-execution-foreground))',
-          },
-        },
-        condition: {
-          DEFAULT: 'hsl(var(--condition))',
-          foreground: 'hsl(var(--condition-foreground))',
-        },
         positive: {
           DEFAULT: 'hsl(var(--positive))',
           foreground: 'hsl(var(--positive-foreground))',
+        },
+        negative: {
+          DEFAULT: 'hsl(var(--negative))',
+          foreground: 'hsl(var(--positive-negative))',
         },
       },
       space: {

@@ -27,8 +27,9 @@ export const SelectTriggerDrawer = () => {
       settings: {
         connectorId: row.original._id,
         connectorName: row.original.name,
-        input: {},
         connectorVersion: row.original.version,
+				triggerName: '',
+        input: {},
       },
     }
 

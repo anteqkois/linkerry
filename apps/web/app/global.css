@@ -7,78 +7,65 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 262.1 83.3% 57.8%;
-    --radius: 0.5rem;
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 224 71.4% 4.1%;
+		--card: 0 0% 100%;
+		--card-foreground: 224 71.4% 4.1%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 224 71.4% 4.1%;
+		--primary: 262.1 83.3% 57.8%;
+		--primary-foreground: 210 20% 98%;
+		--secondary: 220 14.3% 95.9%;
+		--secondary-foreground: 220.9 39.3% 11%;
+		--muted: 220 14.3% 95.9%;
+		--muted-foreground: 220 8.9% 46.1%;
+		--accent: 220 14.3% 95.9%;
+		--accent-foreground: 220.9 39.3% 11%;
+		--destructive: 0 72.2% 50.6%;
+		--destructive-foreground: 0 85.7% 97.3%;
+		--border: 220 13% 91%;
+		--input: 220 13% 91%;
+		--ring: 262.1 83.3% 57.8%;
+		--radius: 0.5rem;
 
-    /* My custom */
-    --strategy-buy: 142.1 76.2% 36.3%;
-    --strategy-buy-foreground: 210 20% 98%;
-    /* --strategy-buy-foreground: 355.7 100% 97.3%; */
-    --strategy-execution: 0 72.2% 50.6%;
-    --strategy-execution-foreground: 210 20% 98%;
-    /* --strategy-execution-foreground: 0 85.7% 97.3%; */
-    --positive: 142.1 70.6% 45.3%;
-    --positive-foreground: 210 20% 98%;
-    --condition: 24.6 95% 53.1%;
-    --condition-foreground: 60 9.1% 97.8%;
-  }
+		/* My custom */
+		--positive: 142.1 70.6% 45.3%;
+		--positive-foreground: 210 20% 98%;
+		--negative: 0 72.2% 50.6%;
+		--negative-foreground: 0 85.7% 97.3%;
+	}
 
-  .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 263.4 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 263.4 70% 50.4%;
+	.dark {
+		--background: 224 71.4% 4.1%;
+		--foreground: 210 20% 98%;
+		--card: 224 71.4% 4.1%;
+		--card-foreground: 210 20% 98%;
+		--popover: 224 71.4% 4.1%;
+		--popover-foreground: 210 20% 98%;
+		--primary: 263.4 70% 50.4%;
+		--primary-foreground: 210 20% 98%;
+		--secondary: 215 27.9% 16.9%;
+		--secondary-foreground: 210 20% 98%;
+		--muted: 215 27.9% 16.9%;
+		--muted-foreground: 217.9 10.6% 64.9%;
+		--accent: 215 27.9% 16.9%;
+		--accent-foreground: 210 20% 98%;
+		--destructive: 0 72.2% 50.6%;
+		--destructive-foreground: 0 85.7% 97.3%;
+		--border: 215 27.9% 16.9%;
+		--input: 215 27.9% 16.9%;
+		--ring: 263.4 70% 50.4%;
 
-    /* My custom */
-    --strategy-buy: 142.1 70.6% 45.3%;
-    --strategy-buy-foreground: 210 20% 98%;
-    /* --strategy-buy-foreground: 144.9 80.4% 10%; */
-    --strategy-execution: 0 72.2% 50.6%;
-    --strategy-execution-foreground: 210 20% 98%;
-    /* --strategy-execution-foreground: 0 85.7% 97.3%; */
-    --positive: 142.1 70.6% 45.3%;
-    --positive-foreground: 210 20% 98%;
-    /* --strategy-execution-foreground: 0 85.7% 97.3%; */
-    --condition: 20.5 90.2% 48.2%;
-    --condition-foreground: 60 9.1% 97.8%;
-  }
+		/* My custom */
+		--positive: 142.1 70.6% 45.3%;
+		--positive-foreground: 210 20% 98%;
+		--negative: 0 72.2% 50.6%;
+		--negative-foreground: 0 85.7% 97.3%;
+	}
 
-  /* Purole from 08.08.2023 */
-  /*
+	/* Purole from 08.08.2023 */
+	/*
   :root {
     --background-page: 0 0% 96%;
     --background: 0 0% 100%;
@@ -148,8 +135,8 @@
     --radius: 0.5rem;
   } */
 
-  /* purple improved 1 */
-  /* .dark {
+	/* purple improved 1 */
+	/* .dark {
     --background-page: 224 71% 3%;
     --background: 261 70% 5%;
     --foreground: 213 31% 91%;
@@ -183,8 +170,8 @@
     --radius: 0.5rem;
   } */
 
-  /* purple */
-  /* .dark {
+	/* purple */
+	/* .dark {
     --background-page: 224 71% 3%;
     --background: 261 70% 5%;
     --foreground: 213 31% 91%;
@@ -220,17 +207,17 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
-  }
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings: 'rlig' 1, 'calt' 1;
+	}
 
-  .center {
-    @apply flex justify-center items-center;
-  }
+	.center {
+		@apply flex justify-center items-center;
+	}
 }
 
 /* html {

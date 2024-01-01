@@ -18,8 +18,7 @@ export interface BaseStep {
 export interface BaseConnectorSettings {
   connectorId: string
   connectorName: string // '@market-connecotr/binance'
-  // name: string // name of trigger or action
-  // index: number
+  triggerName: string // 'new_row'
   connectorVersion: string
   input: Record<string, any> & { auth?: string }
   sampleData?: SampleData

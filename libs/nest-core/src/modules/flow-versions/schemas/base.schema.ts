@@ -21,8 +21,8 @@ export class ConnectorSettingsModel implements BaseConnectorSettings {
   @Prop({ required: true, type: String })
   connectorName: string
 
-  // @Prop({ required: true, type: String })
-  // name: string
+  @Prop({ required: true, type: String })
+  triggerName: string
 
   @Prop({ required: true, type: Object })
   input: Record<string, any> & { auth?: string | undefined }
