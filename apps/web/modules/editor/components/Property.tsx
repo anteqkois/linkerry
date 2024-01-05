@@ -16,9 +16,9 @@ export const Property = ({ label, value, children, clasaName }: PropertyProps) =
       <span>{label}:</span>
       {typeof value === 'boolean' ? (
         value ? (
-          <Icons.true className="h-5 w-5 text-positive -mr-1" />
+          <Icons.True className="h-5 w-5 text-positive -mr-1" />
         ) : (
-          <Icons.false className="h-5 w-5 text-destructive -mr-1" />
+          <Icons.False className="h-5 w-5 text-destructive -mr-1" />
         )
       ) : children ? (
         children

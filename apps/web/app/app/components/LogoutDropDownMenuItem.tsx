@@ -1,7 +1,7 @@
 "use client"
 import { DropdownMenuItem, DropdownMenuShortcut } from '@market-connector/ui-components/client'
-import { useUser } from '../../../modules/user/useUser'
 import { Icons } from '@market-connector/ui-components/server'
+import { useUser } from '../../../modules/user/useUser'
 
 export function LogoutDropDownMenuItem() {
   const { logout } = useUser()
@@ -10,7 +10,7 @@ export function LogoutDropDownMenuItem() {
     <DropdownMenuItem onClick={logout}>
       Log out
       <DropdownMenuShortcut>
-        <Icons.exit/>
+        <Icons.Exit/>
       </DropdownMenuShortcut>
     </DropdownMenuItem>
   )

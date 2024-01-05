@@ -14,65 +14,66 @@ export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty
 // | OAuth2Property<boolean, OAuth2Props>
 // | SecretTextProperty<boolean>
 
+export { TextProperty, NumberProperty, CheckboxProperty, StaticDropdownProperty, DynamicDropdownProperty }
 export type ConnectorProperty = TextProperty | NumberProperty | CheckboxProperty | StaticDropdownProperty | DynamicDropdownProperty<any, boolean>
 
 export interface ConnectorPropertyMap {
-  [name: string]: ConnectorProperty
+	[name: string]: ConnectorProperty
 }
 
 export type ConnectorPropValueSchema<T extends ConnectorProperty | ConnectorAuthProperty> = T extends undefined
-  ? undefined
-  : T extends { required: true }
-  ? T['valueSchema']
-  : T['valueSchema'] | undefined
+	? undefined
+	: T extends { required: true }
+	? T['valueSchema']
+	: T['valueSchema'] | undefined
 
 export type StaticPropsValue<T extends ConnectorPropertyMap> = {
-  [P in keyof T]: ConnectorPropValueSchema<T[P]>
+	[P in keyof T]: ConnectorPropValueSchema<T[P]>
 }
 
 type Properties<T> = Omit<T, 'valueSchema' | 'type'>
 
 export const Property = {
-  Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
-    return { ...config, type: PropertyType.Text } as unknown as R extends true ? TextProperty<true> : TextProperty<false>
-  },
-  Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
-    return { ...config, type: PropertyType.Number } as unknown as R extends true ? NumberProperty<true> : NumberProperty<false>
-  },
-  Checkbox<R extends boolean>(request: Properties<CheckboxProperty<R>>): R extends true ? CheckboxProperty<true> : CheckboxProperty<false> {
-    return { ...request, valueSchema: undefined, type: PropertyType.Checkbox } as unknown as R extends true
-      ? CheckboxProperty<true>
-      : CheckboxProperty<false>
-  },
-  SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
-    return { ...config, type: PropertyType.Text } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
-  },
-  StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
-    config: Properties<StaticDropdownProperty<T, R>>,
-  ): R extends true ? StaticDropdownProperty<T, true> : StaticDropdownProperty<T, false> {
-    return { ...config, type: PropertyType.StaticDropdown } as unknown as R extends true
-      ? StaticDropdownProperty<T, true>
-      : StaticDropdownProperty<T, false>
-  },
-  DynamicDropdown<T, R extends boolean = boolean>(
-    config: Properties<DynamicDropdownProperty<T, R>>,
-  ): R extends true ? DynamicDropdownProperty<T, true> : DynamicDropdownProperty<T, false> {
-    return { ...config, valueSchema: undefined, type: PropertyType.DynamicDropdown } as unknown as R extends true
-      ? DynamicDropdownProperty<T, true>
-      : DynamicDropdownProperty<T, false>
-  },
+	Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
+		return { ...config, type: PropertyType.Text } as unknown as R extends true ? TextProperty<true> : TextProperty<false>
+	},
+	Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
+		return { ...config, type: PropertyType.Number } as unknown as R extends true ? NumberProperty<true> : NumberProperty<false>
+	},
+	Checkbox<R extends boolean>(request: Properties<CheckboxProperty<R>>): R extends true ? CheckboxProperty<true> : CheckboxProperty<false> {
+		return { ...request, valueSchema: undefined, type: PropertyType.Checkbox } as unknown as R extends true
+			? CheckboxProperty<true>
+			: CheckboxProperty<false>
+	},
+	SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
+		return { ...config, type: PropertyType.Text } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
+	},
+	StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
+		config: Properties<StaticDropdownProperty<T, R>>,
+	): R extends true ? StaticDropdownProperty<T, true> : StaticDropdownProperty<T, false> {
+		return { ...config, type: PropertyType.StaticDropdown } as unknown as R extends true
+			? StaticDropdownProperty<T, true>
+			: StaticDropdownProperty<T, false>
+	},
+	DynamicDropdown<T, R extends boolean = boolean>(
+		config: Properties<DynamicDropdownProperty<T, R>>,
+	): R extends true ? DynamicDropdownProperty<T, true> : DynamicDropdownProperty<T, false> {
+		return { ...config, valueSchema: undefined, type: PropertyType.DynamicDropdown } as unknown as R extends true
+			? DynamicDropdownProperty<T, true>
+			: DynamicDropdownProperty<T, false>
+	},
 }
 
 export const ConnectorAuth = {
-  SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
-    return { ...config } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
-  },
-  BasicAuth<R extends boolean>(config: Properties<BasicAuthProperty<R>>): R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false> {
-    return { ...config } as unknown as R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false>
-  },
-  None() {
-    return undefined
-  },
+	SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
+		return { ...config } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
+	},
+	BasicAuth<R extends boolean>(config: Properties<BasicAuthProperty<R>>): R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false> {
+		return { ...config } as unknown as R extends true ? BasicAuthProperty<true> : BasicAuthProperty<false>
+	},
+	None() {
+		return undefined
+	},
 }
 
 // export const ConnectorAuth = {

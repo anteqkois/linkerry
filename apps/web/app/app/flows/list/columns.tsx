@@ -3,13 +3,13 @@
 import { ColumnDef } from '@tanstack/react-table'
 
 import {
-  Checkbox,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    Checkbox,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@market-connector/ui-components/client'
 import { Button, Icons, TableCellContent } from '@market-connector/ui-components/server'
 import Link from 'next/link'
@@ -86,7 +86,7 @@ export const columns: ColumnDef<any>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
-              <Icons.more className="h-4 w-4" />
+              <Icons.More className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -98,7 +98,7 @@ export const columns: ColumnDef<any>[] = [
             <Link href={`/app/strategies/editor/${strategy._id}`} prefetch={false}>
               <DropdownMenuItem className="flex gap-1 justify-between items-center">
                 <span>Edit</span>
-                <Icons.edit />
+                <Icons.Edit />
               </DropdownMenuItem>
             </Link>
             <DropdownMenuItem>Run</DropdownMenuItem>

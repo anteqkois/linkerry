@@ -1,4 +1,4 @@
-import { H3, Icons, buttonVariants} from '@market-connector/ui-components/server'
+import { H3, Icons, buttonVariants } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
 import Link from 'next/link'
 import { SignUpForm } from './SignupForm'
@@ -21,7 +21,7 @@ export default function RegisterPage() {
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
-            <Icons.logo className="mx-auto h-6 w-6" />
+            <Icons.Logo className="mx-auto h-6 w-6" />
             <H3>Create an account</H3>
             <p className="text-sm text-muted-foreground">Enter your email below to create your account</p>
           </div>

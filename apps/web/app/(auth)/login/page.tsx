@@ -1,8 +1,8 @@
+import { buttonVariants, Icons } from "@market-connector/ui-components/server"
 import { cn } from "@market-connector/ui-components/utils"
 import { Metadata } from "next"
 import Link from "next/link"
 import { LoginForm } from "./LoginForm"
-import {buttonVariants, Icons } from "@market-connector/ui-components/server"
 
 export const metadata: Metadata = {
   title: "Login",
@@ -19,14 +19,14 @@ export default function LoginPage() {
           "absolute left-4 top-4 md:left-8 md:top-8"
         )}
       >
-        <>
-          <Icons.arrowLeft className="mr-2 h-4 w-4" />
+        <div>
+          <Icons.ArrowLeft className="mr-2 h-4 w-4" />
           Back
-        </>
+        </div>
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
-          <Icons.logo className="mx-auto h-6 w-6" />
+          <Icons.Logo className="mx-auto h-6 w-6" />
           <h1 className="text-2xl font-semibold tracking-tight">
             Welcome back
           </h1>

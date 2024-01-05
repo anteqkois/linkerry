@@ -2,12 +2,12 @@
 
 import { ConnectorMetadataSummary } from '@market-connector/connectors-framework'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@market-connector/ui-components/client'
 import { Badge, Button, Icons } from '@market-connector/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
@@ -105,7 +105,7 @@ export const columns: ColumnDef<ConnectorMetadataSummary>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
-              <Icons.more className="h-4 w-4" />
+              <Icons.More className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

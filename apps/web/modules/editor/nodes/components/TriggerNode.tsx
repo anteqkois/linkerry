@@ -36,7 +36,7 @@ export const TriggerNodeElement = ({ data: { trigger, connectorMetadata } }: Tri
         </div>
       </div>
       <div className="opacity-20 group-hover:opacity-90 absolute top-1/2 -translate-y-1/2 -left-16">
-        <Icons.change
+        <Icons.Change
           className="opacity-50 hover:opacity-100 bg-muted rounded-full p-2 text-muted-foreground border border-dashed border-muted-foreground w-12 h-12 center rotate-90"
           onClick={handleResetTrigger}
         />

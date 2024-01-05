@@ -1,14 +1,14 @@
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+	CommandSeparator,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 } from '@market-connector/ui-components/client'
 import { Badge, Button, Icons } from '@market-connector/ui-components/server'
 import { cn } from '@market-connector/ui-components/utils'
@@ -32,14 +32,12 @@ export function FacetedFilter<TData, TValue>({ column, title, options }: DataTab
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <Icons.plus />
+          <Icons.Plus />
           <span className={selectedValues?.size > 0 ? 'px-2' : 'pl-2'}>{title}</span>
           {selectedValues?.size > 0 && (
-            <>
               <Badge variant="secondary" className="rounded-sm pl-1 pr-1 font-normal">
                 {selectedValues.size}
               </Badge>
-            </>
           )}
         </Button>
       </PopoverTrigger>
@@ -70,7 +68,7 @@ export function FacetedFilter<TData, TValue>({ column, title, options }: DataTab
                         isSelected ? 'bg-primary text-primary-foreground' : 'opacity-50',
                       )}
                     >
-                      {isSelected && <Icons.check className={cn('h-4 w-4')} />}
+                      {isSelected && <Icons.Check className={cn('h-4 w-4')} />}
                     </div>
                     {option.icon && <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
                     <span>{option.label}</span>

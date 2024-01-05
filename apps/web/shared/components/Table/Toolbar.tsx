@@ -43,7 +43,7 @@ export function TableToolbar<TData, TValue>({ table, filterAccessor, chooseFilte
           )}
         {isFiltered && (
           <Button variant={'ghost'} size={'icon'} onClick={() => table.resetColumnFilters()}>
-            <Icons.close />
+            <Icons.Close />
           </Button>
         )}
       </div>

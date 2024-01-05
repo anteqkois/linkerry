@@ -1,20 +1,20 @@
 import { ConnectorMetadata, ConnectorProperty, PropertyType, TriggerBase } from '@market-connector/connectors-framework'
 import { TriggerType } from '@market-connector/shared'
 import {
-	Checkbox,
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	Input,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+    Checkbox,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    Input,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@market-connector/ui-components/client'
 import { Button, H5, Icons } from '@market-connector/ui-components/server'
 import Image from 'next/image'
@@ -207,7 +207,7 @@ export const TriggerDrawer = () => {
 	if (isFetching)
 		return (
 			<div className="center">
-				<Icons.spinner />
+				<Icons.Spinner />
 			</div>
 		)
 

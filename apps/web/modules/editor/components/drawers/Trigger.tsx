@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorProperty, PropertyType, TriggerBase } from '@market-connector/connectors-framework'
+import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase } from '@market-connector/connectors-framework'
 import { CustomError, TriggerType } from '@market-connector/shared'
 import {
 	Checkbox,
@@ -20,7 +20,8 @@ import { Button, H5 } from '@market-connector/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
 import { HTMLAttributes, useEffect } from 'react'
-import { UseFormReturn, useForm } from 'react-hook-form'
+import { UseFormReturn, useForm, useFormContext } from 'react-hook-form'
+import { VList } from 'virtua'
 import { useClientQuery } from '../../../../libs/react-query'
 import { ErrorInfo } from '../../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../../shared/components/Spinner'
@@ -28,92 +29,72 @@ import { connectorsMetadataQueryConfig } from '../../../connectors-metadata/api/
 import { useEditor } from '../../useEditor'
 
 export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
-const connectorMetadata = {
-	_id: {
-		$oid: '65872bff736a059c0a4642e2',
-	},
-	displayName: 'Coingecko',
-	name: '@market-connector/coingecko',
-	description: 'Coingecko connector for cryptocurrency data',
-	logoUrl:
-		'https://lh3.googleusercontent.com/fife/AGXqzDmFSJ2IUKtH36tY4ZY99CHpjVQo80BTOWxHriDPrJmGWvcaVqQP__eFKxgbkP8TJeT0eAuDooaAI0ZnpGq7vanGRF9aEMS9ehKFrdNRWx_BNG5kqlQGjNBr1DH6gk3aY46XozUsy_l8ajFWuXPhTW26KSYHceY-Y2aYGrv5q3n6ILRcsiFownw-GUzUFx4PDH1B9itHoLkdvjDMNaJh0Q6ksPfyVTymjqg4p1s8Z5EolfSoAOiepr8WEpBj32Jd-Ju4bpYkPqQ7QaP_pkTrlTGkq1uSrXuOm6ZYeD2dNzmiW_hVgh7yp0DXwqfJLsq3Ug9osj8fBevrWfzoKtkINL7Dk1NUIphGAEEGTXgn3nRSZOZPou28N3QiU_EcsbIh_R9qzxIA8NluWwQeno7gyBdbav30j-8GretuDKZkFOLWpAX62PUbK9fwbvbWk2VbN62pr4bXXHbmjBkDzFiY_rW3no-aY9ItpRanEk7f7LugrISCVa6ZXTWL4qMLkZ1GLoyVeDy1aMynV6HG_xVx2gc9pIBMtC5p6I1r1eZmwfvy10xew9DQxXwObGmj8g9hCNmqdyHTdOhJlRHSQMlPIXZ__iaPpy0nID-dNqPebSHt_VOOHo-M5cuWnkUhsQ82lWhB2FgFD5Ag-ZMN3JggwZ0RNssckwh6xbXoU-H1yHWW2t3xfr9z7Q6UgCDWRJ0IcR6noKvI8YWLOhbB4P5us6tMw1oNbFKCPN3hybavXSzFrxHNp4W7Yno6HdFFyXZVnJONJNd-RHfETTX0f_Bv7dH2fvV-tz9FnKxmiJ8XWCrNfksvbSanqiRH772vFrjC9uWKkIoG9O-yaqkelVFYHPndngVCycTuJ813HiWMljsTxU0GuoxT7mbwQFr7Y6gzjiJWIcZeMyn6oFgphDCURFAXU0CQQfwoZP0eBlHXB5yCsR1TthG_0Gx1nXWnNbWo6ofOqULyyWf_BdtTRHMxXEkbsWRqqK1ha6mifySrA0jkXNHkX1XhmzL876QXm7i9_95m2IwER9Aw-JGpV8_fxcPWz4-TsrM5a1ekgnKcr-i5kJQLtj2CgnKu0bJz3byuHn8I9AZJScl4fsus2bb_yE0lvDvze4fTPTZnq4klTYbAU8azUe8qc0mhNZ73xc5CEw9UBrPJaoK7VSvquU6vJVSQegGQZcxl2TVnEaV-1YC89XxODRo8wOTkkQPe21DghS9xMAFACVv09oJGDzEWjCL_8MJ3BMV4VlOS3O5BQiSL8Q30RhmN_tUANFbnewAPx5T7pjZ5wfvtS3DKzA2-wedmTejaRpJBxREkvZDxZ0zdpiLTAoAp5ktZmax0Tf-3N1QEkziGsnLnUIuDXphfJzaMqFD-hDPVkuDun05F70KidXVHV-AbU2hes8UqsXFeCz6oOPJw29l74LkEt30jo4F6AFDqEQIoKLDZo0mx0BGYQXzS5En3X6RrAYA1ZYdcxEYV_vhW9-x6kGtZrhQVUww5MyZExfSWajoth1vBO-b9hBWm2XA_y2AAUX5hDT-KVm_tlqhh2iwbdg198p-ijYZiasyJ2mSuJseyupRcXI7kQMrahwTT6dQRI_Cku-EOgoDbBPjLWuuYhGgZbjAvfwZj-MPfYN7PRdcKOgR_ePYctB8nd0QcKRoFRBRdLkvLQArh4Aya=w2094-h1602',
-	actions: {
-		fetch_marketcap: {
-			name: 'fetch_marketcap',
-			displayName: 'Fetch crypot marketcap',
-			description: 'Fetch crypto marketcap',
-			props: {
-				interval: {
-					displayName: 'Interval',
-					name: 'minutes_interval',
-					required: true,
-					description: 'Every x minutes fetch data (min: 5, max: 60)',
-					validators: [],
-					type: 'Number',
-				},
-			},
-			requireAuth: false,
-		},
-	},
-	triggers: {
-		fetch_top_hundred: {
-			name: 'fetch_top_hundred',
-			displayName: 'Fetch top 100 coins',
-			description: 'Fetch top 100 coins data',
-			props: {
-				interval: {
-					displayName: 'Interval',
-					name: 'minutes_interval',
-					required: true,
-					description: 'Every x minutes fetch data (min: 5, max: 60)',
-					validators: [],
-					type: 'Number',
-				},
-			},
-			type: 'POLLING',
-			handshakeConfiguration: {
-				strategy: 'NONE',
-			},
-			requireAuth: false,
-			sampleData: {},
-		},
-		fetch_by_id: {
-			name: 'fetch_by_id',
-			displayName: 'Fetch by coingecko id',
-			description: 'Fetch by coingecko id',
-			props: {
-				interval: {
-					displayName: 'Interval',
-					name: 'minutes_interval',
-					required: true,
-					description: 'Every x minutes fetch data (min: 5, max: 60)',
-					validators: [],
-					type: 'Number',
-				},
-			},
-			type: 'POLLING',
-			handshakeConfiguration: {
-				strategy: 'NONE',
-			},
-			requireAuth: false,
-			sampleData: {},
-		},
-	},
-	auth: null,
-	minimumSupportedRelease: '0.0.0',
-	maximumSupportedRelease: '9999.9999.9999',
-	tags: ['cryptocurrency', 'data feed'],
-	version: '0.0.1',
-} as unknown as ConnectorMetadata
 
-const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; property: ConnectorProperty }) => {
-	// form.setValue(property.name, property.defaultValue)
+export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
+	property: StaticDropdownProperty
+}
+
+export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
+	const { setValue, control, getValues } = useFormContext()
+
+	// setup temp field which holds String value based on started value from database
+	useEffect(() => {
+		const startedValueString = JSON.stringify(getValues(property.name) || '')
+		if(!startedValueString) return
+		const selectedOption = property.options.options.find((option) => JSON.stringify(option.value) === startedValueString)
+		if(selectedOption) setValue(`__temp__${property.name}`, selectedOption.label)
+	}, [])
+
+	const onChangeValue = (newLabel: string) => {
+		const value = property.options.options.find((option) => option.label === newLabel)
+		setValue(property.name, value?.value)
+	}
+
+	return (
+		<FormField
+			control={control}
+			name={`__temp__${property.name}`}
+			render={({ field }) => (
+				<FormItem>
+					<FormLabel>{property.displayName}</FormLabel>
+					<FormControl>
+						<Select
+							onValueChange={(newValue) => {
+								field.onChange(newValue)
+								onChangeValue(newValue)
+							}}
+						>
+							<SelectTrigger>
+								<SelectValue>{field.value}</SelectValue>
+							</SelectTrigger>
+							<SelectContent position="popper" className="max-h-96 overflow-scroll">
+								<VList style={{ height: 500 }}>
+									{property.options.options.map((option) => (
+										<SelectItem value={option.label} key={option.value}>
+											<span className="flex gap-2 items-center">
+												<p>{option.label}</p>
+											</span>
+										</SelectItem>
+									))}
+								</VList>
+							</SelectContent>
+						</Select>
+					</FormControl>
+					<FormMessage />
+				</FormItem>
+			)}
+		/>
+	)
+}
+
+const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: ConnectorProperty }) => {
+	const { control } = useFormContext()
 
 	switch (property.type) {
 		case PropertyType.Text:
 			return (
 				<FormField
-					control={form.control}
+					control={control}
 					name={property.name}
 					render={({ field }) => (
 						<FormItem>
@@ -129,7 +110,7 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
 		case PropertyType.Checkbox:
 			return (
 				<FormField
-					control={form.control}
+					control={control}
 					name={property.name}
 					render={({ field }) => (
 						<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pl-1">
@@ -145,76 +126,7 @@ const DynamicField = ({ form, property }: { form: UseFormReturn<any, any>; prope
 				/>
 			)
 		case PropertyType.StaticDropdown:
-			return (
-				<FormField
-					control={form.control}
-					name={`_temp_field_name_${property.name}`}
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>{property.displayName}</FormLabel>
-							<Select onValueChange={field.onChange}>
-								<FormControl>
-									<SelectTrigger ref={field.ref}>
-										<SelectValue placeholder={property.displayName} />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent position="popper">
-									{property.options.options.slice(0, 30).map((option) => {
-										return (
-											// use labesl, becouse SelectItem can't handle non string primitives as a value
-											<SelectItem value={option.value as string} key={option.value}>
-												<span className="flex gap-2 items-center">
-													<p>{option.label}</p>
-												</span>
-											</SelectItem>
-										)
-									})}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			)
-
-		// case PropertyType.StaticDropdown:
-		// 	return (
-		// 		<FormField
-		// 			control={form.control}
-		// 			name={`_temp_field_name_${property.name}`}
-		// 			render={({ field }) => (
-		// 				<FormItem>
-		// 					<FormLabel>{property.displayName}</FormLabel>
-		// 					<Select
-		// 						onValueChange={(v) => {
-		// 							field.onChange(v)
-		// 							const value = property.options.options.find((option) => option.label === v)
-		// 							form.setValue(property.name, value)
-		// 						}}
-		// 					>
-		// 						<FormControl>
-		// 							<SelectTrigger ref={field.ref}>
-		// 								<SelectValue placeholder={property.displayName} />
-		// 							</SelectTrigger>
-		// 						</FormControl>
-		// 						<SelectContent position="popper">
-		// 							{property.options.options.map((option) => {
-		// 								return (
-		// 									// use labesl, becouse SelectItem can't handle non string primitives as a value
-		// 									<SelectItem value={option.label} key={option.value}>
-		// 										<span className="flex gap-2 items-center">
-		// 											<p>{option.label}</p>
-		// 										</span>
-		// 									</SelectItem>
-		// 								)
-		// 							})}
-		// 						</SelectContent>
-		// 					</Select>
-		// 					<FormMessage />
-		// 				</FormItem>
-		// 			)}
-		// 		/>
-		// 	)
+			return <VirtualizedSelect property={property} />
 
 		default:
 			break
@@ -235,9 +147,10 @@ export const TriggerDrawer = () => {
 		error,
 	} = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
 
-	const triggerForm = useForm<{ trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({})
-	const triggerWatcher = triggerForm.watch('trigger')
+	const triggerForm = useForm<{ __temp__trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({})
+	const triggerWatcher = triggerForm.watch('__temp__trigger')
 
+	// setup form fields on start based on editedTrigger input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
 		if (isFetching || editedTrigger.type !== TriggerType.Connector || editedTrigger.settings.triggerName === '') return
 		if (!connectorMetadata) throw new CustomError('Can not find connector metadata')
@@ -245,26 +158,38 @@ export const TriggerDrawer = () => {
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
 		if (!selectedTrigger) return
 
-		triggerForm.setValue('trigger', selectedTrigger)
+		triggerForm.setValue('__temp__trigger', selectedTrigger)
+		triggerForm.setValue('triggerName', selectedTrigger.name)
+
+		const input = editedTrigger.settings.input
 		Object.entries(selectedTrigger.props).map(([key, value]) => {
-			if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+			if (input[key] !== undefined) triggerForm.setValue(key, input[key])
+			else if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
 		})
 	}, [isFetching])
 
+	// synchronize with global state and database, merge only new values
 	const handleWatcher = useDebouncedCallback(
-		(value, { name, type }) => {
-			if (!type || !name) return
-			if (name === 'trigger' || name === 'triggerName' || name.includes('_temp_field_name_')) return
-			patchEditedTriggerConnector({
+		async (values, { name }) => {
+			if (!name) return
+			if (name === 'triggerName' || name.includes('__temp__')) return
+			const newData: Record<string, any> = {}
+
+			for (const [key, value] of Object.entries(values)) {
+				if (key === 'triggerName' || key.includes('__temp__')) continue
+				console.log(editedTrigger.settings.input[key], value, editedTrigger.settings.input[key] == value)
+				if (editedTrigger.settings.input[key] == value) continue
+				newData[key] = value
+			}
+
+			await patchEditedTriggerConnector({
 				settings: {
-					input: {
-						[name]: value[name],
-					},
+					input: newData,
 				},
 			})
 		},
 		[],
-		2000,
+		1500,
 	)
 
 	useEffect(() => {
@@ -276,10 +201,11 @@ export const TriggerDrawer = () => {
 	if (error) return <ErrorInfo errorObject={error} />
 	if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
 
+	// build dynamic form based on selected trigger schema -> props from trigger metadata
 	const onChangeTrigger = (triggerName: string) => {
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === triggerName)
 		if (!selectedTrigger) return
-		triggerForm.setValue('trigger', selectedTrigger)
+		triggerForm.setValue('__temp__trigger', selectedTrigger)
 
 		const input: Record<string, any> = {}
 		Object.entries(selectedTrigger.props).map(([key, value]) => {
@@ -330,7 +256,7 @@ export const TriggerDrawer = () => {
 								>
 									<FormControl>
 										<SelectTrigger ref={field.ref}>
-											<SelectValue placeholder="Select Trigger" />
+											<SelectValue>{triggerWatcher?.displayName}</SelectValue>
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent position="popper">

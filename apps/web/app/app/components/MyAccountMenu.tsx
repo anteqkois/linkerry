@@ -2,21 +2,21 @@
 import { useUser } from '../../../modules/user/useUser'
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
 } from '@market-connector/ui-components/client'
+import { Button, Icons } from '@market-connector/ui-components/server'
 import { LogoutDropDownMenuItem } from './LogoutDropDownMenuItem'
-import { Button,Icons } from '@market-connector/ui-components/server'
 
 interface MyAccountMenuProps {
   children?: React.ReactNode
@@ -29,7 +29,7 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
-          <Icons.home className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+          <Icons.Home className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
@@ -46,7 +46,7 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
           <DropdownMenuItem>
             Settings
             <DropdownMenuShortcut>
-              <Icons.settings />
+              <Icons.Settings />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -59,13 +59,13 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
                 <DropdownMenuItem>
                   Rewards
                   <DropdownMenuShortcut>
-                    <Icons.rewards />
+                    <Icons.Rewards />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   Copy Reflink
                   <DropdownMenuShortcut>
-                    <Icons.copy />
+                    <Icons.Copy />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

@@ -1,13 +1,13 @@
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@market-connector/ui-components/client'
-import { Button,Icons } from '@market-connector/ui-components/server'
+import { Button, Icons } from '@market-connector/ui-components/server'
 
 interface MobileProps {
   children?: React.ReactNode
@@ -19,14 +19,14 @@ export function MobileMenu({ children }: MobileProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <Icons.hamburgerMenu className="h-[1.2rem] w-[1.2rem]" />
+            <Icons.HamburgerMenu className="h-[1.2rem] w-[1.2rem]" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 max-h-[calc(100vh-60px)] overflow-y-scroll" align="start">
           <DropdownMenuGroup>
             <DropdownMenuLabel>
               <div className="flex items-center gap-1 text-primary">
-                <Icons.strategy />
+                <Icons.Strategy />
                 Strategies
               </div>
             </DropdownMenuLabel>
@@ -40,7 +40,7 @@ export function MobileMenu({ children }: MobileProps) {
           <DropdownMenuGroup>
             <DropdownMenuLabel>
               <div className="flex items-center gap-1 text-primary">
-                <Icons.condition />
+                <Icons.Condition />
                 Conditions
               </div>
             </DropdownMenuLabel>
@@ -56,7 +56,7 @@ export function MobileMenu({ children }: MobileProps) {
           <DropdownMenuGroup>
             <DropdownMenuLabel>
               <div className="flex items-center gap-1 text-primary">
-                <Icons.exchange />
+                <Icons.Exchange />
                 Exchanges
               </div>
             </DropdownMenuLabel>

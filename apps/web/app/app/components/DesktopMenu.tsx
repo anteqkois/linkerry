@@ -1,11 +1,11 @@
 import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarTrigger,
+    Menubar,
+    MenubarContent,
+    MenubarItem,
+    MenubarMenu,
+    MenubarSeparator,
+    MenubarShortcut,
+    MenubarTrigger,
 } from '@market-connector/ui-components/client'
 import { Icons } from '@market-connector/ui-components/server'
 import Link from 'next/link'
@@ -26,13 +26,13 @@ export function DesktopMenu({ children }: DesktopProps) {
                 Create New
               </Link>
               <MenubarShortcut>
-                <Icons.plus />
+                <Icons.Plus />
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Edit Flow
               <MenubarShortcut>
-                <Icons.update />
+                <Icons.Update />
               </MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
@@ -44,7 +44,7 @@ export function DesktopMenu({ children }: DesktopProps) {
             <MenubarItem disabled>
               Create First Flow
               <MenubarShortcut>
-                <Icons.article />
+                <Icons.Article />
               </MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
@@ -74,7 +74,7 @@ export function DesktopMenu({ children }: DesktopProps) {
             <MenubarItem disabled>
               Security
               <MenubarShortcut>
-                <Icons.article />
+                <Icons.Article />
               </MenubarShortcut>
             </MenubarItem>
           </MenubarContent>

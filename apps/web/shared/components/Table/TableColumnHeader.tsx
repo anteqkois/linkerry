@@ -16,7 +16,7 @@ export const TableColumnHeader = <TColumn,>({
   return sortable ? (
     <Button variant="ghost"  size={'sm'} className={cn('pr-0', className)} onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
       {title}
-      <Icons.sort className="ml-2 h-4 w-4" />
+      <Icons.Sort className="ml-2 h-4 w-4" />
     </Button>
   ) : (
     <div className="text-right">{title}</div>

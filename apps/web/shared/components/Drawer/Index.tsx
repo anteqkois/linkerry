@@ -27,7 +27,7 @@ export const Drawer = ({ show, setShow, children, title }: DrawerProps) => {
       <header className="flex justify-between items-center pb-1">
         <H5>{title}</H5>
         <Button size={'sm'} variant={'ghost'} onClick={() => setShow((prev) => !prev)}>
-          <Icons.close />
+          <Icons.Close />
         </Button>
       </header>
       {children}

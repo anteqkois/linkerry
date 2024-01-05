@@ -17,7 +17,7 @@ export const SelectTriggerNodeElement = ({ data: { trigger } }: SelectTriggerPro
   return (
     <BaseNodeElement title="Trigger" valid={false} invalidMessage="Invalid trigger, try edit settings" onClick={handleOnClick}>
       <div className="flex gap-6">
-        <Icons.questionMarkCircle className="w-16 h-16" />
+        <Icons.QuestionMarkCircle className="w-16 h-16" />
         <div>
           <H5>{trigger.displayName}</H5>
           <p>It will execute the flow</p>

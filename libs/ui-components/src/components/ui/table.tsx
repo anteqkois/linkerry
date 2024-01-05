@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { cn } from '../../utils'
 import { VariantProps, cva } from 'class-variance-authority'
+import { cn } from '../../utils'
 import { Icons } from './icons'
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
@@ -97,9 +97,9 @@ const TableCellContent = React.forwardRef<HTMLDivElement, TableCellContentProps>
       {variant !== 'boolean' ? (
         children
       ) : children ? (
-        <Icons.true className="h-6 w-6 text-positive" />
+        <Icons.True className="h-6 w-6 text-positive" />
       ) : (
-        <Icons.false className="h-6 w-6 text-destructive" />
+        <Icons.False className="h-6 w-6 text-destructive" />
       )}
     </div>
   ),
@@ -114,4 +114,5 @@ const TableCaption = React.forwardRef<HTMLTableCaptionElement, React.HTMLAttribu
 )
 TableCaption.displayName = 'TableCaption'
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption, TableCellContent }
+export { Table, TableBody, TableCaption, TableCell, TableCellContent, TableFooter, TableHead, TableHeader, TableRow }
+

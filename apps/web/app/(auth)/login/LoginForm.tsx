@@ -95,7 +95,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             </div>
           </div>
           <Button>
-            {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading && <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />}
             Login with Email
           </Button>
         </div>

@@ -40,7 +40,7 @@ export const BaseNodeElement = ({ children, title, onClick, valid, invalidMessag
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger className="text-destructive absolute bottom-2 right-3">
-              <Icons.warn />
+              <Icons.Warn />
             </TooltipTrigger>
             <TooltipContent side="bottom" align="start" asChild>
               <p>{invalidMessage}</p>
