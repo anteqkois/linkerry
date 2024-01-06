@@ -1,4 +1,4 @@
-import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase } from '@market-connector/connectors-framework'
+import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase, Validators } from '@market-connector/connectors-framework'
 import { CustomError, TriggerType } from '@market-connector/shared'
 import {
 	Checkbox,
@@ -40,9 +40,9 @@ export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
 	// setup temp field which holds String value based on started value from database
 	useEffect(() => {
 		const startedValueString = JSON.stringify(getValues(property.name) || '')
-		if(!startedValueString) return
+		if (!startedValueString) return
 		const selectedOption = property.options.options.find((option) => JSON.stringify(option.value) === startedValueString)
-		if(selectedOption) setValue(`__temp__${property.name}`, selectedOption.label)
+		if (selectedOption) setValue(`__temp__${property.name}`, selectedOption.label)
 	}, [])
 
 	const onChangeValue = (newLabel: string) => {
@@ -88,7 +88,29 @@ export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
 }
 
 const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: ConnectorProperty }) => {
-	const { control } = useFormContext()
+	const { control, trigger } = useFormContext()
+
+	const rules = {
+		required: (v: any) => {
+			console.log('HERE')
+			// return !!v
+			return 'Error'
+		},
+	}
+
+	useEffect(() => {
+		;(async () => {
+			await trigger()
+			// console.log(property.validators);
+			// console.log(Validators);
+			if(property.validators){
+				for (const validator of property.validators) {
+					console.log(Validators[validator.validatorName!](...validator.args!).fn(property, 'zxz', 'xyz'));
+					// console.log(Validators[validator.validatorName!].fn(...validator.args!));
+				}
+			}
+		})()
+	}, [])
 
 	switch (property.type) {
 		case PropertyType.Text:
@@ -96,6 +118,10 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 				<FormField
 					control={control}
 					name={property.name}
+					rules={{
+						required: { value: property.required, message: 'Required field' },
+						// validate: rules,
+					}}
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>{property.displayName}</FormLabel>
@@ -147,7 +173,9 @@ export const TriggerDrawer = () => {
 		error,
 	} = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
 
-	const triggerForm = useForm<{ __temp__trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({})
+	const triggerForm = useForm<{ __temp__trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({
+		mode: 'all',
+	})
 	const triggerWatcher = triggerForm.watch('__temp__trigger')
 
 	// setup form fields on start based on editedTrigger input values (db), also set temp values (which shouldn't be saved in db )
@@ -177,7 +205,6 @@ export const TriggerDrawer = () => {
 
 			for (const [key, value] of Object.entries(values)) {
 				if (key === 'triggerName' || key.includes('__temp__')) continue
-				console.log(editedTrigger.settings.input[key], value, editedTrigger.settings.input[key] == value)
 				if (editedTrigger.settings.input[key] == value) continue
 				newData[key] = value
 			}
@@ -277,7 +304,7 @@ export const TriggerDrawer = () => {
 					/>
 					{triggerWatcher
 						? Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)
-						: null}
+						: <div/>}
 					<div className="flex justify-end">
 						{/* <Button type="submit" loading={isLoading} className="w-full"> */}
 						<Button type="submit" className="w-full">

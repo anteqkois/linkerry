@@ -24,7 +24,7 @@ const main = async () => {
 	const answear = await rl.question('Do you want to continue... [y] ?')
 
 	if (answear === 'y') {
-		return await deleteFlowsArtifacts()
+		await deleteFlowsArtifacts()
 	}
 
 	console.log('\nEnd process')

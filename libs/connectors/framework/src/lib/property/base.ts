@@ -1,3 +1,4 @@
+import { TypedValidatorFn } from "../validators/types"
 
 export enum PropertyType {
   Text = 'ShortText',
@@ -33,7 +34,7 @@ export type PropertyValue<S, T extends PropertyType, R extends boolean> = {
   required: R
   defaultTransformers?: any[]
   transformers?: any[]
-  validators?: any[]
+  validators?: Omit<TypedValidatorFn, 'fn'>[]
   defaultValidators?: any[]
   defaultValue?: T extends PropertyType.Text
     ? string

@@ -25,7 +25,7 @@ export const insertMetadata = async (data: Omit<ConnectorMetadata, '_id'>[]) => 
 
     data = data.filter((metadata) => {
       if (!existingNames.includes(metadata.name)) return true
-      console.log(`remove ${metadata.name}@${metadata.version}`)
+      console.log(`skip ${metadata.name}@${metadata.version}`)
       return false
     })
   }
