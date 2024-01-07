@@ -17,7 +17,7 @@ export const TriggerNodeElement = ({ data: { trigger, connectorMetadata } }: Tri
   // generateEmptyTrigger(new Types.ObjectId().toString())
 
   const handleResetTrigger = () => {
-    resetTrigger(trigger.id)
+    resetTrigger(trigger.name)
   }
 
   return (

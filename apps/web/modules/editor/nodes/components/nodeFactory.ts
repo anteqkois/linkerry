@@ -24,8 +24,7 @@ export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: numbe
 
 export const selectTriggerNodeFactory = ({ trigger }: { trigger: Trigger }): SelectTriggerNodeProps => {
   return {
-    // id: `SelectTrigger_${trigger.name}`,
-    id: trigger.id,
+    id: trigger.name,
     type: 'SelectTriggerNode',
     position: { x: 0, y: 0 },
     data: {
@@ -37,8 +36,7 @@ export const selectTriggerNodeFactory = ({ trigger }: { trigger: Trigger }): Sel
 
 export const triggerNodeFactory = ({ trigger, connectorMetadata }: { trigger: Trigger; connectorMetadata: ConnectorMetadataSummary }): TriggerNodeProps => {
   return {
-    // id: `Trigger_${trigger.name}`,
-    id: trigger.id,
+    id: trigger.name,
     type: 'TriggerNode',
     position: { x: 0, y: 0 },
     data: {

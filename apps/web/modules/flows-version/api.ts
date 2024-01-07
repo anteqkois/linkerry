@@ -14,7 +14,7 @@ export class FlowVersionApi {
     return apiClient.patch<FlowVersion | undefined>(`/flow-versions/${id}`, data)
   }
 
-  static async updateTrigger(id: Id, data: Partial<Trigger> & { id: Id }) {
+  static async updateTrigger(id: Id, data: Partial<Trigger> & { name: string }) {
     return apiClient.patch<FlowVersion | undefined>(`/flow-versions/${id}/triggers`, data)
   }
 }

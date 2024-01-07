@@ -20,8 +20,8 @@ export const SelectTriggerDrawer = () => {
     if (!editedTrigger) throw new Error('Can not retrive editTrigger data')
 
     const newTrigger: TriggerConnector = {
+      name: editedTrigger.name,
       displayName: row.original.displayName,
-      id: editedTrigger.id,
       type: TriggerType.Connector,
       valid: false,
       settings: {
@@ -30,12 +30,13 @@ export const SelectTriggerDrawer = () => {
         connectorVersion: row.original.version,
 				triggerName: '',
         input: {},
+				inputUiInfo:{}
       },
     }
 
     await updateEditedTrigger(newTrigger)
     setEditedTrigger(newTrigger)
-    updateNode(editedTrigger.id, triggerNodeFactory({ trigger: newTrigger, connectorMetadata: row.original }))
+    updateNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata: row.original }))
     setDrawer('trigger')
   }
 

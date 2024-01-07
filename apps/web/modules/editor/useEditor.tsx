@@ -99,7 +99,7 @@ interface IEditorState {
 	patchEditedTrigger: (update: Partial<WithoutId<Trigger>>) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
-	resetTrigger: (triggerId: Id) => Promise<void>
+	resetTrigger: (triggerName: string) => Promise<void>
 	// ACTIONS
 	editedAction: Action | null
 	setEditedAction: (action: Action) => void
@@ -255,7 +255,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 		localStorage.setItem('flow', JSON.stringify(newFlow))
 	},
-	resetTrigger: async (triggerId: Id) => {
+	resetTrigger: async (triggerName: string) => {
 		let emptyTrigger: TriggerEmpty | undefined = undefined
 
 		// eslint-disable-next-line prefer-const
@@ -263,9 +263,9 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		if (!flow) throw new CustomError('Can not retrive flow')
 
 		nodes = nodes.map((node: CustomNode) => {
-			if (node.id !== triggerId) return node as CustomNode
+			if (node.id !== triggerName) return node as CustomNode
 
-			emptyTrigger = generateEmptyTrigger(node.data.trigger.id)
+			emptyTrigger = generateEmptyTrigger(`${node.data.trigger.name}_${flow.version.stepsCount + 1}`)
 			const emptyNode = selectTriggerNodeFactory({ trigger: emptyTrigger })
 
 			return emptyNode
@@ -273,7 +273,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		if (!emptyTrigger) throw new CustomError(`Can not generate empty trigger`)
 
 		flow.version.triggers = flow.version.triggers.map((trigger) => {
-			if (trigger.id !== triggerId) return trigger
+			if (trigger.name !== triggerName) return trigger
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			return emptyTrigger!
 		})

@@ -1,4 +1,4 @@
-import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase, Validators } from '@market-connector/connectors-framework'
+import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase } from '@market-connector/connectors-framework'
 import { CustomError, TriggerType } from '@market-connector/shared'
 import {
 	Checkbox,
@@ -90,22 +90,14 @@ export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
 const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: ConnectorProperty }) => {
 	const { control, trigger } = useFormContext()
 
-	const rules = {
-		required: (v: any) => {
-			console.log('HERE')
-			// return !!v
-			return 'Error'
-		},
-	}
-
 	useEffect(() => {
 		;(async () => {
 			await trigger()
 			// console.log(property.validators);
 			// console.log(Validators);
-			if(property.validators){
+			if (property.validators) {
 				for (const validator of property.validators) {
-					console.log(Validators[validator.validatorName!](...validator.args!).fn(property, 'zxz', 'xyz'));
+					// console.log(Validators[validator.validatorName!](...validator.args!).fn(property, 'zxz', 'xyz'));
 					// console.log(Validators[validator.validatorName!].fn(...validator.args!));
 				}
 			}
@@ -187,7 +179,8 @@ export const TriggerDrawer = () => {
 		if (!selectedTrigger) return
 
 		triggerForm.setValue('__temp__trigger', selectedTrigger)
-		triggerForm.setValue('triggerName', selectedTrigger.name)
+		// triggerForm.setValue('triggerName', selectedTrigger.name)
+		setTimeout(() => triggerForm.setValue('triggerName', selectedTrigger.name), 0) // ad to the end of callstack
 
 		const input = editedTrigger.settings.input
 		Object.entries(selectedTrigger.props).map(([key, value]) => {
@@ -241,9 +234,8 @@ export const TriggerDrawer = () => {
 		})
 
 		updateEditedTrigger({
-			id: editedTrigger.id,
+			name: editedTrigger.name,
 			valid: false,
-			nextActionId: editedTrigger.nextActionId,
 			displayName: selectedTrigger.displayName,
 			type: TriggerType.Connector,
 			settings: {
@@ -252,6 +244,7 @@ export const TriggerDrawer = () => {
 				connectorVersion: connectorMetadata.version,
 				triggerName: selectedTrigger.name,
 				input,
+				inputUiInfo: {},
 			},
 		})
 	}
@@ -275,36 +268,35 @@ export const TriggerDrawer = () => {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Trigger</FormLabel>
-								<Select
-									onValueChange={(v) => {
-										field.onChange(v)
-										onChangeTrigger(v)
-									}}
-								>
-									<FormControl>
-										<SelectTrigger ref={field.ref}>
-											<SelectValue>{triggerWatcher?.displayName}</SelectValue>
+								<FormControl>
+									<Select
+										value={field.value}
+										onValueChange={(v) => {
+											field.onChange(v)
+											onChangeTrigger(v)
+										}}
+									>
+										<SelectTrigger>
+											<SelectValue />
 										</SelectTrigger>
-									</FormControl>
-									<SelectContent position="popper">
-										{Object.values(connectorMetadata.triggers).map((trigger) => {
-											return (
-												<SelectItem value={trigger.name} key={trigger.name}>
-													<span className="flex gap-2 items-center">
-														<p>{trigger.displayName}</p>
-													</span>
-												</SelectItem>
-											)
-										})}
-									</SelectContent>
-								</Select>
+										<SelectContent position="popper">
+											{Object.values(connectorMetadata.triggers).map((trigger) => {
+												return (
+													<SelectItem value={trigger.name} key={trigger.name}>
+														<span className="flex gap-2 items-center">
+															<p>{trigger.displayName}</p>
+														</span>
+													</SelectItem>
+												)
+											})}
+										</SelectContent>
+									</Select>
+								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-					{triggerWatcher
-						? Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)
-						: <div/>}
+					{triggerWatcher && Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)}
 					<div className="flex justify-end">
 						{/* <Button type="submit" loading={isLoading} className="w-full"> */}
 						<Button type="submit" className="w-full">

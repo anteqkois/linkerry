@@ -1,4 +1,4 @@
-import { isNil } from "@market-connector/shared";
+import { isNull } from "@market-connector/shared";
 import { Store } from "../context";
 
 interface TimebasedPolling<AuthValue, PropsValue> {
@@ -46,18 +46,18 @@ export const pollingHelper = {
 
                 const lastItemIndex = items.findIndex(f => f.id === lastItemId);
                 let newItems = [];
-                if (isNil(lastItemId) || lastItemIndex == -1) {
+                if (isNull(lastItemId) || lastItemIndex == -1) {
                     newItems = items ?? [];
                 } else {
                     newItems = items?.slice(0, lastItemIndex) ?? [];
                 }
                 // Sorted from newest to oldest
-                if (!isNil(maxItemsToPoll)) {
+                if (!isNull(maxItemsToPoll)) {
                     // Get the last polling.maxItemsToPoll items
                     newItems = newItems.slice(-maxItemsToPoll);
                 }
                 const newLastItem = newItems?.[0]?.id;
-                if (!isNil(newLastItem)) {
+                if (!isNull(newLastItem)) {
                     await store.put("lastItem", newLastItem);
                 }
                 return newItems.map((item) => item.data);
@@ -73,7 +73,7 @@ export const pollingHelper = {
             case DedupeStrategy.LAST_ITEM: {
                 const items = (await polling.items({ store, auth, propsValue, lastItemId: null }));
                 const lastItemId = items?.[0]?.id;
-                if (!isNil(lastItemId)) {
+                if (!isNull(lastItemId)) {
                     await store.put("lastItem", lastItemId);
                 } else {
                     await store.delete("lastItem");

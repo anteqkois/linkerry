@@ -1,8 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-types */
-export function isNil<T>(value: T | null | undefined): value is null | undefined {
-  return value === null || value === undefined
-}
-
 export function isString(str: unknown): str is string {
   return str != null && typeof str === 'string'
 }
@@ -21,6 +17,26 @@ export function isEmpty<T>(value: T | null | undefined): boolean {
   }
 
   return false
+}
+
+export const isNull = (value: unknown): value is null | undefined => {
+	return value == null
+}
+
+export const isInteger = (value: unknown) => {
+	return typeof value == 'number' && value == toInteger(value)
+}
+
+export const toInteger = (value: unknown) => {
+	const result = toFinite(value),
+		remainder = result % 1
+
+	return result === result ? (remainder ? result - remainder : result) : 0
+}
+
+export const toFinite = (value: unknown): number=> {
+  if (!value) return 0
+  return Number(value);
 }
 
 export type Dictionary<K extends string | number | symbol, V> = {

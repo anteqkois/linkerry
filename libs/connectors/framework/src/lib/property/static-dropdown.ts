@@ -1,3 +1,4 @@
+import { ValidationInputType } from '../validators/types';
 import { PropertyValue, BaseProperty, PropertyType } from './base';
 
 export type StaticDropdownValue = string | number
@@ -17,4 +18,4 @@ type StaticDropdownProps<T extends StaticDropdownValue> = { options: StaticDropd
 
 export type StaticDropdownProperty<T extends StaticDropdownValue = StaticDropdownValue , R extends boolean = boolean> = BaseProperty &
   StaticDropdownProps<T> &
-  PropertyValue<T, PropertyType.StaticDropdown, R>
+  PropertyValue<T, PropertyType.StaticDropdown, ValidationInputType.ANY, R>

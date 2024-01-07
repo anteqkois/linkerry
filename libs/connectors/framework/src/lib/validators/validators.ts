@@ -1,7 +1,8 @@
 import dayjs, { OpUnitType } from 'dayjs'
 import { ErrorMessages } from './errors'
 import { TypedValidatorFn, ValidationInputType } from './types'
-import { formatErrorMessage, isEmpty, isInteger, isNull } from './utils'
+import { formatErrorMessage} from './utils'
+import { isEmpty, isInteger, isNull } from '@market-connector/shared'
 
 // todo use zod to more specific validations?
 // const response = z.string({description:'Except string'}).safeParse(1)

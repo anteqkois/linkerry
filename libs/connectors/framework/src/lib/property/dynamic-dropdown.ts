@@ -1,4 +1,5 @@
 import { PropertyContext } from '../context'
+import { ValidationInputType } from '../validators/types'
 import { BaseProperty, PropertyType, PropertyValue } from './base'
 
 // export type StaticDropdownValue = string | number
@@ -24,6 +25,6 @@ export type DynamicDropdownOptions<T> = (propsValue: Record<string, unknown>, ct
 export type DynamicDropdownProperty<T, R extends boolean> = BaseProperty & {
   refreshers: string[]
   options: DynamicDropdownOptions<T>
-} & PropertyValue<T, PropertyType.DynamicDropdown, R>
+} & PropertyValue<T, PropertyType.DynamicDropdown,ValidationInputType.ANY, R>
 // todo add validator type generic
 // } & PropertyValue<T, PropertyType.DynamicDropdown, ValidationInputType.ANY, R>

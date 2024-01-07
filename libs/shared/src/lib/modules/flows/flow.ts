@@ -1,7 +1,7 @@
 import { DbTimestamp, Id } from '../../common/database'
 import { User } from '../user'
-import { Action } from './action'
-import { Trigger } from './trigger'
+import { Action } from './steps/action'
+import { Trigger } from './steps/trigger'
 
 export enum FlowStatus {
   Active = 'Active',

@@ -1,21 +1,32 @@
 import { PropertyType } from './base'
-import { BasicAuthProperty } from './base-auth'
+import { BasicAuthProperty } from './basic-auth'
 import { CheckboxProperty } from './checkbox'
+import { CustomAuthProperty } from './custom-auth'
 import { DynamicDropdownProperty } from './dynamic-dropdown'
 import { NumberProperty } from './number'
 import { SecretTextProperty } from './secretText'
 import { StaticDropdownProperty, StaticDropdownValue } from './static-dropdown'
 import { TextProperty } from './text'
+// export { CheckboxProperty, DynamicDropdownProperty, NumberProperty, StaticDropdownProperty, TextProperty }
 
-export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty
+export type NonAuthConnectorProperty =
+	| TextProperty
+	| NumberProperty
+	| CheckboxProperty
+	| StaticDropdownProperty
+	| DynamicDropdownProperty<any, boolean>
+export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty | CustomAuthProperty<boolean, any>
 // export type ConnectorAuthProperty = SecretTextProperty
 // export type ConnectorAuthProperty = BasicAuthProperty
 // | CustomAuthProperty<boolean, any>
 // | OAuth2Property<boolean, OAuth2Props>
 // | SecretTextProperty<boolean>
 
-export { TextProperty, NumberProperty, CheckboxProperty, StaticDropdownProperty, DynamicDropdownProperty }
-export type ConnectorProperty = TextProperty | NumberProperty | CheckboxProperty | StaticDropdownProperty | DynamicDropdownProperty<any, boolean>
+export type ConnectorProperty = NonAuthConnectorProperty | ConnectorAuthProperty
+
+export interface NonAuthConnectorPropertyMap {
+	[name: string]: NonAuthConnectorProperty
+}
 
 export interface ConnectorPropertyMap {
 	[name: string]: ConnectorProperty
