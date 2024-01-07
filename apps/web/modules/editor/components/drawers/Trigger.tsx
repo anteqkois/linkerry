@@ -1,4 +1,4 @@
-import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase } from '@market-connector/connectors-framework'
+import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase, Validators } from '@market-connector/connectors-framework'
 import { CustomError, TriggerType } from '@market-connector/shared'
 import {
 	Checkbox,
@@ -19,8 +19,8 @@ import {
 import { Button, H5 } from '@market-connector/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
-import { HTMLAttributes, useEffect } from 'react'
-import { UseFormReturn, useForm, useFormContext } from 'react-hook-form'
+import { HTMLAttributes, useEffect, useMemo } from 'react'
+import { RegisterOptions, UseFormReturn, useForm, useFormContext } from 'react-hook-form'
 import { VList } from 'virtua'
 import { useClientQuery } from '../../../../libs/react-query'
 import { ErrorInfo } from '../../../../shared/components/ErrorInfo'
@@ -91,18 +91,18 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 	const { control, trigger } = useFormContext()
 
 	useEffect(() => {
-		;(async () => {
-			await trigger()
-			// console.log(property.validators);
-			// console.log(Validators);
-			if (property.validators) {
-				for (const validator of property.validators) {
-					// console.log(Validators[validator.validatorName!](...validator.args!).fn(property, 'zxz', 'xyz'));
-					// console.log(Validators[validator.validatorName!].fn(...validator.args!));
-				}
-			}
-		})()
+		trigger()
 	}, [])
+
+	const validate = useMemo(() => {
+		const output: RegisterOptions['validate'] = {}
+		for (const validator of property.validators?.concat(...(property.defaultValidators ?? [])) ?? []) {
+			if (!validator.validatorName) continue
+			// @ts-ignore
+			output[validator.validatorName] = (value) => Validators[validator.validatorName](...(validator.args ?? [])).fn(property, value, value)
+		}
+		return output
+	}, [property.validators, property.defaultValidators])
 
 	switch (property.type) {
 		case PropertyType.Text:
@@ -112,7 +112,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 					name={property.name}
 					rules={{
 						required: { value: property.required, message: 'Required field' },
-						// validate: rules,
+						validate,
 					}}
 					render={({ field }) => (
 						<FormItem>

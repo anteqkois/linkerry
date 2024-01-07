@@ -1,8 +1,8 @@
+import { isEmpty, isInteger, isNull } from '@market-connector/shared'
 import dayjs, { OpUnitType } from 'dayjs'
 import { ErrorMessages } from './errors'
 import { TypedValidatorFn, ValidationInputType } from './types'
-import { formatErrorMessage} from './utils'
-import { isEmpty, isInteger, isNull } from '@market-connector/shared'
+import { formatErrorMessage } from './utils'
 
 // todo use zod to more specific validations?
 // const response = z.string({description:'Except string'}).safeParse(1)
@@ -34,6 +34,8 @@ export class Validators {
 	static prohibitPattern(regex: string | RegExp): TypedValidatorFn<ValidationInputType.STRING> {
 		return {
 			type: ValidationInputType.STRING,
+			validatorName: 'prohibitPattern',
+			args: [regex.toString()],
 			fn: (property, processedValue, userInput) => {
 				const patternValidator = Validators.pattern(regex)
 				const patternError = patternValidator.fn(property, processedValue, userInput)
@@ -49,6 +51,8 @@ export class Validators {
 	static maxLength(max: number): TypedValidatorFn<ValidationInputType.STRING> {
 		return {
 			type: ValidationInputType.STRING,
+			validatorName: 'maxLength',
+			args: [max],
 			fn: (property, processedValue, userInput) => {
 				if (isEmpty(processedValue)) return null
 
@@ -69,6 +73,8 @@ export class Validators {
 	static minLength(min: number): TypedValidatorFn<ValidationInputType.STRING> {
 		return {
 			type: ValidationInputType.STRING,
+			validatorName: 'minLength',
+			args: [min],
 			fn: (property, processedValue, userInput) => {
 				if (isEmpty(processedValue)) return null
 				const isValid = processedValue.length >= min
@@ -88,6 +94,8 @@ export class Validators {
 	static minValue(min: number): TypedValidatorFn<ValidationInputType.NUMBER> {
 		return {
 			type: ValidationInputType.NUMBER,
+			validatorName: 'minValue',
+			args: [min],
 			fn: (property, processedValue, userInput) => {
 				const isValid = Number(processedValue) >= min
 				if (isValid) return null
@@ -99,6 +107,8 @@ export class Validators {
 	static maxValue(max: number): TypedValidatorFn<ValidationInputType.NUMBER> {
 		return {
 			type: ValidationInputType.NUMBER,
+			validatorName: 'maxValue',
+			args: [max],
 			fn: (property, processedValue, userInput) => {
 				const isValid = Number(processedValue) <= max
 				if (isValid) return null
@@ -111,6 +121,8 @@ export class Validators {
 	static minDate(min: string, unit: OpUnitType = 'day', includeBounds = false): TypedValidatorFn<ValidationInputType.DATE_TIME> {
 		return {
 			type: ValidationInputType.DATE_TIME,
+			validatorName: 'minDate',
+			args: [min, unit, includeBounds],
 			fn: (property, processedValue) => {
 				const dateValue = dayjs(processedValue)
 				const minDate = dayjs(min)
@@ -131,6 +143,8 @@ export class Validators {
 	static maxDate(max: string, unit: OpUnitType = 'day', includeBounds = false): TypedValidatorFn<ValidationInputType.DATE_TIME> {
 		return {
 			type: ValidationInputType.DATE_TIME,
+			validatorName: 'maxDate',
+			args: [max, unit, includeBounds],
 			fn: (property, processedValue) => {
 				const dateValue = dayjs(processedValue)
 				const maxDate = dayjs(max)
@@ -151,6 +165,8 @@ export class Validators {
 	static inRange(min: number, max: number): TypedValidatorFn<ValidationInputType.NUMBER> {
 		return {
 			type: ValidationInputType.NUMBER,
+			validatorName: 'inRange',
+			args: [min, max],
 			fn: (property, processedValue, userInput) => {
 				const numericValue = Number(processedValue)
 				const isValid = numericValue <= max && numericValue >= min
@@ -169,6 +185,8 @@ export class Validators {
 	static inDateRange(min: string, max: string, unit: OpUnitType = 'day', includeBounds = false): TypedValidatorFn<ValidationInputType.DATE_TIME> {
 		return {
 			type: ValidationInputType.DATE_TIME,
+			validatorName: 'inDateRange',
+			args: [max, unit, unit, includeBounds],
 			fn: (property, processedValue) => {
 				const dateValue = dayjs(processedValue)
 				const minDate = dayjs(min)
@@ -194,6 +212,7 @@ export class Validators {
 
 	static number: TypedValidatorFn<ValidationInputType.NUMBER> = {
 		type: ValidationInputType.NUMBER,
+		validatorName: 'number',
 		fn: (property, processedValue, userInput) => {
 			if (isNaN(processedValue)) {
 				return formatErrorMessage(ErrorMessages.NUMBER, { userInput })
@@ -205,6 +224,7 @@ export class Validators {
 
 	static nonZero: TypedValidatorFn<ValidationInputType.NUMBER> = {
 		type: ValidationInputType.NUMBER,
+		validatorName: 'nonZero',
 		fn: (property, processedValue, userInput) => {
 			if (processedValue === 0) {
 				return formatErrorMessage(ErrorMessages.NON_ZERO, { userInput })
@@ -216,6 +236,7 @@ export class Validators {
 
 	static integer: TypedValidatorFn<ValidationInputType.NUMBER> = {
 		type: ValidationInputType.NUMBER,
+		validatorName: 'integer',
 		fn: (property, processedValue, userInput) => {
 			if (isInteger(processedValue)) {
 				return formatErrorMessage(ErrorMessages.WHOLE_NUMBER, { userInput })
@@ -237,6 +258,7 @@ export class Validators {
 
 	static email: TypedValidatorFn<ValidationInputType.STRING> = {
 		type: ValidationInputType.STRING,
+		validatorName: 'email',
 		fn: (property, processedValue, userInput) => {
 			const pattern = new RegExp(
 				'^(([^<>()\\[\\].,;:\\s@"]+(\\.[^<>()\\[\\].,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z-0-9]+\\.)+[a-zA-Z]{2,}))$',
@@ -254,6 +276,7 @@ export class Validators {
 
 	static url: TypedValidatorFn<ValidationInputType.STRING> = {
 		type: ValidationInputType.STRING,
+		validatorName: 'url',
 		fn: (property, processedValue, userInput) => {
 			const pattern = new RegExp(
 				'^((https?|ftp|file)://)?' + // protocol
@@ -271,6 +294,7 @@ export class Validators {
 
 	static datetimeIso: TypedValidatorFn<ValidationInputType.DATE_TIME> = {
 		type: ValidationInputType.DATE_TIME,
+		validatorName: 'datetimeIso',
 		fn: (property, processedValue, userInput) => {
 			if (property.required && isNull(processedValue)) {
 				return formatErrorMessage(ErrorMessages.ISO_DATE, { userInput })
@@ -291,6 +315,7 @@ export class Validators {
 
 	static phoneNumber: TypedValidatorFn<ValidationInputType.STRING> = {
 		type: ValidationInputType.STRING,
+		validatorName: 'phoneNumber',
 		fn: (property, processedValue, userInput) => {
 			const pattern = new RegExp('^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$')
 			if (isEmpty(processedValue)) return null
@@ -302,6 +327,7 @@ export class Validators {
 	static oneOf(values: unknown[]): TypedValidatorFn<any> {
 		return {
 			type: ValidationInputType.ANY,
+			validatorName: 'oneOf',
 			fn: (property, processedValue, userInput) => {
 				if (Array.isArray(values)) {
 					return values.includes(processedValue)
@@ -320,6 +346,8 @@ export class Validators {
 	static requireKeys(values: string[]): TypedValidatorFn<ValidationInputType.OBJECT> {
 		return {
 			type: ValidationInputType.OBJECT,
+			validatorName: 'requireKeys',
+			args: [values],
 			fn: (property, processedValue, userInput) => {
 				if (Array.isArray(values)) {
 					const missingKeys = values.filter((key) => !processedValue[key])
