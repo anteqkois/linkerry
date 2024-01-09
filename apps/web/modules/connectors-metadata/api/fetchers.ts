@@ -25,7 +25,7 @@ export class ConnectorsMetadataApi {
     })
   }
 
-  static async getOne(id: Id) {
-    return apiClient.get<ConnectorMetadata>(`/connectors-metadata/${id}`, { params: { summary: false } })
+  static async getOne({connectorName, connectorVersion}:{ connectorName: string, connectorVersion: string }) {
+    return apiClient.get<ConnectorMetadata>(`/connectors-metadata/${connectorName}`, { params: { summary: false, version: connectorVersion } })
   }
 }

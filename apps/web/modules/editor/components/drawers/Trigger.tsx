@@ -16,7 +16,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@market-connector/ui-components/client'
-import { Button, H5 } from '@market-connector/ui-components/server'
+import { H5 } from '@market-connector/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
 import { HTMLAttributes, useEffect, useMemo } from 'react'
@@ -151,10 +151,6 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 	}
 }
 
-const handleOnSubmit = (data: any) => {
-	console.log(data)
-}
-
 export const TriggerDrawer = () => {
 	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
@@ -163,7 +159,7 @@ export const TriggerDrawer = () => {
 		data: connectorMetadata,
 		isFetching,
 		error,
-	} = useClientQuery(connectorsMetadataQueryConfig.getOne({ id: editedTrigger.settings.connectorId }))
+	} = useClientQuery(connectorsMetadataQueryConfig.getOne({ connectorName: editedTrigger.settings.connectorName, connectorVersion: editedTrigger.settings.connectorVersion }))
 
 	const triggerForm = useForm<{ __temp__trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({
 		mode: 'all',
@@ -239,10 +235,10 @@ export const TriggerDrawer = () => {
 			displayName: selectedTrigger.displayName,
 			type: TriggerType.Connector,
 			settings: {
-				connectorId: connectorMetadata._id,
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
 				triggerName: selectedTrigger.name,
+				connectorVisibility: connectorMetadata.visibility,
 				input,
 				inputUiInfo: {},
 			},
@@ -261,7 +257,7 @@ export const TriggerDrawer = () => {
 				Change trigger
 			</Button> */}
 			<Form {...triggerForm}>
-				<form onSubmit={triggerForm.handleSubmit(handleOnSubmit)} className="space-y-5 mt-6">
+				<form className="space-y-5 mt-6">
 					<FormField
 						control={triggerForm.control}
 						name="triggerName"
@@ -297,12 +293,6 @@ export const TriggerDrawer = () => {
 						)}
 					/>
 					{triggerWatcher && Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)}
-					<div className="flex justify-end">
-						{/* <Button type="submit" loading={isLoading} className="w-full"> */}
-						<Button type="submit" className="w-full">
-							Test
-						</Button>
-					</div>
 				</form>
 			</Form>
 		</div>

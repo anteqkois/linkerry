@@ -1,7 +1,7 @@
-import { clone } from '../../common'
+import { clone } from '../../../common'
+import { Action, ActionType } from '../steps/action'
+import { Trigger, TriggerType } from '../steps/trigger'
 import { FlowVersion } from './flow'
-import { Action, ActionType } from './steps/action'
-import { Trigger, TriggerType } from './steps/trigger'
 
 type Step = Action | Trigger
 

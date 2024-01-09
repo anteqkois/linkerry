@@ -11,7 +11,6 @@ import { useEditor } from '../../useEditor'
 
 export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
 
-// export const SelectTrigger = ({}: SelectTriggerProps) => {
 export const SelectTriggerDrawer = () => {
   const { data } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
   const { updateNode, editedTrigger, setDrawer, setEditedTrigger, updateEditedTrigger } = useEditor()
@@ -25,9 +24,9 @@ export const SelectTriggerDrawer = () => {
       type: TriggerType.Connector,
       valid: false,
       settings: {
-        connectorId: row.original._id,
         connectorName: row.original.name,
         connectorVersion: row.original.version,
+				connectorVisibility: row.original.visibility,
 				triggerName: '',
         input: {},
 				inputUiInfo:{}

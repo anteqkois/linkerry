@@ -1,4 +1,4 @@
-import { ActionType, BaseConnectorSettings, BaseStep, SampleData, SampleDataSettingsObject, TriggerType } from '@market-connector/shared'
+import { ActionType, BaseConnectorSettings, BaseStep, ConnectorVisibility, SampleData, SampleDataSettingsObject, TriggerType } from '@market-connector/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Types } from 'mongoose'
 
@@ -33,9 +33,6 @@ export const SampleDataSettingsObjectSchema = SchemaFactory.createForClass(Sampl
 @Schema({ _id: false })
 export class ConnectorSettingsModel implements BaseConnectorSettings {
 	@Prop({ required: true, type: String })
-	connectorId: string
-
-	@Prop({ required: true, type: String })
 	connectorName: string
 
 	@Prop({ required: true, type: String })
@@ -52,6 +49,9 @@ export class ConnectorSettingsModel implements BaseConnectorSettings {
 
 	@Prop({ required: true, type: String })
 	connectorVersion: string
+
+	@Prop({ required: true, type: String, enum: ConnectorVisibility })
+	connectorVisibility: ConnectorVisibility
 }
 export const ConnectorSettingsSchema = SchemaFactory.createForClass(ConnectorSettingsModel)
 

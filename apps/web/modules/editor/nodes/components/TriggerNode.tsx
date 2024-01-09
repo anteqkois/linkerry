@@ -14,7 +14,6 @@ export const TriggerNodeElement = ({ data: { trigger, connectorMetadata } }: Tri
     setDrawer('trigger')
     setShowDrawer(!showDrawer)
   }
-  // generateEmptyTrigger(new Types.ObjectId().toString())
 
   const handleResetTrigger = () => {
     resetTrigger(trigger.name)

@@ -5,4 +5,5 @@ export interface ConnectorsMetadataGetManyQuery{
 
 export interface ConnectorsMetadataGetOneQuery{
   summary?: boolean
+	version?: string
 }

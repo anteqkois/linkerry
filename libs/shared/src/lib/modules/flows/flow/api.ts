@@ -1,4 +1,4 @@
-import { Trigger } from "./steps/trigger";
+import { Trigger } from "../steps/trigger";
 
 export interface FlowGetManyQuery {}
 

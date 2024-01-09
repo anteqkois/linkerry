@@ -97,11 +97,10 @@ describe('POST /api/flows-version', () => {
     const existingTrigger = flowVersion.triggers[0]
     const input: Trigger = {
       displayName: 'Coingecko',
-      id: existingTrigger.id,
+			name: 'trigger_1',
       type: TriggerType.Connector,
       valid: false,
       settings: {
-        connectorId: mockedConnector._id,
         connectorName: mockedConnector.name,
         connectorVersion: mockedConnector.version,
         input: {
@@ -119,9 +118,7 @@ describe('POST /api/flows-version', () => {
 
     expect(isConnectorTrigger(updatedTrigger)).toBeTruthy()
     if (isConnectorTrigger(updatedTrigger)) {
-      expect(updatedTrigger.id).toBe(input.id)
       expect(updatedTrigger.displayName).toBe(input.displayName)
-      expect(updatedTrigger.settings.connectorId).toBe(mockedConnector._id)
       expect(updatedTrigger.settings.input.expression).toBe(mockedTrigger.props.expression.defaultValue)
       expect(updatedTrigger.settings.input.timezone).toBe(mockedTrigger.props.timezone.defaultValue)
     }
@@ -142,12 +139,9 @@ describe('POST /api/flows-version', () => {
 
     expect(isConnectorTrigger(updatedTrigger)).toBeTruthy()
     if (isConnectorTrigger(updatedTrigger)) {
-      expect(updatedTrigger.id).toBe(input.id)
       expect(updatedTrigger.displayName).toBe(input.displayName)
-      expect(updatedTrigger.id).toBe(input.id)
       expect(updatedTrigger.type).toBe(input.type)
       expect(updatedTrigger.valid).toBe(false)
-      expect(updatedTrigger.settings.connectorId).toBe(input.settings.connectorId)
       expect(updatedTrigger.settings.connectorName).toBe(input.settings.connectorName)
       expect(updatedTrigger.settings.connectorVersion).toBe(input.settings.connectorVersion)
       expect(updatedTrigger.settings.input.expression).toBe(input.settings.input.expression)

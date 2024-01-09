@@ -40,7 +40,9 @@ export const isWebhookTrigger = (trigger: Trigger): trigger is TriggerWebhook =>
 export const triggerConnectorSchema = baseStepSchema.merge(
 	z.object({
 		type: z.enum([TriggerType.Connector]),
-		settings: baseConnectorSettingsSchema,
+		settings: baseConnectorSettingsSchema.merge(z.object({
+			triggerName: z.string(), // 'new_row'
+		})),
 	}),
 )
 

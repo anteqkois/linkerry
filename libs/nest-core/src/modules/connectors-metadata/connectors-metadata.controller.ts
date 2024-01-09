@@ -19,8 +19,8 @@ export class ConnectorsMetadataController {
     return this.connectorsMetadataService.findAll(filter, query)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string, @Query() query: ConnectorMetadataGetOneQueryDto) {
-    return this.connectorsMetadataService.findOne(id, query)
+  @Get(':name')
+  findOne(@Param('name') name: string, @Query() query: ConnectorMetadataGetOneQueryDto) {
+    return this.connectorsMetadataService.findOne(name, query)
   }
 }

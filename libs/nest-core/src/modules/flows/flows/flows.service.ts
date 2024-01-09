@@ -2,7 +2,7 @@ import { Id } from '@market-connector/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { generateId } from '../../lib/mongodb'
+import { generateId } from '../../../lib/mongodb'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowModel } from './schemas/flow.schema'
 

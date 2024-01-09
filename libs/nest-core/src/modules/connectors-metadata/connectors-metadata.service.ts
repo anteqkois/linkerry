@@ -1,8 +1,7 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@market-connector/connectors-framework'
-import { Id } from '@market-connector/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { FilterQuery, Model } from 'mongoose'
 import { MongoFilter } from '../../lib/mongodb/decorators/filter.decorator'
 import { ConnectorMetadataGetManyQueryDto } from './dto/getMany.dto'
 import { ConnectorMetadataGetOneQueryDto } from './dto/getOne.dto'
@@ -26,12 +25,14 @@ export class ConnectorsMetadataService {
 		return query.summary ? connectors.map((connector) => this.connectorToSummaryMetadata(connector)) : connectors
 	}
 
-	async findOne(id: Id, query: ConnectorMetadataGetOneQueryDto) {
-		const connector = (
-			await this.connectorMetadataModel.findOne({
-				_id: id,
-			})
-		)?.toObject()
+	async findOne(name: string, query: ConnectorMetadataGetOneQueryDto) {
+		const filter: FilterQuery<ConnectorMetadataModel> = {
+			name,
+		}
+
+		if (query.version) filter.version = query.version
+
+		const connector = (await this.connectorMetadataModel.findOne(filter))?.toObject()
 
 		if (!connector) throw new UnprocessableEntityException(`Can not find conector metadata`)
 

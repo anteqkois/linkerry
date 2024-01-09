@@ -1,7 +1,7 @@
 import { Id, JwtUser } from '@market-connector/shared'
 import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { JwtAuthGuard } from '../../lib/auth'
-import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
+import { JwtAuthGuard } from '../../../lib/auth'
+import { ReqJwtUser } from '../../../lib/auth/decorators/req-user.decorator'
 import { FlowsService } from './flows.service'
 
 @Controller('flows')

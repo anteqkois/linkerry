@@ -21,10 +21,10 @@ export const connectorsMetadataQueryConfig = {
       queryFn: async () => (await ConnectorsMetadataApi.get()).data,
     }
   },
-  getOne: ({ id }: { id: string }): FetchQueryOptions<ConnectorMetadata> => {
+  getOne: ({ connectorName, connectorVersion }: { connectorName: string, connectorVersion: string }): FetchQueryOptions<ConnectorMetadata> => {
     return {
-      queryKey: [`connectors-metadata/${id}`],
-      queryFn: async () => (await ConnectorsMetadataApi.getOne(id)).data,
+      queryKey: [`connectors-metadata/${connectorName}?version=${connectorVersion}`],
+      queryFn: async () => (await ConnectorsMetadataApi.getOne({ connectorName, connectorVersion })).data,
     }
   },
 }
