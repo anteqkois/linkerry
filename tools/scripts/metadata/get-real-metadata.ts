@@ -1,6 +1,6 @@
 import { readdir } from 'fs/promises'
 import { Connector, ConnectorMetadata } from 'libs/connectors/framework/src'
-import { ConnectorGroup, ConnectorVisibility } from 'libs/shared/src'
+import { ConnectorGroup, ConnectorType } from 'libs/shared/src'
 import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
 
@@ -23,7 +23,7 @@ export const getRealMetadata = async () => {
 
     const metadata: Omit<ConnectorMetadata, '_id'> = {
       ...connector.metadata(),
-      visibility: customConnectors.includes(connector.name) ? ConnectorVisibility.Custom : ConnectorVisibility.Official,
+      connectorType: customConnectors.includes(connector.name) ? ConnectorType.Custom : ConnectorType.Official,
       group: coreConnectors.includes(connector.name) ? ConnectorGroup.Core : ConnectorGroup.App,
       name: connectorName,
       version: connectorVersion,

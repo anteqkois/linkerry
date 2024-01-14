@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ConnectorVisibility } from '../../connectors';
+import { ConnectorType } from '../../connectors';
 import { ActionType } from './action';
 import { TriggerType } from './trigger';
 
@@ -24,10 +24,11 @@ export const sampleDataSettingsObjectSchema = z.object({
 	lastTestDate: z.date().optional(),
 })
 
+console.log(ConnectorType);
 export const baseConnectorSettingsSchema = z.object({
 	connectorName: z.string(), // '@market-connecotr/binance'
 	connectorVersion: z.string(),
-	connectorVisibility: z.nativeEnum(ConnectorVisibility), // Officail, Custom
+	connectorType: z.nativeEnum(ConnectorType), // Officail, Custom
 	input: z.record(z.any()).and(z.object({ auth: z.string().optional() })),
 	inputUiInfo: sampleDataSettingsObjectSchema,
 	sampleData: sampleDataSchema.optional(),

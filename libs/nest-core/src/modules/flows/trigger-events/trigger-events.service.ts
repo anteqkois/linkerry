@@ -1,12 +1,17 @@
-import { Id, TriggerType } from '@market-connector/shared'
+import { Id, TriggerHookType, TriggerType } from '@market-connector/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
+import { EngineService } from '../engine/engine.service'
 import { FlowsService } from '../flows/flows.service'
-import { StepFilesService } from '../step-files/step-files.service'
+// import { StepFilesService } from '../step-files/step-files.service'
 import { PoolTestDto } from '../trigger-events/dto/pool-test.dto'
 
 @Injectable()
 export class TriggerEventsService {
-	constructor(private readonly flowService: FlowsService, private readonly stepFilesService: StepFilesService) {}
+	constructor(
+		private readonly flowService: FlowsService,
+		// private readonly stepFilesService: StepFilesService,
+		private readonly engineService: EngineService,
+	) {}
 
 	async performPoolTest(poolDto: PoolTestDto, userId: Id) {
 		const flow = await this.flowService.findOne(poolDto.flowId, userId)
@@ -23,6 +28,12 @@ export class TriggerEventsService {
 				// this.stepFilesService.delete()
 
 				// execute trigger
+				const { result: testResult} = await  this.engineService.executeTriggerOperation({
+					flowVersion: flow.version,
+					hookType: TriggerHookType.TEST,
+					triggerName: trigger.name,
+					webhookUrl: '', // TODO implement webhook url
+				})
 
 				// delete old event data
 

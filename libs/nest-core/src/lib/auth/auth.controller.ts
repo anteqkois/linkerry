@@ -1,11 +1,11 @@
 import '@fastify/cookie'
 import {
-    AuthStatus,
-    Cookies,
-    IAuthLoginResponse,
-    IAuthLogoutResponse,
-    IAuthSignUpResponse,
-    User,
+	AuthStatus,
+	Cookies,
+	IAuthLoginResponse,
+	IAuthLogoutResponse,
+	IAuthSignUpResponse,
+	User,
 } from '@market-connector/shared'
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'

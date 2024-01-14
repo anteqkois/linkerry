@@ -1,5 +1,5 @@
 import { ActionBase, ConnectorAuthProperty, ConnectorMetadata, ConnectorTag, TriggerBase, connectorTag } from '@market-connector/connectors-framework'
-import { ConnectorGroup, ConnectorVisibility } from '@market-connector/shared'
+import { ConnectorGroup, ConnectorType } from '@market-connector/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
@@ -45,8 +45,8 @@ export class ConnectorMetadataModel implements ConnectorMetadata {
 	@Prop({ required: true, type: String, enum: ConnectorGroup })
 	group: ConnectorGroup
 
-	@Prop({ required: true, type: String, enum: ConnectorVisibility })
-	visibility: ConnectorVisibility
+	@Prop({ required: true, type: String, enum: ConnectorType })
+	connectorType: ConnectorType
 }
 
 export const ConnectorMetadataSchema = SchemaFactory.createForClass(ConnectorMetadataModel)

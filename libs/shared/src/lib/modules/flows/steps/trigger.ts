@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from './base'
+import { StepName, baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from './base'
 
 export enum TriggerType {
 	Empty = 'Empty',
@@ -59,4 +59,13 @@ export type Trigger = TriggerEmpty | TriggerWebhook | TriggerConnector
 export function isTrigger(data: unknown): data is Trigger {
 	const result = baseTriggerSchema.safeParse(data)
 	return result.success
+}
+
+export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
+	return {
+		name,
+		displayName: 'Select trigger',
+		type: TriggerType.Empty,
+		valid: false,
+	}
 }

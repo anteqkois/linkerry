@@ -1,4 +1,4 @@
-import { ConnectorGroup, ConnectorVisibility } from '@market-connector/shared'
+import { ConnectorGroup, ConnectorType } from '@market-connector/shared'
 import { ConnectorAuthProperty, ConnectorPropertyMap } from './property'
 import { ConnectorTag } from './tags'
 import { TriggerStrategy, WebhookHandshakeConfiguration } from './trigger/trigger'
@@ -34,7 +34,7 @@ export type ConnectorMetadata = ConnectorBase & {
   actions: Record<string, ActionBase>
   triggers: Record<string, TriggerBase>
   group: ConnectorGroup
-  visibility: ConnectorVisibility
+  connectorType: ConnectorType
 }
 
 export type ConnectorMetadataSummary = Omit<ConnectorMetadata, 'actions' | 'triggers'> & {

@@ -238,7 +238,7 @@ export const TriggerDrawer = () => {
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
 				triggerName: selectedTrigger.name,
-				connectorVisibility: connectorMetadata.visibility,
+				connectorType: connectorMetadata.connectorType,
 				input,
 				inputUiInfo: {},
 			},

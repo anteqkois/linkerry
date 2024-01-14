@@ -2,10 +2,9 @@ import { AuthModule, ConnectorsMetadataModule, CoreModule, FlowVersionsModule, F
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { ConnectorsModule } from './modules/connectors/connectors.module'
 
 @Module({
-  imports: [CoreModule, UsersModule, AuthModule, ConnectorsModule, FlowsModule, FlowVersionsModule, ConnectorsMetadataModule],
+  imports: [CoreModule, UsersModule, AuthModule, FlowsModule, FlowVersionsModule, ConnectorsMetadataModule],
   controllers: [AppController],
   providers: [AppService],
 })

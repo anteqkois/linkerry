@@ -2,9 +2,9 @@ import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER } from '@nestjs/core'
 import { MongodbModule } from './lib/mongodb'
-import { PackageManagerModule } from './lib/package-manager/package-manager.module'
 import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/utils'
-import { EngineService } from './modules/flows/engine/engine.service';
+// import { EngineModule } from './modules/flows/engine/engine.module'
+// import { SandboxModule } from './modules/workers/sandbox/sandbox.module'
 
 @Module({
   imports: [
@@ -12,7 +12,8 @@ import { EngineService } from './modules/flows/engine/engine.service';
       isGlobal: true,
     }),
     MongodbModule,
-    PackageManagerModule,
+    // SandboxModule,
+    // EngineModule,
   ],
   controllers: [],
   providers: [
@@ -20,7 +21,6 @@ import { EngineService } from './modules/flows/engine/engine.service';
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
     },
-    EngineService,
     // To register as a global guard
     // {
     //   provide: APP_GUARD,

@@ -26,7 +26,7 @@ export const SelectTriggerDrawer = () => {
       settings: {
         connectorName: row.original.name,
         connectorVersion: row.original.version,
-				connectorVisibility: row.original.visibility,
+				connectorType: row.original.connectorType,
 				triggerName: '',
         input: {},
 				inputUiInfo:{}

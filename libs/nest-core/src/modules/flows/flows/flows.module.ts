@@ -9,5 +9,6 @@ import { FlowModelFactory } from './schemas/flow.schema'
   imports: [MongooseModule.forFeatureAsync([FlowModelFactory]), FlowVersionsModule],
   controllers: [FlowsController],
   providers: [FlowsService],
+	exports:[FlowsService]
 })
 export class FlowsModule {}

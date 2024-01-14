@@ -25,7 +25,7 @@
 			"@market-connector/shared": ["libs/shared/src/index.ts"],
 			"@market-connector/tools": ["tools/index.ts"],
 			"@market-connector/ui-components/*": ["libs/ui-components/src/*"]
-		}
+		},
 	},
 	"exclude": ["node_modules", "tmp"],
 	"include": ["**/*.ts", "./libs/*/src/**/*", "./apps/*/src/**/*", "env.d.ts"]

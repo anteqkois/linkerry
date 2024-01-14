@@ -7,4 +7,5 @@ export * from './lib/modules/flows'
 export * from './lib/modules/flows/steps/base'
 export * from './lib/modules/language'
 export * from './lib/modules/user'
+export * from './lib/modules/workers'
 
