@@ -1,5 +1,12 @@
-import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase, Validators } from '@market-connector/connectors-framework'
-import { CustomError, TriggerType } from '@market-connector/shared'
+import {
+	ConnectorProperty,
+	PropertyType,
+	StaticDropdownProperty,
+	TriggerBase,
+	TriggerStrategy,
+	Validators,
+} from '@market-connector/connectors-framework'
+import { ConnectorGroup, CustomError, TriggerType } from '@market-connector/shared'
 import {
 	Checkbox,
 	Form,
@@ -10,6 +17,9 @@ import {
 	FormLabel,
 	FormMessage,
 	Input,
+	ResizableHandle,
+	ResizablePanel,
+	ResizablePanelGroup,
 	Select,
 	SelectContent,
 	SelectItem,
@@ -22,11 +32,11 @@ import Image from 'next/image'
 import { HTMLAttributes, useEffect, useMemo } from 'react'
 import { RegisterOptions, UseFormReturn, useForm, useFormContext } from 'react-hook-form'
 import { VList } from 'virtua'
-import { useClientQuery } from '../../../../libs/react-query'
-import { ErrorInfo } from '../../../../shared/components/ErrorInfo'
-import { Spinner } from '../../../../shared/components/Spinner'
-import { connectorsMetadataQueryConfig } from '../../../connectors-metadata/api/query-configs'
-import { useEditor } from '../../useEditor'
+import { useClientQuery } from '../../../libs/react-query'
+import { ErrorInfo } from '../../../shared/components/ErrorInfo'
+import { Spinner } from '../../../shared/components/Spinner'
+import { connectorsMetadataQueryConfig } from '../../connectors-metadata/api/query-configs'
+import { useEditor } from '../useEditor'
 
 export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
 
@@ -159,7 +169,12 @@ export const TriggerDrawer = () => {
 		data: connectorMetadata,
 		isFetching,
 		error,
-	} = useClientQuery(connectorsMetadataQueryConfig.getOne({ connectorName: editedTrigger.settings.connectorName, connectorVersion: editedTrigger.settings.connectorVersion }))
+	} = useClientQuery(
+		connectorsMetadataQueryConfig.getOne({
+			connectorName: editedTrigger.settings.connectorName,
+			connectorVersion: editedTrigger.settings.connectorVersion,
+		}),
+	)
 
 	const triggerForm = useForm<{ __temp__trigger: TriggerBase; triggerName: TriggerBase['name'] } & Record<string, any>>({
 		mode: 'all',
@@ -246,55 +261,65 @@ export const TriggerDrawer = () => {
 	}
 
 	return (
-		<div>
-			<div className="flex items-center justify-center gap-2">
-				<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
-				<div>
-					<H5>{connectorMetadata.displayName}</H5>
+		<ResizablePanelGroup direction="vertical" className="min-h-full">
+			<ResizablePanel defaultSize={75}>
+				<div className="flex items-center justify-center gap-2">
+					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
+					<div>
+						<H5>{connectorMetadata.displayName}</H5>
+					</div>
 				</div>
-			</div>
-			{/* <Button className="w-full mt-5" variant={'secondary'} onClick={() => resetTrigger(editedTrigger.id)}>
+				{/* <Button className="w-full mt-5" variant={'secondary'} onClick={() => resetTrigger(editedTrigger.id)}>
 				Change trigger
 			</Button> */}
-			<Form {...triggerForm}>
-				<form className="space-y-5 mt-6">
-					<FormField
-						control={triggerForm.control}
-						name="triggerName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Trigger</FormLabel>
-								<FormControl>
-									<Select
-										value={field.value}
-										onValueChange={(v) => {
-											field.onChange(v)
-											onChangeTrigger(v)
-										}}
-									>
-										<SelectTrigger>
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent position="popper">
-											{Object.values(connectorMetadata.triggers).map((trigger) => {
-												return (
-													<SelectItem value={trigger.name} key={trigger.name}>
-														<span className="flex gap-2 items-center">
-															<p>{trigger.displayName}</p>
-														</span>
-													</SelectItem>
-												)
-											})}
-										</SelectContent>
-									</Select>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					{triggerWatcher && Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)}
-				</form>
-			</Form>
-		</div>
+				<Form {...triggerForm}>
+					<form className="space-y-5 mt-6" onSubmit={(e) => e.preventDefault()}>
+						<FormField
+							control={triggerForm.control}
+							name="triggerName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Trigger</FormLabel>
+									<FormControl>
+										<Select
+											value={field.value}
+											onValueChange={(v) => {
+												field.onChange(v)
+												onChangeTrigger(v)
+											}}
+										>
+											<SelectTrigger>
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent position="popper">
+												{Object.values(connectorMetadata.triggers).map((trigger) => {
+													return (
+														<SelectItem value={trigger.name} key={trigger.name}>
+															<span className="flex gap-2 items-center">
+																<p>{trigger.displayName}</p>
+															</span>
+														</SelectItem>
+													)
+												})}
+											</SelectContent>
+										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						{triggerWatcher && Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)}
+					</form>
+				</Form>
+			</ResizablePanel>
+			<ResizableHandle withHandle />
+			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (
+				<ResizablePanel defaultSize={25}>
+					<div className="flex h-full items-center justify-center p-6">
+						<span className="font-semibold">Content</span>
+					</div>
+				</ResizablePanel>
+			)}
+		</ResizablePanelGroup>
 	)
 }

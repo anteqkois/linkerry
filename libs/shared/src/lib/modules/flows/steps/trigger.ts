@@ -17,7 +17,7 @@ export const baseTriggerSchema = baseStepSchema.merge(
 export const triggerEmptySchema = baseStepSchema.merge(
 	z.object({
 		type: z.enum([TriggerType.Empty]),
-		settings: z.any(),
+		settings: z.object({}),
 	}),
 )
 export const isEmptyTrigger = (trigger: Trigger): trigger is TriggerEmpty => {
@@ -40,9 +40,11 @@ export const isWebhookTrigger = (trigger: Trigger): trigger is TriggerWebhook =>
 export const triggerConnectorSchema = baseStepSchema.merge(
 	z.object({
 		type: z.enum([TriggerType.Connector]),
-		settings: baseConnectorSettingsSchema.merge(z.object({
-			triggerName: z.string(), // 'new_row'
-		})),
+		settings: baseConnectorSettingsSchema.merge(
+			z.object({
+				triggerName: z.string(), // 'new_row'
+			}),
+		),
 	}),
 )
 
@@ -58,7 +60,12 @@ export type Trigger = TriggerEmpty | TriggerWebhook | TriggerConnector
 
 export function isTrigger(data: unknown): data is Trigger {
 	const result = baseTriggerSchema.safeParse(data)
-	return result.success
+	if (result.success === false) {
+		console.error(result.error.errors)
+		return false
+	}
+
+	return true
 }
 
 export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
@@ -67,5 +74,6 @@ export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
 		displayName: 'Select trigger',
 		type: TriggerType.Empty,
 		valid: false,
+		settings: {},
 	}
 }

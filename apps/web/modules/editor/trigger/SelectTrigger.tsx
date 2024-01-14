@@ -2,12 +2,12 @@ import { ConnectorMetadataSummary, connectorTag } from '@market-connector/connec
 import { TriggerConnector, TriggerType } from '@market-connector/shared'
 import { Row } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
-import { useClientQuery } from '../../../../libs/react-query'
-import { DataTable } from '../../../../shared/components/table/Table'
-import { connectorsMetadataQueryConfig } from '../../../connectors-metadata/api/query-configs'
-import { columns } from '../../../connectors-metadata/table/defaultColumns'
-import { triggerNodeFactory } from '../../nodes/components/nodeFactory'
-import { useEditor } from '../../useEditor'
+import { useClientQuery } from '../../../libs/react-query'
+import { DataTable } from '../../../shared/components/table/Table'
+import { connectorsMetadataQueryConfig } from '../../connectors-metadata/api/query-configs'
+import { columns } from '../../connectors-metadata/table/defaultColumns'
+import { triggerNodeFactory } from '../nodes/components/nodeFactory'
+import { useEditor } from '../useEditor'
 
 export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
 

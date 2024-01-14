@@ -5,7 +5,7 @@ import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
 
 const customConnectors = []
-const coreConnectors = ['@market-connector/schedule']
+const coreConnectors = ['@linkerry/linkerry-schedule']
 
 export const getRealMetadata = async () => {
   const names = await getAvailableConnectorNames()

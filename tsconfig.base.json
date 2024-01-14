@@ -18,7 +18,7 @@
 		"paths": {
 			"@market-connector/coingecko": ["libs/connectors/coingecko/src/index.ts"],
 			"@market-connector/connectors-framework": ["libs/connectors/framework/src/index.ts"],
-			"@market-connector/schedule": ["libs/connectors/schedule/src/index.ts"],
+			"@linkerry/linkerry-schedule": ["libs/connectors/schedule/src/index.ts"],
 			"@market-connector/engine": ["libs/engine/src/index.ts"],
 			"@market-connector/nest-core": ["libs/nest-core/src/index.ts"],
 			"@market-connector/props": ["libs/connectors/props/src/index.ts"],

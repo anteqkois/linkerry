@@ -24,7 +24,6 @@ export const sampleDataSettingsObjectSchema = z.object({
 	lastTestDate: z.date().optional(),
 })
 
-console.log(ConnectorType);
 export const baseConnectorSettingsSchema = z.object({
 	connectorName: z.string(), // '@market-connecotr/binance'
 	connectorVersion: z.string(),

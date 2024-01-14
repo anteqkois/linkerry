@@ -5,9 +5,15 @@ import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'reactflow'
 import { Drawer } from '../../shared/components/drawer/Index'
 import { TriggerNodeElement } from './components'
-import { editorDrawers } from './components/drawers'
 import { SelectTriggerNodeElement } from './nodes/components/SelectTriggerNode'
+import { SelectTriggerDrawer } from './trigger/SelectTrigger'
+import { TriggerDrawer } from './trigger/Trigger'
 import { useEditor } from './useEditor'
+
+export const editorDrawers = {
+  select_trigger: SelectTriggerDrawer,
+  trigger: TriggerDrawer,
+}
 
 const nodeTypes = {
   SelectTriggerNode: SelectTriggerNodeElement,

@@ -5,7 +5,7 @@ import { login } from '../support/login'
 const mockedConnector = {
   _id: '658c59e19217b0d5c8e7927f',
   displayName: 'Schedule',
-  name: '@market-connector/schedule',
+  name: '@linkerry/linkerry-schedule',
   description: 'Use to schedule starting flow every X times',
   auth: null,
   minimumSupportedRelease: '0.0.0',

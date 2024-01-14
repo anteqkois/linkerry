@@ -96,7 +96,7 @@ interface IEditorState {
 	// TRIGGERS
 	editedTrigger: Trigger | null
 	setEditedTrigger: (trigger: Trigger) => void
-	patchEditedTrigger: (update: Partial<WithoutId<Trigger>>) => Promise<void>
+	patchEditedTrigger: (update: Partial<Trigger>) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
 	resetTrigger: (triggerName: string) => Promise<void>
@@ -265,7 +265,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		nodes = nodes.map((node: CustomNode) => {
 			if (node.id !== triggerName) return node as CustomNode
 
-			emptyTrigger = generateEmptyTrigger(`${node.data.trigger.name}_${flow.version.stepsCount + 1}`)
+			emptyTrigger = generateEmptyTrigger(`trigger_${flow.version.stepsCount + 1}`)
 			const emptyNode = selectTriggerNodeFactory({ trigger: emptyTrigger })
 
 			return emptyNode
@@ -277,7 +277,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			return emptyTrigger!
 		})
-		await FlowVersionApi.updateTrigger(flow._id, emptyTrigger)
+		await FlowVersionApi.updateTrigger(flow.version._id, emptyTrigger)
 
 		set({
 			nodes,
