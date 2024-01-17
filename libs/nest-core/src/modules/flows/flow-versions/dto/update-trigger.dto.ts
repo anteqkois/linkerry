@@ -1,4 +1,4 @@
-import { BaseConnectorSettings, BaseTrigger, TriggerType } from '@market-connector/shared'
+import { BaseConnectorSettings, BaseTrigger, TriggerType } from '@linkerry/shared'
 import { IsDefined, IsOptional } from 'class-validator'
 
 // // export class UpdateTriggerDto implements BaseStep {

@@ -1,4 +1,4 @@
-import { Flow, FlowStatus, FlowVersion, Id } from '@market-connector/shared'
+import { Flow, FlowStatus, FlowVersion, Id } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { UserModel } from '../../../users'

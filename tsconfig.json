@@ -2,8 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@market-connector/ui-components": ["libs/ui-components/src/index.ts"],
-      "@market-connector/ui-components/*": ["libs/ui-components/src/*"]
+      "@linkerry/ui-components": ["libs/ui-components/src/index.ts"],
+      "@linkerry/ui-components/*": ["libs/ui-components/src/*"]
     }
   }
 }

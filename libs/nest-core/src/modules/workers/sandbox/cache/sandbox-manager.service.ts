@@ -1,4 +1,4 @@
-import { isNull } from '@market-connector/shared'
+import { isNull } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { Sandbox } from '../sandboxes/sandbox'
 

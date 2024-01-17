@@ -1,4 +1,4 @@
-import { Flow, Id } from '@market-connector/shared'
+import { Flow, Id } from '@linkerry/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class FlowApi {

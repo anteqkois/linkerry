@@ -2,20 +2,20 @@
 import { useUser } from '../../../modules/user/useUser'
 
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
-} from '@market-connector/ui-components/client'
-import { Button, Icons } from '@market-connector/ui-components/server'
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuPortal,
+	DropdownMenuSeparator,
+	DropdownMenuShortcut,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
+} from '@linkerry/ui-components/client'
+import { Button, Icons } from '@linkerry/ui-components/server'
 import { LogoutDropDownMenuItem } from './LogoutDropDownMenuItem'
 
 interface MyAccountMenuProps {

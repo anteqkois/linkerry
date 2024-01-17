@@ -1,14 +1,14 @@
 'use client'
 import {
-  AuthStatus,
-  Cookies,
-  IAuthLoginInput,
-  IAuthLoginResponse,
-  IAuthLogoutResponse,
-  IAuthSignUpInput,
-  IAuthSignUpResponse,
-  User,
-} from '@market-connector/shared'
+	AuthStatus,
+	Cookies,
+	IAuthLoginInput,
+	IAuthLoginResponse,
+	IAuthLogoutResponse,
+	IAuthSignUpInput,
+	IAuthSignUpResponse,
+	User,
+} from '@linkerry/shared'
 import { useRouter } from 'next/navigation'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext } from 'react'
 import { useCookie } from '../../shared/hooks/useCookie'

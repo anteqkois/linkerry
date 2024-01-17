@@ -1,4 +1,4 @@
-import { isNull } from '@market-connector/shared';
+import { isNull } from '@linkerry/shared';
 import { Store } from '../context';
 
 interface TimebasedPolling<AuthValue, PropsValue> {

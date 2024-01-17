@@ -1,4 +1,4 @@
-import { isEmpty, isInteger, isNull } from '@market-connector/shared'
+import { isEmpty, isInteger, isNull } from '@linkerry/shared'
 import dayjs, { OpUnitType } from 'dayjs'
 import { ErrorMessages } from './errors'
 import { TypedValidatorFn, ValidationInputType } from './types'

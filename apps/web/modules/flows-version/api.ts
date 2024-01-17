@@ -1,4 +1,4 @@
-import { FlowVersion, Id, Trigger } from '@market-connector/shared'
+import { FlowVersion, Id, Trigger } from '@linkerry/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class FlowVersionApi {

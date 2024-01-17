@@ -1,6 +1,6 @@
 'use client'
 
-import { ConnectorMetadataSummary, connectorTag } from '@market-connector/connectors-framework'
+import { ConnectorMetadataSummary, connectorTag } from '@linkerry/connectors-framework'
 import { ColumnDef } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
 import { useClientQuery } from '../../../libs/react-query'

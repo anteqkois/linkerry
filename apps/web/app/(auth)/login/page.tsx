@@ -1,5 +1,5 @@
-import { buttonVariants, Icons } from "@market-connector/ui-components/server"
-import { cn } from "@market-connector/ui-components/utils"
+import { buttonVariants, Icons } from "@linkerry/ui-components/server"
+import { cn } from "@linkerry/ui-components/utils"
 import { Metadata } from "next"
 import Link from "next/link"
 import { LoginForm } from "./LoginForm"

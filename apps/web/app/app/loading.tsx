@@ -1,4 +1,4 @@
-import { Icons } from '@market-connector/ui-components/server'
+import { Icons } from '@linkerry/ui-components/server'
 
 export default function Loading() {
   return (

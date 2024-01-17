@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-import { ModeToggle } from '@market-connector/ui-components/client'
-import { buttonVariants } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { ModeToggle } from '@linkerry/ui-components/client'
+import { buttonVariants } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { MainNav } from '../../shared/components/MianNav'
 import { SiteFooter } from '../../shared/components/SiteFooter'
 import { marketingConfig } from './config'

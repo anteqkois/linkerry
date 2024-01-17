@@ -5,8 +5,8 @@ import {
 	TriggerBase,
 	TriggerStrategy,
 	Validators,
-} from '@market-connector/connectors-framework'
-import { ConnectorGroup, CustomError, TriggerType } from '@market-connector/shared'
+} from '@linkerry/connectors-framework'
+import { ConnectorGroup, CustomError, TriggerType } from '@linkerry/shared'
 import {
 	Checkbox,
 	Form,
@@ -25,8 +25,8 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@market-connector/ui-components/client'
-import { H5 } from '@market-connector/ui-components/server'
+} from '@linkerry/ui-components/client'
+import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
 import { HTMLAttributes, useEffect, useMemo } from 'react'

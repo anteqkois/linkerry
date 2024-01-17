@@ -1,5 +1,5 @@
-import { ActionBase, ConnectorAuthProperty, ConnectorMetadata, ConnectorTag, TriggerBase, connectorTag } from '@market-connector/connectors-framework'
-import { ConnectorGroup, ConnectorType } from '@market-connector/shared'
+import { ActionBase, ConnectorAuthProperty, ConnectorMetadata, ConnectorTag, TriggerBase, connectorTag } from '@linkerry/connectors-framework'
+import { ConnectorGroup, ConnectorType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 

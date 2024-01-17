@@ -1,4 +1,4 @@
-import { HttpMethod, httpClient } from '@market-connector/connectors-common'
+import { HttpMethod, httpClient } from '@linkerry/connectors-common'
 import { GetCoinResponse } from '../types/coin'
 import { GetTrendingsResponse } from '../types/trending'
 export const BASE_URL = 'https://api.coingecko.com/api/v3'

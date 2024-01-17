@@ -1,5 +1,5 @@
-import { Button, Icons } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { Button, Icons } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { Column } from '@tanstack/react-table'
 
 export const TableColumnHeader = <TColumn,>({

@@ -1,4 +1,4 @@
-import { NEST_TOKENS } from '@market-connector/shared'
+import { NEST_TOKENS } from '@linkerry/shared'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 

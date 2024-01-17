@@ -1,5 +1,5 @@
-import { ConnectorMetadata, ConnectorMetadataSummary } from '@market-connector/connectors-framework'
-import { ConnectorsMetadataGetManyQuery, Id } from '@market-connector/shared'
+import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
+import { ConnectorsMetadataGetManyQuery, Id } from '@linkerry/shared'
 import { apiClient } from '../../../libs/api-client'
 
 export class ConnectorsMetadataApi {

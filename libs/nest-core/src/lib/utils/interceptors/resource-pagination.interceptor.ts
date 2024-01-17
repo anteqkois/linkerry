@@ -1,4 +1,4 @@
-import { IResourceResponse } from '@market-connector/shared'
+import { IResourceResponse } from '@linkerry/shared'
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'

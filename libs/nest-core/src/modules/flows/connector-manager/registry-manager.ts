@@ -1,4 +1,4 @@
-import { ConnectorPackage } from '@market-connector/shared'
+import { ConnectorPackage } from '@linkerry/shared'
 import { packageManager } from '../../../lib/package-manager/package-manager'
 import { ConnectorManager } from './base-manager'
 

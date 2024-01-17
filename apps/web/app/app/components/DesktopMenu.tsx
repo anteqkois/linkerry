@@ -1,13 +1,13 @@
 import {
-    Menubar,
-    MenubarContent,
-    MenubarItem,
-    MenubarMenu,
-    MenubarSeparator,
-    MenubarShortcut,
-    MenubarTrigger,
-} from '@market-connector/ui-components/client'
-import { Icons } from '@market-connector/ui-components/server'
+	Menubar,
+	MenubarContent,
+	MenubarItem,
+	MenubarMenu,
+	MenubarSeparator,
+	MenubarShortcut,
+	MenubarTrigger,
+} from '@linkerry/ui-components/client'
+import { Icons } from '@linkerry/ui-components/server'
 import Link from 'next/link'
 
 interface DesktopProps {

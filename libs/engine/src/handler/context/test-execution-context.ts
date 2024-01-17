@@ -1,4 +1,4 @@
-import { ActionType, BranchStepOutput, FlowVersion, GenricStepOutput, LoopStepOutput, StepOutputStatus, TriggerType, flowHelper } from '@market-connector/shared'
+import { ActionType, BranchStepOutput, FlowVersion, GenricStepOutput, LoopStepOutput, StepOutputStatus, TriggerType, flowHelper } from '@linkerry/shared'
 import { variableService } from '../../services/veriables.service'
 import { FlowExecutorContext } from './flow-execution-context'
 

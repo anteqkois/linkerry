@@ -1,6 +1,6 @@
-import { ActionType, ExecutionOutput, ExecutionOutputStatus, PauseMetadata, StepOutput, StepOutputStatus, StopResponse, isNull } from '@market-connector/shared'
-import { StepExecutionPath } from './step-execution-path'
+import { ActionType, ExecutionOutput, ExecutionOutputStatus, PauseMetadata, StepOutput, StepOutputStatus, StopResponse, isNull } from '@linkerry/shared'
 import { loggingUtils } from '../../helper/logging-utils'
+import { StepExecutionPath } from './step-execution-path'
 // import { loggingUtils } from '../../helper/logging-utils'
 
 export enum ExecutionVerdict {

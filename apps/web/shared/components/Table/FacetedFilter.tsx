@@ -9,9 +9,9 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from '@market-connector/ui-components/client'
-import { Badge, Button, Icons } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+} from '@linkerry/ui-components/client'
+import { Badge, Button, Icons } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { Column } from '@tanstack/react-table'
 
 export interface DataTableFacetedFilterProps<TData, TValue> {

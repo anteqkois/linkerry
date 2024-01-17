@@ -1,5 +1,5 @@
 {
-  "name": "@market-connector/engine",
-  "version": "0.0.1",
-  "type": "commonjs"
+	"name": "@linkerry/engine",
+	"version": "0.0.1",
+	"type": "commonjs"
 }

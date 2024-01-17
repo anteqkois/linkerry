@@ -1,4 +1,4 @@
-import { Environment, extractProvisionCacheKey, isNull, ProvisionCacheInfo, SandBoxCacheType } from '@market-connector/shared'
+import { Environment, extractProvisionCacheKey, isNull, ProvisionCacheInfo, SandBoxCacheType } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { CachedSandbox } from './sandbox-cache'
 

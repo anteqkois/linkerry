@@ -1,23 +1,23 @@
 'use client'
 
 import {
-  ColumnFiltersState,
-  Row,
-  SortingState,
-  TableOptions,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+	ColumnFiltersState,
+	Row,
+	SortingState,
+	TableOptions,
+	VisibilityState,
+	flexRender,
+	getCoreRowModel,
+	getFacetedRowModel,
+	getFacetedUniqueValues,
+	getFilteredRowModel,
+	getPaginationRowModel,
+	getSortedRowModel,
+	useReactTable,
 } from '@tanstack/react-table'
 
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { useEffect, useState } from 'react'
 import { usePredefinedMediaQuery } from '../../hooks/usePredefinedMediaQuery'
 import { DataTableToolbarProps, TableToolbar } from './Toolbar'

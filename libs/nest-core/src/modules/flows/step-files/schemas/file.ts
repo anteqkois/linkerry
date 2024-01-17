@@ -1,4 +1,4 @@
-import { Id, StepFile } from '@market-connector/shared'
+import { Id, StepFile } from '@linkerry/shared'
 import { AsyncModelFactory, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 

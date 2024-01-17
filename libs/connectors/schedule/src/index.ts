@@ -1,4 +1,4 @@
-import { ConnectorAuth, createConnector } from '@market-connector/connectors-framework'
+import { ConnectorAuth, createConnector } from '@linkerry/connectors-framework'
 import { cronExpressionTrigger } from './lib/triggers/cron-expression.trigger'
 import { everyHourTrigger } from './lib/triggers/every-hour.trigger'
 

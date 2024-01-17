@@ -1,5 +1,5 @@
 // import * as fs from 'fs';
-import { CustomHttpExceptionResponse, HttpExceptionResponse } from '@market-connector/shared'
+import { CustomHttpExceptionResponse, HttpExceptionResponse } from '@linkerry/shared'
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { DtoException } from '../pipes'

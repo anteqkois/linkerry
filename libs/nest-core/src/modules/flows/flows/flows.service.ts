@@ -1,4 +1,4 @@
-import { Id } from '@market-connector/shared'
+import { Id } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'

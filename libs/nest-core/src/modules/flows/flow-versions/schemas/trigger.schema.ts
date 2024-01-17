@@ -1,4 +1,4 @@
-import { BaseConnectorSettings, SampleData, TriggerConnector, TriggerEmpty, TriggerType, TriggerWebhook } from '@market-connector/shared'
+import { BaseConnectorSettings, SampleData, TriggerConnector, TriggerEmpty, TriggerType, TriggerWebhook } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { BaseStepModel, ConnectorSettingsSchema, SampleDataSchema } from './base.schema'
 

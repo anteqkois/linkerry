@@ -1,4 +1,4 @@
-import { Id } from "@market-connector/shared";
+import { Id } from "@linkerry/shared";
 import { IsDefined } from "class-validator";
 
 export class PoolTestDto {

@@ -1,4 +1,4 @@
-import { Id } from '@market-connector/shared'
+import { Id } from '@linkerry/shared'
 import { ConnectorAuthProperty, ConnectorPropValueSchema, ConnectorPropertyMap, StaticPropsValue } from './property'
 import { TriggerStrategy } from './trigger/trigger'
 

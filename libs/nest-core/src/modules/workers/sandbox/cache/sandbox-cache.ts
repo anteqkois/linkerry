@@ -1,4 +1,4 @@
-import { ConnectorPackage } from '@market-connector/shared'
+import { ConnectorPackage } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import dayjs from 'dayjs'
 import { mkdir, rm } from 'node:fs/promises'

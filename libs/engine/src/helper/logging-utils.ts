@@ -1,5 +1,5 @@
 // import { ActionType, StepOutput, TriggerType, applyFunctionToValues } from '@activepieces/shared'
-import { ActionType, StepOutput, TriggerType, applyFunctionToValues } from '@market-connector/shared'
+import { ActionType, StepOutput, TriggerType, applyFunctionToValues } from '@linkerry/shared'
 import sizeof from 'object-sizeof'
 import { isMemoryFilePath } from '../services/files.service'
 

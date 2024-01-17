@@ -1,5 +1,5 @@
-import { H3, Icons, buttonVariants } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { H3, Icons, buttonVariants } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import Link from 'next/link'
 import { SignUpForm } from './SignupForm'
 

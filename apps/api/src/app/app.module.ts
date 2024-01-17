@@ -1,4 +1,4 @@
-import { AuthModule, CoreModule, UsersModule } from '@market-connector/nest-core'
+import { AuthModule, CoreModule, UsersModule } from '@linkerry/nest-core'
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'

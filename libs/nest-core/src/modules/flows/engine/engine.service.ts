@@ -1,4 +1,4 @@
-import { ExecuteTriggerOperation, SandBoxCacheType, TriggerHookType, clone, isConnectorTrigger } from '@market-connector/shared'
+import { ExecuteTriggerOperation, SandBoxCacheType, TriggerHookType, clone, isConnectorTrigger } from '@linkerry/shared'
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConnectorsMetadataService } from '../../connectors-metadata/connectors-metadata.service'
 import { SandboxProvisionerService } from '../../workers/sandbox/sandbox-provisioner.service'

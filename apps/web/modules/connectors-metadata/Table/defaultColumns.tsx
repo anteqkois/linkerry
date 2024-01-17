@@ -1,15 +1,15 @@
 'use client'
 
-import { ConnectorMetadataSummary } from '@market-connector/connectors-framework'
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@market-connector/ui-components/client'
-import { Badge, Button, Icons } from '@market-connector/ui-components/server'
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@linkerry/ui-components/client'
+import { Badge, Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
 import { TableColumnHeader } from '../../../shared/components/table/TableColumnHeader'

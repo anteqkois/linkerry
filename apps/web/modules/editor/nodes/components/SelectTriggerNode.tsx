@@ -1,4 +1,4 @@
-import { H5, Icons } from '@market-connector/ui-components/server'
+import { H5, Icons } from '@linkerry/ui-components/server'
 import { useEditor } from '../../useEditor'
 import { CustomNodeProps, SelectTriggerNodeProps } from '../types'
 import { BaseNodeElement } from './BaseNode'

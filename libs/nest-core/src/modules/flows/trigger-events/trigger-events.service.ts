@@ -1,4 +1,4 @@
-import { Id, TriggerHookType, TriggerType } from '@market-connector/shared'
+import { Id, TriggerHookType, TriggerType } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { EngineService } from '../engine/engine.service'
 import { FlowsService } from '../flows/flows.service'

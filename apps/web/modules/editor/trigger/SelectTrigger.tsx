@@ -1,5 +1,5 @@
-import { ConnectorMetadataSummary, connectorTag } from '@market-connector/connectors-framework'
-import { TriggerConnector, TriggerType } from '@market-connector/shared'
+import { ConnectorMetadataSummary, connectorTag } from '@linkerry/connectors-framework'
+import { TriggerConnector, TriggerType } from '@linkerry/shared'
 import { Row } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
 import { useClientQuery } from '../../../libs/react-query'

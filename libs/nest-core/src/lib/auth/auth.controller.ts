@@ -6,7 +6,7 @@ import {
 	IAuthLogoutResponse,
 	IAuthSignUpResponse,
 	User,
-} from '@market-connector/shared'
+} from '@linkerry/shared'
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { FastifyReply } from 'fastify'

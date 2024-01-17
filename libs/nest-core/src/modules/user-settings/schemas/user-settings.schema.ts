@@ -1,4 +1,4 @@
-import { User, UserSettings } from '@market-connector/shared'
+import { User, UserSettings } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 

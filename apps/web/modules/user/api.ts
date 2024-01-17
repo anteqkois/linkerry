@@ -1,4 +1,4 @@
-import { IAuthLoginInput, IAuthLoginResponse, IAuthLogoutResponse, IAuthSignUpInput, IAuthSignUpResponse } from '@market-connector/shared'
+import { IAuthLoginInput, IAuthLoginResponse, IAuthLogoutResponse, IAuthSignUpInput, IAuthSignUpResponse } from '@linkerry/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class AuthApi {

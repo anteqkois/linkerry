@@ -1,4 +1,4 @@
-import { Language, User, UserMetadata, UserRole } from '@market-connector/shared'
+import { Language, User, UserMetadata, UserRole } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { UserSettingsModel } from '../../user-settings/schemas/user-settings.schema'

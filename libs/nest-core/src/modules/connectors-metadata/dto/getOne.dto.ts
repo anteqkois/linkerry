@@ -1,4 +1,4 @@
-import { ConnectorsMetadataGetOneQuery } from '@market-connector/shared'
+import { ConnectorsMetadataGetOneQuery } from '@linkerry/shared'
 import { Transform } from 'class-transformer'
 import { IsBoolean, IsOptional, IsSemVer } from 'class-validator'
 

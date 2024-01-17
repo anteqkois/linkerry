@@ -1,13 +1,13 @@
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@market-connector/ui-components/client'
-import { Button, Icons } from '@market-connector/ui-components/server'
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@linkerry/ui-components/client'
+import { Button, Icons } from '@linkerry/ui-components/server'
 
 interface MobileProps {
   children?: React.ReactNode

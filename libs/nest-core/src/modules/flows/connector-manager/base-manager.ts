@@ -1,4 +1,4 @@
-import { ConnectorPackage, isEmpty } from '@market-connector/shared'
+import { ConnectorPackage, isEmpty } from '@linkerry/shared'
 import { PackageInfo, packageManager } from '../../../lib/package-manager/package-manager'
 import { getPackageAliasForConnector, getPackageSpecForConnector } from '../connectors/utils'
 

@@ -1,4 +1,4 @@
-import { Action, ActionType, isNull } from '@market-connector/shared'
+import { Action, ActionType, isNull } from '@linkerry/shared'
 import { BaseExecutor } from './base-executor'
 import { branchExecutor } from './branch-executor'
 // import { codeExecutor } from './code-executor'

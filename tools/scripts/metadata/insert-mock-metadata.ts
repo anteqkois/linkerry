@@ -8,7 +8,7 @@ const lorem =
 const connectorsMetadata: (Omit<ConnectorMetadata, 'triggers' | 'acrtions' | '_id'> & { triggers: any; actions: any })[] = [
   {
     displayName: 'Trading View test',
-    name: '@market-connector/trading-view',
+    name: '@linkerry/trading-view',
     description: lorem,
     group: ConnectorGroup.App,
     connectorType: ConnectorType.Official,
@@ -67,7 +67,7 @@ const connectorsMetadata: (Omit<ConnectorMetadata, 'triggers' | 'acrtions' | '_i
   },
   {
     displayName: 'Maxdata test',
-    name: '@market-connector/maxdata',
+    name: '@linkerry/maxdata',
     description: lorem,
     group: ConnectorGroup.App,
     connectorType: ConnectorType.Official,

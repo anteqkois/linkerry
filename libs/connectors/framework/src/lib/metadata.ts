@@ -1,4 +1,4 @@
-import { ConnectorGroup, ConnectorType } from '@market-connector/shared'
+import { ConnectorGroup, ConnectorType } from '@linkerry/shared'
 import { ConnectorAuthProperty, ConnectorPropertyMap } from './property'
 import { ConnectorTag } from './tags'
 import { TriggerStrategy, WebhookHandshakeConfiguration } from './trigger/trigger'

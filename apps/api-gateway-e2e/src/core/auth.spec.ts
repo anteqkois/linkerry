@@ -1,6 +1,5 @@
-import { testAuthUser } from '@market-connector/tools'
-import { IAuthSignUpResponse, UserRole } from '@market-connector/shared'
-import { Language } from '@market-connector/shared'
+import { IAuthSignUpResponse, Language, UserRole } from '@linkerry/shared'
+import { testAuthUser } from '@linkerry/tools'
 import axios from 'axios'
 
 describe('POST /api/auth', () => {

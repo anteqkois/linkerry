@@ -1,5 +1,5 @@
-import { Button, H5, Icons } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { Button, H5, Icons } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { cva } from 'class-variance-authority'
 import { Dispatch, HTMLAttributes, SetStateAction } from 'react'
 

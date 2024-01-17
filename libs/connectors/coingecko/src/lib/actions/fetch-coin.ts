@@ -1,4 +1,4 @@
-import { Property, createAction } from '@market-connector/connectors-framework'
+import { Property, createAction } from '@linkerry/connectors-framework'
 import { search } from '../common/search'
 
 export const fetchCoin = createAction({

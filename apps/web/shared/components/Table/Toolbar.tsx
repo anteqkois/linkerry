@@ -1,7 +1,7 @@
 'use client'
 
-import { Input } from '@market-connector/ui-components/client'
-import { Button, Icons } from '@market-connector/ui-components/server'
+import { Input } from '@linkerry/ui-components/client'
+import { Button, Icons } from '@linkerry/ui-components/server'
 import { Table } from '@tanstack/react-table'
 import { DataTableFacetedFilterProps, FacetedFilter } from './FacetedFilter'
 

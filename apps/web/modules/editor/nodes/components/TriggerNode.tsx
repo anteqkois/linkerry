@@ -1,4 +1,4 @@
-import { Icons } from '@market-connector/ui-components/server'
+import { Icons } from '@linkerry/ui-components/server'
 import Image from 'next/image'
 import { CustomNodeProps, TriggerNodeProps } from '..'
 import { useEditor } from '../../useEditor'

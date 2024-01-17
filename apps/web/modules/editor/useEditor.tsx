@@ -14,7 +14,7 @@ import {
 	WithoutId,
 	deepMerge,
 	generateEmptyTrigger,
-} from '@market-connector/shared'
+} from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
 	Connection,

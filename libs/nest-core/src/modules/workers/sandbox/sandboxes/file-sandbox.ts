@@ -1,4 +1,4 @@
-import { EngineResponseStatus } from '@market-connector/shared'
+import { EngineResponseStatus } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { spawn } from 'node:child_process'
 import { cp, mkdir, readFile, rmdir, writeFile } from 'node:fs/promises'

@@ -1,4 +1,4 @@
-import { ActionType, BaseConnectorSettings, BaseStep, ConnectorType, SampleData, SampleDataSettingsObject, TriggerType } from '@market-connector/shared'
+import { ActionType, BaseConnectorSettings, BaseStep, ConnectorType, SampleData, SampleDataSettingsObject, TriggerType } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Types } from 'mongoose'
 

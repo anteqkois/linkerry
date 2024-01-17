@@ -1,14 +1,14 @@
 'use client'
 
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
+import { FlowVersion, TriggerType } from '@linkerry/shared'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
-import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
-import { selectTriggerNodeFactory, triggerNodeFactory } from '../../../../../modules/editor/nodes/components/nodeFactory'
-import { ConnectorMetadataSummary } from '@market-connector/connectors-framework'
-import { FlowVersion, TriggerType } from '@market-connector/shared'
-import { useRouter } from 'next/navigation'
 import { useClientQuery } from '../../../../../libs/react-query'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/connectors-metadata/api/query-configs'
+import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
+import { selectTriggerNodeFactory, triggerNodeFactory } from '../../../../../modules/editor/nodes/components/nodeFactory'
 import { FlowApi } from '../../../../../modules/flows/api'
 
 const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetadataSummary[]) => {

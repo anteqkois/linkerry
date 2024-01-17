@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorMetadataSummary } from '@market-connector/connectors-framework'
+import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { FetchQueryOptions } from '@tanstack/react-query'
 import { ConnectorsMetadataApi } from './fetchers'
 

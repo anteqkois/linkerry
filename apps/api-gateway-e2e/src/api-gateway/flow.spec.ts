@@ -1,7 +1,7 @@
+import { FlowStatus } from '@linkerry/shared'
 import axios from 'axios'
-import { login } from '../support/login'
 import { alwaysExistingUser } from 'tools/models.mock'
-import { FlowStatus } from '@market-connector/shared'
+import { login } from '../support/login'
 
 describe('POST /api/flows', () => {
   it('should create empty flow with version', async () => {

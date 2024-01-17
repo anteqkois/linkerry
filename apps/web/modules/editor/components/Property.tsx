@@ -1,6 +1,6 @@
-import { Label } from '@market-connector/ui-components/client'
-import { Icons, Muted } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { Label } from '@linkerry/ui-components/client'
+import { Icons, Muted } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { ReactNode } from 'react'
 
 export interface PropertyProps {

@@ -1,5 +1,5 @@
-import { ConnectorMetadataSummary } from '@market-connector/connectors-framework';
-import { Trigger } from '@market-connector/shared';
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework';
+import { Trigger } from '@linkerry/shared';
 import { Node, NodeProps } from 'reactflow';
 
 export interface ICustomNode<T extends string, D extends object = any> extends Node<D, `${T}Node`> {

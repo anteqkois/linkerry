@@ -1,4 +1,4 @@
-import { ActionConnector, ActionType, BaseConnectorSettings } from '@market-connector/shared'
+import { ActionConnector, ActionType, BaseConnectorSettings } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { BaseStepModel, ConnectorSettingsSchema } from './base.schema'
 

@@ -17,9 +17,9 @@
     "src/**/*.test.jsx"
   ],
   "paths": {
-    "@market-connector/ui-components": ["libs/ui-components/src/index.ts"],
-    "@market-connector/ui-components/*": ["libs/ui-components/src/*"],
-    // "@market-connector/ui-components/server": ["libs/ui-components/src/server.ts"],
+    "@linkerry/ui-components": ["libs/ui-components/src/index.ts"],
+    "@linkerry/ui-components/*": ["libs/ui-components/src/*"],
+    // "@linkerry/ui-components/server": ["libs/ui-components/src/server.ts"],
   },
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
 }

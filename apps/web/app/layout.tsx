@@ -2,9 +2,9 @@ import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
 import './global.css'
 
-import { ThemeProvider, Toaster } from '@market-connector/ui-components/client'
-import { TailwindIndicator } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { ThemeProvider, Toaster } from '@linkerry/ui-components/client'
+import { TailwindIndicator } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { siteConfig } from './webConfig'
 // import { Analytics } from "@/components/analytics"
 

@@ -1,4 +1,4 @@
-import { ConnectorsSource } from "@market-connector/shared"
+import { ConnectorsSource } from "@linkerry/shared"
 import { ConnectorManager } from "./base-manager"
 import { RegistryConnectorManager } from "./registry-manager"
 

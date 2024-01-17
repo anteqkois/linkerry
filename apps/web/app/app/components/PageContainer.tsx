@@ -1,4 +1,4 @@
-import { cn } from '@market-connector/ui-components/utils'
+import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HtmlHTMLAttributes } from 'react'
 

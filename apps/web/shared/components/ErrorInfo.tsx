@@ -1,5 +1,5 @@
-import { isCustomError, isCustomHttpExceptionAxios } from '@market-connector/shared'
-import { P } from '@market-connector/ui-components/server'
+import { isCustomError, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import { P } from '@linkerry/ui-components/server'
 import { HTMLAttributes, useEffect, useState } from 'react'
 
 export interface ErrorInfoProps extends HTMLAttributes<HTMLElement> {

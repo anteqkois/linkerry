@@ -1,4 +1,4 @@
-import { Id, JwtUser } from '@market-connector/shared'
+import { Id, JwtUser } from '@linkerry/shared'
 import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../../lib/auth/decorators/req-user.decorator'

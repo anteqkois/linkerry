@@ -1,4 +1,4 @@
-import { DedupeStrategy, Polling, Property, TriggerStrategy, createTrigger, pollingHelper } from '@market-connector/connectors-framework';
+import { DedupeStrategy, Polling, Property, TriggerStrategy, createTrigger, pollingHelper } from '@linkerry/connectors-framework';
 import { coingeckoApi } from '../common';
 
 const polling: Polling<

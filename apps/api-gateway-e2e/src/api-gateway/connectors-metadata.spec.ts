@@ -1,10 +1,10 @@
-import { ConnectorMetadata } from '@market-connector/connectors-framework'
+import { ConnectorMetadata } from '@linkerry/connectors-framework'
 import axios from 'axios'
 import { valid } from 'semver'
 
 const coingecko = {
   displayName: 'Coingecko',
-  name: '@market-connector/coingecko',
+  name: '@linkerry/coingecko',
   description: 'Coingecko connector for cryptocurrency data',
   logoUrl: '',
   triggers: 1,

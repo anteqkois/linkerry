@@ -1,4 +1,4 @@
-import { ConnectorPackage, SandBoxCacheType, TypedProvisionCacheInfo } from '@market-connector/shared'
+import { ConnectorPackage, SandBoxCacheType, TypedProvisionCacheInfo } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { SandboxManagerService } from './cache/sandbox-manager.service'
 import { sandboxCachePool } from './cache/sandbox-pool'

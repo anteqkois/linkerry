@@ -1,4 +1,4 @@
-import { ConnectorsMetadataGetManyQuery } from '@market-connector/shared'
+import { ConnectorsMetadataGetManyQuery } from '@linkerry/shared'
 import { Type } from 'class-transformer'
 import { IsBoolean, IsOptional, IsString } from 'class-validator'
 import { PaginationDto } from '../../../lib/utils/dto/pagination.dto'

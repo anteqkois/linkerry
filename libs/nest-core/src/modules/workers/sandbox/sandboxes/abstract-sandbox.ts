@@ -1,4 +1,4 @@
-import { EngineResponse, EngineResponseStatus } from '@market-connector/shared'
+import { EngineResponse, EngineResponseStatus } from '@linkerry/shared'
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 import { fileExists } from '../../../../lib/utils'

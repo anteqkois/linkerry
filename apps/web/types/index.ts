@@ -1,4 +1,4 @@
-import { Icons } from '@market-connector/ui-components/server'
+import { Icons } from '@linkerry/ui-components/server'
 
 export type NavItem = {
   title: string

@@ -1,4 +1,4 @@
-import { NEST_TOKENS } from '@market-connector/shared'
+import { NEST_TOKENS } from '@linkerry/shared'
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { ConnectorsController } from './connectors.controller'

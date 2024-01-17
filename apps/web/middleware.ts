@@ -1,4 +1,4 @@
-import { AuthStatus, Cookies } from '@market-connector/shared'
+import { AuthStatus, Cookies } from '@linkerry/shared'
 import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(req: NextRequest) {

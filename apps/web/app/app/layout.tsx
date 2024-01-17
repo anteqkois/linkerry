@@ -1,6 +1,6 @@
 import { UserProvider } from '../../modules/user/useUser'
 
-import { ModeToggle } from '@market-connector/ui-components/client'
+import { ModeToggle } from '@linkerry/ui-components/client'
 import ReactQueryProvider from '../reactQueryProvider'
 import { DesktopMenu } from './components/DesktopMenu'
 import { MobileMenu } from './components/MobileMenu'

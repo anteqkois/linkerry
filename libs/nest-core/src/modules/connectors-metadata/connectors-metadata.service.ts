@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorMetadataSummary } from '@market-connector/connectors-framework'
+import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'

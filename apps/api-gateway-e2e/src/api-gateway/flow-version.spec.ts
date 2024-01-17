@@ -1,4 +1,4 @@
-import { Flow, FlowVersion, Trigger, TriggerType, isConnectorTrigger } from '@market-connector/shared'
+import { Flow, FlowVersion, Trigger, TriggerType, isConnectorTrigger } from '@linkerry/shared'
 import axios from 'axios'
 import { login } from '../support/login'
 

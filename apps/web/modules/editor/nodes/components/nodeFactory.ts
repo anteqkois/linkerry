@@ -1,5 +1,5 @@
-import { ConnectorMetadataSummary } from '@market-connector/connectors-framework'
-import { Trigger } from '@market-connector/shared'
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
+import { Trigger } from '@linkerry/shared'
 import { CustomNodeType, SelectTriggerNodeProps, TriggerNodeProps } from '../types'
 
 type NodeConfig = {

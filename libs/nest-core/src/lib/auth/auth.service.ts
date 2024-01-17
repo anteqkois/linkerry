@@ -1,4 +1,4 @@
-import { JwtToken, User, UserRole } from '@market-connector/shared'
+import { JwtToken, User, UserRole } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'

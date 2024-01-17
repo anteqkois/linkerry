@@ -1,5 +1,5 @@
-import { ConnectorAuthProperty, NonAuthConnectorPropertyMap, PropertyType, formatErrorMessage, ErrorMessages } from "@market-connector/connectors-framework"
-import { isNull, isString } from "@market-connector/shared"
+import { ConnectorAuthProperty, ErrorMessages, NonAuthConnectorPropertyMap, PropertyType, formatErrorMessage } from "@linkerry/connectors-framework"
+import { isNull, isString } from "@linkerry/shared"
 import { FlowExecutorContext } from "../handler/context/flow-execution-context"
 
 export const AUTHENTICATION_PROPERTY_NAME = 'auth'

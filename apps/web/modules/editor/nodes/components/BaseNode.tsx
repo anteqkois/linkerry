@@ -1,6 +1,6 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@market-connector/ui-components/client'
-import { Card, CardContent, Icons } from '@market-connector/ui-components/server'
-import { cn } from '@market-connector/ui-components/utils'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
+import { Card, CardContent, Icons } from '@linkerry/ui-components/server'
+import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HTMLAttributes } from 'react'
 
