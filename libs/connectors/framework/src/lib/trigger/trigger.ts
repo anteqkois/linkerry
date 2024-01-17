@@ -81,7 +81,7 @@ type CreateTriggerParams<TS extends TriggerStrategy, ConnectorAuth extends Conne
   run: (context: TestOrRunHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<unknown[]>
   test?: (context: TriggerHookContext<ConnectorAuth, TriggerProps, TS>) => Promise<unknown[]>
   requireAuth?: boolean
-  sampleData: unknown
+  sampleData?: unknown
 }
 
 export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends ConnectorAuthProperty, TriggerProps extends ConnectorPropertyMap>(

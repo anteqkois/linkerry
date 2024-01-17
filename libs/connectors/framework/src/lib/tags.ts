@@ -10,5 +10,6 @@ export const connectorTag = [
   'time',
   'plan',
   'connector',
+	'trends'
 ] as const
 export type ConnectorTag = typeof connectorTag[number]
