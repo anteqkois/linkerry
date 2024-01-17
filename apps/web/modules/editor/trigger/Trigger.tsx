@@ -1,11 +1,4 @@
-import {
-	ConnectorProperty,
-	PropertyType,
-	StaticDropdownProperty,
-	TriggerBase,
-	TriggerStrategy,
-	Validators,
-} from '@linkerry/connectors-framework'
+import { ConnectorProperty, PropertyType, StaticDropdownProperty, TriggerBase, TriggerStrategy, Validators } from '@linkerry/connectors-framework'
 import { ConnectorGroup, CustomError, TriggerType } from '@linkerry/shared'
 import {
 	Checkbox,
@@ -148,7 +141,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 						<FormItem>
 							<FormLabel>{property.displayName}</FormLabel>
 							<FormControl>
-								<Input {...field} type='number'/>
+								<Input {...field} type="number" />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -214,10 +207,11 @@ export const TriggerDrawer = () => {
 		setTimeout(() => triggerForm.setValue('triggerName', selectedTrigger.name), 0) // ad to the end of callstack
 
 		const input = editedTrigger.settings.input
-		Object.entries(selectedTrigger.props).map(([key, value]) => {
-			if (input[key] !== undefined) triggerForm.setValue(key, input[key])
-			else if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
-		})
+		if (selectedTrigger.props)
+			Object.entries(selectedTrigger.props).map(([key, value]) => {
+				if (input[key] !== undefined) triggerForm.setValue(key, input[key])
+				else if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+			})
 	}, [isFetching])
 
 	// synchronize with global state and database, merge only new values
@@ -259,10 +253,11 @@ export const TriggerDrawer = () => {
 		triggerForm.setValue('__temp__trigger', selectedTrigger)
 
 		const input: Record<string, any> = {}
-		Object.entries(selectedTrigger.props).map(([key, value]) => {
-			if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
-			input[key] = value.defaultValue
-		})
+		if (selectedTrigger.props)
+			Object.entries(selectedTrigger.props).map(([key, value]) => {
+				if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+				input[key] = value.defaultValue
+			})
 
 		updateEditedTrigger({
 			name: editedTrigger.name,
@@ -282,7 +277,7 @@ export const TriggerDrawer = () => {
 
 	return (
 		<ResizablePanelGroup direction="vertical">
-			<ResizablePanel defaultSize={75} className='px-1'>
+			<ResizablePanel defaultSize={75} className="px-1">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
 					<div>
@@ -328,7 +323,8 @@ export const TriggerDrawer = () => {
 								</FormItem>
 							)}
 						/>
-						{triggerWatcher && Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)}
+						{triggerWatcher?.props &&
+							Object.values(triggerWatcher.props).map((prop) => <DynamicField form={triggerForm} property={prop} key={prop.name} />)}
 					</form>
 				</Form>
 			</ResizablePanel>

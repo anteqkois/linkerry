@@ -20,7 +20,7 @@ export type ActionBase = {
   name: string
   displayName: string
   description: string
-  props: ConnectorPropertyMap
+  props?: ConnectorPropertyMap
   requireAuth: boolean
 }
 

@@ -7,23 +7,27 @@ export enum TriggerType {
 	Webhook = 'Webhook',
 }
 
+/* BASE */
 export const baseTriggerSchema = baseStepSchema.merge(
 	z.object({
 		type: z.nativeEnum(TriggerType),
 		settings: z.any(),
 	}),
 )
+export interface BaseTrigger extends z.infer<typeof baseTriggerSchema> {}
 
+/* EMPTY */
 export const triggerEmptySchema = baseStepSchema.merge(
 	z.object({
 		type: z.enum([TriggerType.Empty]),
-		settings: z.object({}),
 	}),
 )
 export const isEmptyTrigger = (trigger: Trigger): trigger is TriggerEmpty => {
 	return trigger.type === TriggerType.Empty
 }
+export interface TriggerEmpty extends z.infer<typeof triggerEmptySchema> {}
 
+/* WEBHOOK */
 export const triggerWebhookSchema = baseStepSchema.merge(
 	z.object({
 		type: z.enum([TriggerType.Webhook]),
@@ -36,15 +40,19 @@ export const triggerWebhookSchema = baseStepSchema.merge(
 export const isWebhookTrigger = (trigger: Trigger): trigger is TriggerWebhook => {
 	return trigger.type === TriggerType.Webhook
 }
+export interface TriggerWebhook extends z.infer<typeof triggerWebhookSchema> {}
+
+/* CONNECTOR */
+const triggerConnectorSettingsSchema = baseConnectorSettingsSchema.merge(
+	z.object({
+		triggerName: z.string(), // 'new_row'
+	}),
+)
 
 export const triggerConnectorSchema = baseStepSchema.merge(
 	z.object({
 		type: z.enum([TriggerType.Connector]),
-		settings: baseConnectorSettingsSchema.merge(
-			z.object({
-				triggerName: z.string(), // 'new_row'
-			}),
-		),
+		settings: triggerConnectorSettingsSchema,
 	}),
 )
 
@@ -52,10 +60,10 @@ export const isConnectorTrigger = (trigger: Trigger): trigger is TriggerConnecto
 	return trigger.type === TriggerType.Connector
 }
 
-export interface BaseTrigger extends z.infer<typeof baseTriggerSchema> {}
-export interface TriggerEmpty extends z.infer<typeof triggerEmptySchema> {}
-export interface TriggerWebhook extends z.infer<typeof triggerWebhookSchema> {}
 export interface TriggerConnector extends z.infer<typeof triggerConnectorSchema> {}
+export interface TriggerConnectorSettings extends z.infer<typeof triggerConnectorSettingsSchema> {}
+
+/* TRIGGER */
 export type Trigger = TriggerEmpty | TriggerWebhook | TriggerConnector
 
 export function isTrigger(data: unknown): data is Trigger {
@@ -74,6 +82,5 @@ export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
 		displayName: 'Select trigger',
 		type: TriggerType.Empty,
 		valid: false,
-		settings: {},
 	}
 }
