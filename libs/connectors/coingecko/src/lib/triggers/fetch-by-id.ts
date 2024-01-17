@@ -29,12 +29,17 @@ export const fetchById = createTrigger({
     })
   },
   props: {
+    coind_id: Property.Text({
+      displayName: 'Coin ID',
+      name: 'coin_id',
+      required: true,
+      description: 'ID from coingecko list: https://apiguide.coingecko.com/getting-started/10-min-tutorial-guide/1-get-data-by-id-or-address',
+    }),
     interval: Property.Number({
       displayName: 'Interval',
       name: 'minutes_interval',
       required: true,
       description: 'Every x minutes fetch data (min: 5, max: 60)',
-      validators: [],
     }),
   },
   run: async (ctx) => {

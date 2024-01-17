@@ -135,6 +135,26 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 					)}
 				/>
 			)
+		case PropertyType.Number:
+			return (
+				<FormField
+					control={control}
+					name={property.name}
+					rules={{
+						required: { value: property.required, message: 'Required field' },
+						validate,
+					}}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>{property.displayName}</FormLabel>
+							<FormControl>
+								<Input {...field} type='number'/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			)
 		case PropertyType.Checkbox:
 			return (
 				<FormField
@@ -261,8 +281,8 @@ export const TriggerDrawer = () => {
 	}
 
 	return (
-		<ResizablePanelGroup direction="vertical" className="min-h-full">
-			<ResizablePanel defaultSize={75}>
+		<ResizablePanelGroup direction="vertical">
+			<ResizablePanel defaultSize={75} className='px-1'>
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
 					<div>
