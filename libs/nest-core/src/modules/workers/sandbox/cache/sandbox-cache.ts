@@ -8,7 +8,7 @@ import { engineInstaller } from '../../../flows/engine/engine-installer'
 
 export class CachedSandbox {
 	private readonly logger = new Logger(CachedSandbox.name)
-	private static readonly cachePath = process.env['CACHE_PATH'] ?? resolve('dist', 'cache')
+	private static readonly cachePath = process.env['CACHE_PATH'] || resolve('dist', 'cache')
 	private _state = CachedSandboxState.CREATED
 	private _activeSandboxCount = 0
 	private _lastUsedAt = dayjs()
@@ -28,20 +28,23 @@ export class CachedSandbox {
 	}
 
 	async init(): Promise<void> {
-		this.logger.debug({ key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
+		this.logger.debug(`#init ${JSON.stringify({ key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })}`)
 
 		if (this._state !== CachedSandboxState.CREATED) {
 			return
 		}
 
 		await this.deletePathIfExists()
-		await mkdir(this.path(), { recursive: true })
+
+		const fullPath = this.path()
+		this.logger.debug(`#init fullPath: ${fullPath}`)
+		await mkdir(fullPath, { recursive: true })
 		this._state = CachedSandboxState.INITIALIZED
 	}
 
 	// async prepare({ projectId, connectors, codeSteps = [] }: PrepareParams): Promise<void> {
-	async prepare({  connectors, codeSteps = [] }: PrepareParams): Promise<void> {
-		this.logger.debug({ key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
+	async prepare({ connectors, codeSteps = [] }: PrepareParams): Promise<void> {
+		this.logger.debug(`#prepare: ${JSON.stringify({ key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })}`)
 
 		try {
 			const notInitialized = this._state === CachedSandboxState.CREATED
@@ -81,6 +84,7 @@ export class CachedSandbox {
 				path: this.path(),
 			}
 
+			this.logger.error(error)
 			throw new Error(`Can not prepare snadbox ${JSON.stringify(contextValue)}`)
 		}
 	}

@@ -19,7 +19,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@linkerry/ui-components/client'
-import { H5 } from '@linkerry/ui-components/server'
+import { Button, H5, Icons } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
 import { HTMLAttributes, useEffect, useMemo } from 'react'
@@ -175,7 +175,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 }
 
 export const TriggerDrawer = () => {
-	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger } = useEditor()
+	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, testPoolTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
 	const {
@@ -331,8 +331,11 @@ export const TriggerDrawer = () => {
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (
 				<ResizablePanel defaultSize={25}>
-					<div className="flex h-full items-center justify-center p-6">
-						<span className="font-semibold">Content</span>
+					<div className="flex h-full items-center justify-center">
+						<Button variant="secondary" onClick={() => testPoolTrigger(editedTrigger.name)}>
+							<Icons.Test className="mr-3" />
+							Generate Test Data
+						</Button>
 					</div>
 				</ResizablePanel>
 			)}

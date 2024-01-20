@@ -20,30 +20,24 @@ export class TriggerEventsService {
 		const trigger = flow.version.triggers.find((trigger) => trigger.name === poolDto.triggerName)
 		if (!trigger) throw new UnprocessableEntityException(`Can not retrive flow trigger by given name`)
 
-		switch (trigger.type) {
-			case TriggerType.Webhook:
-				throw new UnprocessableEntityException(`Can not test webhook triggers`)
-			case TriggerType.Connector:
-				// delete old data
-				// this.stepFilesService.delete()
+		if (trigger.type === TriggerType.Webhook) throw new UnprocessableEntityException(`Can not test webhook triggers`)
+		if (trigger.type === TriggerType.Empty) throw new UnprocessableEntityException(`Can not test empty triggers`)
 
-				// execute trigger
-				const { result: testResult} = await  this.engineService.executeTriggerOperation({
-					flowVersion: flow.version,
-					hookType: TriggerHookType.TEST,
-					triggerName: trigger.name,
-					webhookUrl: '', // TODO implement webhook url
-				})
+		// delete old data
+		// this.stepFilesService.delete()
 
-				// delete old event data
+		// execute trigger
+		const { result } = await this.engineService.executeTriggerOperation({
+			flowVersion: flow.version,
+			hookType: TriggerHookType.TEST,
+			triggerName: trigger.name,
+			webhookUrl: '', // TODO implement webhook url
+		})
 
-				/* create new event data
-				test trigger run produce several outputs. Save it as a event data to give user ability to check more than one example output from pool trigger
-				 */
+		// delete old event data
 
-				break
-			case TriggerType.Empty:
-				throw new UnprocessableEntityException(`Can not test empty triggers`)
-		}
+		/* create new event data
+		test trigger run produce several outputs. Save it as a event data to give user ability to check more than one example output from pool trigger
+		 */
 	}
 }

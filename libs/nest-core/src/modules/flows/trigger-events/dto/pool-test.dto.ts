@@ -1,7 +1,7 @@
-import { Id } from "@linkerry/shared";
+import { Id, TriggerPoolTestBody } from "@linkerry/shared";
 import { IsDefined } from "class-validator";
 
-export class PoolTestDto {
+export class PoolTestDto implements TriggerPoolTestBody{
 	@IsDefined()
 	flowId: Id
 

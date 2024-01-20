@@ -18,7 +18,9 @@ import {
 	GearIcon,
 	HamburgerMenuIcon,
 	HomeIcon,
+	MagicWandIcon,
 	Pencil2Icon,
+	PlayIcon,
 	PlusIcon,
 	QuestionMarkCircledIcon,
 	QuestionMarkIcon,
@@ -33,6 +35,8 @@ type IconProps = React.HTMLAttributes<SVGElement>
 type RadixIconProps = React.HTMLAttributes<SVGElement> & { children?: undefined }
 
 export const Icons = {
+  Run: (props: RadixIconProps) => <PlayIcon {...props} />,
+  Test: (props: RadixIconProps) => <MagicWandIcon {...props} />,
   Change: (props: RadixIconProps) => <UpdateIcon {...props} />,
   Update: (props: RadixIconProps) => <UpdateIcon {...props} />,
   QuestionMarkCircle: (props: RadixIconProps) => <QuestionMarkCircledIcon {...props} />,

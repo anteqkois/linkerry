@@ -1,5 +1,5 @@
 import { Flow, Id } from '@linkerry/shared'
-import { apiClient } from '../../libs/api-client'
+import { apiClient } from '../../../libs/api-client'
 
 export class FlowApi {
   static async get(id: Id) {

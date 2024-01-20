@@ -31,7 +31,8 @@ import {
 import { create } from 'zustand'
 import { EditorDrawer } from '../../shared/components/drawer/types'
 import { FlowVersionApi } from '../flows-version/api'
-import { FlowApi } from '../flows/api'
+import { FlowApi } from '../flows/api/flow'
+import { TriggerApi } from '../flows/api/trigger'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 import { CustomNode, CustomNodeId } from './nodes'
 import { selectTriggerNodeFactory } from './nodes/components/nodeFactory'
@@ -100,6 +101,7 @@ interface IEditorState {
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
 	resetTrigger: (triggerName: string) => Promise<void>
+	testPoolTrigger: (triggerName: string) => Promise<void>
 	// ACTIONS
 	editedAction: Action | null
 	setEditedAction: (action: Action) => void
@@ -286,6 +288,14 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			drawer: editorDrawers.find((entry) => entry.name === 'select_trigger'),
 			editedTrigger: emptyTrigger,
 		})
+	},
+	testPoolTrigger: async (triggerName: string) => {
+		const { data } = await TriggerApi.poolTest({
+			flowId: get().flow._id,
+			triggerName,
+		})
+
+		console.log(data);
 	},
 	// ACTIONS
 	editedAction: null,

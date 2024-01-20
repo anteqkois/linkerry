@@ -9,7 +9,7 @@ import { useClientQuery } from '../../../../../libs/react-query'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/connectors-metadata/api/query-configs'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../../../../../modules/editor/nodes/components/nodeFactory'
-import { FlowApi } from '../../../../../modules/flows/api'
+import { FlowApi } from '../../../../../modules/flows/api/flow'
 
 const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetadataSummary[]) => {
   const nodes: CustomNode[] = []

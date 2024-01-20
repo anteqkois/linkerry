@@ -3,94 +3,101 @@ import { packageManager } from '../../../lib/package-manager/package-manager'
 import { ConnectorManager } from './base-manager'
 
 export class RegistryConnectorManager extends ConnectorManager {
-    protected override async installDependencies({ projectPath, connectors }: InstallParams): Promise<void> {
-        // await this.savePackageArchivesToDiskIfNotCached(projectId, connectors)
-        const dependencies = connectors.map(connector => this.connectorToDependency(connector))
+	// private override readonly logger = new Logger(RegistryConnectorManager.name)
 
-        await packageManager.add({
-            path: projectPath,
-            dependencies,
-        })
-    }
+	constructor(){
+		super()
+	}
 
-    // private async savePackageArchivesToDiskIfNotCached(projectId: string, connectors: ConnectorPackage[]): Promise<void> {
-    //     const packages = await this.getUncachedArchivePackages(projectId, connectors)
-    //     const saveToDiskJobs = packages.map((connector) => this.getArchiveAndSaveToDisk(projectId, connector))
-    //     await Promise.all(saveToDiskJobs)
-    // }
+	protected override async installDependencies({ projectPath, connectors }: InstallParams): Promise<void> {
+		// await this.savePackageArchivesToDiskIfNotCached(projectId, connectors)
+		const dependencies = connectors.map((connector) => this.connectorToDependency(connector))
+		this.logger.debug(`#installDependencies dependencies:${JSON.stringify(dependencies)}`)
 
-    // private async getUncachedArchivePackages(projectId: string, connectors: ConnectorPackage[]): Promise<ConnectorPackage[]> {
-    //     const packages: ConnectorPackage[] = []
+		await packageManager.add({
+			path: projectPath,
+			dependencies,
+		})
+	}
 
-    //     for (const connector of connectors) {
-    //         // if (connector.packageType !== PackageType.ARCHIVE) {
-    //         //     continue
-    //         // }
+	// private async savePackageArchivesToDiskIfNotCached(projectId: string, connectors: ConnectorPackage[]): Promise<void> {
+	//     const packages = await this.getUncachedArchivePackages(projectId, connectors)
+	//     const saveToDiskJobs = packages.map((connector) => this.getArchiveAndSaveToDisk(projectId, connector))
+	//     await Promise.all(saveToDiskJobs)
+	// }
 
-    //         const projectPackageArchivePath = this.getProjectPackageArchivePath({
-    //             projectId,
-    //         })
+	// private async getUncachedArchivePackages(projectId: string, connectors: ConnectorPackage[]): Promise<ConnectorPackage[]> {
+	//     const packages: ConnectorPackage[] = []
 
-    //         const archivePath = getPackageArchivePathForConnector({
-    //             connectorName: connector.connectorName,
-    //             connectorVersion: connector.connectorVersion,
-    //             packageArchivePath: projectPackageArchivePath,
-    //         })
+	//     for (const connector of connectors) {
+	//         // if (connector.packageType !== PackageType.ARCHIVE) {
+	//         //     continue
+	//         // }
 
-    //         if (await fileExists(archivePath)) {
-    //             continue
-    //         }
+	//         const projectPackageArchivePath = this.getProjectPackageArchivePath({
+	//             projectId,
+	//         })
 
-    //         packages.push(connector)
-    //     }
+	//         const archivePath = getPackageArchivePathForConnector({
+	//             connectorName: connector.connectorName,
+	//             connectorVersion: connector.connectorVersion,
+	//             packageArchivePath: projectPackageArchivePath,
+	//         })
 
-    //     return packages
-    // }
+	//         if (await fileExists(archivePath)) {
+	//             continue
+	//         }
 
-    // private async getArchiveAndSaveToDisk(projectId: string, connector: ConnectorPackage): Promise<void> {
-    //     const archiveId = connector.archiveId ?? await this.getArchiveIdOrThrow(projectId, connector)
+	//         packages.push(connector)
+	//     }
 
-    //     const archiveFile = await fileService.getOneOrThrow({
-    //         fileId: archiveId,
-    //     })
+	//     return packages
+	// }
 
-    //     const projectPackageArchivePath = this.getProjectPackageArchivePath({
-    //         projectId,
-    //     })
+	// private async getArchiveAndSaveToDisk(projectId: string, connector: ConnectorPackage): Promise<void> {
+	//     const archiveId = connector.archiveId ?? await this.getArchiveIdOrThrow(projectId, connector)
 
-    //     const archivePath = getPackageArchivePathForConnector({
-    //         connectorName: connector.connectorName,
-    //         connectorVersion: connector.connectorVersion,
-    //         packageArchivePath: projectPackageArchivePath,
-    //     })
+	//     const archiveFile = await fileService.getOneOrThrow({
+	//         fileId: archiveId,
+	//     })
 
-    //     await mkdir(dirname(archivePath), { recursive: true })
-    //     await writeFile(archivePath, archiveFile.data)
-    // }
+	//     const projectPackageArchivePath = this.getProjectPackageArchivePath({
+	//         projectId,
+	//     })
 
-    // private async getArchiveIdOrThrow(projectId: string, connector: ConnectorPackage): Promise<string> {
-    //     const connectorMetadata = await connectorMetadataService.getOrThrow({
-    //         name: connector.connectorName,
-    //         version: connector.connectorVersion,
-    //         projectId,
-    //     })
+	//     const archivePath = getPackageArchivePathForConnector({
+	//         connectorName: connector.connectorName,
+	//         connectorVersion: connector.connectorVersion,
+	//         packageArchivePath: projectPackageArchivePath,
+	//     })
 
-    //     if (isNil(connectorMetadata.archiveId)) {
-    //         throw new ActiveconnectorsError({
-    //             code: ErrorCode.PIECE_NOT_FOUND,
-    //             params: {
-    //                 connectorName: connector.connectorName,
-    //                 connectorVersion: connector.connectorVersion,
-    //             },
-    //         })
-    //     }
+	//     await mkdir(dirname(archivePath), { recursive: true })
+	//     await writeFile(archivePath, archiveFile.data)
+	// }
 
-    //     return connectorMetadata.archiveId
-    // }
+	// private async getArchiveIdOrThrow(projectId: string, connector: ConnectorPackage): Promise<string> {
+	//     const connectorMetadata = await connectorMetadataService.getOrThrow({
+	//         name: connector.connectorName,
+	//         version: connector.connectorVersion,
+	//         projectId,
+	//     })
+
+	//     if (isNil(connectorMetadata.archiveId)) {
+	//         throw new ActiveconnectorsError({
+	//             code: ErrorCode.PIECE_NOT_FOUND,
+	//             params: {
+	//                 connectorName: connector.connectorName,
+	//                 connectorVersion: connector.connectorVersion,
+	//             },
+	//         })
+	//     }
+
+	//     return connectorMetadata.archiveId
+	// }
 }
 
 type InstallParams = {
-    // projectId: string
-    projectPath: string
-    connectors: ConnectorPackage[]
+	// projectId: string
+	projectPath: string
+	connectors: ConnectorPackage[]
 }

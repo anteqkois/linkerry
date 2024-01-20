@@ -22,7 +22,7 @@ const getSandbox = (key: string) => {
 
 const sandboxKeyCachePool = {
 	async findOrCreate(cacheInfo: ProvisionCacheInfo): Promise<CachedSandbox> {
-		logger.debug(`sandboxKeyCachePool#findOrCreate`, cacheInfo)
+		logger.debug(`#findOrCreate cacheInfo: ${JSON.stringify(cacheInfo)}`)
 
 		const key = extractProvisionCacheKey(cacheInfo)
 

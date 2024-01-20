@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common'
-import { TriggerEventsService } from './trigger-events.service'
-import { TriggerEventsController } from './trigger-events.controller'
+import { EngineModule } from '../engine/engine.module'
 import { FlowsModule } from '../flows'
+import { TriggerEventsController } from './trigger-events.controller'
+import { TriggerEventsService } from './trigger-events.service'
 
 @Module({
 	controllers: [TriggerEventsController],
-	imports: [FlowsModule],
+	imports: [FlowsModule, EngineModule],
 	providers: [TriggerEventsService],
 })
 export class TriggerEventsModule {}

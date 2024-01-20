@@ -1,10 +1,12 @@
 import { ConnectorPackage, SandBoxCacheType, TypedProvisionCacheInfo } from '@linkerry/shared'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { SandboxManagerService } from './cache/sandbox-manager.service'
 import { sandboxCachePool } from './cache/sandbox-pool'
 
 @Injectable()
 export class SandboxProvisionerService {
+	private readonly logger = new Logger(SandboxProvisionerService.name)
+
 	constructor(private readonly sandboxManagerService: SandboxManagerService){}
 
 	async provisionSandbox({connectors = [], ...cacheInfo}: GetParams) {
@@ -25,7 +27,8 @@ export class SandboxProvisionerService {
 			})
 
 			return sandbox
-		} catch (error) {
+		} catch (error: any) {
+			this.logger.error(error)
 			throw new Error(`Can not provisionSandbox ${JSON.stringify(connectors)}`)
 		}
 	}

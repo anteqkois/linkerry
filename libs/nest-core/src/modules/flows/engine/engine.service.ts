@@ -26,7 +26,7 @@ export class EngineService {
 	}
 
 	async executeTriggerOperation<T extends TriggerHookType>(operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>) {
-		this.logger.debug('[#executeTriggerOperation]', operation.hookType)
+		this.logger.debug(`#executeTriggerOperation hookType: ${operation.hookType}`)
 		// lock flow version
 
 		const clonedFlowVersion = clone(operation.flowVersion)
