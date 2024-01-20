@@ -1,8 +1,8 @@
-import { readdir } from 'fs/promises'
 import { Connector, ConnectorMetadata } from 'libs/connectors/framework/src'
 import { ConnectorGroup, ConnectorType } from 'libs/shared/src'
 import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
+import { getAvailableConnectorNames } from '../utils/get-available-connector-names'
 
 const customConnectors = []
 const coreConnectors = ['@linkerry/linkerry-schedule']
@@ -38,12 +38,6 @@ export const getRealMetadata = async () => {
   }
 
   return connectorsMetadata
-}
-
-const getAvailableConnectorNames = async (): Promise<string[]> => {
-  const ignoredPackages = ['framework', 'apps', 'dist', 'common']
-  const packageNames = await readdir('libs/connectors')
-  return packageNames.filter((p) => !ignoredPackages.includes(p))
 }
 
 const extractConnectorFromModule = (params: { module: Record<string, unknown> }) => {

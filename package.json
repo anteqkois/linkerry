@@ -10,7 +10,8 @@
 		"web": "nx serve web",
 		"flow-executor": "nx serve flow-executor",
 		"nx-dev": "npx nx run-many -t serve -p api-gateway web flow-executor",
-		"dev": "concurrently -p \"[{name}]\" -n \"api-gateway,web\" -c \"bgBlue.bold,bgGreen.bold,bgCyan.bold\" \"npm:api-gateway\" \"npm:web\" \"npm:flow-executor\""
+		"dev": "concurrently -p \"[{name}]\" -n \"api-gateway,web\" -c \"bgBlue.bold,bgGreen.bold,bgCyan.bold\" \"npm:api-gateway\" \"npm:web\" \"npm:flow-executor\"",
+		"registry": "npx nx local-registry"
 	},
 	"private": true,
 	"devDependencies": {
@@ -68,7 +69,8 @@
 		"tailwindcss": "^3.3.3",
 		"ts-jest": "^29.1.0",
 		"ts-node": "10.9.1",
-		"typescript": "~5.1.6"
+		"typescript": "~5.1.6",
+		"verdaccio": "^5.0.4"
 	},
 	"dependencies": {
 		"@fastify/cookie": "^8.3.0",
@@ -83,6 +85,7 @@
 		"@nestjs/passport": "^10.0.0",
 		"@nestjs/platform-express": "^10.0.2",
 		"@nestjs/platform-fastify": "^10.1.0",
+		"@nx/devkit": "^17.2.8",
 		"@radix-ui/react-alert-dialog": "^1.0.4",
 		"@radix-ui/react-checkbox": "^1.0.4",
 		"@radix-ui/react-dialog": "^1.0.5",
@@ -145,5 +148,8 @@
 		"commitizen": {
 			"path": "./node_modules/cz-conventional-changelog"
 		}
+	},
+	"nx": {
+		"includedScripts": []
 	}
 }
