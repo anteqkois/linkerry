@@ -38,7 +38,7 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
       auth: this.auth,
       minimumSupportedRelease: this.minimumSupportedRelease,
       maximumSupportedRelease: this.maximumSupportedRelease,
-      tags: this.tags
+      tags: this.tags,
     }
   }
 

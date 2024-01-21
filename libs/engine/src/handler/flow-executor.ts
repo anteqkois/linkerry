@@ -1,18 +1,18 @@
 import { Action, ActionType, isNull } from '@linkerry/shared'
 import { BaseExecutor } from './base-executor'
-import { branchExecutor } from './branch-executor'
-// import { codeExecutor } from './code-executor'
-import { EngineConstantData } from './context/engine-constants-data'
+// import { branchExecutor } from './branch-executor'
+import { EngineConstants } from './context/engine-constants'
 import { ExecutionVerdict, FlowExecutorContext } from './context/flow-execution-context'
-import { loopExecutor } from './loop-executor'
-import { pieceExecutor } from './piece-executor'
+// import { loopExecutor } from './loop-executor'
+import { connectorExecutor } from './piece-executor'
 
+// @ts-ignore
 const executeFunction: Record<ActionType, BaseExecutor<Action>> = {
     // [ActionType.Code]: codeExecutor,
-    [ActionType.Branch]: branchExecutor,
-    [ActionType.LoopOnItems]: loopExecutor,
-    [ActionType.Connector]: pieceExecutor,
-    [ActionType.MergeBranch]: pieceExecutor,
+    // [ActionType.Branch]: branchExecutor,
+    // [ActionType.LoopOnItems]: loopExecutor,
+    [ActionType.Connector]: connectorExecutor,
+    [ActionType.MergeBranch]: connectorExecutor, // todo implement
 }
 
 export const flowExecutor = {
@@ -26,7 +26,7 @@ export const flowExecutor = {
     async execute({ action, constants, executionState }: {
         action: Action
         executionState: FlowExecutorContext
-        constants: EngineConstantData
+        constants: EngineConstants
     }): Promise<FlowExecutorContext> {
         const startTime = new Date().getMilliseconds()
         let flowExecutionContext = executionState

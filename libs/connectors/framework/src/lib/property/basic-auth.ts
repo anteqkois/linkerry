@@ -18,4 +18,4 @@ export type BasicAuthPropertySchema = BaseConnectorAuthSchema<BasicAuthPropertyV
 }
 
 export type BasicAuthProperty<R extends boolean = boolean> = BasicAuthPropertySchema &
-	PropertyValue<BasicAuthPropertyValue, PropertyType.BasicAuth, ValidationInputType.ANY, R>
+	PropertyValue<BasicAuthPropertyValue, PropertyType.BASIC_AUTH, ValidationInputType.ANY, R>

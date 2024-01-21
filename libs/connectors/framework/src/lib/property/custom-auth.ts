@@ -25,7 +25,7 @@ export type CustomAuthPropertySchema<T extends CustomAuthProps> = BaseConnectorA
 
 export type CustomAuthProperty<R extends boolean, T extends CustomAuthProps> = CustomAuthPropertySchema<T> & PropertyValue<
 	CustomAuthPropertyValue<T>,
-	PropertyType.CustomAuth,
+	PropertyType.CUSTOM_AUTH,
 	ValidationInputType.ANY,
 	R
 >;

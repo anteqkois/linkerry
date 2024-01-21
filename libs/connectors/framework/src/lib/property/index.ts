@@ -3,6 +3,7 @@ import { BasicAuthProperty } from './basic-auth'
 import { CheckboxProperty } from './checkbox'
 import { CustomAuthProperty } from './custom-auth'
 import { DynamicDropdownProperty } from './dynamic-dropdown'
+import { DynamicProperties } from './dynamic-properties'
 import { NumberProperty } from './number'
 import { SecretTextProperty } from './secretText'
 import { StaticDropdownProperty, StaticDropdownValue } from './static-dropdown'
@@ -14,7 +15,8 @@ export type NonAuthConnectorProperty =
 	| NumberProperty
 	| CheckboxProperty
 	| StaticDropdownProperty
-	| DynamicDropdownProperty<any, boolean>
+	| DynamicDropdownProperty<boolean>
+	| DynamicProperties<boolean>
 export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty | CustomAuthProperty<boolean, any>
 // export type ConnectorAuthProperty = SecretTextProperty
 // export type ConnectorAuthProperty = BasicAuthProperty
@@ -46,32 +48,35 @@ type Properties<T> = Omit<T, 'valueSchema' | 'type'>
 
 export const Property = {
 	Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
-		return { ...config, type: PropertyType.Text } as unknown as R extends true ? TextProperty<true> : TextProperty<false>
+		return { ...config, type: PropertyType.TEXT } as unknown as R extends true ? TextProperty<true> : TextProperty<false>
 	},
 	Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
-		return { ...config, type: PropertyType.Number } as unknown as R extends true ? NumberProperty<true> : NumberProperty<false>
+		return { ...config, type: PropertyType.NUMBER } as unknown as R extends true ? NumberProperty<true> : NumberProperty<false>
 	},
-	Checkbox<R extends boolean>(request: Properties<CheckboxProperty<R>>): R extends true ? CheckboxProperty<true> : CheckboxProperty<false> {
-		return { ...request, valueSchema: undefined, type: PropertyType.Checkbox } as unknown as R extends true
+	Checkbox<R extends boolean>(config: Properties<CheckboxProperty<R>>): R extends true ? CheckboxProperty<true> : CheckboxProperty<false> {
+		return { ...config, valueSchema: undefined, type: PropertyType.CHECKBOX } as unknown as R extends true
 			? CheckboxProperty<true>
 			: CheckboxProperty<false>
 	},
 	SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
-		return { ...config, type: PropertyType.Text } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
+		return { ...config, type: PropertyType.TEXT } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
 	},
 	StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
 		config: Properties<StaticDropdownProperty<T, R>>,
 	): R extends true ? StaticDropdownProperty<T, true> : StaticDropdownProperty<T, false> {
-		return { ...config, type: PropertyType.StaticDropdown } as unknown as R extends true
+		return { ...config, type: PropertyType.STATIC_DROPDOWN } as unknown as R extends true
 			? StaticDropdownProperty<T, true>
 			: StaticDropdownProperty<T, false>
 	},
-	DynamicDropdown<T, R extends boolean = boolean>(
-		config: Properties<DynamicDropdownProperty<T, R>>,
-	): R extends true ? DynamicDropdownProperty<T, true> : DynamicDropdownProperty<T, false> {
-		return { ...config, valueSchema: undefined, type: PropertyType.DynamicDropdown } as unknown as R extends true
-			? DynamicDropdownProperty<T, true>
-			: DynamicDropdownProperty<T, false>
+	DynamicDropdown<R extends boolean = boolean, S = any>(
+		config: Properties<DynamicDropdownProperty<R, S>>,
+	): R extends true ? DynamicDropdownProperty<true, S> : DynamicDropdownProperty<false, S> {
+		return { ...config, valueSchema: undefined, type: PropertyType.DYNAMIC_DROPDOWN } as unknown as R extends true
+			? DynamicDropdownProperty<true, S>
+			: DynamicDropdownProperty<false, S>
+	},
+	DynamicProperties<R extends boolean = boolean>(config: Properties<DynamicProperties<R>>): R extends true ? DynamicProperties<true> : DynamicProperties<false> {
+		return { ...config, valueSchema: undefined, type: PropertyType.DYNAMIC } as unknown as R extends true ? DynamicProperties<true> : DynamicProperties<false>;
 	},
 }
 

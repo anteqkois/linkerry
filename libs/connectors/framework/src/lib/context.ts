@@ -1,4 +1,4 @@
-import { Id } from '@linkerry/shared'
+import { Id, PauseMetadata, StopResponse } from '@linkerry/shared'
 import { ConnectorAuthProperty, ConnectorPropValueSchema, ConnectorPropertyMap, StaticPropsValue } from './property'
 import { TriggerStrategy } from './trigger/trigger'
 
@@ -55,16 +55,25 @@ export type TriggerHookContext<
   : never
 
 export enum ExecutionType {
-  Begin = 'Begin',
-  // Reasume = 'Reasume',
+  BEGIN = 'BEGIN',
+  RESUME = 'RESUME',
 }
 
 export type StopHookParams = {
-  // response: StopResponse
-  response: any
+  response: StopResponse
 }
 
 export type StopHook = (params: StopHookParams) => void
+
+type PauseMetadataWithoutResumeStepMetadata<T extends PauseMetadata> = T extends PauseMetadata ? Omit<T, 'resumeStepMetadata'> : never
+
+export type PauseHookPauseMetadata = PauseMetadataWithoutResumeStepMetadata<PauseMetadata>
+
+export type PauseHookParams = {
+    pauseMetadata: PauseHookPauseMetadata
+}
+
+export type PauseHook = (params: PauseHookParams) => void
 
 export type BaseActionContext<
   ET extends ExecutionType,
@@ -74,36 +83,40 @@ export type BaseActionContext<
   executionType: ET
   connections: ConnectionsManager
   // tags: TagsManager
-  // files: FilesService
+	server: ServerContext,
+  files: FilesService
   serverUrl: string
   run: {
     id: Id
     stop: StopHook
-    // pause: PauseHook,
+    pause: PauseHook,
   }
 }
 
 type BeginExecutionActionContext<
   ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty,
   ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
-> = BaseActionContext<ExecutionType.Begin, ConnectorAuth, ActionProps>
+> = BaseActionContext<ExecutionType.BEGIN, ConnectorAuth, ActionProps>
 
-// type ResumeExecutionActionContext<
-//   ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty,
-//   ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
-// > = BaseActionContext<ExecutionType.RESUME, ConnectorAuth, ActionProps> & {
-//   resumePayload: unknown
-// }
+type ResumeExecutionActionContext<
+  ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty,
+  ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
+> = BaseActionContext<ExecutionType.RESUME, ConnectorAuth, ActionProps> & {
+  resumePayload: unknown
+}
 
 export type ActionContext<
   ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty,
   ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
-> = BeginExecutionActionContext<ConnectorAuth, ActionProps>
-// > = BeginExecutionActionContext<ConnectorAuth, ActionProps> | ResumeExecutionActionContext<ConnectorAuth, ActionProps>
+> = BeginExecutionActionContext<ConnectorAuth, ActionProps> | ResumeExecutionActionContext<ConnectorAuth, ActionProps>
 
 type AppConnectionValue = any
 export interface ConnectionsManager {
   get(key: string): Promise<AppConnectionValue | Record<string, unknown> | string | null>
+}
+
+export interface FilesService {
+	write({ fileName, data }: { fileName: string, data: Buffer }): Promise<string>;
 }
 
 export interface Store {

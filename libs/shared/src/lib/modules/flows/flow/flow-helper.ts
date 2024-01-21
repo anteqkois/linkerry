@@ -24,6 +24,10 @@ const getAllSteps = (flowVersion: FlowVersion): Step[] => {
 	return steps
 }
 
+function getStep(flowVersion: FlowVersion, stepName: string): Action | Trigger | undefined {
+	return getAllSteps(flowVersion).find((step) => step.name === stepName)
+}
+
 // function deleteAction(
 //     flowVersion: FlowVersion,
 //     request: DeleteActionRequest,
@@ -68,13 +72,13 @@ const getAllSteps = (flowVersion: FlowVersion): Step[] => {
 //     })
 // }
 
-// function getUsedPieces(trigger: Trigger): string[] {
+// function getUsedConnectors(trigger: Trigger): string[] {
 //     return traverseInternal(trigger)
 //         .filter(
 //             (step) =>
 //                 step.type === ActionType.Connector || step.type === TriggerType.Connector,
 //         )
-//         .map((step) => step.settings.pieceName)
+//         .map((step) => step.settings.connectorName)
 //         .filter((value, index, self) => self.indexOf(value) === index)
 // }
 
@@ -114,14 +118,14 @@ export const flowHelper = {
 	//         case FlowOperationType.ADD_ACTION: {
 	//             clonedVersion = transferFlow(
 	//                 addAction(clonedVersion, operation.request),
-	//                 (step) => upgradePiece(step, operation.request.action.name),
+	//                 (step) => upgradeConnector(step, operation.request.action.name),
 	//             )
 	//             break
 	//         }
 	//         case FlowOperationType.UPDATE_ACTION:
 	//             clonedVersion = transferFlow(
 	//                 updateAction(clonedVersion, operation.request),
-	//                 (step) => upgradePiece(step, operation.request.name),
+	//                 (step) => upgradeConnector(step, operation.request.name),
 	//             )
 	//             break
 	//         case FlowOperationType.UPDATE_TRIGGER:
@@ -131,7 +135,7 @@ export const flowHelper = {
 	//                 clonedVersion.trigger.nextAction,
 	//             )
 	//             clonedVersion = transferFlow(clonedVersion, (step) =>
-	//                 upgradePiece(step, operation.request.name),
+	//                 upgradeConnector(step, operation.request.name),
 	//             )
 	//             break
 	//         case FlowOperationType.DUPLICATE_ACTION: {
@@ -144,6 +148,7 @@ export const flowHelper = {
 	//     clonedVersion.valid = isValid(clonedVersion)
 	//     return clonedVersion
 	// },
+	getStep,
 	getAllSteps,
 	updateTrigger,
 }

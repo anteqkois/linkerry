@@ -84,7 +84,7 @@ export class RegistryConnectorManager extends ConnectorManager {
 
 	//     if (isNil(connectorMetadata.archiveId)) {
 	//         throw new ActiveconnectorsError({
-	//             code: ErrorCode.PIECE_NOT_FOUND,
+	//             code: ErrorCode.CONNECTOR_NOT_FOUND,
 	//             params: {
 	//                 connectorName: connector.connectorName,
 	//                 connectorVersion: connector.connectorVersion,

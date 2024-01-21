@@ -1,12 +1,11 @@
-import { ActionType, BranchStepOutput, FlowVersion, GenricStepOutput, LoopStepOutput, StepOutputStatus, TriggerType, flowHelper } from '@linkerry/shared'
-import { variableService } from '../../services/veriables.service'
+import { ActionType, BranchStepOutput, FlowVersion, GenricStepOutput, StepOutputStatus, TriggerType, flowHelper } from '@linkerry/shared'
 import { FlowExecutorContext } from './flow-execution-context'
 
 export const testExecutionContext = {
-    async stateFromFlowVersion({ flowVersion, excludedStepName, projectId, workerToken }: {
+    async stateFromFlowVersion({ flowVersion, excludedStepName, workerToken }: {
         flowVersion: FlowVersion
         excludedStepName?: string
-        projectId: string
+        // projectId: string
         workerToken: string
     }): Promise<FlowExecutorContext> {
         const flowSteps = flowHelper.getAllSteps(flowVersion)
@@ -25,23 +24,23 @@ export const testExecutionContext = {
                         input: step.settings,
                     }))
                     break
-                case ActionType.LoopOnItems: {
-                    const { resolvedInput } = await variableService({
-                        projectId,
-                        workerToken,
-                    }).resolve<{ items: unknown[] }>({
-                        unresolvedInput: step.settings,
-                        executionState: flowExecutionContext,
-                    })
-                    flowExecutionContext = flowExecutionContext.upsertStep(step.name, LoopStepOutput.init({
-                        input: step.settings,
-                    }).setOutput({
-                        item: resolvedInput.items[0],
-                        index: 1,
-                        iterations: [],
-                    }))
-                    break
-                }
+                // case ActionType.LoopOnItems: {
+                //     const { resolvedInput } = await variableService({
+                //         projectId,
+                //         workerToken,
+                //     }).resolve<{ items: unknown[] }>({
+                //         unresolvedInput: step.settings,
+                //         executionState: flowExecutionContext,
+                //     })
+                //     flowExecutionContext = flowExecutionContext.upsertStep(step.name, LoopStepOutput.init({
+                //         input: step.settings,
+                //     }).setOutput({
+                //         item: resolvedInput.items[0],
+                //         index: 1,
+                //         iterations: [],
+                //     }))
+                //     break
+                // }
 								// case ActionType.Code:
                 case ActionType.Connector:
                 case TriggerType.Empty:

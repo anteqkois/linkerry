@@ -1,11 +1,11 @@
-import { AUTHENTICATION_PROPERTY_NAME, ApEdition, EventPayload, ExecuteTriggerOperation, ExecuteTriggerResponse, PieceTrigger, ScheduleOptions, TriggerHookType } from '@activepieces/shared'
-import { createContextStore } from '../services/storage.service'
-import { variableService } from '../services/variable-service'
+import { ConnectorPropertyMap, StaticPropsValue, TriggerStrategy } from '@linkerry/connectors-framework'
+import { ExecuteTriggerOperation, ExecuteTriggerResponse, ScheduleOptions, TriggerConnector, TriggerHookType } from '@linkerry/shared'
 import { isValidCron } from 'cron-validator'
-import { PiecePropertyMap, StaticPropsValue, TriggerStrategy } from '@activepieces/pieces-framework'
-import { createFilesService } from '../services/files.service'
+import { EngineConstants } from '../handler/context/engine-constants'
 import { FlowExecutorContext } from '../handler/context/flow-execution-context'
-import { pieceLoader } from './piece-loader'
+import { createContextStore } from '../services/storage.service'
+import { AUTHENTICATION_PROPERTY_NAME, variableService } from '../services/veriables.service'
+import { connectorLoader } from './connector-loader'
 
 type Listener = {
     events: string[]
@@ -14,28 +14,28 @@ type Listener = {
 }
 
 export const triggerHelper = {
-    async executeTrigger({ params, piecesSource }: { piecesSource: string, params: ExecuteTriggerOperation<TriggerHookType> }): Promise<ExecuteTriggerResponse<TriggerHookType>> {
-        const { pieceName, pieceVersion, triggerName, input } = (params.flowVersion.trigger as PieceTrigger).settings
+    async executeTrigger({ params, constants }: ExecuteTriggerParams): Promise<ExecuteTriggerResponse<TriggerHookType>> {
+        const { connectorName, connectorVersion, triggerName, input } = (params.flowVersion.triggers[0] as TriggerConnector).settings
 
-        const piece = await pieceLoader.loadPieceOrThrow({ pieceName, pieceVersion, piecesSource })
-        const trigger = piece.getTrigger(triggerName)
+        const connector = await connectorLoader.loadConnectorOrThrow({ connectorName, connectorVersion, connectorSource: constants.connectorSource })
+        const trigger = connector.getTrigger(triggerName)
 
         if (trigger === undefined) {
-            throw new Error(`trigger not found, pieceName=${pieceName}, triggerName=${triggerName}`)
+            throw new Error(`trigger not found, connectorName=${connectorName}, triggerName=${triggerName}`)
         }
 
         const { resolvedInput } = await variableService({
-            projectId: params.projectId,
+            // projectId: params.projectId,
             workerToken: params.workerToken,
-        }).resolve<StaticPropsValue<PiecePropertyMap>>({
+        }).resolve<StaticPropsValue<ConnectorPropertyMap>>({
             unresolvedInput: input,
             executionState: FlowExecutorContext.empty(),
         })
 
         const { processedInput, errors } = await variableService({
-            projectId: params.projectId,
+            // projectId: params.projectId,
             workerToken: params.workerToken,
-        }).applyProcessorsAndValidators(resolvedInput, trigger.props, piece.auth)
+        }).applyProcessorsAndValidators(resolvedInput, trigger.props, connector.auth)
 
         if (Object.keys(errors).length > 0) {
             throw new Error(JSON.stringify(errors))
@@ -47,7 +47,7 @@ export const triggerHelper = {
         const context = {
             store: createContextStore({
                 prefix,
-                flowId: params.flowVersion.flowId,
+                flowId: params.flowVersion.flow,
                 workerToken: params.workerToken,
             }),
             app: {
@@ -68,6 +68,10 @@ export const triggerHelper = {
             auth: processedInput[AUTHENTICATION_PROPERTY_NAME],
             propsValue: processedInput,
             payload: params.triggerPayload ?? {},
+            // project: {
+            //     id: params.projectId,
+            //     externalId: constants.externalProjectId,
+            // },
         }
         switch (params.hookType) {
             case TriggerHookType.ON_DISABLE:
@@ -102,12 +106,12 @@ export const triggerHelper = {
                         success: true,
                         output: await trigger.test({
                             ...context,
-                            files: createFilesService({
-                                workerToken: params.workerToken!,
-                                stepName: triggerName,
-                                flowId: params.flowVersion.flowId,
-                                type: 'db',
-                            }),
+                            // files: createFilesService({
+                            //     workerToken: params.workerToken,
+                            //     stepName: triggerName,
+                            //     flowId: params.flowVersion.flow,
+                            //     type: 'db',
+                            // }),
                         }),
                     }
                 }
@@ -122,54 +126,46 @@ export const triggerHelper = {
                 }
             case TriggerHookType.RUN: {
                 if (trigger.type === TriggerStrategy.APP_WEBHOOK) {
-                    if (params.edition === ApEdition.COMMUNITY) {
-                        return {
-                            success: false,
-                            message: 'App webhooks are not supported in community edition',
-                            output: [],
-                        }
-                    }
-
                     if (!params.appWebhookUrl) {
-                        throw new Error(`App webhook url is not avaiable for piece name ${pieceName}`)
+                        throw new Error(`App webhook url is not avaiable for connector name ${connectorName}`)
                     }
                     if (!params.webhookSecret) {
-                        throw new Error(`Webhook secret is not avaiable for piece name ${pieceName}`)
+                        throw new Error(`Webhook secret is not avaiable for connector name ${connectorName}`)
                     }
 
-                    try {
-                        const verified = piece.events?.verify({
-                            appWebhookUrl: params.appWebhookUrl,
-                            payload: params.triggerPayload as EventPayload,
-                            webhookSecret: params.webhookSecret,
-                        })
+                    // try {
+                    //     const verified = connector.events?.verify({
+                    //         appWebhookUrl: params.appWebhookUrl,
+                    //         payload: params.triggerPayload as EventPayload,
+                    //         webhookSecret: params.webhookSecret,
+                    //     })
 
-                        if (verified === false) {
-                            console.info('Webhook is not verified')
-                            return {
-                                success: false,
-                                message: 'Webhook is not verified',
-                                output: [],
-                            }
-                        }
-                    }
-                    catch (e) {
-                        console.error('Error while verifying webhook', e)
-                        return {
-                            success: false,
-                            message: 'Error while verifying webhook',
-                            output: [],
-                        }
-                    }
+                    //     if (verified === false) {
+                    //         console.info('Webhook is not verified')
+                    //         return {
+                    //             success: false,
+                    //             message: 'Webhook is not verified',
+                    //             output: [],
+                    //         }
+                    //     }
+                    // }
+                    // catch (e) {
+                    //     console.error('Error while verifying webhook', e)
+                    //     return {
+                    //         success: false,
+                    //         message: 'Error while verifying webhook',
+                    //         output: [],
+                    //     }
+                    // }
                 }
                 const items = await trigger.run({
                     ...context,
-                    files: createFilesService({
-                        workerToken: params.workerToken!,
-                        flowId: params.flowVersion.flowId,
-                        stepName: triggerName,
-                        type: 'memory',
-                    }),
+                    // files: createFilesService({
+                    //     workerToken: params.workerToken,
+                    //     flowId: params.flowVersion.flow,
+                    //     stepName: triggerName,
+                    //     type: 'memory',
+                    // }),
                 })
                 if (!Array.isArray(items)) {
                     throw new Error(`Trigger run should return an array of items, but returned ${typeof items}`)
@@ -181,4 +177,9 @@ export const triggerHelper = {
             }
         }
     },
+}
+
+type ExecuteTriggerParams = {
+    params: ExecuteTriggerOperation<TriggerHookType>
+    constants: EngineConstants
 }

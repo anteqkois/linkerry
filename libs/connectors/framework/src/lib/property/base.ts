@@ -1,22 +1,23 @@
 import { TypedValidatorFn, ValidationInputType } from '../validators/types'
 
 export enum PropertyType {
-	Text = 'ShortText',
-	LongText = 'LongText',
-	Markdown = 'Markdown',
-	StaticDropdown = 'StaticDropdown',
-	Number = 'Number',
-	Checkbox = 'Checkbox',
-	// OAuth2 = 'OAuth2',
-	SecretText = 'SecretText',
+	TEXT = 'TEXT',
+	LONG_TEXT = 'LONG_TEXT',
+	MARKDOWN = 'MARKDOWN',
+	STATIC_DROPDOWN = 'STATIC_DROPDOWN',
+	NUMBER = 'NUMBER',
+	CHECKBOX = 'CHECKBOX',
+	// OAUTH_2 = 'OAuth2',
+	SECRET_TEXT = 'SECRET_TEXT',
 	// Array = 'Array',
 	// Object = 'Object',
-	BasicAuth = 'BasicAuth',
+	BASIC_AUTH = 'BASIC_AUTH',
 	// JSON = 'JSON',
 	// MultiSelectDropdown = 'MultiSelectDropdown',
 	// StaticMultiSelectDropdown = 'StaticMultiSelectDropdown',
-	DynamicDropdown = 'DynamicDropdown',
-	CustomAuth = 'CustomAuth',
+	DYNAMIC_DROPDOWN = 'DYNAMIC_DROPDOWN',
+	DYNAMIC = "DYNAMIC",
+	CUSTOM_AUTH = 'CUSTOM_AUTH',
 	// DateTime = "DateTime",
 	// File = "File"
 }
@@ -28,14 +29,14 @@ export type BaseProperty = {
 	// validate: ()=>{}
 }
 
-type PieceAuthValidatorParams<AuthValueSchema> = {
+type ConnectorAuthValidatorParams<AuthValueSchema> = {
 	auth: AuthValueSchema
 }
 
-export type PieceAuthValidatorResponse = { valid: true } | { valid: false; error: string }
+export type ConnectorAuthValidatorResponse = { valid: true } | { valid: false; error: string }
 
 export type BaseConnectorAuthSchema<AuthValueSchema> = BaseProperty & {
-	validate?: (params: PieceAuthValidatorParams<AuthValueSchema>) => Promise<PieceAuthValidatorResponse>
+	validate?: (params: ConnectorAuthValidatorParams<AuthValueSchema>) => Promise<ConnectorAuthValidatorResponse>
 }
 
 // export type TPropertyValue<T, U extends PropertyType, VALIDATION_INPUT extends ValidationInputType, REQUIRED extends boolean> = {
@@ -47,17 +48,17 @@ export type PropertyValue<S, T extends PropertyType, V extends ValidationInputTy
 	transformers?: any[]
 	validators?: TypedValidatorFn<V>[];
 	defaultValidators?: TypedValidatorFn<V>[];
-	defaultValue?: T extends PropertyType.Text
+	defaultValue?: T extends PropertyType.TEXT
 		? string
-		: T extends PropertyType.LongText
+		: T extends PropertyType.LONG_TEXT
 		? string
-		: T extends PropertyType.StaticDropdown
+		: T extends PropertyType.STATIC_DROPDOWN
 		? unknown
-		: T extends PropertyType.Number
+		: T extends PropertyType.NUMBER
 		? number
-		: T extends PropertyType.SecretText
+		: T extends PropertyType.SECRET_TEXT
 		? string
-		: T extends PropertyType.Checkbox
+		: T extends PropertyType.CHECKBOX
 		? boolean
 		: unknown
 }

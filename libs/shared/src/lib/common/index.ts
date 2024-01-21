@@ -1,4 +1,5 @@
 export * from './api'
+export * from './assertions'
 export * from './auth'
 export * from './database'
 export * from './error'

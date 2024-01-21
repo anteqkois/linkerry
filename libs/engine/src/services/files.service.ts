@@ -1,7 +1,7 @@
+import { LinkerryFile } from '@linkerry/connectors-framework'
+import { isString } from '@linkerry/shared'
 import fs from 'fs/promises'
-import { ApFile } from '@activepieces/pieces-framework'
-import { isString } from '@activepieces/shared'
-import { API_URL } from '../constants'
+import { EngineConstants } from '../handler/context/engine-constants'
 
 const DB_PREFIX_URL = 'db://'
 const FILE_PREFIX_URL = 'file://'
@@ -33,14 +33,14 @@ export function isMemoryFilePath(dbPath: unknown): boolean {
     return dbPath.startsWith(MEMORY_PREFIX_URL)
 }
 
-export function isApFilePath(dbPath: unknown): dbPath is string {
+export function isLinkerryFilePath(dbPath: unknown): dbPath is string {
     if (!isString(dbPath)) {
         return false
     }
     return dbPath.startsWith(FILE_PREFIX_URL) || dbPath.startsWith(DB_PREFIX_URL) || dbPath.startsWith(MEMORY_PREFIX_URL)
 }
 
-export async function handleAPFile({ workerToken, path }: { workerToken: string, path: string }) {
+export async function handleLinkerryFile({ workerToken, path }: { workerToken: string, path: string }) {
     if (path.startsWith(MEMORY_PREFIX_URL)) {
         return readMemoryFile(path)
     }
@@ -67,12 +67,12 @@ async function writeMemoryFile({ fileName, data }: { fileName: string, data: Buf
     }
 }
 
-async function readMemoryFile(absolutePath: string): Promise<ApFile> {
+async function readMemoryFile(absolutePath: string): Promise<LinkerryFile> {
     try {
         const base64String = absolutePath.replace(MEMORY_PREFIX_URL, '')
         const { fileName, data } = JSON.parse(base64String)
         const calcuatedExtension = fileName.includes('.') ? fileName.split('.').pop() : null
-        return new ApFile(fileName, Buffer.from(data, 'base64'), calcuatedExtension)
+        return new LinkerryFile(fileName, Buffer.from(data, 'base64'), calcuatedExtension)
     }
     catch (error) {
         throw new Error(`Error reading file: ${error}`)
@@ -86,7 +86,7 @@ async function writeDbFile({ stepName, flowId, fileName, data, workerToken }: { 
     formData.append('flowId', flowId)
     formData.append('file', new Blob([data], { type: 'application/octet-stream' }))
 
-    const response = await fetch(API_URL + 'v1/step-files', {
+    const response = await fetch(EngineConstants.API_URL + 'v1/step-files', {
         method: 'POST',
         headers: {
             Authorization: 'Bearer ' + workerToken,
@@ -101,9 +101,9 @@ async function writeDbFile({ stepName, flowId, fileName, data, workerToken }: { 
     return result.url
 }
 
-async function readDbFile({ workerToken, absolutePath }: { workerToken: string, absolutePath: string }): Promise<ApFile> {
+async function readDbFile({ workerToken, absolutePath }: { workerToken: string, absolutePath: string }): Promise<LinkerryFile> {
     const fileId = absolutePath.replace(DB_PREFIX_URL, '')
-    const response = await fetch(API_URL + `v1/step-files/${encodeURIComponent(fileId)}`, {
+    const response = await fetch(EngineConstants.API_URL + `v1/step-files/${encodeURIComponent(fileId)}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ async function readDbFile({ workerToken, absolutePath }: { workerToken: string, 
     const filenameMatch = contentDisposition?.match(/filename="(.+)"/)
     const filename = filenameMatch ? filenameMatch[1] : 'unknown'
     const extension = filename.split('.').pop()!
-    return new ApFile(filename, Buffer.from(arrayBuffer), extension)
+    return new LinkerryFile(filename, Buffer.from(arrayBuffer), extension)
 }
 
 
@@ -131,10 +131,10 @@ async function writeLocalFile({ stepName, fileName, data }: { stepName: string, 
 
 }
 
-async function readLocalFile(absolutePath: string): Promise<ApFile> {
+async function readLocalFile(absolutePath: string): Promise<LinkerryFile> {
     const path = 'tmp/' + absolutePath.replace(FILE_PREFIX_URL, '')
     const buffer = await fs.readFile(path)
     const filename = absolutePath.split('/').pop()!
     const extension = filename.split('.').pop()!
-    return new ApFile(filename, buffer, extension)
+    return new LinkerryFile(filename, buffer, extension)
 }

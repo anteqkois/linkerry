@@ -7,13 +7,13 @@ export const AUTHENTICATION_PROPERTY_NAME = 'auth'
 export class VariableService {
 	private VARIABLE_TOKEN = RegExp('\\{\\{(.*?)\\}\\}', 'g')
 	private workerToken: string
-	private projectId: string
+	// private projectId: string
 	private static CONNECTIONS = 'connections'
 
 
-	constructor(data: { workerToken: string, projectId: string }) {
+	constructor(data: { workerToken: string }) {
 			this.workerToken = data.workerToken
-			this.projectId = data.projectId
+			// this.projectId = data.projectId
 	}
 
 	private async resolveInput(
@@ -185,7 +185,7 @@ export class VariableService {
 			const processedInput = { ...resolvedInput }
 			const errors: Record<string, unknown> = {}
 
-			if (auth && auth.type === PropertyType.CustomAuth) {
+			if (auth && auth.type === PropertyType.CUSTOM_AUTH) {
 					const { processedInput: authProcessedInput, errors: authErrors } =
 							await this.applyProcessorsAndValidators(
 									resolvedInput[AUTHENTICATION_PROPERTY_NAME],
@@ -214,8 +214,8 @@ export class VariableService {
 							...(property.validators ?? []),
 					]
 					// TODO remove the hard coding part // AP todo
-					// if (property.type === PropertyType.FILE && isApFilePath(value)) {
-					// 		processedInput[key] = await handleAPFile({
+					// if (property.type === PropertyType.FILE && isLinkerryFilePath(value)) {
+					// 		processedInput[key] = await handleLinkerryFile({
 					// 				path: value.trim(),
 					// 				workerToken: this.workerToken,
 					// 		})
@@ -249,4 +249,5 @@ export class VariableService {
 
 }
 
-export const variableService = ({ projectId, workerToken }: { projectId: string, workerToken: string }) => new VariableService({ projectId, workerToken })
+// export const variableService = ({ projectId, workerToken }: { projectId: string, workerToken: string }) => new VariableService({ projectId, workerToken })
+export const variableService = ({  workerToken }: { workerToken: string }) => new VariableService({  workerToken })

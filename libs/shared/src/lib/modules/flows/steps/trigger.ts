@@ -20,6 +20,7 @@ export interface BaseTrigger extends z.infer<typeof baseTriggerSchema> {}
 export const triggerEmptySchema = baseStepSchema.merge(
 	z.object({
 		type: z.enum([TriggerType.Empty]),
+		settings: z.any(),
 	}),
 )
 export const isEmptyTrigger = (trigger: Trigger): trigger is TriggerEmpty => {
@@ -82,5 +83,6 @@ export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
 		displayName: 'Select trigger',
 		type: TriggerType.Empty,
 		valid: false,
+		nextActionName: '',
 	}
 }

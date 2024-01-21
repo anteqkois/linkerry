@@ -28,7 +28,7 @@ export const extractProvisionCacheKey = (params: ProvisionCacheInfo): string => 
 		case SandBoxCacheType.None:
 			return extractNoneCacheKey(params)
 		case SandBoxCacheType.Connector:
-			return extractPieceCacheKey(params)
+			return extractConnectorCacheKey(params)
 	}
 }
 
@@ -45,7 +45,7 @@ const extractNoneCacheKey = (_params: NoneProvisionCacheInfo): string => {
 	return `NONE-mcId`
 }
 
-const extractPieceCacheKey = ({ connectorName, connectorVersion }: ConnectorProvisionCacheInfo): string => {
+const extractConnectorCacheKey = ({ connectorName, connectorVersion }: ConnectorProvisionCacheInfo): string => {
 	return `CONNECOR-connectorName-${connectorName}-connectorVersion-${connectorVersion}`
 }
 
