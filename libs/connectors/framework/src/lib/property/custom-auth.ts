@@ -3,7 +3,7 @@ import { ValidationInputType } from "../validators/types";
 import { BaseConnectorAuthSchema, PropertyType, PropertyValue } from "./base";
 import { CheckboxProperty } from "./checkbox";
 import { NumberProperty } from "./number";
-import { SecretTextProperty } from "./secretText";
+import { SecretTextProperty } from "./secret-text";
 import { StaticDropdownProperty } from "./static-dropdown";
 import { TextProperty } from "./text";
 

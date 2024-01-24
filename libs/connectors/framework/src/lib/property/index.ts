@@ -5,7 +5,7 @@ import { CustomAuthProperty } from './custom-auth'
 import { DynamicDropdownProperty } from './dynamic-dropdown'
 import { DynamicProperties } from './dynamic-properties'
 import { NumberProperty } from './number'
-import { SecretTextProperty } from './secretText'
+import { SecretTextProperty } from './secret-text'
 import { StaticDropdownProperty, StaticDropdownValue } from './static-dropdown'
 import { TextProperty } from './text'
 // export { CheckboxProperty, DynamicDropdownProperty, NumberProperty, StaticDropdownProperty, TextProperty }

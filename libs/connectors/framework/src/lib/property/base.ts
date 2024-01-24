@@ -26,7 +26,6 @@ export type BaseProperty = {
 	name: string
 	displayName: string
 	description: string
-	// validate: ()=>{}
 }
 
 type ConnectorAuthValidatorParams<AuthValueSchema> = {

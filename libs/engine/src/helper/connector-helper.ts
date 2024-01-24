@@ -7,7 +7,15 @@ import {
 	PropertyType,
 	StaticPropsValue,
 } from '@linkerry/connectors-framework'
-import { ExecuteExtractConnectorMetadata, ExecutePropsOptions } from '@linkerry/shared'
+import {
+	BasicAuthConnectionValue,
+	CustomAuthConnectionValue,
+	ExecuteExtractConnectorMetadata,
+	ExecutePropsOptions,
+	ExecuteValidateAuthOperation,
+	ExecuteValidateAuthResponse,
+	SecretTextConnectionValue,
+} from '@linkerry/shared'
 import { EngineConstants } from '../handler/context/engine-constants'
 import { FlowExecutorContext } from '../handler/context/flow-execution-context'
 import { variableService } from '../services/veriables.service'
@@ -63,45 +71,53 @@ export const connectorHelper = {
 		}
 	},
 
-	// async executeValidateAuth(
-	//     { params, connectorSource }: { params: ExecuteValidateAuthOperation, connectorSource: string },
-	// ): Promise<ExecuteValidateAuthResponse> {
-	//     const { connector: connectorPackage } = params
+	async executeValidateAuth({
+		params,
+		connectorSource,
+	}: {
+		params: ExecuteValidateAuthOperation
+		connectorSource: string
+	}): Promise<ExecuteValidateAuthResponse> {
+		const { connector: connectorPackage } = params
 
-	//     const connector = await connectorLoader.loadConnectorOrThrow({ connectorName: connectorPackage.connectorName, connectorVersion: connectorPackage.connectorVersion, connectorSource })
-	//     if (connector.auth?.validate === undefined) {
-	//         return {
-	//             valid: true,
-	//         }
-	//     }
+		const connector = await connectorLoader.loadConnectorOrThrow({
+			connectorName: connectorPackage.connectorName,
+			connectorVersion: connectorPackage.connectorVersion,
+			connectorSource,
+		})
+		if (connector.auth?.validate === undefined) {
+			return {
+				valid: true,
+			}
+		}
 
-	//     switch (connector.auth.type) {
-	//         case PropertyType.BASIC_AUTH: {
-	//             const con = params.auth as BasicAuthConnectionValue
-	//             return connector.auth.validate({
-	//                 auth: {
-	//                     username: con.username,
-	//                     password: con.password,
-	//                 },
-	//             })
-	//         }
-	//         case PropertyType.SECRET_TEXT: {
-	//             const con = params.auth as SecretTextConnectionValue
-	//             return connector.auth.validate({
-	//                 auth: con.secret_text,
-	//             })
-	//         }
-	//         case PropertyType.CUSTOM_AUTH: {
-	//             const con = params.auth as CustomAuthConnectionValue
-	//             return connector.auth.validate({
-	//                 auth: con.props,
-	//             })
-	//         }
-	//         default: {
-	//             throw new Error('Invalid auth type')
-	//         }
-	//     }
-	// },
+		switch (connector.auth.type) {
+			case PropertyType.BASIC_AUTH: {
+				const con = params.auth as BasicAuthConnectionValue
+				return connector.auth.validate({
+					auth: {
+						username: con.username,
+						password: con.password,
+					},
+				})
+			}
+			case PropertyType.SECRET_TEXT: {
+				const con = params.auth as SecretTextConnectionValue
+				return connector.auth.validate({
+					auth: con.secret_text,
+				})
+			}
+			case PropertyType.CUSTOM_AUTH: {
+				const con = params.auth as CustomAuthConnectionValue
+				return connector.auth.validate({
+					auth: con.props,
+				})
+			}
+			default: {
+				throw new Error('Invalid auth type')
+			}
+		}
+	},
 
 	async extractConnectorMetadata({
 		connectorSource,
