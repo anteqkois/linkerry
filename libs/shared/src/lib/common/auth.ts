@@ -31,11 +31,15 @@ export interface JwtCustomerTokenPayload {
 	sub: string
 	name: string
 	type: JWTPrincipalType.CUSTOMER
+	exp: number
+	iss: 'linkerry'
 }
 
 export interface JwtWorkerTokenPayload {
 	sub: string
 	type: JWTPrincipalType.WORKER
+	exp: number
+	iss: 'linkerry'
 }
 
 export type JwtTokenPayload = JwtCustomerTokenPayload | JwtWorkerTokenPayload
