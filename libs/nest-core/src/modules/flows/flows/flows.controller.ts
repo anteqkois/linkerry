@@ -1,4 +1,4 @@
-import { Id, JwtUser } from '@linkerry/shared'
+import { Id, RequestUser } from '@linkerry/shared'
 import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../../lib/auth/decorators/req-user.decorator'
@@ -10,13 +10,13 @@ export class FlowsController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  getFlow(@ReqJwtUser() user: JwtUser, @Param('id') id: Id) {
+  getFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
     return this.flowsService.findOne(id, user.id)
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  createEmptyFlow(@ReqJwtUser() user: JwtUser) {
+  createEmptyFlow(@ReqJwtUser() user: RequestUser) {
     return this.flowsService.createEmpty(user.id)
   }
 }

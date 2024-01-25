@@ -1,44 +1,57 @@
 import { Language } from '../modules/language'
 
 export interface IAuthSignUpInput {
-  email: string
-  password: string
-  name: string
-  language: Language
-  consents: Record<string, boolean>
+	email: string
+	password: string
+	name: string
+	language: Language
+	consents: Record<string, boolean>
 }
 
 export interface IAuthSignUpResponse {
-  user: any
-  error: string | undefined
+	user: any
+	error: string | undefined
 }
 
 export interface IAuthLoginInput {
-  email: string
-  password: string
+	email: string
+	password: string
 }
 
 export interface IAuthLoginResponse {
-  user: any
-  error: string | undefined
+	user: any
+	error: string | undefined
 }
 
 export interface IAuthLogoutResponse {
-  error: string | undefined
+	error: string | undefined
 }
 
-export interface JwtToken {
-  sub: string
-  name: string
+export interface JwtCustomerTokenPayload {
+	sub: string
+	name: string
+	type: JWTPrincipalType.CUSTOMER
 }
 
-export interface JwtUser {
-  id: string
-  name: string
+export interface JwtWorkerTokenPayload {
+	sub: string
+	type: JWTPrincipalType.WORKER
+}
+
+export type JwtTokenPayload = JwtCustomerTokenPayload | JwtWorkerTokenPayload
+
+export interface RequestUser {
+	id: string
+	name: string
 }
 
 export enum AuthStatus {
-  LOADING = 'loading',
-  AUTHENTICATED = 'authenticated',
-  UNAUTHENTICATED = 'unauthenticated',
+	LOADING = 'LOADING',
+	AUTHENTICATED = 'AUTHENTICATED',
+	UNAUTHENTICATED = 'UNAUTHENTICATED',
+}
+
+export enum JWTPrincipalType {
+	CUSTOMER = 'CUSTOMER',
+	WORKER = 'WORKER',
 }

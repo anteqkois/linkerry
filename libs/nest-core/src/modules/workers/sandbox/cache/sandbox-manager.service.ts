@@ -11,7 +11,7 @@ export class SandboxManagerService {
 	private readonly logger = new Logger(SandboxManagerService.name)
 
 	async allocate(): Promise<Sandbox> {
-		this.logger.debug('[SandboxManagerService#allocate]')
+		this.logger.debug('[#allocate]')
 
 		const sandbox = this._getSandbox()
 
@@ -29,7 +29,7 @@ export class SandboxManagerService {
 		const sandbox = sandboxes.find(byNotInUse)
 
 		if (isNull(sandbox)) {
-			throw new Error('[SandboxManagerService#allocate] all sandboxes are in-use')
+			throw new Error('[#allocate] all sandboxes are in-use')
 		}
 
 		sandbox.inUse = true
@@ -37,12 +37,12 @@ export class SandboxManagerService {
 	}
 
 	async release(sandboxId: number): Promise<void> {
-		this.logger.log({ boxId: sandboxId }, '[SandboxManagerService#release]')
+		this.logger.log({ boxId: sandboxId }, '[#release]')
 
 		const sandbox = sandboxes[sandboxId]
 
 		if (isNull(sandbox)) {
-			throw new Error(`[SandboxManagerService#release] sandbox not found id=${sandboxId}`)
+			throw new Error(`[#release] sandbox not found id=${sandboxId}`)
 		}
 
 		sandbox.inUse = false

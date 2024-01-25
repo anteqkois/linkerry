@@ -1,4 +1,4 @@
-import { JwtUser } from '@linkerry/shared';
+import { RequestUser } from '@linkerry/shared';
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../lib/auth';
 import { ReqJwtUser } from '../../../lib/auth/decorators/req-user.decorator';
@@ -11,7 +11,7 @@ export class TriggerEventsController {
 
 	@UseGuards(JwtAuthGuard)
   @Post('/test/pool')
-  create(@ReqJwtUser() user: JwtUser, @Body() poolTestDto: PoolTestDto) {
+  create(@ReqJwtUser() user: RequestUser, @Body() poolTestDto: PoolTestDto) {
     return this.triggerEventsService.performPoolTest(poolTestDto, user.id);
   }
 }

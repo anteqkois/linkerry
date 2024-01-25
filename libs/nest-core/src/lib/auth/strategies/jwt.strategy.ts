@@ -1,4 +1,4 @@
-import { Cookies, JwtToken } from '@linkerry/shared'
+import { Cookies, JwtCustomerTokenPayload } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
@@ -22,8 +22,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return null
   }
 
-  async validate(payload: JwtToken) {
-    // check for privilages using calb ? Logic to get privilages from db
+  async validate(payload: JwtCustomerTokenPayload) {
+    // todo check for privilages using calb ? Logic to get privilages from db
     return { id: payload.sub, name: payload.name }
   }
 }

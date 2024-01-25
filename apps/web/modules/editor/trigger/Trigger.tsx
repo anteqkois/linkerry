@@ -108,7 +108,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 	}, [property.validators, property.defaultValidators])
 
 	switch (property.type) {
-		case PropertyType.Text:
+		case PropertyType.TEXT:
 			return (
 				<FormField
 					control={control}
@@ -128,7 +128,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 					)}
 				/>
 			)
-		case PropertyType.Number:
+		case PropertyType.NUMBER:
 			return (
 				<FormField
 					control={control}
@@ -148,7 +148,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 					)}
 				/>
 			)
-		case PropertyType.Checkbox:
+		case PropertyType.CHECKBOX:
 			return (
 				<FormField
 					control={control}
@@ -166,7 +166,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 					)}
 				/>
 			)
-		case PropertyType.StaticDropdown:
+		case PropertyType.STATIC_DROPDOWN:
 			return <VirtualizedSelect property={property} />
 
 		default:
@@ -175,7 +175,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 }
 
 export const TriggerDrawer = () => {
-	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, testPoolTrigger } = useEditor()
+	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, testPoolTrigger, testConnectorLoading } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
 
 	const {
@@ -272,6 +272,7 @@ export const TriggerDrawer = () => {
 				input,
 				inputUiInfo: {},
 			},
+			nextActionName: '',
 		})
 	}
 
@@ -333,7 +334,7 @@ export const TriggerDrawer = () => {
 				<ResizablePanel defaultSize={25}>
 					<div className="flex h-full items-center justify-center">
 						<Button variant="secondary" onClick={() => testPoolTrigger(editedTrigger.name)}>
-							<Icons.Test className="mr-3" />
+							{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
 							Generate Test Data
 						</Button>
 					</div>

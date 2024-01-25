@@ -41,7 +41,7 @@ const sandboxKeyCachePool = {
 const sandboxNoCachePool = {
 	async findOrCreate(_cacheInfo: ProvisionCacheInfo): Promise<CachedSandbox> {
 		return sandboxKeyCachePool.findOrCreate({
-			type: SandBoxCacheType.None,
+			type: SandBoxCacheType.NONE,
 		})
 	},
 	async release({ key }: ReleaseParams): Promise<void> {

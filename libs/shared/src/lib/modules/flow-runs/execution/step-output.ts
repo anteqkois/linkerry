@@ -73,20 +73,20 @@ export class GenricStepOutput<T extends ActionType | TriggerType, OUTPUT> {
 
 }
 
-export type StepOutput = GenricStepOutput<ActionType.LoopOnItems, LoopStepResult> | GenricStepOutput<ActionType.Branch, BranchStepResult> | GenricStepOutput<Exclude<ActionType, ActionType.LoopOnItems | ActionType.Branch> | TriggerType, unknown>
+export type StepOutput = GenricStepOutput<ActionType.LOOP_ON_ITEMS, LoopStepResult> | GenricStepOutput<ActionType.BRANCH, BranchStepResult> | GenricStepOutput<Exclude<ActionType, ActionType.LOOP_ON_ITEMS | ActionType.BRANCH> | TriggerType, unknown>
 
 type BranchStepResult = {
     condition: boolean
 }
 
-export class BranchStepOutput extends GenricStepOutput<ActionType.Branch, BranchStepResult> {
-    constructor(step: BaseStepOutputParams<ActionType.Branch, BranchStepResult>) {
+export class BranchStepOutput extends GenricStepOutput<ActionType.BRANCH, BranchStepResult> {
+    constructor(step: BaseStepOutputParams<ActionType.BRANCH, BranchStepResult>) {
         super(step)
     }
 
     static init({ input }: { input: unknown }): BranchStepOutput {
         return new BranchStepOutput({
-            type: ActionType.Branch,
+            type: ActionType.BRANCH,
             input,
             status: StepOutputStatus.SUCCEEDED,
         })
@@ -101,8 +101,8 @@ type LoopStepResult = {
     iterations: Record<string, StepOutput>[]
 }
 
-export class LoopStepOutput extends GenricStepOutput<ActionType.LoopOnItems, LoopStepResult> {
-    constructor(step: BaseStepOutputParams<ActionType.LoopOnItems, LoopStepResult>) {
+export class LoopStepOutput extends GenricStepOutput<ActionType.LOOP_ON_ITEMS, LoopStepResult> {
+    constructor(step: BaseStepOutputParams<ActionType.LOOP_ON_ITEMS, LoopStepResult>) {
         super(step)
         this.output = step.output ?? {
             item: undefined,
@@ -113,7 +113,7 @@ export class LoopStepOutput extends GenricStepOutput<ActionType.LoopOnItems, Loo
 
     static init({ input }: { input: unknown }): LoopStepOutput {
         return new LoopStepOutput({
-            type: ActionType.LoopOnItems,
+            type: ActionType.LOOP_ON_ITEMS,
             input,
             status: StepOutputStatus.SUCCEEDED,
         })

@@ -1,7 +1,5 @@
 import { z } from 'zod'
 import { ConnectorType } from '../../connectors'
-import { ActionType } from './action'
-import { TriggerType } from './trigger'
 
 export const sampleDataSchema = z.object({
 	currentSelectedData: z.unknown(),
@@ -14,7 +12,7 @@ export const baseStepSchema = z.object({
 	name: stepNameSchema,
 	displayName: z.string(),
 	valid: z.boolean(),
-	type: z.nativeEnum(ActionType).or(z.nativeEnum(TriggerType)),
+	// type: z.nativeEnum(ActionType).or(z.nativeEnum(TriggerType)),
 	// nextActionName: z.string().optional(),
 	nextActionName: z.string(),
 })
@@ -26,7 +24,6 @@ export const sampleDataSettingsObjectSchema = z.object({
 })
 
 export const baseConnectorSettingsSchema = z.object({
-	actionName: z.string(),
 	connectorName: z.string(), // '@market-connecotr/binance'
 	connectorVersion: z.string(),
 	connectorType: z.nativeEnum(ConnectorType), // Officail, Custom

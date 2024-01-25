@@ -14,6 +14,7 @@ import {
 	WithoutId,
 	deepMerge,
 	generateEmptyTrigger,
+	isCustomHttpExceptionAxios,
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
@@ -94,6 +95,8 @@ interface IEditorState {
 	loadFlow: (id: Id) => Promise<Flow | null>
 	setFlow: (flow: Flow) => void
 	updateFlow: (id: Id, flow: Partial<Flow>) => Promise<void>
+	// CONNECTORS
+	testConnectorLoading: boolean
 	// TRIGGERS
 	editedTrigger: Trigger | null
 	setEditedTrigger: (trigger: Trigger) => void
@@ -196,6 +199,8 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		const { data } = await FlowApi.patch(id, flow)
 		set({ flow: data })
 	},
+	// CONNECTORS
+	testConnectorLoading: false,
 	// TRIGGERS
 	editedTrigger: null,
 	setEditedTrigger: (trigger: Trigger) =>
@@ -290,12 +295,21 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 	},
 	testPoolTrigger: async (triggerName: string) => {
-		const { data } = await TriggerApi.poolTest({
-			flowId: get().flow._id,
-			triggerName,
-		})
+		set({ testConnectorLoading: true })
+		try {
+			const { data } = await TriggerApi.poolTest({
+				flowId: get().flow._id,
+				triggerName,
+			})
 
-		console.log(data);
+			console.log(data)
+		} catch (error) {
+			if (isCustomHttpExceptionAxios(error)) {
+				console.log(error.response.data)
+			} else console.log(error)
+		}
+
+		set({ testConnectorLoading: false })
 	},
 	// ACTIONS
 	editedAction: null,

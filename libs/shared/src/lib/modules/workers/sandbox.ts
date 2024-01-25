@@ -1,19 +1,19 @@
 import { Id } from "../../common"
 
 export enum SandBoxCacheType {
-	Connector = 'Connector', // Only connector data
-	Flow = 'Flow', // Only given flow cached
-	Code = 'Code',
-	None = 'None',
+	CONNECTOR = 'CONNECTOR', // Only connector data
+	FLOW = 'FLOW', // Only given flow cached
+	CODE = 'CODE',
+	NONE = 'NONE',
 }
 
-export type TypedProvisionCacheInfo<T extends SandBoxCacheType = SandBoxCacheType> = T extends SandBoxCacheType.Code
+export type TypedProvisionCacheInfo<T extends SandBoxCacheType = SandBoxCacheType> = T extends SandBoxCacheType.CODE
 	? CodeProvisionCacheInfo
-	: T extends SandBoxCacheType.Flow
+	: T extends SandBoxCacheType.FLOW
 	? FlowProvisionCacheInfo
-	: T extends SandBoxCacheType.None
+	: T extends SandBoxCacheType.NONE
 	? NoneProvisionCacheInfo
-	: T extends SandBoxCacheType.Connector
+	: T extends SandBoxCacheType.CONNECTOR
 	? ConnectorProvisionCacheInfo
 	: never
 
@@ -21,13 +21,13 @@ export type ProvisionCacheInfo = TypedProvisionCacheInfo
 
 export const extractProvisionCacheKey = (params: ProvisionCacheInfo): string => {
 	switch (params.type) {
-		case SandBoxCacheType.Code:
+		case SandBoxCacheType.CODE:
 			return extractCodeCacheKey(params)
-		case SandBoxCacheType.Flow:
+		case SandBoxCacheType.FLOW:
 			return extractFlowCacheKey(params)
-		case SandBoxCacheType.None:
+		case SandBoxCacheType.NONE:
 			return extractNoneCacheKey(params)
-		case SandBoxCacheType.Connector:
+		case SandBoxCacheType.CONNECTOR:
 			return extractConnectorCacheKey(params)
 	}
 }
@@ -53,17 +53,17 @@ type BaseProvisionCacheInfo<T extends SandBoxCacheType> = {
 	type: T
 }
 
-type CodeProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.Code> & {
+type CodeProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.CODE> & {
 	sourceCodeHash: string
 }
 
-type FlowProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.Flow> & {
+type FlowProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.FLOW> & {
 	flowVersionId: Id
 }
 
-type NoneProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.None>
+type NoneProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.NONE>
 
-type ConnectorProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.Connector> & {
+type ConnectorProvisionCacheInfo = BaseProvisionCacheInfo<SandBoxCacheType.CONNECTOR> & {
 	connectorName: string
 	connectorVersion: string
 }

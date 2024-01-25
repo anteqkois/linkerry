@@ -19,7 +19,7 @@ export const SelectTriggerDrawer = () => {
     if (!editedTrigger) throw new Error('Can not retrive editTrigger data')
 
     const newTrigger: TriggerConnector = {
-      name: editedTrigger.name,
+			name: editedTrigger.name,
       displayName: row.original.displayName,
       type: TriggerType.Connector,
       valid: false,
@@ -31,6 +31,7 @@ export const SelectTriggerDrawer = () => {
         input: {},
 				inputUiInfo:{}
       },
+			nextActionName:'',
     }
 
     await updateEditedTrigger(newTrigger)

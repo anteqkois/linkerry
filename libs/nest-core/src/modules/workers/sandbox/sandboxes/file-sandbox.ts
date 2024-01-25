@@ -1,7 +1,7 @@
 import { EngineResponseStatus } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { spawn } from 'node:child_process'
-import { cp, mkdir, readFile, rmdir, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { AbstractSandbox, ExecuteSandboxResult, SandboxCtorParams } from './abstract-sandbox'
 
@@ -13,14 +13,14 @@ export class FileSandbox extends AbstractSandbox {
 	}
 
 	public override async recreate(): Promise<void> {
-		console.log(`[#recreate]`, { boxId: this.boxId })
+		this.logger.debug(`[#recreate] ${JSON.stringify({ boxId: this.boxId })}`)
 
 		const sandboxFolderPath = this.getSandboxFolderPath()
 
 		try {
-			await rmdir(sandboxFolderPath, { recursive: true })
+			await rm(sandboxFolderPath, { recursive: true })
 		} catch (e) {
-			this.logger.error(`[#recreate] rmdir failure`, sandboxFolderPath)
+			this.logger.debug(`[#recreate] rm failure; sandboxFolderPath:`, sandboxFolderPath)
 		}
 
 		await mkdir(sandboxFolderPath, { recursive: true })
@@ -43,7 +43,7 @@ export class FileSandbox extends AbstractSandbox {
 
 		let engineResponse
 
-		if (result.verdict === EngineResponseStatus.Ok) {
+		if (result.verdict === EngineResponseStatus.OK) {
 			engineResponse = await this.parseFunctionOutput()
 		}
 
@@ -61,7 +61,7 @@ export class FileSandbox extends AbstractSandbox {
 	}
 
 	protected override async setupCache(): Promise<void> {
-		console.log({ boxId: this.boxId, cacheKey: this._cacheKey, cachePath: this._cachePath }, '[FileSandbox#setupCache]')
+		this.logger.debug(`[#setupCache]`, { boxId: this.boxId, cacheKey: this._cacheKey, cachePath: this._cachePath })
 
 		if (this._cachePath) {
 			await cp(this._cachePath, this.getSandboxFolderPath(), { recursive: true })
@@ -111,12 +111,12 @@ export class FileSandbox extends AbstractSandbox {
 					await writeFile(standardErrorPath, stderr)
 				}
 
-				resolve({ verdict: EngineResponseStatus.Ok })
+				resolve({ verdict: EngineResponseStatus.OK })
 			})
 
 			setTimeout(() => {
 				process.kill()
-				resolve({ verdict: EngineResponseStatus.Timeout })
+				resolve({ verdict: EngineResponseStatus.TIMEOUT })
 			}, AbstractSandbox.sandboxRunTimeSeconds * 1000)
 		})
 	}

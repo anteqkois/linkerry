@@ -1,8 +1,10 @@
 import { EngineResponse, EngineResponseStatus } from '@linkerry/shared'
+import { Logger } from '@nestjs/common'
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 import { fileExists } from '../../../../lib/utils'
 
+const logger = new Logger('AbstractSandbox')
 export abstract class AbstractSandbox {
     protected static readonly sandboxRunTimeSeconds =  +(process.env['SANDBOX_RUN_TIME_SECONDS'] ?? 600)
     protected static readonly nodeExecutablePath = process.execPath
@@ -26,7 +28,7 @@ export abstract class AbstractSandbox {
     protected abstract setupCache(): Promise<void>
 
     public async assignCache({ cacheKey, cachePath }: AssignCacheParams): Promise<void> {
-        console.log({ boxId: this.boxId, cacheKey, cachePath }, '[AbstractSandbox#assignCache]')
+			logger.debug(`[#assignCache]`, { boxId: this.boxId, cacheKey, cachePath })
 
         this._cacheKey = cacheKey
         this._cachePath = cachePath

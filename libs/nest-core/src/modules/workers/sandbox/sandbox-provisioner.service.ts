@@ -2,14 +2,15 @@ import { ConnectorPackage, SandBoxCacheType, TypedProvisionCacheInfo } from '@li
 import { Injectable, Logger } from '@nestjs/common'
 import { SandboxManagerService } from './cache/sandbox-manager.service'
 import { sandboxCachePool } from './cache/sandbox-pool'
+import { Sandbox } from './sandboxes/sandbox'
 
 @Injectable()
 export class SandboxProvisionerService {
 	private readonly logger = new Logger(SandboxProvisionerService.name)
 
-	constructor(private readonly sandboxManagerService: SandboxManagerService){}
+	constructor(private readonly sandboxManagerService: SandboxManagerService) {}
 
-	async provisionSandbox({connectors = [], ...cacheInfo}: GetParams) {
+	async provisionSandbox({ connectors = [], ...cacheInfo }: GetParams) {
 		try {
 			const cachedSandbox = await sandboxCachePool.findOrCreate(cacheInfo)
 
@@ -32,10 +33,26 @@ export class SandboxProvisionerService {
 			throw new Error(`Can not provisionSandbox ${JSON.stringify(connectors)}`)
 		}
 	}
+
+	async releaseSandbox({ sandbox }: ReleaseParams): Promise<void> {
+		this.logger.debug(`#releaseSandbox`, { boxId: sandbox.boxId, cacheKey: sandbox.cacheKey })
+
+		await this.sandboxManagerService.release(sandbox.boxId)
+
+		if (sandbox.cacheKey) {
+			await sandboxCachePool.release({
+				key: sandbox.cacheKey,
+			})
+		}
+	}
 }
 
 type GetParams<T extends SandBoxCacheType = SandBoxCacheType> = TypedProvisionCacheInfo<T> & {
 	connectors?: ConnectorPackage[]
 	// projectId: ProjectId
 	// codeSteps?: CodeArtifact[]
+}
+
+type ReleaseParams = {
+	sandbox: Sandbox
 }

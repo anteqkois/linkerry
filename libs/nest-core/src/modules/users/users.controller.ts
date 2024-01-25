@@ -1,4 +1,4 @@
-import { JwtUser } from '@linkerry/shared';
+import { RequestUser } from '@linkerry/shared';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator';
 import { JwtAuthGuard } from '../../lib/auth/guards/jwt-auth.guard';
@@ -11,7 +11,7 @@ export class UsersController {
   // Add more secure logic
   @UseGuards(JwtAuthGuard)
   @Get()
-  getUser(@ReqJwtUser() user: JwtUser) {
+  getUser(@ReqJwtUser() user: RequestUser) {
     return this.usersService.find()
   }
 

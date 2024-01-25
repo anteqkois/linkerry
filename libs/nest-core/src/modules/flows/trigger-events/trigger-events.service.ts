@@ -1,6 +1,6 @@
 import { Id, TriggerHookType, TriggerType } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
-import { EngineService } from '../engine/engine.service'
+import { EngineService } from '../../engine/engine.service'
 import { FlowsService } from '../flows/flows.service'
 // import { StepFilesService } from '../step-files/step-files.service'
 import { PoolTestDto } from '../trigger-events/dto/pool-test.dto'
@@ -27,7 +27,7 @@ export class TriggerEventsService {
 		// this.stepFilesService.delete()
 
 		// execute trigger
-		const { result } = await this.engineService.executeTriggerOperation({
+		const { result } = await this.engineService.executeTrigger({
 			flowVersion: flow.version,
 			hookType: TriggerHookType.TEST,
 			triggerName: trigger.name,
