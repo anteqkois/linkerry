@@ -65,6 +65,6 @@ export class BaseStepModel implements BaseStep {
 	@Prop({ required: true, type: Boolean, default: false })
 	valid: boolean
 
-	@Prop({ required: false, type: String })
-	nextActionName?: string | undefined
+	@Prop({ required: false, type: String, default: '' })
+	nextActionName: string
 }

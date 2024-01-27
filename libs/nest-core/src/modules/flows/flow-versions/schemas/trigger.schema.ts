@@ -5,16 +5,16 @@ import { BaseStepModel, ConnectorSettingsModel, SampleDataSchema } from './base.
 /* EMPTY */
 @Schema({ _id: false, discriminatorKey: 'type' })
 export class TriggerEmptyModel extends BaseStepModel implements TriggerEmpty {
-	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.Empty })
-	override type: TriggerType.Empty
+	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.EMPTY })
+	override type: TriggerType.EMPTY
 }
 export const TriggerEmptySchema = SchemaFactory.createForClass(TriggerEmptyModel)
 
 /* WEBHOOK */
 @Schema({ _id: false, discriminatorKey: 'type' })
 export class TriggerWebhookModel extends BaseStepModel implements TriggerWebhook {
-	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.Webhook })
-	override type: TriggerType.Webhook
+	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.WEBHOOK })
+	override type: TriggerType.WEBHOOK
 
 	@Prop({ required: false, type: { sampleData: SampleDataSchema } })
 	settings: {
@@ -33,8 +33,8 @@ export const TriggerConnectorSettingsSchema = SchemaFactory.createForClass(Trigg
 
 @Schema({ _id: false, discriminatorKey: 'type' })
 export class TriggerConnectorModel extends BaseStepModel implements TriggerConnector {
-	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.Webhook })
-	override type: TriggerType.Connector
+	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.WEBHOOK })
+	override type: TriggerType.CONNECTOR
 
 	@Prop({ required: false, type: TriggerConnectorSettingsSchema })
 	settings: TriggerConnectorSettings

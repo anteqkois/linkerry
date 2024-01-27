@@ -11,7 +11,7 @@ export class SandboxManagerService {
 	private readonly logger = new Logger(SandboxManagerService.name)
 
 	async allocate(): Promise<Sandbox> {
-		this.logger.debug('[#allocate]')
+		// this.logger.debug('[#allocate]')
 
 		const sandbox = this._getSandbox()
 
@@ -37,7 +37,7 @@ export class SandboxManagerService {
 	}
 
 	async release(sandboxId: number): Promise<void> {
-		this.logger.log({ boxId: sandboxId }, '[#release]')
+		this.logger.log(`#release`, { boxId: sandboxId })
 
 		const sandbox = sandboxes[sandboxId]
 

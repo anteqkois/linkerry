@@ -168,7 +168,7 @@ function getStateAtPath({ currentPath, steps }: { currentPath: StepExecutionPath
 	let targetMap = steps
 	currentPath.path.forEach(([stepName, iteration]) => {
 		const stepOutput = targetMap[stepName]
-		if (!stepOutput.output || stepOutput.type !== ActionType.LoopOnItems) {
+		if (!stepOutput.output || stepOutput.type !== ActionType.LOOP_ON_ITEMS) {
 			throw new Error('[ExecutionState#getTargetMap] Not instance of Loop On Items step output')
 		}
 		targetMap = stepOutput.output.iterations[iteration]

@@ -176,7 +176,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 
 export const TriggerDrawer = () => {
 	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, testPoolTrigger, testConnectorLoading } = useEditor()
-	if (!editedTrigger || editedTrigger?.type !== TriggerType.Connector) throw new Error('Missing editedTrigger')
+	if (!editedTrigger || editedTrigger?.type !== TriggerType.CONNECTOR) throw new Error('Missing editedTrigger')
 
 	const {
 		data: connectorMetadata,
@@ -196,7 +196,7 @@ export const TriggerDrawer = () => {
 
 	// setup form fields on start based on editedTrigger input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
-		if (isFetching || editedTrigger.type !== TriggerType.Connector || editedTrigger.settings.triggerName === '') return
+		if (isFetching || editedTrigger.type !== TriggerType.CONNECTOR || editedTrigger.settings.triggerName === '') return
 		if (!connectorMetadata) throw new CustomError('Can not find connector metadata')
 
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
@@ -263,7 +263,7 @@ export const TriggerDrawer = () => {
 			name: editedTrigger.name,
 			valid: false,
 			displayName: selectedTrigger.displayName,
-			type: TriggerType.Connector,
+			type: TriggerType.CONNECTOR,
 			settings: {
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,

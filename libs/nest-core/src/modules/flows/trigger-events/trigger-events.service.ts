@@ -20,8 +20,8 @@ export class TriggerEventsService {
 		const trigger = flow.version.triggers.find((trigger) => trigger.name === poolDto.triggerName)
 		if (!trigger) throw new UnprocessableEntityException(`Can not retrive flow trigger by given name`)
 
-		if (trigger.type === TriggerType.Webhook) throw new UnprocessableEntityException(`Can not test webhook triggers`)
-		if (trigger.type === TriggerType.Empty) throw new UnprocessableEntityException(`Can not test empty triggers`)
+		if (trigger.type === TriggerType.WEBHOOK) throw new UnprocessableEntityException(`Can not test webhook triggers`)
+		if (trigger.type === TriggerType.EMPTY) throw new UnprocessableEntityException(`Can not test empty triggers`)
 
 		// delete old data
 		// this.stepFilesService.delete()

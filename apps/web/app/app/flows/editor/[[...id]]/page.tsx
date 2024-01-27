@@ -17,10 +17,10 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 
   for (const trigger of flowVersion.triggers) {
     switch (trigger.type) {
-      case TriggerType.Empty:
+      case TriggerType.EMPTY:
         nodes.push(selectTriggerNodeFactory({ trigger }))
         break
-      case TriggerType.Connector: {
+      case TriggerType.CONNECTOR: {
         const connectorMetadata = connectorsMetadata.find((metadata) => trigger.settings.connectorName === metadata.name)
         if (!connectorMetadata) throw new Error(`Can not retrive trigger connector metadata: ${trigger.settings.connectorName}`)
         nodes.push(triggerNodeFactory({ trigger, connectorMetadata }))

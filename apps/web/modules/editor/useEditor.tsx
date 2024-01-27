@@ -8,6 +8,7 @@ import {
 	FlowState,
 	FlowStatus,
 	Id,
+	StepName,
 	Trigger,
 	TriggerConnector,
 	TriggerEmpty,
@@ -15,6 +16,7 @@ import {
 	deepMerge,
 	generateEmptyTrigger,
 	isCustomHttpExceptionAxios,
+	retriveStepNumber,
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
@@ -103,7 +105,7 @@ interface IEditorState {
 	patchEditedTrigger: (update: Partial<Trigger>) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
-	resetTrigger: (triggerName: string) => Promise<void>
+	resetTrigger: (triggerName: StepName) => Promise<void>
 	testPoolTrigger: (triggerName: string) => Promise<void>
 	// ACTIONS
 	editedAction: Action | null
@@ -262,17 +264,18 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 		localStorage.setItem('flow', JSON.stringify(newFlow))
 	},
-	resetTrigger: async (triggerName: string) => {
+	resetTrigger: async (triggerName: StepName) => {
 		let emptyTrigger: TriggerEmpty | undefined = undefined
 
 		// eslint-disable-next-line prefer-const
 		let { nodes, flow } = get()
 		if (!flow) throw new CustomError('Can not retrive flow')
 
+		const stepNumber = retriveStepNumber(triggerName)
 		nodes = nodes.map((node: CustomNode) => {
 			if (node.id !== triggerName) return node as CustomNode
 
-			emptyTrigger = generateEmptyTrigger(`trigger_${flow.version.stepsCount + 1}`)
+			emptyTrigger = generateEmptyTrigger(`trigger_${stepNumber}`)
 			const emptyNode = selectTriggerNodeFactory({ trigger: emptyTrigger })
 
 			return emptyNode

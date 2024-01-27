@@ -90,7 +90,7 @@ export class CachedSandbox {
 	}
 
 	async decrementActiveSandboxCount(): Promise<void> {
-		this.logger.debug({ key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
+		this.logger.debug(`#decrementActiveSandboxCount`, { key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
 
 		if (this._activeSandboxCount === 0) {
 			return

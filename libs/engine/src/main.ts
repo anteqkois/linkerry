@@ -135,10 +135,12 @@ const execute = async (): Promise<void> => {
 			case EngineOperationType.EXECUTE_TRIGGER_HOOK: {
 				const input: ExecuteTriggerOperation<TriggerHookType> = await utils.parseJsonFile(EngineConstants.INPUT_FILE)
 
+				console.log(1);
 				const output = await triggerHelper.executeTrigger({
 					params: input,
 					constants: EngineConstants.fromExecuteTriggerInput(input),
 				})
+				console.log(1.1);
 				await writeOutput({
 					status: EngineResponseStatus.OK,
 					response: output,

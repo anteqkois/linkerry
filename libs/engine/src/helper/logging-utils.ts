@@ -20,13 +20,13 @@ async function trimStepOutput(stepOutput: StepOutput): Promise<StepOutput> {
     const modified: StepOutput = JSON.parse(JSON.stringify(stepOutput))
     modified.input = await applyFunctionToValues(modified.input, trim)
     switch (modified.type) {
-        case ActionType.Branch:
-        case TriggerType.Webhook:
-        case TriggerType.Empty:
-        case TriggerType.Connector:
+        case ActionType.BRANCH:
+        case TriggerType.WEBHOOK:
+        case TriggerType.EMPTY:
+        case TriggerType.CONNECTOR:
             modified.output = await applyFunctionToValues(modified.output, trim)
             break
-        case ActionType.LoopOnItems: {
+        case ActionType.LOOP_ON_ITEMS: {
             const loopItem = modified.output
             if (loopItem) {
                 loopItem.iterations = await applyFunctionToValues(loopItem.iterations, trim)
@@ -35,7 +35,7 @@ async function trimStepOutput(stepOutput: StepOutput): Promise<StepOutput> {
             break
         }
         // case ActionType.Code:
-        case ActionType.Connector:
+        case ActionType.CONNECTOR:
     }
     modified.errorMessage = await applyFunctionToValues(modified.errorMessage, trim)
     return modified

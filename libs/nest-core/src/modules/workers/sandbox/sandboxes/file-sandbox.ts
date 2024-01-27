@@ -85,21 +85,24 @@ export class FileSandbox extends AbstractSandbox {
 			let stderr = ''
 
 			process.stdout.on('data', (data: string) => {
+				// console.log('stdout', data.toString());
 				stdout += data
 			})
 
 			process.stderr.on('data', (data: string) => {
+				console.log('stderr', data.toString());
 				stderr += data
 			})
 
 			process.on('error', (error: unknown) => {
+				// console.log("on('error')", error?.toString());
 				reject(error)
 			})
 
 			process.on('close', async (code: number) => {
 				if (code !== 0) {
 					reject(new Error(`Command failed with code ${code}: ${cmd}`))
-					return
+					// return
 				}
 
 				if (stdout) {

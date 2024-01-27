@@ -19,7 +19,7 @@ export const testExecutionContext = {
 
             const stepType = step.type
             switch (stepType) {
-                case ActionType.Branch:
+                case ActionType.BRANCH:
                     flowExecutionContext = flowExecutionContext.upsertStep(step.name, BranchStepOutput.init({
                         input: step.settings,
                     }))
@@ -42,10 +42,10 @@ export const testExecutionContext = {
                 //     break
                 // }
 								// case ActionType.Code:
-                case ActionType.Connector:
-                case TriggerType.Empty:
-                case TriggerType.Connector:
-                case TriggerType.Webhook:
+                case ActionType.CONNECTOR:
+                case TriggerType.EMPTY:
+                case TriggerType.CONNECTOR:
+                case TriggerType.WEBHOOK:
                     flowExecutionContext = flowExecutionContext.upsertStep(step.name, GenricStepOutput.create({
                         input: step.settings,
                         type: stepType,

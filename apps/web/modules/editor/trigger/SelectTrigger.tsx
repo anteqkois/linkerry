@@ -21,7 +21,7 @@ export const SelectTriggerDrawer = () => {
     const newTrigger: TriggerConnector = {
 			name: editedTrigger.name,
       displayName: row.original.displayName,
-      type: TriggerType.Connector,
+      type: TriggerType.CONNECTOR,
       valid: false,
       settings: {
         connectorName: row.original.name,

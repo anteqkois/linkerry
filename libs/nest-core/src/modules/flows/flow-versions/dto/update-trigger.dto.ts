@@ -1,5 +1,6 @@
-import { BaseConnectorSettings, BaseTrigger, TriggerType } from '@linkerry/shared'
-import { IsDefined, IsOptional } from 'class-validator'
+import { BaseConnectorSettings, BaseTrigger, ConnectorType, TriggerConnector, TriggerConnectorSettings, TriggerType } from '@linkerry/shared'
+import { Type } from 'class-transformer'
+import { IsDefined, IsNotEmptyObject, IsOptional, ValidateNested } from 'class-validator'
 
 // // export class UpdateTriggerDto implements BaseStep {
 // export class UpdateTriggerEmptyDto implements TriggerEmpty {
@@ -64,26 +65,119 @@ import { IsDefined, IsOptional } from 'class-validator'
 
 // export class UpdateTriggerDto extends IntersectionType(UpdateTriggerEmptyDto, UpdateTriggerConnecotrDto, UpdateTriggerWebhookDto) {}
 
-export class UpdateTriggerDto
-	// implements Omit<TriggerEmpty, 'type'>, Omit<TriggerWebhook, 'type' | 'settings'>, Omit<TriggerConnector, 'type' | 'settings'>
-	implements BaseTrigger
-{
+// class UpdateTriggerSettingsDto implements BaseTrigger{}
+
+class BaseConnectorSettingsDto implements BaseConnectorSettings {
+	@IsDefined()
+	connectorName: string
+
+	@IsDefined()
+	connectorType: ConnectorType
+
+	@IsDefined()
+	connectorVersion: string
+
+	@IsDefined()
+	input: any
+
+	@IsDefined()
+	inputUiInfo: any
+
+	@IsOptional()
+	sampleData?: any
+}
+
+export class UpdateTriggerBaseDto implements BaseTrigger {
 	@IsDefined()
 	name: string
 
 	@IsDefined()
 	displayName: string
 
-	@IsOptional()
-	nextActionName?: string
+	@IsDefined()
+	nextActionName: string
 
 	@IsDefined()
-	// type: TriggerType.Connector | TriggerType.Empty | TriggerType.Webhook
 	type: TriggerType
 
 	@IsDefined()
 	valid: boolean
 
-	@IsOptional()
+	@IsNotEmptyObject()
+	@ValidateNested()
+	@Type(() => BaseConnectorSettingsDto)
 	settings: BaseConnectorSettings
+	// @IsObject()
+	// settings: BaseConnectorSettings
 }
+
+class TriggerConnectorSettingsDto implements TriggerConnectorSettings {
+	@IsDefined()
+	connectorName: string
+
+	@IsDefined()
+	connectorType: ConnectorType
+
+	@IsDefined()
+	connectorVersion: string
+
+	@IsDefined()
+	triggerName: string
+
+	@IsDefined()
+	input: any
+
+	@IsDefined()
+	inputUiInfo: any
+
+	@IsOptional()
+	sampleData?: any
+}
+
+export class UpdateTriggerConnectorDto implements TriggerConnector {
+	@IsDefined()
+	name: string
+
+	@IsDefined()
+	displayName: string
+
+	@IsDefined()
+	nextActionName: string
+
+	@IsDefined()
+	type: TriggerType.CONNECTOR
+
+	@IsDefined()
+	valid: boolean
+
+	@IsNotEmptyObject()
+	@ValidateNested()
+	@Type(() => TriggerConnectorSettingsDto)
+	settings: TriggerConnectorSettings
+}
+
+// export class UpdateTriggerDto
+// 	implements BaseTrigger
+// {
+// 	@IsDefined()
+// 	name: string
+
+// 	@IsDefined()
+// 	displayName: string
+
+// 	@IsDefined()
+// 	nextActionName: string
+
+// 	@IsDefined()
+// 	// type: TriggerType.Connector | TriggerType.Empty | TriggerType.Webhook
+// 	type: TriggerType
+
+// 	@IsDefined()
+// 	valid: boolean
+
+// 	// @IsNotEmptyObject()
+// 	// @ValidateNested()
+// 	// @Type(() => User)
+// 	@IsObject()
+// 	settings: BaseConnectorSettings | TriggerConnectorSettings
+// }

@@ -4,15 +4,15 @@ import { BaseExecutor } from './base-executor'
 import { EngineConstants } from './context/engine-constants'
 import { ExecutionVerdict, FlowExecutorContext } from './context/flow-execution-context'
 // import { loopExecutor } from './loop-executor'
-import { connectorExecutor } from './piece-executor'
+import { connectorExecutor } from './connector-executor'
 
 // @ts-ignore
 const executeFunction: Record<ActionType, BaseExecutor<Action>> = {
     // [ActionType.Code]: codeExecutor,
     // [ActionType.Branch]: branchExecutor,
     // [ActionType.LoopOnItems]: loopExecutor,
-    [ActionType.Connector]: connectorExecutor,
-    [ActionType.MergeBranch]: connectorExecutor, // todo implement
+    [ActionType.CONNECTOR]: connectorExecutor,
+    [ActionType.MERGE_BRANCH]: connectorExecutor, // todo implement
 }
 
 export const flowExecutor = {

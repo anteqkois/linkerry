@@ -86,7 +86,7 @@ function getStep(flowVersion: FlowVersion, stepName: string): Action | Trigger |
 const updateTrigger = (flowVersion: FlowVersion, triggerData: Trigger) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (triggerData.type) {
-		case TriggerType.Connector:
+		case TriggerType.CONNECTOR:
 			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
 				if (trigger.name !== triggerData.name) return trigger
 				return triggerData

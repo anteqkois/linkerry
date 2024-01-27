@@ -2,9 +2,9 @@ import { z } from 'zod'
 import { StepName, baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from './base'
 
 export enum TriggerType {
-	Empty = 'Empty',
-	Connector = 'Connector',
-	Webhook = 'Webhook',
+	EMPTY = 'EMPTY',
+	CONNECTOR = 'CONNECTOR',
+	WEBHOOK = 'WEBHOOK',
 }
 
 /* BASE */
@@ -19,19 +19,19 @@ export interface BaseTrigger extends z.infer<typeof baseTriggerSchema> {}
 /* EMPTY */
 export const triggerEmptySchema = baseStepSchema.merge(
 	z.object({
-		type: z.enum([TriggerType.Empty]),
+		type: z.enum([TriggerType.EMPTY]),
 		settings: z.any(),
 	}),
 )
 export const isEmptyTrigger = (trigger: Trigger): trigger is TriggerEmpty => {
-	return trigger.type === TriggerType.Empty
+	return trigger.type === TriggerType.EMPTY
 }
 export interface TriggerEmpty extends z.infer<typeof triggerEmptySchema> {}
 
 /* WEBHOOK */
 export const triggerWebhookSchema = baseStepSchema.merge(
 	z.object({
-		type: z.enum([TriggerType.Webhook]),
+		type: z.enum([TriggerType.WEBHOOK]),
 		settings: z.object({
 			sampleData: sampleDataSchema,
 		}),
@@ -39,7 +39,7 @@ export const triggerWebhookSchema = baseStepSchema.merge(
 )
 
 export const isWebhookTrigger = (trigger: Trigger): trigger is TriggerWebhook => {
-	return trigger.type === TriggerType.Webhook
+	return trigger.type === TriggerType.WEBHOOK
 }
 export interface TriggerWebhook extends z.infer<typeof triggerWebhookSchema> {}
 
@@ -52,13 +52,13 @@ const triggerConnectorSettingsSchema = baseConnectorSettingsSchema.merge(
 
 export const triggerConnectorSchema = baseStepSchema.merge(
 	z.object({
-		type: z.enum([TriggerType.Connector]),
+		type: z.enum([TriggerType.CONNECTOR]),
 		settings: triggerConnectorSettingsSchema,
 	}),
 )
 
 export const isConnectorTrigger = (trigger: Trigger): trigger is TriggerConnector => {
-	return trigger.type === TriggerType.Connector
+	return trigger.type === TriggerType.CONNECTOR
 }
 
 export interface TriggerConnector extends z.infer<typeof triggerConnectorSchema> {}
@@ -81,8 +81,13 @@ export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
 	return {
 		name,
 		displayName: 'Select trigger',
-		type: TriggerType.Empty,
+		type: TriggerType.EMPTY,
 		valid: false,
 		nextActionName: '',
 	}
+}
+
+export const retriveStepNumber = (name: StepName): number => {
+	const nameParts = name.split('_')
+	return Number(nameParts[nameParts.length - 1])
 }

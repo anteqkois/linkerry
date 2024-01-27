@@ -42,7 +42,7 @@ export const connectorExecutor: BaseExecutor<ActionConnector> = {
 
 		const stepOutput = GenricStepOutput.create({
 			input: censoredInput,
-			type: ActionType.Connector,
+			type: ActionType.CONNECTOR,
 			status: StepOutputStatus.SUCCEEDED,
 		})
 		try {
