@@ -23,6 +23,7 @@ export class FlowVersionsService {
 	async createEmpty(flowId: Id, userId: Id) {
 		const emptyTrigger = generateEmptyTrigger('trigger_1')
 
+		console.log(emptyTrigger);
 		return this.flowVersionModel.create({
 			user: userId,
 			displayName: 'Untitled',

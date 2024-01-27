@@ -8,7 +8,6 @@ import {
 	FlowState,
 	FlowStatus,
 	Id,
-	StepName,
 	Trigger,
 	TriggerConnector,
 	TriggerEmpty,
@@ -16,7 +15,7 @@ import {
 	deepMerge,
 	generateEmptyTrigger,
 	isCustomHttpExceptionAxios,
-	retriveStepNumber,
+	retriveStepNumber
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import {
@@ -105,7 +104,7 @@ interface IEditorState {
 	patchEditedTrigger: (update: Partial<Trigger>) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
-	resetTrigger: (triggerName: StepName) => Promise<void>
+	resetTrigger: (triggerName: string) => Promise<void>
 	testPoolTrigger: (triggerName: string) => Promise<void>
 	// ACTIONS
 	editedAction: Action | null
@@ -264,7 +263,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 		localStorage.setItem('flow', JSON.stringify(newFlow))
 	},
-	resetTrigger: async (triggerName: StepName) => {
+	resetTrigger: async (triggerName: string) => {
 		let emptyTrigger: TriggerEmpty | undefined = undefined
 
 		// eslint-disable-next-line prefer-const

@@ -2,6 +2,7 @@ import { SampleData, TriggerConnector, TriggerConnectorSettings, TriggerEmpty, T
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { BaseStepModel, ConnectorSettingsModel, SampleDataSchema } from './base.schema'
 
+// todo discriminatorKey don't work
 /* EMPTY */
 @Schema({ _id: false, discriminatorKey: 'type' })
 export class TriggerEmptyModel extends BaseStepModel implements TriggerEmpty {
@@ -33,10 +34,10 @@ export const TriggerConnectorSettingsSchema = SchemaFactory.createForClass(Trigg
 
 @Schema({ _id: false, discriminatorKey: 'type' })
 export class TriggerConnectorModel extends BaseStepModel implements TriggerConnector {
-	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.WEBHOOK })
+	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.CONNECTOR })
 	override type: TriggerType.CONNECTOR
 
-	@Prop({ required: false, type: TriggerConnectorSettingsSchema })
+	@Prop({ required: true, type: TriggerConnectorSettingsSchema })
 	settings: TriggerConnectorSettings
 }
 export const TriggerConnectorSchema = SchemaFactory.createForClass(TriggerConnectorModel)

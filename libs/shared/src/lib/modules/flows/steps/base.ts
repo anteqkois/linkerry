@@ -32,7 +32,6 @@ export const baseConnectorSettingsSchema = z.object({
 	sampleData: sampleDataSchema.optional(),
 })
 
-export type StepName = `${string}_${number}`
 export interface SampleData extends z.infer<typeof sampleDataSchema> {}
 export interface BaseStep extends z.infer<typeof baseStepSchema> {}
 export interface SampleDataSettingsObject extends z.infer<typeof sampleDataSettingsObjectSchema> {}

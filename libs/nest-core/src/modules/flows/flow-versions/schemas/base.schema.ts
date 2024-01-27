@@ -35,6 +35,12 @@ export class ConnectorSettingsModel implements BaseConnectorSettings {
 	@Prop({ required: true, type: String })
 	connectorName: string
 
+	@Prop({ required: true, type: String })
+	connectorVersion: string
+
+	@Prop({ required: true, type: String, enum: ConnectorType })
+	connectorType: ConnectorType
+
 	@Prop({ required: true, type: Object })
 	input: Record<string, any> & { auth?: string | undefined }
 
@@ -43,12 +49,6 @@ export class ConnectorSettingsModel implements BaseConnectorSettings {
 
 	@Prop({ required: true, type: SampleDataSchema })
 	sampleData: SampleData
-
-	@Prop({ required: true, type: String })
-	connectorVersion: string
-
-	@Prop({ required: true, type: String, enum: ConnectorType })
-	connectorType: ConnectorType
 }
 export const ConnectorSettingsSchema = SchemaFactory.createForClass(ConnectorSettingsModel)
 

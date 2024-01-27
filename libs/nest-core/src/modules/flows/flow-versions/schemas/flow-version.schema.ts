@@ -2,11 +2,10 @@ import { ActionConnector, FlowState, FlowVersion, Id, TriggerConnector, TriggerE
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { ActionConnectorSchema } from './action.schema'
-import { TriggerConnectorSchema, TriggerEmptySchema, TriggerWebhookSchema } from './trigger.schema'
 
 export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'flow_versions' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'flow_versions', minimize: false })
 export class FlowVersionModel implements FlowVersion {
   _id: string
 
@@ -28,8 +27,9 @@ export class FlowVersionModel implements FlowVersion {
   @Prop({ required: true, type: String, enum: FlowState, default: FlowState.Draft })
   state: FlowState
 
-  @Prop({ required: true, type: [TriggerConnectorSchema, TriggerEmptySchema, TriggerWebhookSchema] })
-  triggers: (TriggerConnector | TriggerEmpty | TriggerWebhook)[]
+	// todo discriminatorKey don't work
+  @Prop({ required: true, type: [Object] })
+  triggers: (TriggerEmpty | TriggerConnector |  TriggerWebhook)[]
 
   @Prop({ required: true, type: [ActionConnectorSchema]})
   actions: ActionConnector[]

@@ -90,7 +90,7 @@ export class FileSandbox extends AbstractSandbox {
 			})
 
 			process.stderr.on('data', (data: string) => {
-				console.log('stderr', data.toString());
+				// console.log('stderr', data.toString());
 				stderr += data
 			})
 

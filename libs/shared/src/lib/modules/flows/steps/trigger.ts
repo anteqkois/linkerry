@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { StepName, baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from './base'
+import { baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from './base'
 
 export enum TriggerType {
 	EMPTY = 'EMPTY',
@@ -66,6 +66,7 @@ export interface TriggerConnectorSettings extends z.infer<typeof triggerConnecto
 
 /* TRIGGER */
 export type Trigger = TriggerEmpty | TriggerWebhook | TriggerConnector
+export type TriggerNotEmpty =  TriggerWebhook | TriggerConnector
 
 export function isTrigger(data: unknown): data is Trigger {
 	const result = baseTriggerSchema.safeParse(data)
@@ -77,7 +78,7 @@ export function isTrigger(data: unknown): data is Trigger {
 	return true
 }
 
-export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
+export const generateEmptyTrigger = (name: string): TriggerEmpty => {
 	return {
 		name,
 		displayName: 'Select trigger',
@@ -87,7 +88,7 @@ export const generateEmptyTrigger = (name: StepName): TriggerEmpty => {
 	}
 }
 
-export const retriveStepNumber = (name: StepName): number => {
+export const retriveStepNumber = (name: string): number => {
 	const nameParts = name.split('_')
 	return Number(nameParts[nameParts.length - 1])
 }
