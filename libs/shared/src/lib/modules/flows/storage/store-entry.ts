@@ -1,4 +1,4 @@
-import { DbTimestamp, Id } from '../../../common'
+import { Id, TimestampDatabase } from '../../../common'
 
 export type StoreEntryId = Id
 
@@ -6,7 +6,7 @@ export type StoreEntry = {
 	key: string
 	// projectId: ProjectId
 	value: unknown
-} & DbTimestamp
+} & TimestampDatabase
 
 export type PutStoreEntryRequest = {
 	key: string

@@ -10,7 +10,7 @@ import { FlowModel } from './schemas/flow.schema'
 export class FlowsService {
 	constructor(@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>, private readonly flowVersionService: FlowVersionsService) {}
 
-	async findOne(id: Id, userId: Id) {
+	async findOne(id: Id, userId?: Id) {
 		return this.flowModel
 			.findOne({
 				_id: id,

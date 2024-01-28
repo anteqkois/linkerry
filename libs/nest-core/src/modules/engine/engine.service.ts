@@ -177,8 +177,6 @@ export class EngineService {
 				standardOutput: sandboxResponse.standardOutput,
 			}
 
-			this.logger.debug(`#execute response`, response)
-
 			return response
 		} finally {
 			await this.sandboxProvisionerService.releaseSandbox({ sandbox })
@@ -330,7 +328,7 @@ export class EngineService {
 		return this._execute(EngineOperationType.EXECUTE_VALIDATE_AUTH, sandbox, input)
 	}
 
-	async executeTrigger<T extends TriggerHookType>(operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>) {
+	async executeTrigger<T extends TriggerHookType>(operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>): Promise<EngineHelperResponse<EngineHelperTriggerResult<T>>> {
 		this.logger.debug(`#executeTrigger hookType: ${operation.hookType}`)
 
 		// todo lock flow version

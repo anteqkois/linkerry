@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { DbTimestamp, idStringSchema } from '../../../common'
+import { TimestampDatabase, idStringSchema } from '../../../common'
 
 export const stepFileSchema = z.object({
 	_id: z.string(),
@@ -10,4 +10,4 @@ export const stepFileSchema = z.object({
 	data: z.any()
 })
 
-export interface StepFile extends z.infer<typeof stepFileSchema>, DbTimestamp {}
+export interface StepFile extends z.infer<typeof stepFileSchema>, TimestampDatabase {}

@@ -28,6 +28,10 @@ function getStep(flowVersion: FlowVersion, stepName: string): Action | Trigger |
 	return getAllSteps(flowVersion).find((step) => step.name === stepName)
 }
 
+function getTrigger(flowVersion: FlowVersion, triggerName: string): Trigger | undefined {
+	return flowVersion.triggers.find((trigger) => trigger.name === triggerName)
+}
+
 // function deleteAction(
 //     flowVersion: FlowVersion,
 //     request: DeleteActionRequest,
@@ -151,4 +155,5 @@ export const flowHelper = {
 	getStep,
 	getAllSteps,
 	updateTrigger,
+	getTrigger
 }

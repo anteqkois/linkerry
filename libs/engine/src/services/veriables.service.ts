@@ -119,12 +119,10 @@ export class VariableService {
 					return unresolvedInput
 			}
 
-			console.log('unresolvedInput', unresolvedInput);
 			if (isString(unresolvedInput)) {
 					return this.resolveInput(unresolvedInput, valuesMap, logs)
 			}
 
-			console.log(2.1);
 			if (Array.isArray(unresolvedInput)) {
 					for (let i = 0; i < unresolvedInput.length; ++i) {
 							unresolvedInput[i] = await this.resolveInternally(
@@ -145,7 +143,6 @@ export class VariableService {
 					}
 			}
 
-			console.log(2.1);
 			return unresolvedInput
 	}
 	async resolve<T = unknown>(params: {
@@ -200,7 +197,6 @@ export class VariableService {
 							errors["auth"] = authErrors
 					}
 			}
-			console.log('resolvedInput', resolvedInput);
 			for (const [key, value] of Object.entries(resolvedInput)) {
 					const property = props[key]
 					if (key === AUTHENTICATION_PROPERTY_NAME) {

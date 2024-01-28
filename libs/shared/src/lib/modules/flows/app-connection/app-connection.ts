@@ -1,4 +1,4 @@
-import { DbTimestamp } from '../../../common'
+import { TimestampDatabase } from '../../../common'
 import { OAuth2GrantType } from './dto/upsert-app-connection-request'
 import { OAuth2AuthorizationMethod } from './oauth2-authorization-method'
 
@@ -77,7 +77,7 @@ export type AppConnectionValue<T extends AppConnectionType = AppConnectionType> 
 	? CustomAuthConnectionValue
 	: never
 
-export type AppConnection<Type extends AppConnectionType = AppConnectionType> = DbTimestamp & {
+export type AppConnection<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
 	name: string
 	type: Type
 	connectorName: string
@@ -85,7 +85,7 @@ export type AppConnection<Type extends AppConnectionType = AppConnectionType> = 
 	status: AppConnectionStatus
 	value: AppConnectionValue<Type>
 }
-// export type AppConnection<Type extends AppConnectionType = AppConnectionType> = DbTimestamp<AppConnectionId> & {
+// export type AppConnection<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase<AppConnectionId> & {
 //     name: string
 //     type: Type
 //     connectorName: string

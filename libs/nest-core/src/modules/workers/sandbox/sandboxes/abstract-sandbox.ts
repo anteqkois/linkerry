@@ -58,7 +58,7 @@ export abstract class AbstractSandbox {
         }
 
         const output = JSON.parse(await readFile(outputFile, { encoding: 'utf-8' }))
-        console.log(output, '[Sandbox#parseFunctionOutput] output')
+				// logger.debug(`#parseFunctionOutput`, output)
         return output
     }
 

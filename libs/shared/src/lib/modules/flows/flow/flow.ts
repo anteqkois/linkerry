@@ -1,4 +1,4 @@
-import { DbTimestamp, Id } from '../../../common/database'
+import { Id, TimestampDatabase } from '../../../common/database'
 import { User } from '../../user'
 import { Action } from '../steps/action'
 import { Trigger } from '../steps/trigger'
@@ -14,7 +14,7 @@ export enum FlowState {
   Valid = 'Valid',
 }
 
-export interface Flow extends DbTimestamp {
+export interface Flow extends TimestampDatabase {
   _id: Id
   user: Id
   // projectId: Id
@@ -23,7 +23,7 @@ export interface Flow extends DbTimestamp {
   status: FlowStatus
 }
 
-export interface FlowVersion extends DbTimestamp {
+export interface FlowVersion extends TimestampDatabase {
   _id: Id
   user: Id | User
   displayName: string
