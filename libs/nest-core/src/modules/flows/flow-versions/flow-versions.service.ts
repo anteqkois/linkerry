@@ -28,7 +28,7 @@ export class FlowVersionsService {
 			user: userId,
 			displayName: 'Untitled',
 			state: FlowState.Draft,
-			flow: flowId,
+			flowId: flowId,
 			valid: false,
 			stepsCount: 1,
 			triggers: [emptyTrigger],
@@ -38,7 +38,7 @@ export class FlowVersionsService {
 
 	async deleteRelatedToFlow(flowId: Id) {
 		return this.flowVersionModel.deleteMany({
-			flow: flowId,
+			flowId: flowId,
 		})
 	}
 

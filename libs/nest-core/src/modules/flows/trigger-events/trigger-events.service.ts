@@ -5,7 +5,9 @@ import { FlowsService } from '../flows/flows.service'
 // import { StepFilesService } from '../step-files/step-files.service'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
+import { FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { PoolTestDto } from '../trigger-events/dto/pool-test.dto'
+import { GetManyDto } from './dto/get-many.dto'
 import { TriggerEventModel } from './schemas/trigger-events.schema'
 
 @Injectable()
@@ -15,6 +17,7 @@ export class TriggerEventsService {
 		// private readonly stepFilesService: StepFilesService,
 		private readonly engineService: EngineService,
 		@InjectModel(TriggerEventModel.name) private readonly triggerEventsModel: Model<TriggerEventModel>,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionsModel: Model<FlowVersionModel>,
 	) {}
 
 	private _deleteEventBasedOnSourceName({ flowId, sourceName }: { flowId: Id; sourceName: string }) {
@@ -90,6 +93,24 @@ export class TriggerEventsService {
 		return this.findMany({
 			flowLike: flow,
 			triggerName: flowTrigger.name,
+		})
+	}
+
+	async getMany(query: GetManyDto, userId: Id) {
+		const flowVersion = await this.flowVersionsModel.findOne({
+			flow: query.flowId,
+			user: userId,
+		})
+		if (!flowVersion) throw new UnprocessableEntityException('Can not retrive flow version')
+
+		const trigger = flowHelper.getTrigger(flowVersion, query.triggerName)
+		if (!trigger) throw new UnprocessableEntityException('Can not retrive trigger')
+
+		const sourceName = this._getSourceName(trigger)
+
+		return this.triggerEventsModel.find({
+			flowId: query.flowId,
+			sourceName,
 		})
 	}
 

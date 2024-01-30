@@ -20,7 +20,7 @@ export const baseStepSchema = z.object({
 export const sampleDataSettingsObjectSchema = z.object({
 	currentSelectedData: z.any().optional(),
 	customizedInputs: z.record(z.any()).optional(),
-	lastTestDate: z.date().optional(),
+	lastTestDate: z.string().optional(),
 })
 
 export const baseConnectorSettingsSchema = z.object({

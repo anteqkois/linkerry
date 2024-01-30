@@ -1,6 +1,6 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { FetchQueryOptions } from '@tanstack/react-query'
-import { ConnectorsMetadataApi } from './fetchers'
+import { ConnectorsMetadataApi } from './api'
 
 export const connectorsMetadataQueryConfig = {
   getSummaryMany: (): FetchQueryOptions<ConnectorMetadataSummary[]> => {

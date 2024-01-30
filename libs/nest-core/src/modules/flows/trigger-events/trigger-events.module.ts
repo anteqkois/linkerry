@@ -5,10 +5,11 @@ import { FlowsModule } from '../flows'
 import { TriggerEventModelFactory } from './schemas/trigger-events.schema'
 import { TriggerEventsController } from './trigger-events.controller'
 import { TriggerEventsService } from './trigger-events.service'
+import { flowVersionModelFactory } from '../flow-versions/schemas/flow-version.schema'
 
 @Module({
 	controllers: [TriggerEventsController],
-	imports: [MongooseModule.forFeatureAsync([TriggerEventModelFactory]), FlowsModule, EngineModule, ],
+	imports: [MongooseModule.forFeatureAsync([TriggerEventModelFactory, flowVersionModelFactory]), FlowsModule, EngineModule, ],
 	providers: [TriggerEventsService],
 })
 export class TriggerEventsModule {}

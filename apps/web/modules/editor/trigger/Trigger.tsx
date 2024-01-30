@@ -19,7 +19,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@linkerry/ui-components/client'
-import { Button, H5, Icons } from '@linkerry/ui-components/server'
+import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
 import { HTMLAttributes, useEffect, useMemo } from 'react'
@@ -30,6 +30,7 @@ import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../connectors-metadata/api/query-configs'
 import { useEditor } from '../useEditor'
+import { TriggerEvents } from './TriggerEvents'
 
 export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
 
@@ -175,7 +176,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 }
 
 export const TriggerDrawer = () => {
-	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, testPoolTrigger, testConnectorLoading } = useEditor()
+	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.CONNECTOR) throw new Error('Missing editedTrigger')
 
 	const {
@@ -332,12 +333,7 @@ export const TriggerDrawer = () => {
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (
 				<ResizablePanel defaultSize={25}>
-					<div className="flex h-full items-center justify-center">
-						<Button variant="secondary" onClick={() => testPoolTrigger(editedTrigger.name)}>
-							{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
-							Generate Test Data
-						</Button>
-					</div>
+					<TriggerEvents/>
 				</ResizablePanel>
 			)}
 		</ResizablePanelGroup>

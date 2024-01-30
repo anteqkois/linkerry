@@ -7,16 +7,20 @@ import {
 	Flow,
 	FlowState,
 	FlowStatus,
+	FlowVersion,
 	Id,
 	Trigger,
 	TriggerConnector,
 	TriggerEmpty,
 	WithoutId,
 	deepMerge,
+	flowHelper,
 	generateEmptyTrigger,
+	isConnectorTrigger,
 	isCustomHttpExceptionAxios,
-	retriveStepNumber
+	retriveStepNumber,
 } from '@linkerry/shared'
+import dayjs from 'dayjs'
 import { Dispatch, SetStateAction } from 'react'
 import {
 	Connection,
@@ -34,7 +38,7 @@ import { create } from 'zustand'
 import { EditorDrawer } from '../../shared/components/drawer/types'
 import { FlowVersionApi } from '../flows-version/api'
 import { FlowApi } from '../flows/api/flow'
-import { TriggerApi } from '../flows/api/trigger'
+import { TriggerApi } from '../flows/triggers/api'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 import { CustomNode, CustomNodeId } from './nodes'
 import { selectTriggerNodeFactory } from './nodes/components/nodeFactory'
@@ -298,20 +302,31 @@ export const useEditor = create<IEditorState>((set, get) => ({
 	},
 	testPoolTrigger: async (triggerName: string) => {
 		set({ testConnectorLoading: true })
+		const flow = get().flow
+		let newFlowVersion: FlowVersion | undefined = undefined
 		try {
 			const { data } = await TriggerApi.poolTest({
-				flowId: get().flow._id,
+				flowId: flow._id,
 				triggerName,
 			})
 
+			const trigger = flowHelper.getTrigger(flow.version, triggerName)
+			if (!trigger || !isConnectorTrigger(trigger)) throw new CustomError(`Can not find trigger`)
 			console.log(data)
+			trigger.settings.inputUiInfo = {
+				currentSelectedData: data[0],
+				lastTestDate: dayjs().format('YYYY-MM-DD HH-mm-ss'),
+			}
+			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
 		} catch (error) {
 			if (isCustomHttpExceptionAxios(error)) {
 				console.log(error.response.data)
 			} else console.log(error)
 		}
 
-		set({ testConnectorLoading: false })
+		// check if it is optimal to update whole flowVersion insted only trigger
+		if (!newFlowVersion) set({ testConnectorLoading: false })
+		else set({ testConnectorLoading: false, flow: { ...flow, version: newFlowVersion } })
 	},
 	// ACTIONS
 	editedAction: null,

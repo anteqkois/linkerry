@@ -25,7 +25,7 @@ export class SampleDataSettingsObjectModel implements SampleDataSettingsObject {
 	customizedInputs: Record<string, any>
 
 	@Prop({ required: false, type: Date })
-	lastTestDate: Date
+	lastTestDate: string
 }
 
 export const SampleDataSettingsObjectSchema = SchemaFactory.createForClass(SampleDataSettingsObjectModel)

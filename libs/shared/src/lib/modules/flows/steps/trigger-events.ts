@@ -5,6 +5,11 @@ export interface TriggerPoolTestBody {
 	triggerName: string
 }
 
+export interface GetTriggerEventsQuery {
+	flowId: Id
+	triggerName: string
+}
+
 export interface TriggerEvent extends TimestampDatabase {
 	_id: Id
 	flowId: Id
