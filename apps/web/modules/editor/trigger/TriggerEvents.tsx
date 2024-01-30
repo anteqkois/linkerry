@@ -1,7 +1,7 @@
 import { json } from '@codemirror/lang-json'
 import { CustomError, Id } from '@linkerry/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@linkerry/ui-components/client'
-import { Button, Icons } from '@linkerry/ui-components/server'
+import { Button, Icons, Muted, Small, } from '@linkerry/ui-components/server'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import CodeMirror from '@uiw/react-codemirror'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
@@ -44,15 +44,15 @@ export const TriggerEvents = () => {
 	if (isLoading) return <Spinner />
 
 	return (
-		<>
-			<div className="flex h-16 items-center gap-4">
-				<Button variant="secondary" onClick={() => testPoolTrigger(editedTrigger.name)}>
-					{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
-					Generate Test Data
-				</Button>
+		<div>
+			<div className="pt-3 pl-1">
+				<Small>Generate Test Data</Small>
+				<Muted>They can be used in next steps</Muted>
+			</div>
+			<div className="flex h-14 px-1 items-center justify-between gap-4">
 				{data?.data.length && (
 					<Select onValueChange={onChangeTriggerEvent}>
-						<SelectTrigger className="w-52">
+						<SelectTrigger className="w-full">
 							<SelectValue placeholder="Select other event" />
 						</SelectTrigger>
 						<SelectContent position="popper">
@@ -68,6 +68,10 @@ export const TriggerEvents = () => {
 						</SelectContent>
 					</Select>
 				)}
+				<Button variant="secondary" onClick={() => testPoolTrigger(editedTrigger.name)}>
+					{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
+					<span className="whitespace-nowrap">Generate Data</span>
+				</Button>
 			</div>
 			<div className="h-full pb-28">
 				<CodeMirror
@@ -81,6 +85,6 @@ export const TriggerEvents = () => {
 					extensions={[json()]}
 				/>
 			</div>
-		</>
+		</div>
 	)
 }

@@ -279,7 +279,7 @@ export const TriggerDrawer = () => {
 
 	return (
 		<ResizablePanelGroup direction="vertical">
-			<ResizablePanel defaultSize={75} className="px-1">
+			<ResizablePanel defaultSize={60} className="px-1">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
 					<div>
@@ -332,7 +332,7 @@ export const TriggerDrawer = () => {
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (
-				<ResizablePanel defaultSize={25}>
+				<ResizablePanel defaultSize={30}>
 					<TriggerEvents/>
 				</ResizablePanel>
 			)}
