@@ -1,8 +1,14 @@
 import {
+	Action,
+	ActionType,
 	FlowState,
+	FlowVersionAddActionInput,
 	Id,
 	Trigger,
 	TriggerType,
+	actionBranchSchema,
+	actionConnectorSchema,
+	assertNotNullOrUndefined,
 	flowHelper,
 	generateEmptyTrigger,
 	isTrigger,
@@ -23,7 +29,7 @@ export class FlowVersionsService {
 	async createEmpty(flowId: Id, userId: Id) {
 		const emptyTrigger = generateEmptyTrigger('trigger_1')
 
-		console.log(emptyTrigger);
+		console.log(emptyTrigger)
 		return this.flowVersionModel.create({
 			user: userId,
 			displayName: 'Untitled',
@@ -42,7 +48,7 @@ export class FlowVersionsService {
 		})
 	}
 
-	// triggers
+	/* STEPS */
 	async updateTrigger(id: Id, userId: Id, updateTrigger: Trigger) {
 		switch (updateTrigger.type) {
 			case TriggerType.CONNECTOR:
@@ -77,6 +83,106 @@ export class FlowVersionsService {
 		)
 
 		if (!response.modifiedCount) throw new UnprocessableEntityException(`Can not find flow version`)
+		return newFlowVersion
+	}
+
+	async updateTriggerSettingsInputUiInfo({
+		flowVersionId,
+		currentSelectedData,
+		lastTestDate,
+		triggerName,
+	}: {
+		flowVersionId: Id
+		currentSelectedData: any
+		lastTestDate: string
+		triggerName: string
+	}) {
+		const flowVersion = await this.flowVersionModel.findById(flowVersionId)
+		assertNotNullOrUndefined(flowVersion, 'flowVersion')
+		flowVersion.triggers = flowVersion.triggers.map((trigger) => {
+			if (trigger.name !== triggerName) return trigger
+			if (trigger.type !== TriggerType.CONNECTOR) return trigger
+			trigger.settings = {
+				...trigger.settings,
+				inputUiInfo: {
+					...trigger.settings.inputUiInfo.customizedInputs,
+					currentSelectedData,
+					lastTestDate,
+				},
+			}
+			return trigger
+		})
+
+		await this.flowVersionModel.updateOne(
+			{
+				_id: flowVersionId,
+			},
+			{ $set: flowVersion },
+		)
+	}
+
+	async updateAction(id: Id, userId: Id, updateAction: Action) {
+		switch (updateAction.type) {
+			case ActionType.CONNECTOR:
+				actionConnectorSchema.parse(updateAction)
+				break
+			case ActionType.BRANCH:
+				actionBranchSchema.parse(updateAction)
+				break
+			default:
+				throw new UnprocessableEntityException(`Invalid trigger type`)
+		}
+
+		const flowVersion = await this.flowVersionModel.findOne({
+			_id: id,
+			user: userId,
+		})
+
+		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
+
+		const newFlowVersion = flowHelper.updateAction(flowVersion.toObject(), updateAction)
+
+		const response = await this.flowVersionModel.updateOne(
+			{
+				_id: id,
+				user: userId,
+			},
+			{ $set: newFlowVersion },
+		)
+
+		if (!response.modifiedCount) throw new UnprocessableEntityException(`Can not find flow version`)
+		return newFlowVersion
+	}
+
+	async addAction(id: Id, userId: Id, { action, parentStepName }: FlowVersionAddActionInput) {
+		switch (action.type) {
+			case ActionType.CONNECTOR:
+				actionConnectorSchema.parse(action)
+				break
+			case ActionType.BRANCH:
+				actionBranchSchema.parse(action)
+				break
+			default:
+				throw new UnprocessableEntityException(`Invalid trigger type`)
+		}
+
+		const flowVersion = await this.flowVersionModel.findOne({
+			_id: id,
+			user: userId,
+		})
+
+		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
+
+		const newFlowVersion = flowHelper.addAction(flowVersion.toObject(), parentStepName, action)
+
+		await this.flowVersionModel.updateOne(
+			{
+				_id: id,
+				user: userId,
+			},
+			{ $set: newFlowVersion },
+		)
+
 		return newFlowVersion
 	}
 }

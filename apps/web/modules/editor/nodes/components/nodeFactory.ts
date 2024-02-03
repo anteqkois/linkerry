@@ -1,48 +1,80 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { Trigger } from '@linkerry/shared'
-import { CustomNodeType, SelectTriggerNodeProps, TriggerNodeProps } from '../types'
+import { Action, Trigger } from '@linkerry/shared'
+import { ActionNodeProps, CustomNodeType, SelectTriggerNodeProps, TriggerNodeProps } from '../types'
 
 type NodeConfig = {
-  width: number
-  height: number
+	width: number
+	height: number
 }
 
 export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: number; y: number } } = {
-  gap: {
-    x: 40,
-    y: 40,
-  },
-  SelectTriggerNode: {
-    width: 384,
-    height: 428,
-  },
-  TriggerNode: {
-    width: 384,
-    height: 428,
-  },
+	gap: {
+		x: 40,
+		y: 40,
+	},
+	SelectTriggerNode: {
+		width: 384,
+		height: 428,
+	},
+	TriggerNode: {
+		width: 384,
+		height: 428,
+	},
+	ActionNode: {
+		width: 384,
+		height: 428,
+	},
 }
 
 export const selectTriggerNodeFactory = ({ trigger }: { trigger: Trigger }): SelectTriggerNodeProps => {
-  return {
-    id: trigger.name,
-    type: 'SelectTriggerNode',
-    position: { x: 0, y: 0 },
-    data: {
-      trigger,
-    },
-    draggable: false,
-  }
+	return {
+		id: trigger.name,
+		type: 'SelectTriggerNode',
+		position: { x: 0, y: 0 },
+		data: {
+			trigger,
+		},
+		draggable: false,
+	}
 }
 
-export const triggerNodeFactory = ({ trigger, connectorMetadata }: { trigger: Trigger; connectorMetadata: ConnectorMetadataSummary }): TriggerNodeProps => {
-  return {
-    id: trigger.name,
-    type: 'TriggerNode',
-    position: { x: 0, y: 0 },
-    data: {
-      trigger,
-      connectorMetadata,
-    },
-    draggable: false,
-  }
+export const triggerNodeFactory = ({
+	trigger,
+	connectorMetadata,
+}: {
+	trigger: Trigger
+	connectorMetadata: ConnectorMetadataSummary
+}): TriggerNodeProps => {
+	return {
+		id: trigger.name,
+		type: 'TriggerNode',
+		position: { x: 0, y: 0 },
+		data: {
+			trigger,
+			connectorMetadata,
+		},
+		draggable: false,
+	}
+}
+
+export const actionNodeFactory = ({
+	action,
+	connectorMetadata,
+	position,
+}: {
+	action: Action
+	connectorMetadata: ConnectorMetadataSummary
+	position: { x: number; y: number }
+}): ActionNodeProps => {
+	return {
+		id: action.name,
+		type: 'ActionNode',
+		position: position,
+		data: {
+			action,
+			connectorMetadata,
+			position,
+		},
+		draggable: false,
+	}
 }

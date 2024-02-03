@@ -1,4 +1,4 @@
-import { clone } from '../../../common'
+import { CustomError, clone } from '../../../common'
 import { Action, ActionType } from '../steps/action'
 import { Trigger, TriggerType } from '../steps/trigger'
 import { FlowVersion } from './flow'
@@ -86,17 +86,63 @@ function getTrigger(flowVersion: FlowVersion, triggerName: string): Trigger | un
 //         .filter((value, index, self) => self.indexOf(value) === index)
 // }
 
-// const updateTrigger = (flowVersion: FlowVersion, updatedTriggerData: Trigger) => {
 const updateTrigger = (flowVersion: FlowVersion, triggerData: Trigger) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (triggerData.type) {
 		case TriggerType.CONNECTOR:
+		case TriggerType.EMPTY:
 			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
 				if (trigger.name !== triggerData.name) return trigger
 				return triggerData
 			})
 	}
 	return flowVersionClone
+}
+
+const updateAction = (flowVersion: FlowVersion, actionData: Action) => {
+	const flowVersionClone = clone(flowVersion)
+	switch (actionData.type) {
+		case ActionType.CONNECTOR:
+			flowVersionClone.actions = flowVersionClone.actions.map((action) => {
+				if (action.name !== actionData.name) return action
+				return actionData
+			})
+			break
+		// case ActionType.BRANCH:
+		// case ActionType.LOOP_ON_ITEMS:
+		// case ActionType.MERGE_BRANCH:
+		default:
+			throw new CustomError('Unsuported action type')
+	}
+	return flowVersionClone
+}
+
+const addNextActionName = (flowVersion: FlowVersion, stepName: string, nextActionName: string) => {
+	let done = false
+
+	flowVersion.triggers = flowVersion.triggers.map((trigger) => {
+		if (trigger.name === stepName) {
+			done = true
+			return { ...trigger, nextActionName }
+		}
+		return trigger
+	})
+	if (done) return flowVersion
+	flowVersion.actions = flowVersion.actions.map((action) => {
+		if (action.name === stepName) {
+			done = true
+			return { ...action, nextActionName }
+		}
+		return action
+	})
+	if (!done) throw new CustomError('Can not find step to edit nextActionName')
+	return flowVersion
+}
+
+const addAction = (flowVersion: FlowVersion, parentStepName: string, action: Action) => {
+	flowVersion = addNextActionName(flowVersion, parentStepName, action.name)
+	flowVersion.actions.push(action)
+	return flowVersion
 }
 
 export const flowHelper = {
@@ -155,5 +201,7 @@ export const flowHelper = {
 	getStep,
 	getAllSteps,
 	updateTrigger,
-	getTrigger
+	getTrigger,
+	addAction,
+	updateAction,
 }

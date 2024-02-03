@@ -4,7 +4,9 @@ import { EngineService } from '../../engine/engine.service'
 import { FlowsService } from '../flows/flows.service'
 // import { StepFilesService } from '../step-files/step-files.service'
 import { InjectModel } from '@nestjs/mongoose'
+import dayjs from 'dayjs'
 import { Model } from 'mongoose'
+import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { PoolTestDto } from '../trigger-events/dto/pool-test.dto'
 import { GetManyDto } from './dto/get-many.dto'
@@ -14,6 +16,7 @@ import { TriggerEventModel } from './schemas/trigger-events.schema'
 export class TriggerEventsService {
 	constructor(
 		private readonly flowService: FlowsService,
+		private readonly flowVersionsService: FlowVersionsService,
 		// private readonly stepFilesService: StepFilesService,
 		private readonly engineService: EngineService,
 		@InjectModel(TriggerEventModel.name) private readonly triggerEventsModel: Model<TriggerEventModel>,
@@ -89,6 +92,14 @@ export class TriggerEventsService {
 				payload,
 			})
 		}
+
+		// todo save in db
+		await this.flowVersionsService.updateTriggerSettingsInputUiInfo({
+			flowVersionId: flow.version._id,
+			currentSelectedData: result.output[0],
+			lastTestDate: dayjs().format(),
+			triggerName: flowTrigger.name
+		})
 
 		return this.findMany({
 			flowLike: flow,

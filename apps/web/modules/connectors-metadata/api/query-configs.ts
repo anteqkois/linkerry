@@ -5,13 +5,13 @@ import { ConnectorsMetadataApi } from './api'
 export const connectorsMetadataQueryConfig = {
   getSummaryMany: (): FetchQueryOptions<ConnectorMetadataSummary[]> => {
     return {
-      queryKey: ['connectors-metadata:summary'],
+      queryKey: ['connectors-metadata', 'summary'],
       queryFn: async () => (await ConnectorsMetadataApi.getSummary()).data,
     }
   },
   getSummaryOne: ({ id }: { id: string }): FetchQueryOptions<ConnectorMetadataSummary> => {
     return {
-      queryKey: [`connectors-metadata/${id}:summary`],
+      queryKey: [`connectors-metadata`, id, 'summary'],
       queryFn: async () => (await ConnectorsMetadataApi.getOneSummary(id)).data,
     }
   },
@@ -23,7 +23,7 @@ export const connectorsMetadataQueryConfig = {
   },
   getOne: ({ connectorName, connectorVersion }: { connectorName: string, connectorVersion: string }): FetchQueryOptions<ConnectorMetadata> => {
     return {
-      queryKey: [`connectors-metadata/${connectorName}?version=${connectorVersion}`],
+      queryKey: [`connectors-metadata`, connectorName, connectorVersion],
       queryFn: async () => (await ConnectorsMetadataApi.getOne({ connectorName, connectorVersion })).data,
     }
   },

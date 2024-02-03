@@ -1,9 +1,12 @@
 'use client'
 
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
 	Action,
+	ActionConnector,
 	CustomError,
 	DeepPartial,
+	ErrorCode,
 	Flow,
 	FlowState,
 	FlowStatus,
@@ -12,7 +15,9 @@ import {
 	Trigger,
 	TriggerConnector,
 	TriggerEmpty,
+	TriggerType,
 	WithoutId,
+	assertNotNullOrUndefined,
 	deepMerge,
 	flowHelper,
 	generateEmptyTrigger,
@@ -20,7 +25,6 @@ import {
 	isCustomHttpExceptionAxios,
 	retriveStepNumber,
 } from '@linkerry/shared'
-import dayjs from 'dayjs'
 import { Dispatch, SetStateAction } from 'react'
 import {
 	Connection,
@@ -41,7 +45,7 @@ import { FlowApi } from '../flows/api/flow'
 import { TriggerApi } from '../flows/triggers/api'
 import { CustomEdge, CustomEdgeId } from './edges/types'
 import { CustomNode, CustomNodeId } from './nodes'
-import { selectTriggerNodeFactory } from './nodes/components/nodeFactory'
+import { actionNodeFactory, nodeConfigs, selectTriggerNodeFactory, triggerNodeFactory } from './nodes/components/nodeFactory'
 
 // type EditorNode = Node | CustomNode
 type EditorNode = CustomNode
@@ -52,8 +56,16 @@ const editorDrawers: EditorDrawer[] = [
 		title: 'Select Trigger',
 	},
 	{
-		name: 'trigger',
+		name: 'trigger_connector',
 		title: 'Trigger',
+	},
+	{
+		name: 'select_action',
+		title: 'Select Action',
+	},
+	{
+		name: 'action',
+		title: 'Action',
 	},
 ]
 
@@ -99,12 +111,13 @@ interface IEditorState {
 	flow: Flow
 	loadFlow: (id: Id) => Promise<Flow | null>
 	setFlow: (flow: Flow) => void
-	updateFlow: (id: Id, flow: Partial<Flow>) => Promise<void>
 	// CONNECTORS
 	testConnectorLoading: boolean
 	// TRIGGERS
 	editedTrigger: Trigger | null
 	setEditedTrigger: (trigger: Trigger) => void
+	onClickSelectTrigger: (trigger: Trigger) => void
+	handleSelectTriggerConnector: (connectorMetadata: ConnectorMetadataSummary) => Promise<void>
 	patchEditedTrigger: (update: Partial<Trigger>) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
@@ -113,6 +126,18 @@ interface IEditorState {
 	// ACTIONS
 	editedAction: Action | null
 	setEditedAction: (action: Action) => void
+	onClickSelectAction: (nodeId: string) => void
+	onAddAction: (action: ActionConnector, connectorMetadata: ConnectorMetadataSummary) => void
+	patchEditedAction: (update: Partial<Action>) => Promise<void>
+	updateEditedAction: (newAction: Action) => Promise<void>
+	// patchEditedActionConnector: (update: DeepPartial<WithoutId<ActionConnector>>) => Promise<void>
+	// resetAction: (actionName: string) => Promise<void>
+	// STEPS
+	editStepMetadata: {
+		parentNodeName: string
+		actionName: string
+	} | null
+	setEditStepMetadata: (data: IEditorState['editStepMetadata']) => void
 }
 
 export const useEditor = create<IEditorState>((set, get) => ({
@@ -126,6 +151,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 	drawer: editorDrawers[0],
 	setDrawer: (name: EditorDrawer['name']) => {
 		const newDrawer = editorDrawers.find((drawer) => drawer.name === name)
+		if (newDrawer?.name === get().drawer.name) return
 		set(() => ({ drawer: newDrawer }))
 	},
 	// NODES
@@ -200,20 +226,54 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		set({ flow })
 		localStorage.setItem('flow', JSON.stringify(flow))
 	},
-	updateFlow: async (id: Id, flow: Partial<Flow>) => {
-		const { data } = await FlowApi.patch(id, flow)
-		set({ flow: data })
-	},
 	// CONNECTORS
 	testConnectorLoading: false,
 	// TRIGGERS
 	editedTrigger: null,
-	setEditedTrigger: (trigger: Trigger) =>
+	setEditedTrigger: (trigger: Trigger) => {
+		const { setDrawer, showDrawer } = get()
+
+		setDrawer('trigger_connector')
 		set({
 			editedTrigger: trigger,
-		}),
+			showDrawer: !showDrawer,
+		})
+	},
+	onClickSelectTrigger(trigger: Trigger) {
+		const { setDrawer, showDrawer } = get()
+
+		setDrawer('select_trigger')
+		set({
+			editedTrigger: trigger,
+			showDrawer: !showDrawer,
+		})
+	},
+	handleSelectTriggerConnector: async (connectorMetadata: ConnectorMetadataSummary) => {
+		const { editedTrigger, updateEditedTrigger, updateNode, setDrawer } = get()
+		assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
+
+		const newTrigger: TriggerConnector = {
+			name: editedTrigger.name,
+			displayName: connectorMetadata.displayName,
+			type: TriggerType.CONNECTOR,
+			valid: false,
+			settings: {
+				connectorName: connectorMetadata.name,
+				connectorVersion: connectorMetadata.version,
+				connectorType: connectorMetadata.connectorType,
+				triggerName: '',
+				input: {},
+				inputUiInfo: {},
+			},
+			nextActionName: '',
+		}
+
+		await updateEditedTrigger(newTrigger)
+		updateNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
+		setDrawer('trigger_connector')
+	},
 	patchEditedTrigger: async (update: Partial<Trigger>) => {
-		const { editedTrigger, flow } = get()
+		const { editedTrigger, flow, setFlow } = get()
 		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update')
 
 		const newTrigger = deepMerge(editedTrigger, update)
@@ -225,14 +285,13 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			version: data,
 		}
 
+		setFlow(newFlow)
 		set({
 			editedTrigger: newTrigger,
-			flow: newFlow,
 		})
-		localStorage.setItem('flow', JSON.stringify(newFlow))
 	},
 	updateEditedTrigger: async (newTrigger: Trigger) => {
-		const { flow } = get()
+		const { flow, setFlow } = get()
 
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 		if (!data) throw new CustomError(`Can not update flow trigger. Missing flow-version in response`)
@@ -242,14 +301,14 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			version: data,
 		}
 
+		setFlow(newFlow)
 		set({
 			editedTrigger: newTrigger,
 			flow: newFlow,
 		})
-		localStorage.setItem('flow', JSON.stringify(newFlow))
 	},
 	patchEditedTriggerConnector: async (update: DeepPartial<TriggerConnector>) => {
-		const { editedTrigger, flow } = get()
+		const { editedTrigger, flow, setFlow } = get()
 		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update')
 
 		const newTrigger = deepMerge(editedTrigger, update)
@@ -261,17 +320,16 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			version: data,
 		}
 
+		setFlow(newFlow)
 		set({
 			editedTrigger: newTrigger,
 			flow: newFlow,
 		})
-		localStorage.setItem('flow', JSON.stringify(newFlow))
 	},
 	resetTrigger: async (triggerName: string) => {
 		let emptyTrigger: TriggerEmpty | undefined = undefined
-
 		// eslint-disable-next-line prefer-const
-		let { nodes, flow } = get()
+		let { nodes, flow, setFlow } = get()
 		if (!flow) throw new CustomError('Can not retrive flow')
 
 		const stepNumber = retriveStepNumber(triggerName)
@@ -292,9 +350,9 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 		await FlowVersionApi.updateTrigger(flow.version._id, emptyTrigger)
 
+		setFlow(flow)
 		set({
 			nodes,
-			flow,
 			showDrawer: true,
 			drawer: editorDrawers.find((entry) => entry.name === 'select_trigger'),
 			editedTrigger: emptyTrigger,
@@ -302,8 +360,9 @@ export const useEditor = create<IEditorState>((set, get) => ({
 	},
 	testPoolTrigger: async (triggerName: string) => {
 		set({ testConnectorLoading: true })
-		const flow = get().flow
+		const { flow, setFlow } = get()
 		let newFlowVersion: FlowVersion | undefined = undefined
+
 		try {
 			const { data } = await TriggerApi.poolTest({
 				flowId: flow._id,
@@ -311,22 +370,28 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			})
 
 			const trigger = flowHelper.getTrigger(flow.version, triggerName)
-			if (!trigger || !isConnectorTrigger(trigger)) throw new CustomError(`Can not find trigger`)
-			console.log(data)
+			if (!trigger || !isConnectorTrigger(trigger))
+				throw new CustomError({
+					code: ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND,
+					params: {
+						message: `Can not find trigger`,
+					},
+				})
+
 			trigger.settings.inputUiInfo = {
 				currentSelectedData: data[0],
-				lastTestDate: dayjs().format('YYYY-MM-DD HH-mm-ss'),
+				lastTestDate: data[0].createdAt,
 			}
+
 			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
+			setFlow({ ...flow, version: newFlowVersion })
 		} catch (error) {
 			if (isCustomHttpExceptionAxios(error)) {
 				console.log(error.response.data)
 			} else console.log(error)
 		}
 
-		// check if it is optimal to update whole flowVersion insted only trigger
-		if (!newFlowVersion) set({ testConnectorLoading: false })
-		else set({ testConnectorLoading: false, flow: { ...flow, version: newFlowVersion } })
+		set({ testConnectorLoading: false })
 	},
 	// ACTIONS
 	editedAction: null,
@@ -334,4 +399,62 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		set({
 			editedAction: action,
 		}),
+	onClickSelectAction(nodeIdName: string) {
+		get().setDrawer('select_action')
+		const actionName = `action_${get().flow.version.stepsCount}`
+		set({
+			showDrawer: true,
+			editStepMetadata: {
+				parentNodeName: nodeIdName,
+				actionName,
+			},
+		})
+	},
+	async onAddAction(action: ActionConnector, connectorMetadata: ConnectorMetadataSummary) {
+		const { getNodeById, editStepMetadata, setDrawer, updateNode, addNode, flow, setFlow, setEditedAction } = get()
+		if (!editStepMetadata?.parentNodeName) throw new CustomError('Can not retrive editStepMetadata.parentNodeName')
+
+		const { data } = await FlowVersionApi.addAction(flow.version._id, {
+			action,
+			parentStepName: editStepMetadata?.parentNodeName,
+		})
+
+		const parentNode = getNodeById(editStepMetadata.parentNodeName)
+		assertNotNullOrUndefined(parentNode, 'parentNode')
+
+		// add action name to parent step
+		if ('action' in parentNode.data)
+			updateNode(parentNode.id, { data: { ...parentNode.data, action: { ...parentNode.data.action, nextActionName: editStepMetadata.actionName } } })
+		else
+			updateNode(parentNode.id, {
+				data: { ...parentNode.data, trigger: { ...parentNode.data.trigger, nextActionName: editStepMetadata.actionName } },
+			})
+
+		const newActionNode = actionNodeFactory({
+			action,
+			connectorMetadata,
+			position: {
+				x: parentNode.position.x,
+				y: parentNode.position.y + nodeConfigs.gap.y,
+			},
+		})
+
+		setDrawer('action')
+		addNode(newActionNode)
+		setFlow({ ...flow, version: data })
+		setEditedAction(action)
+	},
+	async patchEditedAction(update: Partial<Action>) {
+		//
+	},
+	async updateEditedAction(newAction: Action) {
+		//
+	},
+	// STEPS
+	setEditStepMetadata: (data: IEditorState['editStepMetadata']) => {
+		set({
+			editStepMetadata: data,
+		})
+	},
+	editStepMetadata: null,
 }))

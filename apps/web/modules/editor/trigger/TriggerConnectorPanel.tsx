@@ -175,7 +175,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 	}
 }
 
-export const TriggerDrawer = () => {
+export const TriggerConnectorPanel = () => {
 	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.CONNECTOR) throw new Error('Missing editedTrigger')
 
@@ -306,7 +306,7 @@ export const TriggerDrawer = () => {
 											}}
 										>
 											<SelectTrigger>
-												<SelectValue />
+												<SelectValue placeholder="Select flow trigger" />
 											</SelectTrigger>
 											<SelectContent position="popper">
 												{Object.values(connectorMetadata.triggers).map((trigger) => {
@@ -333,7 +333,7 @@ export const TriggerDrawer = () => {
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (
 				<ResizablePanel defaultSize={30}>
-					<TriggerEvents/>
+					<TriggerEvents />
 				</ResizablePanel>
 			)}
 		</ResizablePanelGroup>

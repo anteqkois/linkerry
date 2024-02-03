@@ -30,6 +30,7 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
         throw new Error(`Can not find trigger type: ${trigger}`)
     }
   }
+	// todo render actions
 
   return { nodes, edges }
 }

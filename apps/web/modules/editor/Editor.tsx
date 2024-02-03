@@ -6,13 +6,16 @@ import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'rea
 import { Drawer } from '../../shared/components/drawer/Index'
 import { TriggerNodeElement } from './components'
 import { SelectTriggerNodeElement } from './nodes/components/SelectTriggerNode'
-import { SelectTriggerDrawer } from './trigger/SelectTrigger'
-import { TriggerDrawer } from './trigger/Trigger'
+import { SelectActionPanel } from './trigger/SelectActionPanel'
+import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
+import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
 import { useEditor } from './useEditor'
 
 export const editorDrawers = {
-  select_trigger: SelectTriggerDrawer,
-  trigger: TriggerDrawer,
+  select_trigger: SelectTriggerPanel,
+  trigger_connector: TriggerConnectorPanel,
+  select_action: SelectActionPanel,
+  action: TriggerConnectorPanel,
 }
 
 const nodeTypes = {

@@ -1,7 +1,7 @@
 import { json } from '@codemirror/lang-json'
-import { CustomError, Id } from '@linkerry/shared'
+import { CustomError, Id, assertNotNullOrUndefined } from '@linkerry/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@linkerry/ui-components/client'
-import { Button, Icons, Muted, Small, } from '@linkerry/ui-components/server'
+import { Button, Icons, Muted, Small } from '@linkerry/ui-components/server'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import CodeMirror from '@uiw/react-codemirror'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
@@ -15,22 +15,17 @@ export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {}
 // export const TriggerEvents = ({}: TriggerEventsProps) => {
 export const TriggerEvents = () => {
 	const { flow, editedTrigger, testPoolTrigger, testConnectorLoading } = useEditor()
-	const { data, isLoading, isSuccess } = useClientQuery({
+	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
+
+	const { data, status, refetch } = useClientQuery({
 		queryKey: ['trigger-events'],
 		queryFn: () =>
 			TriggerApi.getTriggerEvents({
 				flowId: flow._id,
-				triggerName: editedTrigger!.name,
+				triggerName: editedTrigger.name,
 			}),
 	})
 	const [record, setRecord] = useState('')
-
-	useEffect(() => {
-		if (!isSuccess) return
-
-		if (data?.data) setRecord(JSON.stringify(data.data[0].payload, null, 2))
-	}, [isSuccess])
-
 	const onChangeTriggerEvent = useCallback(
 		(newTriggerEventId: Id) => {
 			if (!data?.data) return
@@ -40,8 +35,20 @@ export const TriggerEvents = () => {
 		[data?.data],
 	)
 
+	useEffect(() => {
+		if (status !== 'success') return
+
+		console.log(data.data)
+		if (data?.data.length) setRecord(JSON.stringify(data.data[0].payload, null, 2))
+	}, [status])
+
 	if (!editedTrigger) throw new CustomError('Can not retrive editedTrigger')
-	if (isLoading) return <Spinner />
+	if (status === 'pending') return <Spinner />
+
+	const onClickTest = async () => {
+		await testPoolTrigger(editedTrigger.name)
+		await refetch()
+	}
 
 	return (
 		<div>
@@ -68,7 +75,7 @@ export const TriggerEvents = () => {
 						</SelectContent>
 					</Select>
 				)}
-				<Button variant="secondary" onClick={() => testPoolTrigger(editedTrigger.name)}>
+				<Button variant="secondary" onClick={onClickTest}>
 					{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
 					<span className="whitespace-nowrap">Generate Data</span>
 				</Button>
