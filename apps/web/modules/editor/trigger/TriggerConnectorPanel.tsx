@@ -22,7 +22,7 @@ import {
 import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
-import { HTMLAttributes, useEffect, useMemo } from 'react'
+import { HTMLAttributes, useEffect, useMemo, useState } from 'react'
 import { RegisterOptions, UseFormReturn, useForm, useFormContext } from 'react-hook-form'
 import { VList } from 'virtua'
 import { useClientQuery } from '../../../libs/react-query'
@@ -178,6 +178,7 @@ const DynamicField = ({ property }: { form: UseFormReturn<any, any>; property: C
 export const TriggerConnectorPanel = () => {
 	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.CONNECTOR) throw new Error('Missing editedTrigger')
+	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
 	const {
 		data: connectorMetadata,
@@ -204,7 +205,6 @@ export const TriggerConnectorPanel = () => {
 		if (!selectedTrigger) return
 
 		triggerForm.setValue('__temp__trigger', selectedTrigger)
-		// triggerForm.setValue('triggerName', selectedTrigger.name)
 		setTimeout(() => triggerForm.setValue('triggerName', selectedTrigger.name), 0) // ad to the end of callstack
 
 		const input = editedTrigger.settings.input
@@ -278,7 +278,7 @@ export const TriggerConnectorPanel = () => {
 	}
 
 	return (
-		<ResizablePanelGroup direction="vertical">
+		<ResizablePanelGroup direction="vertical" className="max-h-screen">
 			<ResizablePanel defaultSize={60} className="px-1">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
@@ -332,8 +332,8 @@ export const TriggerConnectorPanel = () => {
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (
-				<ResizablePanel defaultSize={30}>
-					<TriggerEvents />
+				<ResizablePanel defaultSize={30} maxSize={80} onResize={(size) => setTestDataPanelHeight(size)}>
+					<TriggerEvents panelSize={testDataPanelHeight} />
 				</ResizablePanel>
 			)}
 		</ResizablePanelGroup>

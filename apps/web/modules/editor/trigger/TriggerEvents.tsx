@@ -10,10 +10,11 @@ import { Spinner } from '../../../shared/components/Spinner'
 import { TriggerApi } from '../../flows/triggers/api'
 import { useEditor } from '../useEditor'
 
-export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {}
+export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {
+	panelSize: number
+}
 
-// export const TriggerEvents = ({}: TriggerEventsProps) => {
-export const TriggerEvents = () => {
+export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 	const { flow, editedTrigger, testPoolTrigger, testConnectorLoading } = useEditor()
 	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
 
@@ -50,6 +51,7 @@ export const TriggerEvents = () => {
 		await refetch()
 	}
 
+	// TODO improve rerenndeing (change pane size debounce)
 	return (
 		<div>
 			<div className="pt-3 pl-1">
@@ -80,13 +82,13 @@ export const TriggerEvents = () => {
 					<span className="whitespace-nowrap">Generate Data</span>
 				</Button>
 			</div>
-			<div className="h-full pb-28">
+			<div>
 				<CodeMirror
 					readOnly={true}
 					value={record}
-					height="100%"
 					style={{
-						height: '100%',
+						overflow: 'scroll',
+						height: `calc(${panelSize}vh - 150px)`,
 					}}
 					theme={vscodeDark}
 					extensions={[json()]}

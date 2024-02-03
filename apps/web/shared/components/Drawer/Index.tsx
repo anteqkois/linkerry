@@ -9,7 +9,7 @@ export interface DrawerProps extends HTMLAttributes<HTMLElement> {
   title?: string
 }
 
-const variants = cva('w-full h-full fixed top-0 right-0 z-40 bg-popover lg:w-108 border-l p-2 ease-out duration-300', {
+const variants = cva('w-full h-full fixed top-0 right-0 z-40 bg-popover md:w-108 border-l p-2 ease-out duration-300', {
   variants: {
     state: {
       true: 'translate-x-0',

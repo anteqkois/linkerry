@@ -6,7 +6,7 @@ import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'rea
 import { Drawer } from '../../shared/components/drawer/Index'
 import { TriggerNodeElement } from './components'
 import { SelectTriggerNodeElement } from './nodes/components/SelectTriggerNode'
-import { SelectActionPanel } from './trigger/SelectActionPanel'
+import { SelectActionPanel } from './action/SelectActionPanel'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
 import { useEditor } from './useEditor'
