@@ -93,12 +93,17 @@ export class TriggerEventsService {
 			})
 		}
 
-		// todo save in db
-		await this.flowVersionsService.updateTriggerSettingsInputUiInfo({
+		await this.flowVersionsService.patchTrigger({
 			flowVersionId: flow.version._id,
-			currentSelectedData: result.output[0],
-			lastTestDate: dayjs().format(),
-			triggerName: flowTrigger.name
+			triggerName: flowTrigger.name,
+			trigger: {
+				settings: {
+					inputUiInfo: {
+						currentSelectedData: result.output.pop(),
+						lastTestDate: dayjs().format(),
+					},
+				},
+			},
 		})
 
 		return this.findMany({

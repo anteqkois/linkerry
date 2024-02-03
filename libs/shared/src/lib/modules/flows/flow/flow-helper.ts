@@ -1,4 +1,4 @@
-import { CustomError, clone } from '../../../common'
+import { CustomError, clone, deepMerge } from '../../../common'
 import { Action, ActionType } from '../steps/action'
 import { Trigger, TriggerType } from '../steps/trigger'
 import { FlowVersion } from './flow'
@@ -94,6 +94,20 @@ const updateTrigger = (flowVersion: FlowVersion, triggerData: Trigger) => {
 			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
 				if (trigger.name !== triggerData.name) return trigger
 				return triggerData
+			})
+	}
+	return flowVersionClone
+}
+
+const patchTrigger = (flowVersion: FlowVersion, triggerName: string, updateTriggerData: Partial<Trigger>) => {
+	const flowVersionClone = clone(flowVersion)
+	switch (updateTriggerData.type) {
+		case TriggerType.CONNECTOR:
+		case TriggerType.EMPTY:
+			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
+				if (trigger.name !== triggerName) return trigger
+				const newTrigger = deepMerge(trigger, updateTriggerData)
+				return newTrigger
 			})
 	}
 	return flowVersionClone
@@ -201,6 +215,7 @@ export const flowHelper = {
 	getStep,
 	getAllSteps,
 	updateTrigger,
+	patchTrigger,
 	getTrigger,
 	addAction,
 	updateAction,

@@ -86,38 +86,50 @@ export class FlowVersionsService {
 		return newFlowVersion
 	}
 
-	async updateTriggerSettingsInputUiInfo({
-		flowVersionId,
-		currentSelectedData,
-		lastTestDate,
-		triggerName,
-	}: {
-		flowVersionId: Id
-		currentSelectedData: any
-		lastTestDate: string
-		triggerName: string
-	}) {
+	// async updateTriggerSettingsInputUiInfo({
+	// 	flowVersionId,
+	// 	currentSelectedData,
+	// 	lastTestDate,
+	// 	triggerName,
+	// }: {
+	// 	flowVersionId: Id
+	// 	currentSelectedData: any
+	// 	lastTestDate: string
+	// 	triggerName: string
+	// }) {
+	// 	const flowVersion = await this.flowVersionModel.findById(flowVersionId)
+	// 	assertNotNullOrUndefined(flowVersion, 'flowVersion')
+	// 	flowVersion.triggers = flowVersion.triggers.map((trigger) => {
+	// 		if (trigger.name !== triggerName) return trigger
+	// 		if (trigger.type !== TriggerType.CONNECTOR) return trigger
+	// 		trigger.settings = {
+	// 			...trigger.settings,
+	// 			inputUiInfo: {
+	// 				...trigger.settings.inputUiInfo.customizedInputs,
+	// 				currentSelectedData,
+	// 				lastTestDate,
+	// 			},
+	// 		}
+	// 		return trigger
+	// 	})
+
+	// 	await this.flowVersionModel.updateOne(
+	// 		{
+	// 			_id: flowVersionId,
+	// 		},
+	// 		{ $set: flowVersion },
+	// 	)
+	// }
+	async patchTrigger({ flowVersionId, triggerName, trigger }: { flowVersionId: Id; triggerName: string; trigger: Partial<Trigger> }) {
 		const flowVersion = await this.flowVersionModel.findById(flowVersionId)
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
-		flowVersion.triggers = flowVersion.triggers.map((trigger) => {
-			if (trigger.name !== triggerName) return trigger
-			if (trigger.type !== TriggerType.CONNECTOR) return trigger
-			trigger.settings = {
-				...trigger.settings,
-				inputUiInfo: {
-					...trigger.settings.inputUiInfo.customizedInputs,
-					currentSelectedData,
-					lastTestDate,
-				},
-			}
-			return trigger
-		})
+		const newFlowVersion = flowHelper.patchTrigger(flowVersion, triggerName, trigger)
 
 		await this.flowVersionModel.updateOne(
 			{
 				_id: flowVersionId,
 			},
-			{ $set: flowVersion },
+			{ $set: newFlowVersion },
 		)
 	}
 

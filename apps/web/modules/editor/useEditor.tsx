@@ -15,6 +15,7 @@ import {
 	Trigger,
 	TriggerConnector,
 	TriggerEmpty,
+	TriggerEvent,
 	TriggerType,
 	WithoutId,
 	assertNotNullOrUndefined,
@@ -118,11 +119,10 @@ interface IEditorState {
 	setEditedTrigger: (trigger: Trigger) => void
 	onClickSelectTrigger: (trigger: Trigger) => void
 	handleSelectTriggerConnector: (connectorMetadata: ConnectorMetadataSummary) => Promise<void>
-	patchEditedTrigger: (update: Partial<Trigger>) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
 	resetTrigger: (triggerName: string) => Promise<void>
-	testPoolTrigger: (triggerName: string) => Promise<void>
+	testPoolTrigger: (triggerName: string) => Promise<TriggerEvent[]>
 	// ACTIONS
 	editedAction: Action | null
 	setEditedAction: (action: Action) => void
@@ -272,24 +272,6 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		updateNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
 		setDrawer('trigger_connector')
 	},
-	patchEditedTrigger: async (update: Partial<Trigger>) => {
-		const { editedTrigger, flow, setFlow } = get()
-		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update')
-
-		const newTrigger = deepMerge(editedTrigger, update)
-		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
-		if (!data) throw new CustomError(`Can not update flow trigger. No flowVersion in response`)
-
-		const newFlow: Flow = {
-			...flow,
-			version: data,
-		}
-
-		setFlow(newFlow)
-		set({
-			editedTrigger: newTrigger,
-		})
-	},
 	updateEditedTrigger: async (newTrigger: Trigger) => {
 		const { flow, setFlow } = get()
 
@@ -362,12 +344,13 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		set({ testConnectorLoading: true })
 		const { flow, setFlow } = get()
 		let newFlowVersion: FlowVersion | undefined = undefined
+		let testResult: TriggerEvent[] = []
 
 		try {
-			const { data } = await TriggerApi.poolTest({
+			testResult = (await TriggerApi.poolTest({
 				flowId: flow._id,
 				triggerName,
-			})
+			})).data
 
 			const trigger = flowHelper.getTrigger(flow.version, triggerName)
 			if (!trigger || !isConnectorTrigger(trigger))
@@ -379,8 +362,8 @@ export const useEditor = create<IEditorState>((set, get) => ({
 				})
 
 			trigger.settings.inputUiInfo = {
-				currentSelectedData: data[0],
-				lastTestDate: data[0].createdAt,
+				currentSelectedData: testResult[0],
+				lastTestDate: testResult[0].createdAt,
 			}
 
 			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
@@ -392,6 +375,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		}
 
 		set({ testConnectorLoading: false })
+		return testResult
 	},
 	// ACTIONS
 	editedAction: null,
