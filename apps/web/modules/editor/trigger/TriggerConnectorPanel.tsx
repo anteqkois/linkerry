@@ -59,7 +59,7 @@ export const TriggerConnectorPanel = () => {
 		if (!selectedTrigger) return
 
 		triggerForm.setValue('__temp__trigger', selectedTrigger)
-		setTimeout(() => triggerForm.setValue('triggerName', selectedTrigger.name), 0) // ad to the end of callstack
+		setTimeout(() => triggerForm.setValue('triggerName', selectedTrigger.name), 0) // add to the end of callstack
 
 		const input = editedTrigger.settings.input
 		if (selectedTrigger.props)
@@ -102,7 +102,7 @@ export const TriggerConnectorPanel = () => {
 	if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
 
 	// build dynamic form based on selected trigger schema -> props from trigger metadata
-	const onChangeTrigger = (triggerName: string) => {
+	const onChangeTrigger = async (triggerName: string) => {
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === triggerName)
 		if (!selectedTrigger) return
 		triggerForm.setValue('__temp__trigger', selectedTrigger)
@@ -114,7 +114,7 @@ export const TriggerConnectorPanel = () => {
 				input[key] = value.defaultValue
 			})
 
-		updateEditedTrigger({
+		await updateEditedTrigger({
 			name: editedTrigger.name,
 			valid: false,
 			displayName: selectedTrigger.displayName,

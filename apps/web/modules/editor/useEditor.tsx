@@ -170,7 +170,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			nodes: get().nodes.map((node) => {
 				if (node.id !== id) return node
 				updated = true
-				return { ...node, ...changes, data: { ...node.data, ...changes.data } }
+				return deepMerge(node, changes)
 			}) as CustomNode[],
 		})
 		if (!updated) throw new CustomError(`Can not update node`)
@@ -342,7 +342,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 	},
 	testPoolTrigger: async (triggerName: string) => {
 		set({ testConnectorLoading: true })
-		const { flow, setFlow } = get()
+		const { flow, setFlow, updateNode } = get()
 		let newFlowVersion: FlowVersion | undefined = undefined
 		let testResult: TriggerEvent[] = []
 
@@ -365,7 +365,13 @@ export const useEditor = create<IEditorState>((set, get) => ({
 				currentSelectedData: testResult[0],
 				lastTestDate: testResult[0].createdAt,
 			}
+			trigger.valid = true
 
+			updateNode(trigger.name, {
+				data:{
+					trigger
+				}
+			})
 			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
 			setFlow({ ...flow, version: newFlowVersion })
 		} catch (error) {
