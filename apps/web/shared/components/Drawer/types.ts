@@ -1,4 +1,4 @@
 export interface EditorDrawer {
-	name: 'select_trigger' | 'trigger_connector' | 'action' | 'select_action'
+	name: 'select_trigger' | 'trigger_connector' | 'action_connector' | 'select_action'
 	title: string
 }

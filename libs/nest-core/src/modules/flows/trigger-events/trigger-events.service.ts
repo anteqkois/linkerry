@@ -23,7 +23,8 @@ export class TriggerEventsService {
 		@InjectModel(FlowVersionModel.name) private readonly flowVersionsModel: Model<FlowVersionModel>,
 	) {}
 
-	private _deleteEventBasedOnSourceName({ flowId, sourceName }: { flowId: Id; sourceName: string }) {
+	async deleteAllRelatedToTrigger({ flowId, trigger }: { flowId: Id; trigger: Trigger }) {
+		const sourceName = this._getSourceName(trigger)
 		return this.triggerEventsModel.deleteMany({
 			flowId,
 			sourceName,
@@ -79,12 +80,12 @@ export class TriggerEventsService {
 		}
 
 		// delete old event data related to this trigger
-		const sourceName = this._getSourceName(flowTrigger)
-		await this._deleteEventBasedOnSourceName({
+		await this.deleteAllRelatedToTrigger({
 			flowId: flow.id,
-			sourceName,
+			trigger: flowTrigger,
 		})
 
+		const sourceName = this._getSourceName(flowTrigger)
 		for (const payload of result.output) {
 			await this.create({
 				flowId: flow.id,
@@ -97,6 +98,7 @@ export class TriggerEventsService {
 			flowVersionId: flow.version._id,
 			triggerName: flowTrigger.name,
 			trigger: {
+				valid: true,
 				settings: {
 					inputUiInfo: {
 						currentSelectedData: result.output.pop(),

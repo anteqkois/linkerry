@@ -1,11 +1,11 @@
 import { json } from '@codemirror/lang-json'
-import { Id, assertNotNullOrUndefined } from '@linkerry/shared'
+import { CustomError, Id, assertNotNullOrUndefined, isConnectorTrigger } from '@linkerry/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@linkerry/ui-components/client'
 import { Button, Icons, Muted, Small } from '@linkerry/ui-components/server'
-import { cn } from '@linkerry/ui-components/utils'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import CodeMirror from '@uiw/react-codemirror'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
+import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
 import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
@@ -17,13 +17,14 @@ export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
-	const { flow, editedTrigger, testPoolTrigger, testConnectorLoading } = useEditor()
+	const { flow, editedTrigger, testPoolTrigger, testConnectorLoading, patchEditedTriggerConnector } = useEditor()
 	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
+	if (!isConnectorTrigger(editedTrigger)) throw new CustomError('Can not use other trigger than connector trigger')
 
 	const { data, status } = useClientQuery({
 		queryKey: ['trigger-events', editedTrigger.name],
 		queryFn: async () => {
-			const { data } =await  TriggerApi.getTriggerEvents({
+			const { data } = await TriggerApi.getTriggerEvents({
 				flowId: flow._id,
 				triggerName: editedTrigger.name,
 			})
@@ -31,21 +32,36 @@ export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 		},
 	})
 	const [record, setRecord] = useState('')
-	const [selectedTriggerEventId, setSelectedTriggerEventId] = useState<string>('')
+	const [selectedTriggerEventId, setSelectedTriggerEventId] = useState<string>()
 	const onChangeTriggerEvent = useCallback(
-		(newTriggerEventId: Id) => {
+		async (newTriggerEventId: Id) => {
 			if (!data) return
+			setSelectedTriggerEventId(newTriggerEventId)
 			const triggerEvent = data.find((event) => event._id === newTriggerEventId)
-			setRecord(JSON.stringify(triggerEvent?.payload, null, 2))
+			assertNotNullOrUndefined(triggerEvent, 'triggerEvent')
+
+			setRecord(prepareCodeMirrorValue(triggerEvent.payload))
+			await patchEditedTriggerConnector({
+				settings: {
+					inputUiInfo: {
+						currentSelectedData: triggerEvent.payload,
+					},
+				},
+			})
 		},
 		[data],
 	)
 
 	useEffect(() => {
 		if (status !== 'success' || !data?.length) return
-		const lastTriggerEvent = data[data.length - 1]
-		setRecord(JSON.stringify(lastTriggerEvent.payload, null, 2))
-		setSelectedTriggerEventId(lastTriggerEvent._id)
+
+		if (editedTrigger.settings.inputUiInfo.currentSelectedData) {
+			setRecord(prepareCodeMirrorValue(editedTrigger.settings.inputUiInfo.currentSelectedData))
+		} else {
+			const selectedTriggerEvent = data[data.length - 1]
+			setRecord(prepareCodeMirrorValue(selectedTriggerEvent.payload))
+			setSelectedTriggerEventId(selectedTriggerEvent._id)
+		}
 	}, [status, data?.length])
 
 	if (!editedTrigger) return <ErrorInfo message="Can not retrive editedTrigger" />
@@ -55,7 +71,7 @@ export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 		const triggerEvents = await testPoolTrigger(editedTrigger.name)
 		const queryClient = getBrowserQueryCllient()
 		queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEvents)
-		setSelectedTriggerEventId(triggerEvents[triggerEvents.length -1]._id)
+		setSelectedTriggerEventId(triggerEvents[triggerEvents.length - 1]._id)
 	}
 
 	// TODO improve rerenndeing (change pane size debounce)
@@ -65,8 +81,21 @@ export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 				<Small>Generate sample sata</Small>
 				<Muted>The sample sata can be used in next steps</Muted>
 			</div>
-			<div className={cn('flex h-14 px-1 items-center gap-4', data?.length ? 'justify-between' : 'justify-center ')}>
-				{data?.length ? (
+			{data?.length ? (
+				<>
+					{/* TODO handle error state */}
+					<div className="flex h-14 px-1 items-center justify-between gap-4">
+						{data?.length ? (
+							<h5 className="flex items-center gap-2">
+								<Icons.True className="text-positive" />
+								Loaded data successfully
+							</h5>
+						) : null}
+						<Button variant="secondary" onClick={onClickTest} size={'sm'}>
+							{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test size={'xs'} className="mr-3" />}
+							<span className="whitespace-nowrap">Regenerate Data</span>
+						</Button>
+					</div>
 					<Select onValueChange={onChangeTriggerEvent} value={selectedTriggerEventId}>
 						<SelectTrigger className="w-full">
 							<SelectValue placeholder="Select other event" />
@@ -83,20 +112,24 @@ export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 							})}
 						</SelectContent>
 					</Select>
-				) : null}
-				<Button variant="secondary" onClick={onClickTest}>
-					{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
-					<span className="whitespace-nowrap">Generate Data</span>
-				</Button>
-			</div>
+				</>
+			) : (
+				<div className="flex h-14 px-1 center">
+					<Button variant="secondary" onClick={onClickTest}>
+						{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
+						<span className="whitespace-nowrap">Generate Data</span>
+					</Button>
+				</div>
+			)}
+
 			{record && (
-				<div>
+				<div className="mt-2">
 					<CodeMirror
 						readOnly={true}
 						value={record}
 						style={{
 							overflow: 'scroll',
-							height: `calc(${panelSize}vh - 150px)`,
+							height: `calc(${panelSize}vh - 180px)`,
 						}}
 						theme={vscodeDark}
 						extensions={[json()]}

@@ -66,7 +66,7 @@ const editorDrawers: EditorDrawer[] = [
 		title: 'Select Action',
 	},
 	{
-		name: 'action',
+		name: 'action_connector',
 		title: 'Action',
 	},
 ]
@@ -131,6 +131,7 @@ interface IEditorState {
 	handleSelectActionConnector: (connectorMetadata: ConnectorMetadataSummary) => Promise<void>
 	patchEditedAction: (update: DeepPartial<Action>) => Promise<void>
 	updateEditedAction: (newAction: Action) => Promise<void>
+	deleteAction: (actionName: string) => Promise<void>
 	// resetAction: (actionName: string) => Promise<void>
 	// STEPS
 	editStepMetadata: {
@@ -347,10 +348,12 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		let testResult: TriggerEvent[] = []
 
 		try {
-			testResult = (await TriggerApi.poolTest({
-				flowId: flow._id,
-				triggerName,
-			})).data
+			testResult = (
+				await TriggerApi.poolTest({
+					flowId: flow._id,
+					triggerName,
+				})
+			).data
 
 			const trigger = flowHelper.getTrigger(flow.version, triggerName)
 			if (!trigger || !isConnectorTrigger(trigger))
@@ -368,9 +371,9 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			trigger.valid = true
 
 			updateNode(trigger.name, {
-				data:{
-					trigger
-				}
+				data: {
+					trigger,
+				},
 			})
 			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
 			setFlow({ ...flow, version: newFlowVersion })
@@ -441,16 +444,19 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			connectorMetadata,
 			position: {
 				x: parentNode.position.x,
-				y: parentNode.position.y + nodeConfigs.gap.y,
+				y: parentNode.position.y + nodeConfigs.TriggerNode.height + nodeConfigs.gap.y,
 			},
 		})
 
-		setDrawer('action')
+		console.log(newActionNode)
+
+		setDrawer('action_connector')
 		addNode(newActionNode)
 		setFlow({ ...flow, version: data })
 		setEditedAction(action)
+		console.log(1)
 	},
-	async patchEditedAction(update: Partial<Action>) {
+	async patchEditedAction(update: DeepPartial<Action>) {
 		const { editedAction, flow, setFlow } = get()
 		assertNotNullOrUndefined(editedAction, 'editedAction')
 
@@ -472,18 +478,29 @@ export const useEditor = create<IEditorState>((set, get) => ({
 	async updateEditedAction(newAction: Action) {
 		const { flow, setFlow } = get()
 
-		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
-		if (!data) throw new CustomError(`Can not update flow action. Missing flow-version in response`)
+		const { data: newFlowVersion } = await FlowVersionApi.updateAction(flow.version._id, newAction)
+		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
 
 		const newFlow: Flow = {
 			...flow,
-			version: data,
+			version: newFlowVersion,
 		}
 
 		setFlow(newFlow)
 		set({
 			editedAction: newAction,
 			flow: newFlow,
+		})
+	},
+	deleteAction: async (actionName: string) => {
+		const { flow, setFlow } = get()
+
+		const { data: newFlowVersion } = await FlowVersionApi.deleteAction(flow.version._id, actionName)
+		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
+
+		setFlow({
+			...flow,
+			version: newFlowVersion,
 		})
 	},
 	// STEPS

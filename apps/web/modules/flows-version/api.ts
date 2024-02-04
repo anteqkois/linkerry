@@ -15,6 +15,10 @@ export class FlowVersionApi {
   }
 
 	static async updateAction(flowVersionId: Id, data: Action & { name: string }) {
-		return apiClient.patch<FlowVersion | undefined>(`/flow-versions/${flowVersionId}/actions`, data)
+		return apiClient.patch<FlowVersion>(`/flow-versions/${flowVersionId}/actions`, data)
+	}
+
+	static async deleteAction(flowVersionId: Id, actionName: string) {
+		return apiClient.delete<FlowVersion >(`/flow-versions/${flowVersionId}/actions/${actionName}`)
 	}
 }

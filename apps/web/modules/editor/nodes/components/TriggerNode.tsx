@@ -23,7 +23,7 @@ export const TriggerNodeElement = ({ data: { trigger, connectorMetadata }, id }:
 	}, [])
 
 	return (
-		<div>
+		<>
 			<BaseNodeElement
 				title={trigger.displayName}
 				valid={trigger.valid}
@@ -50,15 +50,17 @@ export const TriggerNodeElement = ({ data: { trigger, connectorMetadata }, id }:
 				</Button>
 			</Handle> */}
 			</BaseNodeElement>
-			<div className="h-20 w-10 absolute -bottom-20 left-1/2 -translate-x-1/2 center">
-				<span className="h-20 w-0.5 absolute left-1/2 -translate-x-1/2 center border border-muted-foreground/50 border-dashed -z-10" />
-				<Button size={'icon'} variant={'outline'} className="min-w-max" onClick={() => onClickSelectAction(id)}>
-					<Icons.Plus />
-				</Button>
-				<div className="absolute -bottom-8 left-1/2 -translate-x-1/2 border border-muted-foreground/50 border-dashed rounded-md p-1">
-					<Muted>End</Muted>
+			{trigger.nextActionName ? null : (
+				<div className="h-20 w-10 absolute -bottom-20 left-1/2 -translate-x-1/2 center">
+					<span className="h-20 w-0.5 absolute left-1/2 -translate-x-1/2 center border border-muted-foreground/50 border-dashed -z-10" />
+					<Button size={'icon'} variant={'outline'} className="min-w-max" onClick={() => onClickSelectAction(id)}>
+						<Icons.Plus />
+					</Button>
+					<div className="absolute -bottom-8 left-1/2 -translate-x-1/2 border border-muted-foreground/50 border-dashed rounded-md p-1">
+						<Muted>End</Muted>
+					</div>
 				</div>
-			</div>
-		</div>
+			)}
+		</>
 	)
 }

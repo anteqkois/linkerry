@@ -1,5 +1,5 @@
 import { Action, FlowVersionAddActionInput, Id, RequestUser, Trigger } from '@linkerry/shared'
-import { Body, Controller, Param, Patch, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Param, Patch, Post, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../../lib/auth/decorators/req-user.decorator'
 import { FlowVersionsService } from './flow-versions.service'
@@ -24,5 +24,11 @@ export class FlowVersionsController {
 	@Patch(':id/actions')
 	updateFlowAction(@ReqJwtUser() user: RequestUser, @Param('id') id: Id, @Body() body: Action) {
 		return this.flowVersionsService.updateAction(id, user.id, body)
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Delete(':id/actions/:actionName')
+	deleteFlowAction(@ReqJwtUser() user: RequestUser, @Param('id') id: Id,@Param('actionName') actionName: string) {
+		return this.flowVersionsService.deleteAction(id, user.id, actionName)
 	}
 }

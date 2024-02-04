@@ -14,7 +14,7 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue
+	SelectValue,
 } from '@linkerry/ui-components/client'
 import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
@@ -27,10 +27,10 @@ import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../connectors-metadata/api/query-configs'
 import { DynamicField } from '../form/DynamicField'
 import { useEditor } from '../useEditor'
-// import { TriggerEvents } from './TriggerEvents'
+import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
-	const { editedAction, patchEditedAction, updateEditedAction } = useEditor()
+	const { editedAction, patchEditedAction, updateEditedAction, nodes } = useEditor()
 	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
@@ -133,6 +133,7 @@ export const ActionConnectorPanel = () => {
 
 	return (
 		<ResizablePanelGroup direction="vertical" className="max-h-screen">
+			{JSON.stringify(nodes.map(node => node.position))}
 			<ResizablePanel defaultSize={60} className="px-1">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
@@ -157,7 +158,7 @@ export const ActionConnectorPanel = () => {
 											}}
 										>
 											<SelectTrigger>
-												<SelectValue placeholder="Select flow action" />
+												<SelectValue placeholder="Select action" />
 											</SelectTrigger>
 											<SelectContent position="popper">
 												{Object.values(connectorMetadata.actions).map((action) => {
@@ -176,15 +177,14 @@ export const ActionConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
-						{actionWatcher?.props &&
-							Object.values(actionWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
+						{actionWatcher?.props && Object.values(actionWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
 					</form>
 				</Form>
 			</ResizablePanel>
 			<ResizableHandle withHandle />
-			{connectorMetadata.group !== ConnectorGroup.Core && actionWatcher?.type === ActionType.CONNECTOR && (
+			{connectorMetadata.group !== ConnectorGroup.Core && (
 				<ResizablePanel defaultSize={30} maxSize={80} onResize={(size) => setTestDataPanelHeight(size)}>
-					{/* <TriggerEvents panelSize={testDataPanelHeight} /> */}
+					<ActionTest panelSize={testDataPanelHeight} />
 				</ResizablePanel>
 			)}
 		</ResizablePanelGroup>

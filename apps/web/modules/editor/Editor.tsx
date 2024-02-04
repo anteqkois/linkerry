@@ -10,17 +10,20 @@ import { SelectActionPanel } from './action/SelectActionPanel'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
 import { useEditor } from './useEditor'
+import { ActionConnectorPanel } from './action/ActionConnectorPanel'
+import { ActionNodeElement } from './nodes/components/ActionNode'
 
 export const editorDrawers = {
   select_trigger: SelectTriggerPanel,
   trigger_connector: TriggerConnectorPanel,
   select_action: SelectActionPanel,
-  action: TriggerConnectorPanel,
+  action_connector: ActionConnectorPanel,
 }
 
 const nodeTypes = {
   SelectTriggerNode: SelectTriggerNodeElement,
   TriggerNode: TriggerNodeElement,
+  ActionNode: ActionNodeElement,
 }
 
 interface EditorProps {

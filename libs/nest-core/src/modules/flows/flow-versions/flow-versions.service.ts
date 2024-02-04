@@ -29,12 +29,11 @@ export class FlowVersionsService {
 	async createEmpty(flowId: Id, userId: Id) {
 		const emptyTrigger = generateEmptyTrigger('trigger_1')
 
-		console.log(emptyTrigger)
 		return this.flowVersionModel.create({
 			user: userId,
 			displayName: 'Untitled',
 			state: FlowState.Draft,
-			flowId: flowId,
+			flow: flowId,
 			valid: false,
 			stepsCount: 1,
 			triggers: [emptyTrigger],
@@ -86,40 +85,6 @@ export class FlowVersionsService {
 		return newFlowVersion
 	}
 
-	// async updateTriggerSettingsInputUiInfo({
-	// 	flowVersionId,
-	// 	currentSelectedData,
-	// 	lastTestDate,
-	// 	triggerName,
-	// }: {
-	// 	flowVersionId: Id
-	// 	currentSelectedData: any
-	// 	lastTestDate: string
-	// 	triggerName: string
-	// }) {
-	// 	const flowVersion = await this.flowVersionModel.findById(flowVersionId)
-	// 	assertNotNullOrUndefined(flowVersion, 'flowVersion')
-	// 	flowVersion.triggers = flowVersion.triggers.map((trigger) => {
-	// 		if (trigger.name !== triggerName) return trigger
-	// 		if (trigger.type !== TriggerType.CONNECTOR) return trigger
-	// 		trigger.settings = {
-	// 			...trigger.settings,
-	// 			inputUiInfo: {
-	// 				...trigger.settings.inputUiInfo.customizedInputs,
-	// 				currentSelectedData,
-	// 				lastTestDate,
-	// 			},
-	// 		}
-	// 		return trigger
-	// 	})
-
-	// 	await this.flowVersionModel.updateOne(
-	// 		{
-	// 			_id: flowVersionId,
-	// 		},
-	// 		{ $set: flowVersion },
-	// 	)
-	// }
 	async patchTrigger({ flowVersionId, triggerName, trigger }: { flowVersionId: Id; triggerName: string; trigger: Partial<Trigger> }) {
 		const flowVersion = await this.flowVersionModel.findById(flowVersionId)
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
@@ -185,6 +150,26 @@ export class FlowVersionsService {
 		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
 
 		const newFlowVersion = flowHelper.addAction(flowVersion.toObject(), parentStepName, action)
+
+		await this.flowVersionModel.updateOne(
+			{
+				_id: id,
+				user: userId,
+			},
+			{ $set: newFlowVersion },
+		)
+
+		return newFlowVersion
+	}
+
+	async deleteAction(id: Id, userId: Id, actionName: string) {
+		const flowVersion = await this.flowVersionModel.findOne({
+			_id: id,
+			user: userId,
+		})
+		assertNotNullOrUndefined(flowVersion, 'flowVersion')
+
+		const newFlowVersion = flowHelper.deleteAction(flowVersion.toObject(), actionName)
 
 		await this.flowVersionModel.updateOne(
 			{

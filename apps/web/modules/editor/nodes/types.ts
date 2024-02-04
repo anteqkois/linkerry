@@ -1,16 +1,18 @@
-import { ConnectorMetadataSummary } from '@linkerry/connectors-framework';
-import { Action, Trigger } from '@linkerry/shared';
-import { NodeProps, Node as ReactFlowNode } from 'reactflow';
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
+import { Action, Trigger } from '@linkerry/shared'
+import { NodeProps, Node as ReactFlowNode } from 'reactflow'
 
 export interface ICustomNode<T extends string, D extends object = any> extends ReactFlowNode<D, `${T}Node`> {
 	// id: `${T}_${`${string}`}`
 	id: string
+	height: number
+	width: number
 }
 
 export interface SelectTriggerNodeProps extends ICustomNode<'SelectTrigger', { trigger: Trigger }> {}
 export interface TriggerNodeProps extends ICustomNode<'Trigger', { trigger: Trigger; connectorMetadata: ConnectorMetadataSummary }> {}
 export interface ActionNodeProps
-	extends ICustomNode<'Action', { action: Action; connectorMetadata: ConnectorMetadataSummary; position: { x: number; y: number } }> {}
+	extends ICustomNode<'Action', { action: Action; connectorMetadata: ConnectorMetadataSummary; position: ReactFlowNode['position'] }> {}
 
 export type CustomNode = TriggerNodeProps | SelectTriggerNodeProps | ActionNodeProps
 // export type CustomNodeType = NonNullable<CustomNode['type']>

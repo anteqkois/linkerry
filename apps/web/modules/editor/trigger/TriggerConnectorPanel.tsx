@@ -14,7 +14,7 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue
+	SelectValue,
 } from '@linkerry/ui-components/client'
 import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
@@ -179,14 +179,17 @@ export const TriggerConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
-						{triggerWatcher?.props &&
-							Object.values(triggerWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
+						{triggerWatcher?.props && Object.values(triggerWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
 					</form>
 				</Form>
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (
-				<ResizablePanel defaultSize={30} maxSize={80} onResize={(size) => setTestDataPanelHeight(size)}>
+				<ResizablePanel
+					defaultSize={editedTrigger.settings.inputUiInfo.currentSelectedData ? 50 : 30}
+					maxSize={80}
+					onResize={(size) => setTestDataPanelHeight(size)}
+				>
 					<TriggerEvents panelSize={testDataPanelHeight} />
 				</ResizablePanel>
 			)}

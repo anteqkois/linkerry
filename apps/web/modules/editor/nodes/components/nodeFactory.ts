@@ -1,5 +1,6 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { Action, Trigger } from '@linkerry/shared'
+import { Node } from 'reactflow'
 import { ActionNodeProps, CustomNodeType, SelectTriggerNodeProps, TriggerNodeProps } from '../types'
 
 type NodeConfig = {
@@ -35,6 +36,8 @@ export const selectTriggerNodeFactory = ({ trigger }: { trigger: Trigger }): Sel
 			trigger,
 		},
 		draggable: false,
+		height: nodeConfigs.SelectTriggerNode.height,
+		width: nodeConfigs.SelectTriggerNode.width,
 	}
 }
 
@@ -54,6 +57,8 @@ export const triggerNodeFactory = ({
 			connectorMetadata,
 		},
 		draggable: false,
+		height: nodeConfigs.TriggerNode.height,
+		width: nodeConfigs.TriggerNode.width,
 	}
 }
 
@@ -64,7 +69,7 @@ export const actionNodeFactory = ({
 }: {
 	action: Action
 	connectorMetadata: ConnectorMetadataSummary
-	position: { x: number; y: number }
+	position: Node['position']
 }): ActionNodeProps => {
 	return {
 		id: action.name,
@@ -76,5 +81,7 @@ export const actionNodeFactory = ({
 			position,
 		},
 		draggable: false,
+		height: nodeConfigs.ActionNode.height,
+		width: nodeConfigs.ActionNode.width,
 	}
 }

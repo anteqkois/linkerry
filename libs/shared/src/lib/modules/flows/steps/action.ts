@@ -37,7 +37,7 @@ export interface BaseAction extends z.infer<typeof baseActionSchema> {}
 const actionConnectorSettingsSchema = baseConnectorSettingsSchema.merge(
 	z.object({
 		actionName: z.string(), // 'send_xyz'
-		errorHandlingOptions: actionErrorHandlingOptionsSchema,
+		errorHandlingOptions: actionErrorHandlingOptionsSchema.optional(),
 	}),
 )
 
