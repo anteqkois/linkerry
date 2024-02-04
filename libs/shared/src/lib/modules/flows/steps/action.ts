@@ -2,12 +2,27 @@ import { z } from 'zod'
 import { baseConnectorSettingsSchema, baseStepSchema } from './base'
 
 export enum ActionType {
-  // Code = 'Code',
-  CONNECTOR = 'CONNECTOR',
-  BRANCH = 'BRANCH',
-  MERGE_BRANCH = 'MERGE_BRANCH',
+	// Code = 'Code',
+	CONNECTOR = 'CONNECTOR',
+	BRANCH = 'BRANCH',
+	MERGE_BRANCH = 'MERGE_BRANCH',
 	LOOP_ON_ITEMS = 'LOOP_ON_ITEMS',
 }
+
+export const actionErrorHandlingOptionsSchema = z.object({
+	continueOnFailure: z
+		.object({
+			value: z.boolean(),
+		})
+		.optional(),
+	retryOnFailure: z
+		.object({
+			value: z.boolean(),
+		})
+		.optional(),
+})
+
+export interface ActionErrorHandlingOptions extends z.infer<typeof actionErrorHandlingOptionsSchema> {}
 
 /* BASE */
 export const baseActionSchema = baseStepSchema.merge(
@@ -22,6 +37,7 @@ export interface BaseAction extends z.infer<typeof baseActionSchema> {}
 const actionConnectorSettingsSchema = baseConnectorSettingsSchema.merge(
 	z.object({
 		actionName: z.string(), // 'send_xyz'
+		errorHandlingOptions: actionErrorHandlingOptionsSchema,
 	}),
 )
 
@@ -42,7 +58,7 @@ export interface ActionConnectorSettings extends z.infer<typeof actionConnectorS
 /* BRANCH */
 const actionBranchSettingsSchema = baseConnectorSettingsSchema.merge(
 	z.object({
-		conditions: z.array(z.array(z.object({})))
+		conditions: z.array(z.array(z.object({}))),
 	}),
 )
 

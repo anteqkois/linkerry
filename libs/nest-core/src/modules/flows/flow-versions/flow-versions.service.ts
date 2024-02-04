@@ -150,8 +150,7 @@ export class FlowVersionsService {
 			user: userId,
 		})
 
-		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
-
+		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 		const newFlowVersion = flowHelper.updateAction(flowVersion.toObject(), updateAction)
 
 		const response = await this.flowVersionModel.updateOne(

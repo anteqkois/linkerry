@@ -1,6 +1,17 @@
 import { ExecuteFlowOperation, ExecuteStepOperation, ExecuteTriggerOperation, ExecutionType, TriggerHookType } from "@linkerry/shared"
 import { VariableService } from "../../services/veriables.service"
 
+type RetryConstants = {
+	maxAttempts: number
+	retryExponential: number
+	retryInterval: number
+}
+const DEFAULT_RETRY_CONSTANTS: RetryConstants = {
+	maxAttempts: 1,
+	retryExponential: 6,
+	retryInterval: 1000,
+}
+
 export class EngineConstants {
     public static readonly API_URL = 'http://127.0.0.1:3000/'
     // public static readonly BASE_CODE_DIRECTORY = process.env.BASE_CODE_DIRECTORY ?? './codes'
@@ -26,6 +37,7 @@ export class EngineConstants {
         public readonly flowId: string,
         public readonly flowRunId: string,
         public readonly serverUrl: string,
+				public readonly retryConstants: RetryConstants,
         public readonly executionType: ExecutionType,
         public readonly workerToken: string,
         // public readonly projectId: ProjectId,
@@ -40,6 +52,7 @@ export class EngineConstants {
             input.flowVersion.flow,
             input.flowRunId,
             input.serverUrl,
+						DEFAULT_RETRY_CONSTANTS,
             input.executionType,
             input.workerToken,
             // input.projectId,
@@ -58,6 +71,25 @@ export class EngineConstants {
             input.flowVersion.flow,
             'test-run',
             input.serverUrl,
+						DEFAULT_RETRY_CONSTANTS,
+            ExecutionType.BEGIN,
+            input.workerToken,
+            // input.projectId,
+            new VariableService({
+                // projectId: input.projectId,
+                workerToken: input.workerToken,
+            }),
+            true,
+            'db',
+        )
+    }
+
+    public static fromExecutePropertyInput(input: ExecuteStepOperation): EngineConstants {
+        return new EngineConstants(
+            input.flowVersion.flow,
+            'execute-property',
+            input.serverUrl,
+						DEFAULT_RETRY_CONSTANTS,
             ExecutionType.BEGIN,
             input.workerToken,
             // input.projectId,
@@ -75,6 +107,7 @@ export class EngineConstants {
             input.flowVersion.flow,
             'execute-trigger',
             input.serverUrl,
+						DEFAULT_RETRY_CONSTANTS,
             ExecutionType.BEGIN,
             input.workerToken,
             // input.projectId,

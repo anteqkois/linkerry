@@ -4,6 +4,7 @@ import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
 	Action,
 	ActionConnector,
+	ActionType,
 	CustomError,
 	DeepPartial,
 	ErrorCode,
@@ -127,10 +128,9 @@ interface IEditorState {
 	editedAction: Action | null
 	setEditedAction: (action: Action) => void
 	onClickSelectAction: (nodeId: string) => void
-	onAddAction: (action: ActionConnector, connectorMetadata: ConnectorMetadataSummary) => void
-	patchEditedAction: (update: Partial<Action>) => Promise<void>
+	handleSelectActionConnector: (connectorMetadata: ConnectorMetadataSummary) => Promise<void>
+	patchEditedAction: (update: DeepPartial<Action>) => Promise<void>
 	updateEditedAction: (newAction: Action) => Promise<void>
-	// patchEditedActionConnector: (update: DeepPartial<WithoutId<ActionConnector>>) => Promise<void>
 	// resetAction: (actionName: string) => Promise<void>
 	// STEPS
 	editStepMetadata: {
@@ -400,9 +400,25 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			},
 		})
 	},
-	async onAddAction(action: ActionConnector, connectorMetadata: ConnectorMetadataSummary) {
+	async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
 		const { getNodeById, editStepMetadata, setDrawer, updateNode, addNode, flow, setFlow, setEditedAction } = get()
-		if (!editStepMetadata?.parentNodeName) throw new CustomError('Can not retrive editStepMetadata.parentNodeName')
+
+		assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
+		const action: ActionConnector = {
+			name: editStepMetadata.actionName,
+			displayName: connectorMetadata.displayName,
+			type: ActionType.CONNECTOR,
+			valid: false,
+			settings: {
+				connectorName: connectorMetadata.name,
+				connectorVersion: connectorMetadata.version,
+				connectorType: connectorMetadata.connectorType,
+				actionName: '',
+				input: {},
+				inputUiInfo: {},
+			},
+			nextActionName: '',
+		}
 
 		const { data } = await FlowVersionApi.addAction(flow.version._id, {
 			action,
@@ -435,10 +451,40 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		setEditedAction(action)
 	},
 	async patchEditedAction(update: Partial<Action>) {
-		//
+		const { editedAction, flow, setFlow } = get()
+		assertNotNullOrUndefined(editedAction, 'editedAction')
+
+		const newAction = deepMerge<Action>(editedAction, update)
+		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
+		if (!data) throw new CustomError(`Can not update flow trigger. No flowVersion in response`)
+
+		const newFlow: Flow = {
+			...flow,
+			version: data,
+		}
+
+		setFlow(newFlow)
+		set({
+			editedAction: newAction,
+			flow: newFlow,
+		})
 	},
 	async updateEditedAction(newAction: Action) {
-		//
+		const { flow, setFlow } = get()
+
+		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
+		if (!data) throw new CustomError(`Can not update flow action. Missing flow-version in response`)
+
+		const newFlow: Flow = {
+			...flow,
+			version: data,
+		}
+
+		setFlow(newFlow)
+		set({
+			editedAction: newAction,
+			flow: newFlow,
+		})
 	},
 	// STEPS
 	setEditStepMetadata: (data: IEditorState['editStepMetadata']) => {
