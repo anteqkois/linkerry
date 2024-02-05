@@ -10,20 +10,20 @@ type NodeConfig = {
 
 export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: number; y: number } } = {
 	gap: {
-		x: 40,
-		y: 40,
+		x: 50,
+		y: 50,
 	},
 	SelectTriggerNode: {
 		width: 384,
-		height: 428,
+		height: 100,
 	},
 	TriggerNode: {
 		width: 384,
-		height: 428,
+		height: 100,
 	},
 	ActionNode: {
 		width: 384,
-		height: 428,
+		height: 100,
 	},
 }
 

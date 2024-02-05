@@ -4,14 +4,14 @@ import 'reactflow/dist/style.css'
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'reactflow'
 import { Drawer } from '../../shared/components/drawer/Index'
-import { TriggerNodeElement } from './common'
-import { SelectTriggerNodeElement } from './nodes/components/SelectTriggerNode'
+import { ActionConnectorPanel } from './action/ActionConnectorPanel'
+import { ActionNodeElement } from './action/ActionNode'
 import { SelectActionPanel } from './action/SelectActionPanel'
+import { TriggerNodeElement } from './common'
+import { SelectTriggerNodeElement } from './trigger/SelectTriggerNode'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
 import { useEditor } from './useEditor'
-import { ActionConnectorPanel } from './action/ActionConnectorPanel'
-import { ActionNodeElement } from './nodes/components/ActionNode'
 
 export const editorDrawers = {
   select_trigger: SelectTriggerPanel,

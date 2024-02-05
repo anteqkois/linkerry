@@ -4,7 +4,7 @@ import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { ActionType, CustomError, FlowVersion, TriggerType, assertNotNullOrUndefined } from '@linkerry/shared'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
-import { Edge, Node } from 'reactflow'
+import { Edge } from 'reactflow'
 import { useClientQuery } from '../../../../../libs/react-query'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/connectors-metadata/api/query-configs'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
@@ -13,16 +13,19 @@ import {
 	nodeConfigs,
 	selectTriggerNodeFactory,
 	triggerNodeFactory,
-} from '../../../../../modules/editor/nodes/components/nodeFactory'
+} from '../../../../../modules/editor/common/nodeFactory'
+import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
 import { FlowApi } from '../../../../../modules/flows/api/flow'
 
 const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetadataSummary[]) => {
 	const nodes: CustomNode[] = []
 	const edges: Edge[] = []
-	let parentNode: Pick<Node, 'position'> & {
+
+	let parentNode: Pick<CustomNode, 'position' | 'id'> & {
 		height: number
 		width: number
 	} = {
+		id: '',
 		position: {
 			x: 0,
 			y: 0,
@@ -61,17 +64,24 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 				const connectorMetadata = connectorsMetadata.find((metadata) => action.settings.connectorName === metadata.name)
 				assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata')
 
-				nodes.push(
-					actionNodeFactory({
-						action,
-						connectorMetadata,
-						position: {
-							x: parentNode.position.x,
-							y: parentNode.position.y + parentNode.height + nodeConfigs.gap.y,
-						},
+				const newNode = actionNodeFactory({
+					action,
+					connectorMetadata,
+					position: {
+						x: parentNode.position.x,
+						y: parentNode.position.y + parentNode.height + nodeConfigs.gap.y,
+					},
+				})
+				nodes.push(newNode)
+
+				edges.push(
+					defaultEdgeFactory({
+						sourceNodeId: parentNode.id,
+						targetNodeId: newNode.id,
 					}),
 				)
-				parentNode = nodes[nodes.length - 1]
+
+				parentNode = newNode
 			}
 		}
 	}

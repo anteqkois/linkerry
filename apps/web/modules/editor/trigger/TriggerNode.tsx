@@ -1,9 +1,11 @@
-import { Button, Icons, Muted } from '@linkerry/ui-components/server'
+import { Icons } from '@linkerry/ui-components/server'
 import Image from 'next/image'
 import { useEffect } from 'react'
-import { CustomNodeProps, TriggerNodeProps } from '..'
-import { useEditor } from '../../useEditor'
-import { BaseNodeElement } from './BaseNode'
+import { Handle, Position } from 'reactflow'
+import { BaseNodeElement } from '../common/BaseNode'
+import { AddAction } from '../steps/AddAction'
+import { CustomNodeProps, TriggerNodeProps } from '../types'
+import { useEditor } from '../useEditor'
 
 type TriggerProps = CustomNodeProps<TriggerNodeProps>
 
@@ -44,23 +46,9 @@ export const TriggerNodeElement = ({ data: { trigger, connectorMetadata }, id }:
 						onClick={handleResetTrigger}
 					/>
 				</div>
-				{/* <Handle type="source" position={Position.Bottom} id="addAction" isConnectable={false} className="-bottom-10">
-				<Button size={'icon'} variant={'outline'}>
-				<Icons.Plus />
-				</Button>
-			</Handle> */}
+				<Handle type="source" position={Position.Bottom} isConnectable={false} className="opacity-0"></Handle>
 			</BaseNodeElement>
-			{trigger.nextActionName ? null : (
-				<div className="h-20 w-10 absolute -bottom-20 left-1/2 -translate-x-1/2 center">
-					<span className="h-20 w-0.5 absolute left-1/2 -translate-x-1/2 center border border-muted-foreground/50 border-dashed -z-10" />
-					<Button size={'icon'} variant={'outline'} className="min-w-max" onClick={() => onClickSelectAction(id)}>
-						<Icons.Plus />
-					</Button>
-					<div className="absolute -bottom-8 left-1/2 -translate-x-1/2 border border-muted-foreground/50 border-dashed rounded-md p-1">
-						<Muted>End</Muted>
-					</div>
-				</div>
-			)}
+			{trigger.nextActionName ? null : <AddAction nodeId={id} />}
 		</>
 	)
 }

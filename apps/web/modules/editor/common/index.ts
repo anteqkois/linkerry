@@ -1,3 +1,3 @@
-export * from '../nodes/components/TriggerNode'
+export * from '../trigger/TriggerNode'
 export * from './Property'
 

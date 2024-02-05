@@ -4,7 +4,7 @@ import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HTMLAttributes } from 'react'
 
-const baseNodeVariants = cva('w-editor-element border-2 border-primary/50 cursor-pointer', {
+const baseNodeVariants = cva('w-editor-element h-[100px] border-2 border-primary/50 cursor-pointer', {
 	variants: {
 		valid: {
 			true: '',

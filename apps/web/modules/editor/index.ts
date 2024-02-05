@@ -1,5 +1,4 @@
 export * from './Editor'
-// export * from './components'
-export * from './nodes'
+export * from './types'
 export * from './useEditor'
 

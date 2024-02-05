@@ -1,14 +1,16 @@
-import { Button, Icons, Muted } from '@linkerry/ui-components/server'
+import { Icons } from '@linkerry/ui-components/server'
 import Image from 'next/image'
 import { useEffect } from 'react'
-import { ActionNodeProps, CustomNodeProps } from '..'
-import { useEditor } from '../../useEditor'
-import { BaseNodeElement } from './BaseNode'
+import { Handle, Position } from 'reactflow'
+import { BaseNodeElement } from '../common/BaseNode'
+import { AddAction } from '../steps/AddAction'
+import { ActionNodeProps, CustomNodeProps } from '../types'
+import { useEditor } from '../useEditor'
 
 type ActionProps = CustomNodeProps<ActionNodeProps>
 
 export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: ActionProps) => {
-	const { setEditedAction, deleteAction, onClickSelectAction, setEditStepMetadata } = useEditor()
+	const { setEditedAction, deleteAction, setEditStepMetadata } = useEditor()
 
 	const onClickHandler = () => {
 		setEditedAction(action)
@@ -29,7 +31,7 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 	}, [])
 
 	return (
-		<div>
+		<>
 			<BaseNodeElement
 				title={action.displayName}
 				valid={action.valid}
@@ -37,6 +39,7 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 				onClick={onClickHandler}
 				className="group"
 			>
+				<Handle type="target" position={Position.Top} isConnectable={false} className="opacity-0"></Handle>
 				<div className="flex gap-4">
 					<Image width={64} height={64} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
 					<div className="flex flex-col flex-wrap justify-center">
@@ -56,15 +59,7 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 				</Button>
 			</Handle> */}
 			</BaseNodeElement>
-			<div className="h-20 w-10 absolute -bottom-20 left-1/2 -translate-x-1/2 center">
-				<span className="h-20 w-0.5 absolute left-1/2 -translate-x-1/2 center border border-muted-foreground/50 border-dashed -z-10" />
-				<Button size={'icon'} variant={'outline'} className="min-w-max" onClick={() => onClickSelectAction(id)}>
-					<Icons.Plus />
-				</Button>
-				<div className="absolute -bottom-8 left-1/2 -translate-x-1/2 border border-muted-foreground/50 border-dashed rounded-md p-1">
-					<Muted>End</Muted>
-				</div>
-			</div>
-		</div>
+			{action.nextActionName ? null : <AddAction nodeId={id} />}
+		</>
 	)
 }

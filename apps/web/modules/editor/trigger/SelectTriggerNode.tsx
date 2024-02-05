@@ -1,7 +1,7 @@
 import { H5, Icons } from '@linkerry/ui-components/server'
-import { useEditor } from '../../useEditor'
+import { BaseNodeElement } from '../common/BaseNode'
 import { CustomNodeProps, SelectTriggerNodeProps } from '../types'
-import { BaseNodeElement } from './BaseNode'
+import { useEditor } from '../useEditor'
 
 type SelectTriggerProps = CustomNodeProps<SelectTriggerNodeProps>
 

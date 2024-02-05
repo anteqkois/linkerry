@@ -45,9 +45,10 @@ import { EditorDrawer } from '../../shared/components/drawer/types'
 import { FlowVersionApi } from '../flows-version/api'
 import { FlowApi } from '../flows/api/flow'
 import { TriggerApi } from '../flows/triggers/api'
+import { actionNodeFactory, nodeConfigs, selectTriggerNodeFactory, triggerNodeFactory } from './common/nodeFactory'
+import { defaultEdgeFactory } from './edges/edgesFactory'
 import { CustomEdge, CustomEdgeId } from './edges/types'
-import { CustomNode, CustomNodeId } from './nodes'
-import { actionNodeFactory, nodeConfigs, selectTriggerNodeFactory, triggerNodeFactory } from './nodes/components/nodeFactory'
+import { CustomNode, CustomNodeId } from './types'
 
 // type EditorNode = Node | CustomNode
 type EditorNode = CustomNode
@@ -106,6 +107,7 @@ interface IEditorState {
 	// EDGES
 	edges: Edge[]
 	setEdges: (nodes: Edge[]) => void
+	addEdge: (edge: Edge) => void
 	onEdgesChange: OnEdgesChange
 	onConnect: OnConnect
 	updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => void
@@ -404,7 +406,7 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 	},
 	async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
-		const { getNodeById, editStepMetadata, setDrawer, updateNode, addNode, flow, setFlow, setEditedAction } = get()
+		const { getNodeById, editStepMetadata, setDrawer, updateNode, addNode, flow, setFlow, setEditedAction, addEdge } = get()
 
 		assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
 		const action: ActionConnector = {
@@ -448,10 +450,14 @@ export const useEditor = create<IEditorState>((set, get) => ({
 			},
 		})
 
-		console.log(newActionNode)
-
 		setDrawer('action_connector')
 		addNode(newActionNode)
+		addEdge(
+			defaultEdgeFactory({
+				sourceNodeId: editStepMetadata?.parentNodeName,
+				targetNodeId: newActionNode.id,
+			}),
+		)
 		setFlow({ ...flow, version: data })
 		setEditedAction(action)
 		console.log(1)
@@ -493,11 +499,13 @@ export const useEditor = create<IEditorState>((set, get) => ({
 		})
 	},
 	deleteAction: async (actionName: string) => {
-		const { flow, setFlow } = get()
+		const { flow, setFlow, deleteNode, setShowDrawer } = get()
 
 		const { data: newFlowVersion } = await FlowVersionApi.deleteAction(flow.version._id, actionName)
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
 
+		setShowDrawer(false)
+		deleteNode(actionName)
 		setFlow({
 			...flow,
 			version: newFlowVersion,
