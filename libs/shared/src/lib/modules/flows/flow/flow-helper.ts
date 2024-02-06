@@ -1,6 +1,6 @@
 import { CustomError, assertNotNullOrUndefined, clone, deepMerge } from '../../../common'
-import { Action, ActionType } from '../steps/action'
-import { Trigger, TriggerType } from '../steps/trigger'
+import { Action, ActionType } from '../actions/action'
+import { Trigger, TriggerType } from '../triggers/trigger'
 import { FlowVersion } from './flow'
 
 type Step = Action | Trigger
@@ -30,6 +30,10 @@ function getStep(flowVersion: FlowVersion, stepName: string): Action | Trigger |
 
 function getTrigger(flowVersion: FlowVersion, triggerName: string): Trigger | undefined {
 	return flowVersion.triggers.find((trigger) => trigger.name === triggerName)
+}
+
+function getAction(flowVersion: FlowVersion, actionName: string): Action | undefined {
+	return flowVersion.actions.find((trigger) => trigger.name === actionName)
 }
 
 const updateTrigger = (flowVersion: FlowVersion, triggerData: Trigger) => {
@@ -250,6 +254,7 @@ export const flowHelper = {
 	patchTrigger,
 	getTrigger,
 	addAction,
+	getAction,
 	updateAction,
 	deleteAction,
 }

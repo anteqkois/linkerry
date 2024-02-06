@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import { Model } from 'mongoose'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
-import { FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { PoolTestDto } from '../trigger-events/dto/pool-test.dto'
 import { GetManyDto } from './dto/get-many.dto'
 import { TriggerEventModel } from './schemas/trigger-events.schema'
@@ -20,7 +19,6 @@ export class TriggerEventsService {
 		// private readonly stepFilesService: StepFilesService,
 		private readonly engineService: EngineService,
 		@InjectModel(TriggerEventModel.name) private readonly triggerEventsModel: Model<TriggerEventModel>,
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionsModel: Model<FlowVersionModel>,
 	) {}
 
 	async deleteAllRelatedToTrigger({ flowId, trigger }: { flowId: Id; trigger: Trigger }) {
@@ -115,9 +113,11 @@ export class TriggerEventsService {
 	}
 
 	async getMany(query: GetManyDto, userId: Id) {
-		const flowVersion = await this.flowVersionsModel.findOne({
-			flow: query.flowId,
-			user: userId,
+		const flowVersion = await this.flowVersionsService.findOne({
+			filter: {
+				flow: query.flowId,
+				user: userId,
+			},
 		})
 		if (!flowVersion) throw new UnprocessableEntityException('Can not retrive flow version')
 

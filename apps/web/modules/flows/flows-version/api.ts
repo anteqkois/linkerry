@@ -1,5 +1,5 @@
 import { Action, FlowVersion, FlowVersionAddActionInput, Id, Trigger } from '@linkerry/shared'
-import { apiClient } from '../../libs/api-client'
+import { apiClient } from '../../../libs/api-client'
 
 export class FlowVersionApi {
   static async patch(flowVersionId: Id, data: Partial<FlowVersion>) {

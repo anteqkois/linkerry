@@ -19,12 +19,16 @@ import {
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-// import { UpdateTriggerDto } from './dto/update-trigger.dto'
+import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { FlowVersionModel } from './schemas/flow-version.schema'
 
 @Injectable()
 export class FlowVersionsService {
 	constructor(@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>) {}
+
+	async findOne({ filter }: { filter: MongoFilter<FlowVersionModel> }) {
+		return (await this.flowVersionModel.findOne(filter))?.toObject()
+	}
 
 	async createEmpty(flowId: Id, userId: Id) {
 		const emptyTrigger = generateEmptyTrigger('trigger_1')

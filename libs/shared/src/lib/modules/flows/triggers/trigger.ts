@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from './base'
+import { baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from '../steps/base'
 
 export enum TriggerType {
 	EMPTY = 'EMPTY',

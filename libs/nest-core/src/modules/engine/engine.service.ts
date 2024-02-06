@@ -268,7 +268,7 @@ export class EngineService {
 		})
 		// const lockedFlowVersion = await lockPieceAction(operation)
 		const clonedFlowVersion = clone(operation.flowVersion)
-		const step = flowHelper.getStep(clonedFlowVersion, operation.stepName) as Action | undefined
+		const step = flowHelper.getAction(clonedFlowVersion, operation.stepName)
 		assertNotNullOrUndefined(step, 'Step not found')
 
 		const sandbox = await this._getSandboxForAction(

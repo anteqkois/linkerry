@@ -114,7 +114,7 @@ export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 					</Select>
 				</>
 			) : (
-				<div className="flex h-14 px-1 center">
+				<div className="flex h-20 px-1 center">
 					<Button variant="secondary" onClick={onClickTest}>
 						{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
 						<span className="whitespace-nowrap">Generate Data</span>

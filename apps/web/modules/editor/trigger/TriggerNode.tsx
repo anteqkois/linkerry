@@ -10,7 +10,7 @@ import { useEditor } from '../useEditor'
 type TriggerProps = CustomNodeProps<TriggerNodeProps>
 
 export const TriggerNodeElement = ({ data: { trigger, connectorMetadata }, id }: TriggerProps) => {
-	const { setEditedTrigger, resetTrigger, onClickSelectAction, setEditStepMetadata } = useEditor()
+	const { setEditedTrigger, resetTrigger, setEditStepMetadata } = useEditor()
 
 	const onClickHandler = () => {
 		setEditedTrigger(trigger)

@@ -15,7 +15,7 @@ import {
 	triggerNodeFactory,
 } from '../../../../../modules/editor/common/nodeFactory'
 import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
-import { FlowApi } from '../../../../../modules/flows/api/flow'
+import { FlowApi } from '../../../../../modules/flows/flows/api'
 
 const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetadataSummary[]) => {
 	const nodes: CustomNode[] = []

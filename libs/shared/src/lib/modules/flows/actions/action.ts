@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { baseConnectorSettingsSchema, baseStepSchema } from './base'
+import { baseConnectorSettingsSchema, baseStepSchema } from '../steps/base'
 
 export enum ActionType {
 	// Code = 'Code',
