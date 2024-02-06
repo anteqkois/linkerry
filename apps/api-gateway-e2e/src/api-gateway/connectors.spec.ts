@@ -15,9 +15,9 @@ const coingecko = {
   actions: 2,
 }
 
-describe('GET /api/connectors-metadata', () => {
+describe('GET /api/connectors', () => {
   it('should return a connector metadata', async () => {
-    const { data, status } = await axios.get<ConnectorMetadata[]>(`/connectors-metadata`)
+    const { data, status } = await axios.get<ConnectorMetadata[]>(`/connectors`)
 
     expect(status).toBe(200)
     expect(data.length).toBeGreaterThan(0)
@@ -33,7 +33,7 @@ describe('GET /api/connectors-metadata', () => {
   })
 
   it('should return coingecko connector metadata after filtration', async () => {
-    const { data } = await axios.get<ConnectorMetadata[]>(`/connectors-metadata`, {
+    const { data } = await axios.get<ConnectorMetadata[]>(`/connectors`, {
       params: {
         displayName: 'coingecko',
       },
@@ -53,7 +53,7 @@ describe('GET /api/connectors-metadata', () => {
   })
 
   it('should return empty array for filtration when no results', async () => {
-    const { data } = await axios.get<ConnectorMetadata[]>(`/connectors-metadata`, {
+    const { data } = await axios.get<ConnectorMetadata[]>(`/connectors`, {
       params: {
         displayName: 'unknown connecotr',
       },

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
 import { useClientQuery } from '../../../../../libs/react-query'
-import { connectorsMetadataQueryConfig } from '../../../../../modules/connectors-metadata/api/query-configs'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
 import {
 	actionNodeFactory,
@@ -15,6 +14,7 @@ import {
 	triggerNodeFactory,
 } from '../../../../../modules/editor/common/nodeFactory'
 import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
+import { connectorsMetadataQueryConfig } from '../../../../../modules/flows/connectors/api/query-configs'
 import { FlowApi } from '../../../../../modules/flows/flows/api'
 
 const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetadataSummary[]) => {

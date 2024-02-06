@@ -33,7 +33,7 @@ import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common
 import { ConfigService } from '@nestjs/config'
 import fs from 'fs/promises'
 import { AuthService } from '../../lib/auth/auth.service'
-import { ConnectorsMetadataService } from '../connectors-metadata/connectors-metadata.service'
+import { ConnectorsMetadataService } from '../flows/connectors'
 import { SandboxProvisionerService } from '../workers/sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../workers/sandbox/sandboxes/sandbox'
 

@@ -23,7 +23,7 @@ export type DropdownOption<T> = {
 export type DynamicDropdownOptions<T> = (propsValue: Record<string, unknown>, ctx: PropertyContext) => Promise<DynamicDropdownState<T>>
 
 // export type DynamicDropdownProperty<T, R extends boolean> = BaseProperty & {
-export type DynamicDropdownProperty<R extends boolean, T = any> = BaseProperty & {
+export type DynamicDropdownProperty<R extends boolean = boolean, T = any> = BaseProperty & {
   refreshers: string[]
   options: DynamicDropdownOptions<T>
 } & PropertyValue<T, PropertyType.DYNAMIC_DROPDOWN,ValidationInputType.ANY, R>

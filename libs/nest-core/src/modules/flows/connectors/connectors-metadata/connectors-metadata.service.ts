@@ -2,7 +2,7 @@ import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connector
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
-import { MongoFilter } from '../../lib/mongodb/decorators/filter.decorator'
+import { MongoFilter } from '../../../../lib/mongodb/decorators/filter.decorator'
 import { ConnectorMetadataGetManyQueryDto } from './dto/getMany.dto'
 import { ConnectorMetadataGetOneQueryDto } from './dto/getOne.dto'
 import { ConnectorMetadataModel } from './schemas/connector.schema'

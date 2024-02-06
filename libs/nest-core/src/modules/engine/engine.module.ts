@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../../lib/auth';
-import { ConnectorsMetadataModule } from '../connectors-metadata';
+import { ConnectorsModule } from '../flows/connectors';
 import { SandboxModule } from '../workers/sandbox/sandbox.module';
 import { EngineService } from './engine.service';
 
 @Module({
-	imports: [ConnectorsMetadataModule, SandboxModule, AuthModule],
+	imports: [ SandboxModule, AuthModule, ConnectorsModule],
+	// providers: [EngineService, ConnectorsMetadataService],
 	providers: [EngineService],
 	exports: [EngineService],
 })

@@ -7,8 +7,8 @@ export const fetchCoin = createAction({
   name: 'fetch_coin',
   props: {
     query: Property.Text({
-      description: 'Search query to search coin',
-      displayName: 'Query',
+      description: 'Type query phrase to search for coin',
+      displayName: 'Search Query',
       name: 'query',
       required: true,
       // todo implement validators

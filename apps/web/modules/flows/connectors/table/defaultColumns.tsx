@@ -12,7 +12,7 @@ import {
 import { Badge, Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
 import Image from 'next/image'
-import { TableColumnHeader } from '../../../shared/components/table/TableColumnHeader'
+import { TableColumnHeader } from '../../../../shared/components/table/TableColumnHeader'
 
 export const columns: ColumnDef<ConnectorMetadataSummary>[] = [
   // todo add like/saved field

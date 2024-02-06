@@ -1,5 +1,6 @@
 import { ConnectorProperty, PropertyType } from '@linkerry/connectors-framework'
 import { CheckboxField } from './CheckboxField'
+import { DynamicVirtualizedSelect } from './DynamicVirtualizedSelect'
 import { NumberField } from './NumberField'
 import { TextField } from './TextField'
 import { VirtualizedSelect } from './VirtualizedSelect'
@@ -14,6 +15,8 @@ export const DynamicField = ({ property }: { property: ConnectorProperty }) => {
 			return <CheckboxField property={property} />
 		case PropertyType.STATIC_DROPDOWN:
 			return <VirtualizedSelect property={property} />
+		case PropertyType.DYNAMIC_DROPDOWN:
+			return <DynamicVirtualizedSelect property={property} />
 
 		default:
 			break

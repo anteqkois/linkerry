@@ -117,6 +117,7 @@ interface IEditorState {
 	setFlow: (flow: Flow) => void
 	// CONNECTORS
 	testConnectorLoading: boolean
+	// getConnectorOptions: () => Promise<void>
 	// TRIGGERS
 	editedTrigger: Trigger | null
 	setEditedTrigger: (trigger: Trigger) => void
@@ -390,10 +391,15 @@ export const useEditor = create<IEditorState>((set, get) => ({
 	},
 	// ACTIONS
 	editedAction: null,
-	setEditedAction: (action: Action) =>
+	setEditedAction: (action: Action) => {
+		const { setDrawer, showDrawer } = get()
+
+		setDrawer('action_connector')
 		set({
 			editedAction: action,
-		}),
+			showDrawer: !showDrawer,
+		})
+	},
 	onClickSelectAction(nodeIdName: string) {
 		get().setDrawer('select_action')
 		const actionName = `action_${get().flow.version.stepsCount}`
