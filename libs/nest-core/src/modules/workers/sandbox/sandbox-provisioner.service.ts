@@ -1,4 +1,4 @@
-import { ConnectorPackage, SandBoxCacheType, TypedProvisionCacheInfo } from '@linkerry/shared'
+import { ConnectorPackage, CustomError, ErrorCode, SandBoxCacheType, TypedProvisionCacheInfo } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { SandboxManagerService } from './cache/sandbox-manager.service'
 import { sandboxCachePool } from './cache/sandbox-pool'
@@ -30,7 +30,7 @@ export class SandboxProvisionerService {
 			return sandbox
 		} catch (error: any) {
 			this.logger.error(error)
-			throw new Error(`Can not provisionSandbox ${JSON.stringify(connectors)}`)
+			throw new CustomError(`Can not provisionSandbox`, ErrorCode.ENTITY_NOT_FOUND, { connectors })
 		}
 	}
 

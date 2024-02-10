@@ -1,5 +1,5 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { Action, DeepPartial, Flow, Id, Trigger, TriggerConnector, TriggerEvent, WithoutId } from '@linkerry/shared'
+import { Action, ConnectorsGetOptionsResponse, DeepPartial, Flow, Id, Trigger, TriggerConnector, TriggerEvent, WithoutId } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
 import { StoreApi } from 'zustand'
@@ -44,7 +44,7 @@ export interface FlowAndConnectorsSlice {
 	setFlow: (flow: Flow) => void
 	// CONNECTORS
 	testConnectorLoading: boolean
-	// getConnectorOptions: () => Promise<void>
+	getConnectorOptions: ({ input, propertyName }: { input: any; propertyName: string }) => Promise<ConnectorsGetOptionsResponse>
 }
 
 export interface TriggersSlice {

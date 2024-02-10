@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { mkdir, rm } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { engineInstaller } from '../../../engine/engine-installer'
-import { connectorManager } from '../../../flows/connector-manager'
+import { connectorManager } from '../../../flows/connectors/connector-manager'
 
 export class CachedSandbox {
 	private readonly logger = new Logger(CachedSandbox.name)

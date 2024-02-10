@@ -1,5 +1,5 @@
 import { json } from '@codemirror/lang-json'
-import { CustomError, Id, assertNotNullOrUndefined, isConnectorTrigger } from '@linkerry/shared'
+import { CustomError, ErrorCode, Id, assertNotNullOrUndefined, isConnectorTrigger } from '@linkerry/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@linkerry/ui-components/client'
 import { Button, Icons, Muted, Small } from '@linkerry/ui-components/server'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
@@ -19,7 +19,10 @@ export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {
 export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 	const { flow, editedTrigger, testPoolTrigger, testConnectorLoading, patchEditedTriggerConnector } = useEditor()
 	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
-	if (!isConnectorTrigger(editedTrigger)) throw new CustomError('Can not use other trigger than connector trigger')
+	if (!isConnectorTrigger(editedTrigger))
+		throw new CustomError('Invalid trigger type, can not use other than ConnectorTrigger', ErrorCode.INVALID_TYPE, {
+			editedTrigger,
+		})
 
 	const { data, status } = useClientQuery({
 		queryKey: ['trigger-events', editedTrigger.name],

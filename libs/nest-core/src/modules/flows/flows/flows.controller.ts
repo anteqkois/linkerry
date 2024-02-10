@@ -6,23 +6,28 @@ import { FlowsService } from './flows.service'
 
 @Controller('flows')
 export class FlowsController {
-  constructor(private readonly flowsService: FlowsService) {}
+	constructor(private readonly flowsService: FlowsService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  getFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
-    return this.flowsService.findOne(id, user.id)
-  }
+	@UseGuards(JwtAuthGuard)
+	@Get(':id')
+	getFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
+		return this.flowsService.findOne({
+			filter: {
+				_id: id,
+				user: user.id,
+			},
+		})
+	}
 
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  delteFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
-    return this.flowsService.deleteOne(id, user.id)
-  }
+	@UseGuards(JwtAuthGuard)
+	@Delete(':id')
+	delteFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
+		return this.flowsService.deleteOne(id, user.id)
+	}
 
-  @UseGuards(JwtAuthGuard)
-  @Post()
-  createEmptyFlow(@ReqJwtUser() user: RequestUser) {
-    return this.flowsService.createEmpty(user.id)
-  }
+	@UseGuards(JwtAuthGuard)
+	@Post()
+	createEmptyFlow(@ReqJwtUser() user: RequestUser) {
+		return this.flowsService.createEmpty(user.id)
+	}
 }

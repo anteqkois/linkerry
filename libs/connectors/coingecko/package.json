@@ -4,5 +4,16 @@
 	"type": "commonjs",
 	"scripts": {
 		"publish-package": "pnpm publish --no-git-checks"
-	}
+	},
+	"author": {
+		"name": "Antoni Kois",
+		"email": "anteqkois.dev@gmail.com",
+		"url": "https://github.com/anteqkois"
+	},
+	"contributors": [
+		{
+			"name": "Antoni Kois",
+			"url": "https://github.com/anteqkois"
+		}
+	]
 }

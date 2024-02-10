@@ -7,7 +7,7 @@ export class FlowVersionApi {
   }
 
   static async updateTrigger(flowVersionId: Id, data: Trigger & { name: string }) {
-    return apiClient.patch<FlowVersion | undefined>(`/flow-versions/${flowVersionId}/triggers`, data)
+    return apiClient.patch<FlowVersion>(`/flow-versions/${flowVersionId}/triggers`, data)
   }
 
   static async addAction(flowVersionId: Id, data: FlowVersionAddActionInput) {

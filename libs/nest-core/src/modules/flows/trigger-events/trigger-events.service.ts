@@ -34,7 +34,14 @@ export class TriggerEventsService {
 	}
 
 	async findMany({ flowLike, triggerName }: { flowLike: Id | Flow; triggerName: string }) {
-		const flow = typeof flowLike === 'string' ? await this.flowService.findOne(flowLike) : flowLike
+		const flow =
+			typeof flowLike === 'string'
+				? await this.flowService.findOne({
+						filter: {
+							_id: flowLike,
+						},
+				  })
+				: flowLike
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
 
 		const trigger = flowHelper.getTrigger(flow.version, triggerName)
@@ -48,8 +55,13 @@ export class TriggerEventsService {
 	}
 
 	async performPoolTest(poolDto: PoolTestDto, userId: Id) {
-		const flow = await this.flowService.findOne(poolDto.flowId, userId)
-		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
+		// const flow = await this.flowService.findOne(poolDto.flowId, userId)
+		const flow = await this.flowService.findOne({
+			filter: {
+				_id: poolDto.flowId,
+				user: userId,
+			},
+		})
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
 
 		const flowTrigger = flowHelper.getTrigger(flow.version, poolDto.triggerName)
@@ -69,11 +81,8 @@ export class TriggerEventsService {
 		})
 
 		if (!result.success) {
-			throw new CustomError({
-				code: ErrorCode.TEST_TRIGGER_FAILED,
-				params: {
-					message: result.message,
-				},
+			throw new CustomError('Execute trigger failed', ErrorCode.TEST_TRIGGER_FAILED, {
+				message: result.message,
 			})
 		}
 

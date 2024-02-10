@@ -23,7 +23,7 @@ export const sampleDataSettingsObjectSchema = z.object({
 	lastTestDate: z.string().optional(),
 })
 
-export const baseConnectorSettingsSchema = z.object({
+export const baseStepSettingsSchema = z.object({
 	connectorName: z.string(), // '@market-connecotr/binance'
 	connectorVersion: z.string(),
 	connectorType: z.nativeEnum(ConnectorType), // Officail, Custom
@@ -32,7 +32,12 @@ export const baseConnectorSettingsSchema = z.object({
 	sampleData: sampleDataSchema.optional(),
 })
 
+export const isStepBaseSettings = (settings: unknown): settings is BaseStepSettings => {
+	const response = baseStepSettingsSchema.safeParse(settings)
+	return response.success
+}
+
 export interface SampleData extends z.infer<typeof sampleDataSchema> {}
 export interface BaseStep extends z.infer<typeof baseStepSchema> {}
 export interface SampleDataSettingsObject extends z.infer<typeof sampleDataSettingsObjectSchema> {}
-export interface BaseConnectorSettings extends z.infer<typeof baseConnectorSettingsSchema> {}
+export interface BaseStepSettings extends z.infer<typeof baseStepSettingsSchema> {}

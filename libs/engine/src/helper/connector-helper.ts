@@ -59,7 +59,9 @@ export const connectorHelper = {
 			// }
 
 			const dropdownProperty = property as DynamicDropdownProperty<any, boolean>
-			dropdownProperty.options
+
+			console.log(dropdownProperty)
+			console.log(await dropdownProperty.options(resolvedInput, ctx))
 			return await dropdownProperty.options(resolvedInput, ctx)
 		} catch (e) {
 			console.error(e)

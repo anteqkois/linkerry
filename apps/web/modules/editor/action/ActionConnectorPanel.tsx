@@ -26,11 +26,12 @@ import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { DynamicField } from '../form/DynamicField'
+import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
 import { useEditor } from '../useEditor'
 import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
-	const { editedAction, patchEditedAction, updateEditedAction, nodes } = useEditor()
+	const { editedAction, patchEditedAction, updateEditedAction } = useEditor()
 	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
@@ -73,20 +74,17 @@ export const ActionConnectorPanel = () => {
 	const handleWatcher = useDebouncedCallback(
 		async (values, { name }) => {
 			if (!name) return
-			if (name === 'actionName' || name.includes('__temp__')) return
-			const newData: Record<string, any> = {}
 
-			for (const [key, value] of Object.entries(values)) {
-				if (key === 'actionName' || key.includes('__temp__')) continue
-				if (editedAction.settings.input[key] == value) continue
-				newData[key] = value
-			}
-
-			await patchEditedAction({
-				settings: {
-					input: newData,
-				},
+			const newData = retriveStepInputFromObject(editedAction.settings.input, values, {
+				onlyChanged: true,
 			})
+
+			if (newData)
+				await patchEditedAction({
+					settings: {
+						input: newData,
+					},
+				})
 		},
 		[],
 		1500,

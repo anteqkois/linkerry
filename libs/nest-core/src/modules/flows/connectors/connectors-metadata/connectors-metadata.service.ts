@@ -1,4 +1,5 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
+import { EXACT_VERSION_PATTERN } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
@@ -37,5 +38,26 @@ export class ConnectorsMetadataService {
 		if (!connector) throw new UnprocessableEntityException(`Can not find conector metadata`)
 
 		return query.summary ? this.connectorToSummaryMetadata(connector) : connector
+	}
+
+	async getExactPieceVersion({
+		name,
+		version,
+	}: {
+		name: string
+		version: string
+		// projectId: ProjectId
+	}): Promise<string> {
+		const isExactVersion = EXACT_VERSION_PATTERN.test(version)
+
+		if (isExactVersion) {
+			return version
+		}
+
+		const pieceMetadata = await this.findOne(name, {
+			version,
+		})
+
+		return pieceMetadata.version
 	}
 }

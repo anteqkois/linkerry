@@ -1,5 +1,5 @@
 // import * as fs from 'fs';
-import { CustomHttpExceptionResponse, ErrorCode, HttpExceptionResponse } from '@linkerry/shared'
+import { CustomHttpExceptionResponse, ErrorCode, HttpExceptionResponse, isCustomError } from '@linkerry/shared'
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ZodError, ZodIssue } from 'zod'
@@ -52,6 +52,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
 			errorMessage = exception.message
 			humanMessage = exception.message
 			errorCode = ErrorCode.DATABASE_INTERNAL
+		} else if (isCustomError(exception)) {
+			status = HttpStatus.UNPROCESSABLE_ENTITY
+			errorMessage = exception.message
+			humanMessage = exception.message
+			errorCode = exception.code
 		} else {
 			console.log(exception)
 			status = HttpStatus.INTERNAL_SERVER_ERROR

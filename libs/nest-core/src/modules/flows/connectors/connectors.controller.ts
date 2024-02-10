@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Query } from '@nestjs/common'
+import { ConnectorsGetOptionsInput } from '@linkerry/shared'
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { MongoFilter, QueryToMongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { ConnectorsMetadataService } from './connectors-metadata/connectors-metadata.service'
 import { ConnectorMetadataGetManyQueryDto } from './connectors-metadata/dto/getMany.dto'
@@ -23,5 +24,10 @@ export class ConnectorsController {
 	@Get(':name')
 	findOne(@Param('name') name: string, @Query() query: ConnectorMetadataGetOneQueryDto) {
 		return this.connectorsMetadataService.findOne(name, query)
+	}
+
+	@Post('/options')
+	getPropertyOptions(@Body() body: ConnectorsGetOptionsInput) {
+		return this.connectorsService.getPropertyOptions(body)
 	}
 }

@@ -1,4 +1,4 @@
-import { CustomError, assertNotNullOrUndefined, clone, deepMerge } from '../../../common'
+import { CustomError, ErrorCode, assertNotNullOrUndefined, clone, deepMerge } from '../../../common'
 import { Action, ActionType } from '../actions/action'
 import { Trigger, TriggerType } from '../triggers/trigger'
 import { FlowVersion } from './flow'
@@ -79,7 +79,9 @@ const updateAction = (flowVersion: FlowVersion, actionData: Action) => {
 		case ActionType.BRANCH:
 			// case ActionType.LOOP_ON_ITEMS:
 			// case ActionType.MERGE_BRANCH:
-			throw new CustomError('Unsuported action type')
+			throw new CustomError('Unsuported action type', ErrorCode.INVALID_TYPE, {
+				actionData,
+			})
 	}
 	return flowVersionClone
 }
@@ -102,7 +104,10 @@ const addNextActionName = (flowVersion: FlowVersion, stepName: string, nextActio
 		}
 		return action
 	})
-	if (!done) throw new CustomError('Can not find step to edit nextActionName')
+	if (!done)
+		throw new CustomError('Can not find step to edit nextActionName', ErrorCode.STEP_NOT_FOUND, {
+			stepName,
+		})
 	return flowVersion
 }
 
@@ -124,7 +129,9 @@ const removeNextActionName = (flowVersion: FlowVersion, nextActionName: string) 
 			case ActionType.BRANCH:
 				// case ActionType.LOOP_ON_ITEMS:
 				// case ActionType.MERGE_BRANCH:
-				throw new CustomError('Unsupported operation during removeNextActionName')
+				throw new CustomError('Unsupported operation during removeNextActionName', ErrorCode.INVALID_TYPE, {
+					action,
+				})
 		}
 	})
 	return flowVersion

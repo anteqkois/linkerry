@@ -1,5 +1,5 @@
 import { ConnectorPackage } from '@linkerry/shared'
-import { packageManager } from '../../../lib/package-manager/package-manager'
+import { packageManager } from '../../../../lib/package-manager/package-manager'
 import { ConnectorManager } from './base-manager'
 
 export class RegistryConnectorManager extends ConnectorManager {

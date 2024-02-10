@@ -123,4 +123,5 @@ module.exports = {
 		},
 	},
 	plugins: [require('tailwindcss-animate')],
+	safelist: ['border-destructive', 'bg-destructive', 'text-destructive-foreground', 'border-secondary', 'bg-secondary', 'text-secondary-foreground'],
 }

@@ -1,12 +1,10 @@
 import {
 	Action,
 	ActionType,
-	CustomError,
 	EngineOperationType,
 	EngineResponse,
 	EngineResponseStatus,
 	EngineTestOperation,
-	ErrorCode,
 	ExecuteActionResponse,
 	ExecuteExtractConnectorMetadata,
 	ExecuteFlowOperation,
@@ -19,8 +17,9 @@ import {
 	GenricStepOutput,
 	StepOutputStatus,
 	TriggerHookType,
+	assertNotNullOrUndefined,
 	flowHelper,
-	isNull,
+	isNull
 } from '@linkerry/shared'
 import { argv } from 'node:process'
 import { EngineConstants } from './handler/context/engine-constants'
@@ -33,13 +32,9 @@ import { utils } from './utils'
 
 const executeFlow = async (input: ExecuteFlowOperation, context: FlowExecutorContext): Promise<EngineResponse<ExecutionOutput>> => {
 	const action = input.flowVersion.actions.find((action) => action.name === input.flowVersion.triggers[0].nextActionName)
-	if (!action)
-		throw new CustomError({
-			code: ErrorCode.CONNECTOR_NOT_FOUND,
-			params: {
-				nextActionName: input.flowVersion.triggers[0].nextActionName,
-			},
-		})
+	assertNotNullOrUndefined(action, 'action', {
+		nextActionName: input.flowVersion.triggers[0].nextActionName,
+	})
 
 	const output = await flowExecutor.execute({
 		action,

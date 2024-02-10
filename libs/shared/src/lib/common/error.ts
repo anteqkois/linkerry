@@ -34,21 +34,24 @@ export const isCustomHttpExceptionAxios = (object: unknown): object is { respons
 	return false
 }
 
-type CustomErrorParams = {
-	code: ErrorCode
-	params: {
-		message?: string
-	} & Record<string, any>
-}
+// TODO implement every cusotm code with typed props
+type CustomErrorMetadata = Record<string, any>
 
 export class CustomError extends Error {
-	type = 'CustomError'
+	override name = 'CustomError'
 	isOperational = true
+	metadata: CustomErrorMetadata | undefined
+	code: ErrorCode
 
-	constructor(params: string | CustomErrorParams, isOperational = true) {
-		super()
-		this.message = typeof params === 'string' ? params : params.params?.message ?? ''
-		this.isOperational = isOperational
+	constructor(
+		message: string,
+		code: ErrorCode,
+		metadata?: CustomErrorMetadata,
+		// isOperational = true
+	) {
+		super(`${code} ${message}`)
+		this.metadata = metadata
+		this.code = code
 		Error.captureStackTrace(this, this.constructor)
 	}
 }
@@ -59,6 +62,7 @@ export const isCustomError = (object: unknown): object is CustomError => {
 }
 
 export enum ErrorCode {
+	INVALID_TYPE = 'INVALID_TYPE',
 	APP_CONNECTION_NOT_FOUND = 'APP_CONNECTION_NOT_FOUND',
 	AUTHENTICATION = 'AUTHENTICATION',
 	AUTHORIZATION = 'AUTHORIZATION',
@@ -68,7 +72,6 @@ export enum ErrorCode {
 	ENGINE_OPERATION_FAILURE = 'ENGINE_OPERATION_FAILURE',
 	ENTITY_NOT_FOUND = 'ENTITY_NOT_FOUND',
 	EXECUTION_TIMEOUT = 'EXECUTION_TIMEOUT',
-	EMAIL_AUTH_DISABLED = 'EMAIL_AUTH_DISABLED',
 	EXISTING_USER = 'EXISTING_USER',
 	FILE_NOT_FOUND = 'FILE_NOT_FOUND',
 	FLOW_INSTANCE_NOT_FOUND = 'INSTANCE_NOT_FOUND',
@@ -82,8 +85,8 @@ export enum ErrorCode {
 	INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
 	INVALID_OR_EXPIRED_JWT_TOKEN = 'INVALID_OR_EXPIRED_JWT_TOKEN',
 	INVITATION_ONLY_SIGN_UP = 'INVITATION_ONLY_SIGN_UP',
-	JOB_REMOVAL_FAILURE = 'JOB_REMOVAL_FAILURE',
-	OPEN_AI_FAILED = 'OPEN_AI_FAILED',
+	// JOB_REMOVAL_FAILURE = 'JOB_REMOVAL_FAILURE',
+	// OPEN_AI_FAILED = 'OPEN_AI_FAILED',
 	PAUSE_METADATA_MISSING = 'PAUSE_METADATA_MISSING',
 	PERMISSION_DENIED = 'PERMISSION_DENIED',
 	CONNECTOR_NOT_FOUND = 'CONNECTOR_NOT_FOUND',

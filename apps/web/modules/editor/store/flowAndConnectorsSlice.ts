@@ -1,7 +1,20 @@
-import { CustomError, Flow, FlowState, FlowStatus, Id } from "@linkerry/shared";
-import { FlowApi } from "../../flows";
-import { CreateSlice, FlowAndConnectorsSlice } from "./types";
-
+import {
+	Action,
+	CustomError,
+	ErrorCode,
+	Flow,
+	FlowState,
+	FlowStatus,
+	Id,
+	Trigger,
+	assertNotNullOrUndefined,
+	isConnectorAction,
+	isConnectorTrigger,
+	isStepBaseSettings,
+} from '@linkerry/shared'
+import { FlowApi } from '../../flows'
+import { ConnectorsApi } from '../../flows/connectors/api/api'
+import { CreateSlice, FlowAndConnectorsSlice } from './types'
 
 const emptyFlow: Flow = {
 	_id: '1234567890',
@@ -20,7 +33,6 @@ const emptyFlow: Flow = {
 	},
 }
 
-
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
 	// FLOW
 	flow: emptyFlow,
@@ -34,7 +46,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 			localStorage.setItem('flow', JSON.stringify(flow))
 		}
 
-		if (!flow) throw new CustomError('Can not retrive flow')
+		assertNotNullOrUndefined(flow, 'flow')
 
 		set({ flow })
 		return flow
@@ -45,4 +57,44 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 	},
 	// CONNECTORS
 	testConnectorLoading: false,
+	getConnectorOptions: async ({ input, propertyName }: { input: any; propertyName: string }) => {
+		const { editedAction, editedTrigger, flow } = get()
+
+		let stepName: string
+		let editedStep: Trigger | Action
+
+		if (editedAction && isConnectorAction(editedAction)) {
+			stepName = editedAction.settings.actionName
+			editedStep = editedAction
+		} else if (editedTrigger && isConnectorTrigger(editedTrigger)) {
+			stepName = editedTrigger.settings.triggerName
+			editedStep = editedTrigger
+		} else {
+			throw new CustomError('Invalid step type or data unset', ErrorCode.ENTITY_NOT_FOUND, {
+				editedAction,
+				editedTrigger,
+			})
+		}
+
+		assertNotNullOrUndefined(editedStep, 'editedStep')
+		const settings = editedStep.settings
+
+		if (!isStepBaseSettings(settings))
+			throw new CustomError(`Invalid step settings`, ErrorCode.INVALID_TYPE, {
+				settings,
+			})
+
+		const response = await ConnectorsApi.getOptions({
+			connectorName: settings.connectorName,
+			connectorType: settings.connectorType,
+			connectorVersion: settings.connectorVersion,
+			stepName,
+			flowId: flow._id,
+			flowVersionId: flow.version._id,
+			input,
+			propertyName,
+		})
+
+		return response.data
+	},
 })

@@ -1,4 +1,4 @@
-import { ActionType, BaseConnectorSettings, BaseStep, ConnectorType, SampleData, SampleDataSettingsObject, TriggerType } from '@linkerry/shared'
+import { ActionType, BaseStepSettings, BaseStep, ConnectorType, SampleData, SampleDataSettingsObject, TriggerType } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Types } from 'mongoose'
 
@@ -31,7 +31,7 @@ export class SampleDataSettingsObjectModel implements SampleDataSettingsObject {
 export const SampleDataSettingsObjectSchema = SchemaFactory.createForClass(SampleDataSettingsObjectModel)
 
 @Schema({ _id: false })
-export class ConnectorSettingsModel implements BaseConnectorSettings {
+export class StepSettingsModel implements BaseStepSettings {
 	@Prop({ required: true, type: String })
 	connectorName: string
 
@@ -50,7 +50,7 @@ export class ConnectorSettingsModel implements BaseConnectorSettings {
 	@Prop({ required: true, type: SampleDataSchema })
 	sampleData: SampleData
 }
-export const ConnectorSettingsSchema = SchemaFactory.createForClass(ConnectorSettingsModel)
+export const ConnectorSettingsSchema = SchemaFactory.createForClass(StepSettingsModel)
 
 export class BaseStepModel implements BaseStep {
 	@Prop({ required: true, type: String })

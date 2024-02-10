@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { baseConnectorSettingsSchema, baseStepSchema, sampleDataSchema } from '../steps/base'
+import { baseStepSchema, baseStepSettingsSchema, sampleDataSchema } from '../steps/base'
 
 export enum TriggerType {
 	EMPTY = 'EMPTY',
@@ -44,7 +44,7 @@ export const isWebhookTrigger = (trigger: Trigger): trigger is TriggerWebhook =>
 export interface TriggerWebhook extends z.infer<typeof triggerWebhookSchema> {}
 
 /* CONNECTOR */
-const triggerConnectorSettingsSchema = baseConnectorSettingsSchema.merge(
+const triggerConnectorSettingsSchema = baseStepSettingsSchema.merge(
 	z.object({
 		triggerName: z.string(), // 'new_row'
 	}),

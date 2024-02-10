@@ -1,5 +1,5 @@
 import { TriggerBase, TriggerStrategy } from '@linkerry/connectors-framework'
-import { ConnectorGroup, CustomError, TriggerType } from '@linkerry/shared'
+import { ConnectorGroup, TriggerType, assertNotNullOrUndefined } from '@linkerry/shared'
 import {
 	Form,
 	FormControl,
@@ -26,6 +26,7 @@ import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { DynamicField } from '../form/DynamicField'
+import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
 import { useEditor } from '../useEditor'
 import { TriggerEvents } from './TriggerEvents'
 
@@ -53,7 +54,10 @@ export const TriggerConnectorPanel = () => {
 	// setup form fields on start based on editedTrigger input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
 		if (isFetching || editedTrigger.type !== TriggerType.CONNECTOR || editedTrigger.settings.triggerName === '') return
-		if (!connectorMetadata) throw new CustomError('Can not find connector metadata')
+		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', {
+			connectorName: editedTrigger.settings.connectorName,
+			connectorVersion: editedTrigger.settings.connectorVersion,
+		})
 
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
 		if (!selectedTrigger) return
@@ -73,20 +77,17 @@ export const TriggerConnectorPanel = () => {
 	const handleWatcher = useDebouncedCallback(
 		async (values, { name }) => {
 			if (!name) return
-			if (name === 'triggerName' || name.includes('__temp__')) return
-			const newData: Record<string, any> = {}
 
-			for (const [key, value] of Object.entries(values)) {
-				if (key === 'triggerName' || key.includes('__temp__')) continue
-				if (editedTrigger.settings.input[key] == value) continue
-				newData[key] = value
-			}
-
-			await patchEditedTriggerConnector({
-				settings: {
-					input: newData,
-				},
+			const newData = retriveStepInputFromObject(editedTrigger.settings.input, values, {
+				onlyChanged: true,
 			})
+
+			if (newData)
+				await patchEditedTriggerConnector({
+					settings: {
+						input: newData,
+					},
+				})
 		},
 		[],
 		1500,
@@ -122,8 +123,8 @@ export const TriggerConnectorPanel = () => {
 			settings: {
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
-				triggerName: selectedTrigger.name,
 				connectorType: connectorMetadata.connectorType,
+				triggerName: selectedTrigger.name,
 				input,
 				inputUiInfo: {},
 			},

@@ -1,18 +1,13 @@
 'use client'
 
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { ActionType, CustomError, FlowVersion, TriggerType, assertNotNullOrUndefined } from '@linkerry/shared'
+import { ActionType, CustomError, ErrorCode, FlowVersion, TriggerType, assertNotNullOrUndefined } from '@linkerry/shared'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
 import { useClientQuery } from '../../../../../libs/react-query'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
-import {
-	actionNodeFactory,
-	nodeConfigs,
-	selectTriggerNodeFactory,
-	triggerNodeFactory,
-} from '../../../../../modules/editor/common/nodeFactory'
+import { actionNodeFactory, nodeConfigs, selectTriggerNodeFactory, triggerNodeFactory } from '../../../../../modules/editor/common/nodeFactory'
 import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/flows/connectors/api/query-configs'
 import { FlowApi } from '../../../../../modules/flows/flows/api'
@@ -59,7 +54,9 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 			case ActionType.BRANCH:
 				// case ActionType.LOOP_ON_ITEMS:
 				// case ActionType.MERGE_BRANCH:
-				throw new CustomError(`Unsuported action type: ${action.type}`)
+				throw new CustomError(`Unsuported action type`, ErrorCode.INVALID_TYPE, {
+					action,
+				})
 			case ActionType.CONNECTOR: {
 				const connectorMetadata = connectorsMetadata.find((metadata) => action.settings.connectorName === metadata.name)
 				assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata')

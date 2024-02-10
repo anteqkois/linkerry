@@ -1,9 +1,9 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { Action, ActionConnector, ActionType, CustomError, DeepPartial, Flow, assertNotNullOrUndefined, deepMerge } from '@linkerry/shared'
-import { ActionsSlice, CreateSlice } from './types'
+import { Action, ActionConnector, ActionType, DeepPartial, Flow, assertNotNullOrUndefined, deepMerge } from '@linkerry/shared'
 import { FlowVersionApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
 import { defaultEdgeFactory } from '../edges/edgesFactory'
+import { ActionsSlice, CreateSlice } from './types'
 
 export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	// ACTIONS
@@ -91,7 +91,6 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 
 		const newAction = deepMerge<Action>(editedAction, update)
 		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
-		if (!data) throw new CustomError(`Can not update flow trigger. No flowVersion in response`)
 
 		const newFlow: Flow = {
 			...flow,

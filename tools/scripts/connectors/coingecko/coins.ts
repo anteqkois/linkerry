@@ -1,4 +1,4 @@
-import { HttpMethod, httpClient } from '../../../libs/connectors/common/src'
+import { HttpMethod, httpClient } from '../../../../libs/connectors/common/src'
 
 const main = async () => {
 	console.log(

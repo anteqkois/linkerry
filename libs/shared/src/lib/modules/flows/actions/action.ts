@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { baseConnectorSettingsSchema, baseStepSchema } from '../steps/base'
+import { baseStepSchema, baseStepSettingsSchema } from '../steps/base'
 
 export enum ActionType {
 	// Code = 'Code',
@@ -34,7 +34,7 @@ export const baseActionSchema = baseStepSchema.merge(
 export interface BaseAction extends z.infer<typeof baseActionSchema> {}
 
 /* CONNECTOR */
-const actionConnectorSettingsSchema = baseConnectorSettingsSchema.merge(
+const actionConnectorSettingsSchema = baseStepSettingsSchema.merge(
 	z.object({
 		actionName: z.string(), // 'send_xyz'
 		errorHandlingOptions: actionErrorHandlingOptionsSchema.optional(),
@@ -56,7 +56,7 @@ export interface ActionConnector extends z.infer<typeof actionConnectorSchema> {
 export interface ActionConnectorSettings extends z.infer<typeof actionConnectorSettingsSchema> {}
 
 /* BRANCH */
-const actionBranchSettingsSchema = baseConnectorSettingsSchema.merge(
+const actionBranchSettingsSchema = baseStepSettingsSchema.merge(
 	z.object({
 		conditions: z.array(z.array(z.object({}))),
 	}),

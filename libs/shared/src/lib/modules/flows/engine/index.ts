@@ -52,6 +52,7 @@ export type ExecutePropsOptions = BaseEngineOperation & {
 	connector: ConnectorPackage
 	propertyName: string
 	stepName: string
+	flowVersion: FlowVersion
 	input: Record<string, unknown>
 }
 

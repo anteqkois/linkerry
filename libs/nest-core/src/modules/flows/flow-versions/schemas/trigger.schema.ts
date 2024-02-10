@@ -1,6 +1,6 @@
 import { SampleData, TriggerConnector, TriggerConnectorSettings, TriggerEmpty, TriggerType, TriggerWebhook } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { BaseStepModel, ConnectorSettingsModel, SampleDataSchema } from './base.schema'
+import { BaseStepModel, StepSettingsModel, SampleDataSchema } from './base.schema'
 
 // todo discriminatorKey don't work
 /* EMPTY */
@@ -26,11 +26,11 @@ export const TriggerWebhookSchema = SchemaFactory.createForClass(TriggerWebhookM
 
 /* CONNECTOR */
 @Schema({ _id: false })
-export class TriggerConnectorSettingsModel extends ConnectorSettingsModel implements TriggerConnectorSettings {
+export class TriggerStepSettingsModel extends StepSettingsModel implements TriggerConnectorSettings {
 	@Prop({ required: true, type: String })
 	triggerName: string
 }
-export const TriggerConnectorSettingsSchema = SchemaFactory.createForClass(TriggerConnectorSettingsModel)
+export const TriggerConnectorSettingsSchema = SchemaFactory.createForClass(TriggerStepSettingsModel)
 
 @Schema({ _id: false, discriminatorKey: 'type' })
 export class TriggerConnectorModel extends BaseStepModel implements TriggerConnector {

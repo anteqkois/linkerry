@@ -1,7 +1,11 @@
 import { DynamicDropdownProperty, DynamicDropdownState, PropertyType } from '@linkerry/connectors-framework'
+import { isCustomHttpExceptionAxios } from '@linkerry/shared'
+import { useToast } from '@linkerry/ui-components/client'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
+import { useEditor } from '../useEditor'
 import { VirtualizedSelect } from './VirtualizedSelect'
 
 export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
@@ -9,8 +13,19 @@ export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLE
 }
 
 export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectProps) => {
-	// const { getConnectorOptions } = useEditor()
-	const { setValue, control, getValues, watch } = useFormContext()
+	const { toast } = useToast()
+	const { getConnectorOptions } = useEditor()
+	const { setValue, control, getValues, watch, setError } = useFormContext()
+	const [options, setOptions] = useState<DynamicDropdownState<any>>({
+		options: [
+			{
+				label: '',
+				value: '',
+			},
+		],
+		disabled: true,
+		placeholder: 'Placeholder',
+	})
 
 	// console.log(property.refreshers)
 	// const watcher = watch([property.refreshers])
@@ -19,45 +34,44 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 		async (values, { name }) => {
 			if (!name) return
 			if (!property.refreshers.includes(name)) return
-			console.log(values[name])
-			// console.log(await getConnectorOptions());
-			// console.log({
-			// 	values,
-			// 	name,
-			// })
-			// const newData: Record<string, any> = {}
+			const input = retriveStepInputFromObject({}, values, {
+				onlyChanged: false,
+			})
+			console.log(input)
 
-			// for (const [key, value] of Object.entries(values)) {
-			// 	if (key === 'triggerName' || key.includes('__temp__')) continue
-			// 	if (editedTrigger.settings.input[key] == value) continue
-			// 	newData[key] = value
-			// }
+			try {
+				const response = await getConnectorOptions({
+					propertyName: property.name,
+					input,
+				})
 
-			// await patchEditedTriggerConnector({
-			// 	settings: {
-			// 		input: newData,
-			// 	},
-			// })
+				console.log(response)
+			} catch (error) {
+				if (isCustomHttpExceptionAxios(error))
+					toast({
+						title: `Something got wrong, try later again. Error message: ${error.response.data.message}`,
+						variant: 'destructive',
+					})
+				else {
+					toast({
+						title: `Something got wrong, inform our IT tem and try again later`,
+						variant: 'destructive',
+					})
+					console.log(error)
+				}
+				setError(name, {
+					message: 'Can not retive options',
+				})
+			}
 		},
 		[],
-		1000,
+		700,
 	)
 
 	useEffect(() => {
 		const subscription = watch(handleWatcher)
 		return () => subscription.unsubscribe()
 	}, [])
-
-	const [options, setOptions] = useState<DynamicDropdownState<any>>({
-		options: [
-			{
-				label: '',
-				value: '',
-			},
-		],
-		disabled: false,
-		placeholder: 'Placeholder',
-	})
 
 	return (
 		<VirtualizedSelect

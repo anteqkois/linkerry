@@ -1,6 +1,6 @@
 import { ConnectorPackage, getPackageAliasForConnector, getPackageSpecForConnector, isEmpty } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
-import { PackageInfo, packageManager } from '../../../lib/package-manager/package-manager'
+import { PackageInfo, packageManager } from '../../../../lib/package-manager/package-manager'
 
 // const PACKAGE_ARCHIVE_PATH = system.getOrThrow(SystemProp.PACKAGE_ARCHIVE_PATH)
 

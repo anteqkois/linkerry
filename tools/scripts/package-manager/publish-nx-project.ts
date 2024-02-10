@@ -11,7 +11,7 @@ export const publishNxProject = async (path: string): Promise<void> => {
 	const packageAlreadyPublished = await packagePrePublishChecks(path)
 
 	if (packageAlreadyPublished) {
-		console.log(`Package already published: ${path}`)
+		console.log(`[publishNxProject] Package already published: ${path}`)
 		return
 	}
 

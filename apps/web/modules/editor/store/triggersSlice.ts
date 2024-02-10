@@ -1,5 +1,23 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { CustomError, DeepPartial, ErrorCode, Flow, FlowVersion, Trigger, TriggerConnector, TriggerEmpty, TriggerEvent, TriggerType, assertNotNullOrUndefined, deepMerge, flowHelper, generateEmptyTrigger, isConnectorTrigger, isCustomHttpExceptionAxios, retriveStepNumber } from '@linkerry/shared'
+import {
+	CustomError,
+	DeepPartial,
+	ErrorCode,
+	Flow,
+	FlowVersion,
+	Trigger,
+	TriggerConnector,
+	TriggerEmpty,
+	TriggerEvent,
+	TriggerType,
+	assertNotNullOrUndefined,
+	deepMerge,
+	flowHelper,
+	generateEmptyTrigger,
+	isConnectorTrigger,
+	isCustomHttpExceptionAxios,
+	retriveStepNumber,
+} from '@linkerry/shared'
 import { FlowVersionApi, TriggerApi } from '../../flows'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../common/nodeFactory'
 import { CustomNode } from '../types'
@@ -55,7 +73,6 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		const { flow, setFlow } = get()
 
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
-		if (!data) throw new CustomError(`Can not update flow trigger. Missing flow-version in response`)
 
 		const newFlow: Flow = {
 			...flow,
@@ -70,11 +87,10 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	},
 	patchEditedTriggerConnector: async (update: DeepPartial<TriggerConnector>) => {
 		const { editedTrigger, flow, setFlow } = get()
-		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update')
+		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update', ErrorCode.ENTITY_NOT_FOUND)
 
 		const newTrigger = deepMerge(editedTrigger, update)
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
-		if (!data) throw new CustomError(`Can not update flow trigger. No flowVersion in response`)
 
 		const newFlow: Flow = {
 			...flow,
@@ -91,7 +107,6 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		let emptyTrigger: TriggerEmpty | undefined = undefined
 		// eslint-disable-next-line prefer-const
 		let { nodes, flow, setFlow } = get()
-		if (!flow) throw new CustomError('Can not retrive flow')
 
 		const stepNumber = retriveStepNumber(triggerName)
 		nodes = nodes.map((node: CustomNode) => {
@@ -102,7 +117,10 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 			return emptyNode
 		})
-		if (!emptyTrigger) throw new CustomError(`Can not generate empty trigger`)
+		if (!emptyTrigger)
+			throw new CustomError(`Can not find trigger to reset`, ErrorCode.ENTITY_NOT_FOUND, {
+				triggerName,
+			})
 
 		flow.version.triggers = flow.version.triggers.map((trigger) => {
 			if (trigger.name !== triggerName) return trigger
@@ -135,11 +153,8 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 			const trigger = flowHelper.getTrigger(flow.version, triggerName)
 			if (!trigger || !isConnectorTrigger(trigger))
-				throw new CustomError({
-					code: ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND,
-					params: {
-						message: `Can not find trigger`,
-					},
+				throw new CustomError(`Can not find trigger`, ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND, {
+					trigger,
 				})
 
 			trigger.settings.inputUiInfo = {

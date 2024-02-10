@@ -1,5 +1,5 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { ConnectorsGetOptionsInput, ConnectorsMetadataGetManyQuery, Id } from '@linkerry/shared'
+import { ConnectorsGetOptionsInput, ConnectorsGetOptionsResponse, ConnectorsMetadataGetManyQuery, Id } from '@linkerry/shared'
 import { apiClient } from '../../../../libs/api-client'
 
 export class ConnectorsApi {
@@ -32,6 +32,6 @@ export class ConnectorsApi {
 	}
 
 	static async getOptions(body: ConnectorsGetOptionsInput) {
-		return apiClient.post<ConnectorMetadata>(`/connectors/options`, body)
+		return apiClient.post<ConnectorsGetOptionsResponse>(`/connectors/options`, body)
 	}
 }

@@ -1,5 +1,16 @@
 import { StaticDropdownProperty } from '@linkerry/connectors-framework'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@linkerry/ui-components/client'
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@linkerry/ui-components/client'
 import { HTMLAttributes, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { VList } from 'virtua'
@@ -33,6 +44,7 @@ export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
 					<FormLabel>{property.displayName}</FormLabel>
 					<FormControl>
 						<Select
+							disabled={property.options.disabled}
 							onValueChange={(newValue) => {
 								field.onChange(newValue)
 								onChangeValue(newValue)

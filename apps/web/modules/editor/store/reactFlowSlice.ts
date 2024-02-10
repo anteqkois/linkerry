@@ -1,4 +1,4 @@
-import { CustomError, deepMerge } from '@linkerry/shared'
+import { assertNotNullOrUndefined, deepMerge } from '@linkerry/shared'
 import { Connection, Edge, EdgeChange, NodeChange, addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow'
 import { CustomEdge, CustomEdgeId } from '../edges/types'
 import { CustomNode, CustomNodeId } from '../types'
@@ -23,7 +23,7 @@ export const createReactFlowSlice: CreateSlice<ReactFlowSlice> = (set, get) => (
 				return deepMerge(node, changes)
 			}) as CustomNode[],
 		})
-		if (!updated) throw new CustomError(`Can not update node`)
+		assertNotNullOrUndefined(updated, 'node', { id })
 	},
 	// EDGES
 	edges: [],
@@ -48,7 +48,7 @@ export const createReactFlowSlice: CreateSlice<ReactFlowSlice> = (set, get) => (
 				return { ...edge, ...changes, data: { ...edge.data, ...edge.data } }
 			}),
 		})
-		if (!updated) throw new CustomError(`Can not update egde`)
+		assertNotNullOrUndefined(updated, 'edge', { id })
 	},
 	onConnect: (connection: Connection) => {
 		set({

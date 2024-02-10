@@ -6,14 +6,9 @@ export function assertEqual<T>(actual: T, expected: T, fieldName1: string, field
 	}
 }
 
-export function assertNotNullOrUndefined<T>(value: T | null | undefined, fieldName: string): asserts value is T {
+export function assertNotNullOrUndefined<T>(value: T | null | undefined, fieldName: string, metadata?: CustomError['metadata']): asserts value is T {
 	if (value === null || value === undefined) {
-		throw new CustomError({
-			code: ErrorCode.ENTITY_NOT_FOUND,
-			params: {
-				message: `${fieldName} is null or undefined`,
-			},
-		})
+		throw new CustomError(`${fieldName} is null or undefined`, ErrorCode.ENTITY_NOT_FOUND, metadata)
 	}
 }
 

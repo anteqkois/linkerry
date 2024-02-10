@@ -33,7 +33,7 @@ import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common
 import { ConfigService } from '@nestjs/config'
 import fs from 'fs/promises'
 import { AuthService } from '../../lib/auth/auth.service'
-import { ConnectorsMetadataService } from '../flows/connectors'
+import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
 import { SandboxProvisionerService } from '../workers/sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../workers/sandbox/sandboxes/sandbox'
 
@@ -78,11 +78,9 @@ export class EngineService {
 		private readonly configService: ConfigService,
 	) {
 		this.serverUrl = this.configService.getOrThrow('SERVER_URL')
-		if (!this.serverUrl)
-			throw new CustomError({
-				code: ErrorCode.SYSTEM_ENV_NOT_DEFINED,
-				params: {},
-			})
+		assertNotNullOrUndefined(this.serverUrl, 'serverUrl', {
+			serverUrl: this.serverUrl,
+		})
 	}
 
 	private async _getSandboxForAction(
@@ -162,10 +160,7 @@ export class EngineService {
 			})
 
 			if (sandboxResponse.verdict === EngineResponseStatus.TIMEOUT) {
-				throw new CustomError({
-					code: ErrorCode.EXECUTION_TIMEOUT,
-					params: {},
-				})
+				throw new CustomError('Engine execution timeout', ErrorCode.EXECUTION_TIMEOUT)
 			}
 
 			const result = tryParseJson<Result>(sandboxResponse.output)
@@ -216,11 +211,11 @@ export class EngineService {
 
 		const { connector } = operation
 
-		// connector.connectorVersion = await connectorMetadataService.getExactPieceVersion({
-		// 		name: connector.connectorName,
-		// 		version: connector.connectorVersion,
-		// 		projectId: operation.projectId,
-		// })
+		connector.connectorVersion = await this.connectorsMetadataService.getExactPieceVersion({
+			name: connector.connectorName,
+			version: connector.connectorVersion,
+			// projectId: operation.projectId,
+		})
 
 		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
 			type: SandBoxCacheType.CONNECTOR,
@@ -300,11 +295,11 @@ export class EngineService {
 
 		const { connector } = operation
 
-		// connector.connectorVersion = await connectorMetadataService.getExactPieceVersion({
-		// 		name: connector.connectorName,
-		// 		version: connector.connectorVersion,
-		// 		projectId: operation.projectId,
-		// })
+		connector.connectorVersion = await this.connectorsMetadataService.getExactPieceVersion({
+			name: connector.connectorName,
+			version: connector.connectorVersion,
+			// projectId: operation.projectId,
+		})
 
 		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
 			type: SandBoxCacheType.CONNECTOR,
@@ -328,7 +323,9 @@ export class EngineService {
 		return this._execute(EngineOperationType.EXECUTE_VALIDATE_AUTH, sandbox, input)
 	}
 
-	async executeTrigger<T extends TriggerHookType>(operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>): Promise<EngineHelperResponse<EngineHelperTriggerResult<T>>> {
+	async executeTrigger<T extends TriggerHookType>(
+		operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>,
+	): Promise<EngineHelperResponse<EngineHelperTriggerResult<T>>> {
 		this.logger.debug(`#executeTrigger hookType: ${operation.hookType}`)
 
 		// todo lock flow version
@@ -339,7 +336,11 @@ export class EngineService {
 		if (!isConnectorTrigger(trigger)) throw new UnprocessableEntityException(`Can not perform operation on non Connector trigger`)
 
 		const { connectorType, connectorName, connectorVersion } = trigger.settings
-		const connectorMetadataFixedVersion = (await this.connectorsMetadataService.findOne(connectorName, { version: connectorVersion })).version
+		const connectorMetadataFixedVersion = await this.connectorsMetadataService.getExactPieceVersion({
+			name: connectorName,
+			version: connectorVersion,
+			// projectId: operation.projectId,
+		})
 
 		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
 			type: SandBoxCacheType.CONNECTOR,

@@ -3,20 +3,16 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { generateId } from '../../../lib/mongodb'
+import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
-import { FlowModel } from './schemas/flow.schema'
+import { FlowDocument, FlowModel } from './schemas/flow.schema'
 
 @Injectable()
 export class FlowsService {
 	constructor(@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>, private readonly flowVersionService: FlowVersionsService) {}
 
-	async findOne(id: Id, userId?: Id) {
-		return this.flowModel
-			.findOne({
-				_id: id,
-				user: userId,
-			})
-			.populate(['version'])
+	async findOne({ filter }: { filter: MongoFilter<FlowDocument> }) {
+		return this.flowModel.findOne(filter).populate(['version'])
 	}
 
 	async deleteOne(id: Id, userId: Id) {
