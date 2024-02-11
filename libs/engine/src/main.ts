@@ -1,10 +1,12 @@
 import {
 	Action,
 	ActionType,
+	CustomError,
 	EngineOperationType,
 	EngineResponse,
 	EngineResponseStatus,
 	EngineTestOperation,
+	ErrorCode,
 	ExecuteActionResponse,
 	ExecuteExtractConnectorMetadata,
 	ExecuteFlowOperation,
@@ -19,7 +21,7 @@ import {
 	TriggerHookType,
 	assertNotNullOrUndefined,
 	flowHelper,
-	isNull
+	isNull,
 } from '@linkerry/shared'
 import { argv } from 'node:process'
 import { EngineConstants } from './handler/context/engine-constants'
@@ -49,9 +51,11 @@ const executeFlow = async (input: ExecuteFlowOperation, context: FlowExecutorCon
 
 async function executeStep(input: ExecuteStepOperation): Promise<ExecuteActionResponse> {
 	const step = flowHelper.getStep(input.flowVersion, input.stepName) as Action | undefined
-	if (isNull(step) || !Object.values(ActionType).includes(step.type)) {
-		throw new Error('Step not found or not supported')
-	}
+	if (isNull(step) || !Object.values(ActionType).includes(step.type))
+		throw new CustomError('Step not found or not supported', ErrorCode.INVALID_TYPE, {
+			step,
+		})
+
 	const output = await flowExecutor.getExecutorForAction(step.type).handle({
 		action: step,
 		executionState: await testExecutionContext.stateFromFlowVersion({

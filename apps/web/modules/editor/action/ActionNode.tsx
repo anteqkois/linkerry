@@ -1,6 +1,6 @@
 import { Icons } from '@linkerry/ui-components/server'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { MouseEvent as ReactMouseEvent, useEffect } from 'react'
 import { Handle, Position } from 'reactflow'
 import { BaseNodeElement } from '../common/BaseNode'
 import { AddAction } from '../steps/AddAction'
@@ -22,7 +22,8 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 	// }
 
 	/* Currently only for last action */
-	const handleDeleteAction = () => {
+	const handleDeleteAction = (event?: ReactMouseEvent<SVGElement, MouseEvent>) => {
+		event?.stopPropagation()
 		deleteAction(action.name)
 	}
 
@@ -51,6 +52,10 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 					<Icons.Delete
 						className="opacity-50 hover:opacity-100 bg-muted rounded-full p-2 text-negative border border-dashed border-negative w-12 h-12 center"
 						onClick={handleDeleteAction}
+						// onClick={(e) => {
+						// 	e.stopPropagation()
+						// 	handleDeleteAction()
+						// }}
 					/>
 				</div>
 				{/* <Handle type="source" position={Position.Bottom} id="addAction" isConnectable={false} className="-bottom-10">

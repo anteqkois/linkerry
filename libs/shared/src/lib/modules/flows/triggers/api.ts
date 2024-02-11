@@ -9,3 +9,8 @@ export interface GetTriggerEventsQuery {
 	flowId: Id
 	triggerName: string
 }
+
+export interface DeleteTriggerEventsInput {
+	flowId: Id
+	triggerName: string
+}

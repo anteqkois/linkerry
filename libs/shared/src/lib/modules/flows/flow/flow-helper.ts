@@ -111,6 +111,13 @@ const addNextActionName = (flowVersion: FlowVersion, stepName: string, nextActio
 	return flowVersion
 }
 
+const getParentSteps = (flowVersion: FlowVersion, nextActionName: string) => {
+	return [
+		flowVersion.triggers.filter((step) => step.nextActionName === nextActionName),
+		flowVersion.actions.filter((step) => step.nextActionName === nextActionName),
+	].flat()
+}
+
 const removeNextActionName = (flowVersion: FlowVersion, nextActionName: string) => {
 	flowVersion.triggers = flowVersion.triggers.map((trigger) => {
 		if (trigger.nextActionName === nextActionName) {
@@ -264,4 +271,5 @@ export const flowHelper = {
 	getAction,
 	updateAction,
 	deleteAction,
+	getParentSteps,
 }

@@ -1,10 +1,11 @@
 import { json } from '@codemirror/lang-json'
-import { assertNotNullOrUndefined } from '@linkerry/shared'
+import { assertNotNullOrUndefined, isCustomError, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import { Button, Icons, Small } from '@linkerry/ui-components/server'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import CodeMirror from '@uiw/react-codemirror'
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
+import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { useEditor } from '../useEditor'
 
 export interface ActionTestProps extends HTMLAttributes<HTMLElement> {
@@ -12,11 +13,23 @@ export interface ActionTestProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const ActionTest = ({ panelSize }: ActionTestProps) => {
-	const { editedAction, testConnectorLoading } = useEditor()
+	const { editedAction, testConnectorLoading, testAction } = useEditor()
+	const [errorMessage, setErrorMessage] = useState('')
 	assertNotNullOrUndefined(editedAction?.name, 'editedAction.name')
 
-	const onClickTest = () => {
-		//
+	const onClickTest = async () => {
+		try {
+			await testAction()
+		} catch (error: unknown) {
+			if (isCustomError(error)) {
+				setErrorMessage(error.message)
+			} else if (isCustomHttpExceptionAxios(error)) {
+				setErrorMessage(error.response.data.message)
+			} else {
+				setErrorMessage('Unknwon error occured. Check your action options and try again')
+			}
+			console.error(error)
+		}
 	}
 
 	return (
@@ -51,12 +64,15 @@ export const ActionTest = ({ panelSize }: ActionTestProps) => {
 					</div>
 				</>
 			) : (
-				<div className="flex h-20 px-1 center">
-					<Button variant="secondary" onClick={onClickTest}>
-						{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
-						<span className="whitespace-nowrap">Generate Data</span>
-					</Button>
-				</div>
+				<>
+					<div className="flex h-20 px-1 center">
+						<Button variant="secondary" onClick={onClickTest}>
+							{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
+							<span className="whitespace-nowrap">Generate Data</span>
+						</Button>
+					</div>
+					{errorMessage && <ErrorInfo message={errorMessage} />}
+				</>
 			)}
 		</div>
 	)

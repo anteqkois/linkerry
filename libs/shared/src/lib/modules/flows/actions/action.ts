@@ -78,4 +78,15 @@ export const isBranchAction = (action: Action): action is ActionConnector => {
 export interface ActionBranch extends z.infer<typeof actionBranchSchema> {}
 export interface ActionBranchSettings extends z.infer<typeof actionBranchSettingsSchema> {}
 
+/* ACTION */
 export type Action = ActionConnector | ActionBranch
+
+export function isAction(data: unknown): data is Action {
+	const result = baseActionSchema.safeParse(data)
+	if (result.success === false) {
+		console.error(result.error.errors)
+		return false
+	}
+
+	return true
+}

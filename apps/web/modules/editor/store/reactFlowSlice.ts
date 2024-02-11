@@ -1,4 +1,4 @@
-import { assertNotNullOrUndefined, deepMerge } from '@linkerry/shared'
+import { DeepPartial, assertNotNullOrUndefined, deepMerge } from '@linkerry/shared'
 import { Connection, Edge, EdgeChange, NodeChange, addEdge, applyEdgeChanges, applyNodeChanges } from 'reactflow'
 import { CustomEdge, CustomEdgeId } from '../edges/types'
 import { CustomNode, CustomNodeId } from '../types'
@@ -14,8 +14,8 @@ export const createReactFlowSlice: CreateSlice<ReactFlowSlice> = (set, get) => (
 		// TODO change it in fitire to map to not using filter (performance)?
 		return get().nodes.filter((node) => node.id === id)[0] as CustomNode
 	},
-	updateNode: (id: CustomNodeId, changes: Partial<CustomNode>) => {
-		let updated = false
+	updateNode: (id: CustomNodeId, changes: DeepPartial<CustomNode>) => {
+		let updated
 		set({
 			nodes: get().nodes.map((node) => {
 				if (node.id !== id) return node

@@ -1,5 +1,5 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { Action, ConnectorsGetOptionsResponse, DeepPartial, Flow, Id, Trigger, TriggerConnector, TriggerEvent, WithoutId } from '@linkerry/shared'
+import { Action, ConnectorsGetOptionsResponse, DeepPartial, Flow, Id, RunActionResponse, Trigger, TriggerConnector, TriggerEvent, WithoutId } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
 import { StoreApi } from 'zustand'
@@ -18,7 +18,7 @@ export interface ReactFlowSlice {
 	deleteNode: (nodeId: CustomNodeId) => void
 	onNodesChange: OnNodesChange
 	getNodeById: (id: string) => CustomNode | undefined
-	updateNode: (nodeId: CustomNodeId, changes: Partial<CustomNode>) => void
+	updateNode: (nodeId: CustomNodeId, changes: DeepPartial<CustomNode>) => void
 	// EDGES
 	edges: Edge[]
 	setEdges: (nodes: Edge[]) => void
@@ -55,7 +55,7 @@ export interface TriggersSlice {
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
 	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
 	resetTrigger: (triggerName: string) => Promise<void>
-	testPoolTrigger: (triggerName: string) => Promise<TriggerEvent[]>
+	testPoolTrigger: () => Promise<TriggerEvent[]>
 }
 
 export interface ActionsSlice {
@@ -66,7 +66,7 @@ export interface ActionsSlice {
 	patchEditedAction: (update: DeepPartial<Action>) => Promise<void>
 	updateEditedAction: (newAction: Action) => Promise<void>
 	deleteAction: (actionName: string) => Promise<void>
-	// resetAction: (actionName: string) => Promise<void>
+	testAction: () => Promise<RunActionResponse | undefined>
 }
 
 export interface StepsSlice {

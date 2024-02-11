@@ -1,6 +1,24 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { Action, ActionConnector, ActionType, DeepPartial, Flow, assertNotNullOrUndefined, deepMerge } from '@linkerry/shared'
-import { FlowVersionApi } from '../../flows'
+import {
+	Action,
+	ActionConnector,
+	ActionType,
+	CustomError,
+	DeepPartial,
+	ErrorCode,
+	Flow,
+	FlowVersion,
+	RunActionResponse,
+	assertNotNullOrUndefined,
+	deepMerge,
+	flowHelper,
+	isAction,
+	isConnectorAction,
+	isCustomHttpExceptionAxios,
+	isTrigger,
+} from '@linkerry/shared'
+import dayjs from 'dayjs'
+import { FlowVersionApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
 import { defaultEdgeFactory } from '../edges/edgesFactory'
 import { ActionsSlice, CreateSlice } from './types'
@@ -83,7 +101,6 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		)
 		setFlow({ ...flow, version: data })
 		setEditedAction(action)
-		console.log(1)
 	},
 	async patchEditedAction(update: DeepPartial<Action>) {
 		const { editedAction, flow, setFlow } = get()
@@ -121,10 +138,32 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	deleteAction: async (actionName: string) => {
-		const { flow, setFlow, deleteNode, setShowDrawer } = get()
+		const { flow, setFlow, deleteNode, setShowDrawer, updateNode } = get()
 
 		const { data: newFlowVersion } = await FlowVersionApi.deleteAction(flow.version._id, actionName)
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
+
+		// trigger.nextActionName
+		const parentSteps = flowHelper.getParentSteps(flow.version, actionName)
+
+		for (const step of parentSteps) {
+			if (isTrigger(step))
+				updateNode(step.name, {
+					data: {
+						trigger: {
+							nextActionName: '',
+						},
+					},
+				})
+			else if (isAction(step))
+				updateNode(step.name, {
+					data: {
+						trigger: {
+							nextActionName: '',
+						},
+					},
+				})
+		}
 
 		setShowDrawer(false)
 		deleteNode(actionName)
@@ -132,5 +171,65 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			...flow,
 			version: newFlowVersion,
 		})
+	},
+	testAction: async () => {
+		set({ testConnectorLoading: true })
+		const { flow, setFlow, updateNode, editedAction } = get()
+		if (!editedAction || !isConnectorAction(editedAction))
+			throw new CustomError('Invalid action data', ErrorCode.INVALID_TYPE, {
+				editedAction,
+			})
+
+		assertNotNullOrUndefined(editedAction, 'editedAction')
+		let newFlowVersion: FlowVersion | undefined = undefined
+		let testResult: RunActionResponse | undefined = undefined
+
+		try {
+			testResult = (
+				await StepApi.run({
+					actionName: editedAction.name,
+					flowVersionId: flow.version._id,
+				})
+			).data
+			assertNotNullOrUndefined(testResult, 'testResult')
+
+			if (!testResult.success && typeof testResult.output === 'string')
+				throw new CustomError(testResult.output, ErrorCode.TEST_ACTION_FAILED, {
+					result: testResult,
+				})
+
+			const action = flowHelper.getAction(flow.version, editedAction.name)
+			if (!action || !isConnectorAction(action))
+				throw new CustomError(`Can not find action`, ErrorCode.ENTITY_NOT_FOUND, {
+					action,
+				})
+
+			action.settings.inputUiInfo = {
+				currentSelectedData: testResult.output,
+				lastTestDate: dayjs().format(),
+			}
+			action.valid = true
+
+			updateNode(action.name, {
+				data: {
+					action,
+				},
+			})
+			newFlowVersion = flowHelper.updateAction(flow.version, action)
+			setFlow({ ...flow, version: newFlowVersion })
+		} catch (error) {
+			if (isCustomHttpExceptionAxios(error)) {
+				// console.log(error.response.data)
+			} else {
+				// console.log(error)
+			}
+
+			throw error
+		} finally {
+			set({ testConnectorLoading: false })
+		}
+
+		set({ testConnectorLoading: false })
+		return testResult
 	},
 })

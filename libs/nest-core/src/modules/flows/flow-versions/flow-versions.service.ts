@@ -53,6 +53,14 @@ export class FlowVersionsService {
 
 	/* STEPS */
 	async updateTrigger(id: Id, userId: Id, updateTrigger: Trigger) {
+		const flowVersion = await this.flowVersionModel.findOne({
+			_id: id,
+			user: userId,
+		})
+
+		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
+		if (!isTrigger(updateTrigger)) throw new UnprocessableEntityException(`Invalid input, expect trigger receive: ${JSON.stringify(updateTrigger)}`)
+
 		switch (updateTrigger.type) {
 			case TriggerType.CONNECTOR:
 				triggerConnectorSchema.parse(updateTrigger)
@@ -66,14 +74,6 @@ export class FlowVersionsService {
 			default:
 				throw new UnprocessableEntityException(`Invalid trigger type`)
 		}
-
-		const flowVersion = await this.flowVersionModel.findOne({
-			_id: id,
-			user: userId,
-		})
-
-		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
-		if (!isTrigger(updateTrigger)) throw new UnprocessableEntityException(`Invalid input, expect trigger receive: ${JSON.stringify(updateTrigger)}`)
 
 		const newFlowVersion = flowHelper.updateTrigger(flowVersion.toObject(), updateTrigger)
 

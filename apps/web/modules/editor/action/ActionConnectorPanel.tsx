@@ -120,8 +120,8 @@ export const ActionConnectorPanel = () => {
 			settings: {
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
-				actionName: selectedAction.name,
 				connectorType: connectorMetadata.connectorType,
+				actionName: selectedAction.name,
 				input,
 				inputUiInfo: {},
 			},

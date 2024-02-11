@@ -1,5 +1,5 @@
 import { isCustomError, isCustomHttpExceptionAxios } from '@linkerry/shared'
-import { P } from '@linkerry/ui-components/server'
+import { Small } from '@linkerry/ui-components/server'
 import { HTMLAttributes, useEffect, useState } from 'react'
 
 export interface ErrorInfoProps extends HTMLAttributes<HTMLElement> {
@@ -19,7 +19,7 @@ export const ErrorInfo = ({ message, errorObject, children }: ErrorInfoProps) =>
 
 	return (
 		<div>
-			<P className="text-negative center">{errorMessage}</P>
+			<Small className="text-negative center">{errorMessage}</Small>
 			<div>{children}</div>
 		</div>
 	)

@@ -1,4 +1,4 @@
-import { GetTriggerEventsQuery, TriggerEvent, TriggerPoolTestBody } from '@linkerry/shared'
+import { DeleteTriggerEventsInput, GetTriggerEventsQuery, TriggerEvent, TriggerPoolTestBody } from '@linkerry/shared'
 import { apiClient } from '../../../libs/api-client'
 
 export class TriggerApi {
@@ -8,7 +8,11 @@ export class TriggerApi {
 
 	static async getTriggerEvents(params: GetTriggerEventsQuery) {
 		return apiClient.get<TriggerEvent[]>(`/trigger-events`, {
-			params
+			params,
 		})
+	}
+
+	static async deleteAllTriggerEvents(body: DeleteTriggerEventsInput) {
+		return apiClient.delete<TriggerEvent[]>(`/trigger-events`, { data: body })
 	}
 }

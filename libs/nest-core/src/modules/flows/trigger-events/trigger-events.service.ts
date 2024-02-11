@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { Model } from 'mongoose'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { PoolTestDto } from '../trigger-events/dto/pool-test.dto'
+import { DeleteDto } from './dto/delete.dto'
 import { GetManyDto } from './dto/get-many.dto'
 import { TriggerEventModel } from './schemas/trigger-events.schema'
 
@@ -51,6 +52,24 @@ export class TriggerEventsService {
 		return this.triggerEventsModel.find({
 			flowId: flow._id,
 			sourceName,
+		})
+	}
+
+	async deleteMany({ flowId, triggerName }: DeleteDto, userId: Id) {
+		const flow = await this.flowService.findOne({
+			filter: {
+				_id: flowId,
+				user: userId,
+			},
+		})
+		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
+
+		const trigger = flowHelper.getTrigger(flow.version, triggerName)
+		if (!trigger) throw new UnprocessableEntityException(`Can not retrive trigger by name`)
+
+		return this.deleteAllRelatedToTrigger({
+			flowId,
+			trigger,
 		})
 	}
 

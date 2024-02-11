@@ -10,7 +10,8 @@ import { TriggerEventsService } from './trigger-events.service'
 
 @Module({
 	controllers: [TriggerEventsController],
-	imports: [MongooseModule.forFeatureAsync([TriggerEventModelFactory, flowVersionModelFactory]), FlowsModule, EngineModule, FlowVersionsModule ],
+	imports: [MongooseModule.forFeatureAsync([TriggerEventModelFactory, flowVersionModelFactory]), FlowsModule, EngineModule, FlowVersionsModule],
 	providers: [TriggerEventsService],
+	exports: [TriggerEventsService],
 })
 export class TriggerEventsModule {}

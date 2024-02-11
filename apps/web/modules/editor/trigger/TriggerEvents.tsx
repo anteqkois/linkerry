@@ -71,7 +71,7 @@ export const TriggerEvents = ({ panelSize }: TriggerEventsProps) => {
 	if (status === 'pending') return <Spinner />
 
 	const onClickTest = async () => {
-		const triggerEvents = await testPoolTrigger(editedTrigger.name)
+		const triggerEvents = await testPoolTrigger()
 		const queryClient = getBrowserQueryCllient()
 		queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEvents)
 		setSelectedTriggerEventId(triggerEvents[triggerEvents.length - 1]._id)

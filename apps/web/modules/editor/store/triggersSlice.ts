@@ -127,6 +127,10 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			return emptyTrigger!
 		})
+		await TriggerApi.deleteAllTriggerEvents({
+			flowId: flow._id,
+			triggerName,
+		})
 		await FlowVersionApi.updateTrigger(flow.version._id, emptyTrigger)
 
 		setFlow(flow)
@@ -137,9 +141,10 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			editedTrigger: emptyTrigger,
 		})
 	},
-	testPoolTrigger: async (triggerName: string) => {
+	testPoolTrigger: async () => {
 		set({ testConnectorLoading: true })
-		const { flow, setFlow, updateNode } = get()
+		const { flow, setFlow, updateNode, editedTrigger } = get()
+		assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
 		let newFlowVersion: FlowVersion | undefined = undefined
 		let testResult: TriggerEvent[] = []
 
@@ -147,11 +152,11 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			testResult = (
 				await TriggerApi.poolTest({
 					flowId: flow._id,
-					triggerName,
+					triggerName: editedTrigger.name,
 				})
 			).data
 
-			const trigger = flowHelper.getTrigger(flow.version, triggerName)
+			const trigger = flowHelper.getTrigger(flow.version, editedTrigger.name)
 			if (!trigger || !isConnectorTrigger(trigger))
 				throw new CustomError(`Can not find trigger`, ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND, {
 					trigger,
