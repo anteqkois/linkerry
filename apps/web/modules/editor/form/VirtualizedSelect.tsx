@@ -41,11 +41,6 @@ export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps
 	const onChangeValue = (newLabel: string) => {
 		const value = property.options.options.find((option) => option.label === newLabel)
 		setValue(property.name, value?.value)
-
-		/* add to end of callstack */
-		setTimeout(() => {
-			setValue(`__temp__${property.name}`, newLabel)
-		}, 0)
 	}
 
 	return (
@@ -60,15 +55,16 @@ export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps
 							disabled={property.options.disabled}
 							onValueChange={async (newValue) => {
 								onChangeValue(newValue)
-								// can not field.onChange(newValue) becouse it brokes rendering
-								// field.onChange(newValue)
+								/* add to end of callstack, can not witjout it becouse it brokes rendering  */
+								setTimeout(() => {
+									field.onChange(newValue)
+								}, 0)
 							}}
 						>
 							<SelectTrigger>
 								<SelectValue placeholder={property.options.placeholder} aria-label={field.value}>
-									{/*  can not field.onChange(newValue) becouse it brokes rendering */}
-									{/* {field.value} */}
-									{property.options.options.find((option) => option.label === field.value)?.label}
+									{field.value}
+									{/* {property.options.options.find((option) => option.label === field.value)?.label} */}
 								</SelectValue>
 							</SelectTrigger>
 							<SelectContent position="popper" className="max-h-96 overflow-scroll">
