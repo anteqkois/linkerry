@@ -1,5 +1,5 @@
 import { DropdownOption, DynamicDropdownProperty, DynamicDropdownState, PropertyType } from '@linkerry/connectors-framework'
-import { isCustomHttpExceptionAxios, isEmpty } from '@linkerry/shared'
+import { assertNotNullOrUndefined, isCustomHttpExceptionAxios, isEmpty } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { HTMLAttributes, useEffect, useState } from 'react'
@@ -25,12 +25,12 @@ export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLE
 
 export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
-	const { getConnectorOptions } = useEditor()
+	const { getConnectorOptions, editedConnectorMetadata, editedAction } = useEditor()
 	const { getValues, watch, setError, getFieldState } = useFormContext()
 	const [options, setOptions] = useState<DynamicDropdownState<any>>(initOptions)
 	const [initValue, setInitValue] = useState<DropdownOption<any>>()
 
-	const refreshOptions = async ({ values, fieldName }: { values: Record<string, any>; fieldName: string }) => {
+	const refreshOptions = async ({ values }: { values: Record<string, any> }) => {
 		setOptions((options) => ({
 			...options,
 			disabled: true,
@@ -67,7 +67,7 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 				})
 				console.log(error)
 			}
-			setError(fieldName, {
+			setError(`__temp__${property.name}`, {
 				message: 'Can not retive options',
 			})
 			setOptions((options) => ({
@@ -82,7 +82,7 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 		async (values, { name }) => {
 			if (!name) return
 			if (!property.refreshers.includes(name)) return
-			await refreshOptions({ values, fieldName: name })
+			await refreshOptions({ values })
 		},
 		[],
 		700,
@@ -92,12 +92,41 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 		const subscription = watch(handleWatcher)
 
 		/* check if refreshers are filled, if filled, fetch options */
-		const someRefresherValid = property.refreshers
-			.map((refresher) => ({ ...getFieldState(refresher), refresher }))
-			.filter((data) => !data.error && !data.invalid)
+		const values = getValues()
+		// const someRefresherValid = property.refreshers
+		// 	.map((refresher) => ({ ...getFieldState(refresher), value: values[refresher], refresher }))
+		// 	.filter((data) => !data.error && !data.invalid && !isEmpty(data.value))
+		const missingRefresherNames: string[] = []
 
-		if (someRefresherValid.length) {
-			refreshOptions({ values: getValues(), fieldName: someRefresherValid[0].refresher })
+		const allValidRefreshers = property.refreshers
+			.map((refresher) => ({ ...getFieldState(refresher), value: values[refresher], refresher }))
+			.filter((data) => {
+				const isValid = !!(!data.error && !data.invalid && !isEmpty(data.value))
+				if (!isValid) missingRefresherNames.push(data.refresher)
+				return isValid
+			})
+
+		if (allValidRefreshers.length !== property.refreshers.length) {
+			assertNotNullOrUndefined(editedConnectorMetadata, 'editedConnectorMetadata')
+			assertNotNullOrUndefined(editedAction, 'editedAction')
+
+			const selectedActionProps = Object.values(editedConnectorMetadata.actions).find(
+				(action) => action.name === editedAction.settings.actionName,
+			)?.props
+			assertNotNullOrUndefined(selectedActionProps, 'selectedActionProps')
+
+			const missingRefreshers = property.refreshers.filter((refresherName) => selectedActionProps[refresherName].displayName)
+
+			/* Move to end of callstack */
+			setTimeout(() => {
+				setError(`__temp__${property.name}`, {
+					message: `First fill options: ${missingRefreshers}`,
+				})
+			}, 0)
+		}
+
+		if (allValidRefreshers.length === property.refreshers.length) {
+			refreshOptions({ values: getValues() })
 				.then(({ currentValue, options }) => {
 					/* check if current value includes options */
 					if (isEmpty(options)) return

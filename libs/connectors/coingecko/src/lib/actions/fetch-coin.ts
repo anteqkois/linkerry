@@ -1,4 +1,5 @@
 import { Property, createAction } from '@linkerry/connectors-framework'
+import { isEmpty } from '@linkerry/shared'
 import { search } from '../common/search'
 
 export const fetchCoin = createAction({
@@ -21,6 +22,13 @@ export const fetchCoin = createAction({
 			description: 'Coin which data will be fetched',
 			refreshers: ['query'],
 			options: async ({ query }) => {
+				if (isEmpty(query))
+					return {
+						options: [],
+						disabled: true,
+						placeholder: 'Type query first',
+					}
+
 				const { coins } = await search(query as string)
 
 				return {

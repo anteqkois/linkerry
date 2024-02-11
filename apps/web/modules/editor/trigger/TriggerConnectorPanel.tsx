@@ -31,7 +31,7 @@ import { useEditor } from '../useEditor'
 import { TriggerEvents } from './TriggerEvents'
 
 export const TriggerConnectorPanel = () => {
-	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger } = useEditor()
+	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, setEditedConnectorMetadata } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.CONNECTOR) throw new Error('Missing editedTrigger')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
@@ -58,6 +58,7 @@ export const TriggerConnectorPanel = () => {
 			connectorName: editedTrigger.settings.connectorName,
 			connectorVersion: editedTrigger.settings.connectorVersion,
 		})
+		setEditedConnectorMetadata(connectorMetadata)
 
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
 		if (!selectedTrigger) return

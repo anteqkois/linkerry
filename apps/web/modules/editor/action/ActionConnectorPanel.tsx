@@ -31,7 +31,7 @@ import { useEditor } from '../useEditor'
 import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
-	const { editedAction, patchEditedAction, updateEditedAction } = useEditor()
+	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata } = useEditor()
 	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
@@ -54,7 +54,11 @@ export const ActionConnectorPanel = () => {
 	// setup form fields on start based on editedAction input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
 		if (isFetching || editedAction.type !== ActionType.CONNECTOR || editedAction.settings.actionName === '') return
-		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata')
+		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', {
+			connectorName: editedAction.settings.connectorName,
+			connectorVersion: editedAction.settings.connectorVersion,
+		})
+		setEditedConnectorMetadata(connectorMetadata)
 
 		const selectedAction = Object.values(connectorMetadata.actions).find((action) => action.name === editedAction.settings.actionName)
 		if (!selectedAction) return

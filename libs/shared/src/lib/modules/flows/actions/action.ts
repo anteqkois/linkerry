@@ -25,21 +25,24 @@ export const actionErrorHandlingOptionsSchema = z.object({
 export interface ActionErrorHandlingOptions extends z.infer<typeof actionErrorHandlingOptionsSchema> {}
 
 /* BASE */
-export const baseActionSchema = baseStepSchema.merge(
-	z.object({
-		type: z.nativeEnum(ActionType),
-		settings: z.any(),
-	}),
-)
-export interface BaseAction extends z.infer<typeof baseActionSchema> {}
-
-/* CONNECTOR */
-const actionConnectorSettingsSchema = baseStepSettingsSchema.merge(
+export const baseActionSettingsSchema = baseStepSettingsSchema.merge(
 	z.object({
 		actionName: z.string(), // 'send_xyz'
 		errorHandlingOptions: actionErrorHandlingOptionsSchema.optional(),
 	}),
 )
+export interface BaseAction extends z.infer<typeof baseActionSchema> {}
+
+export const baseActionSchema = baseStepSchema.merge(
+	z.object({
+		type: z.nativeEnum(ActionType),
+		settings: baseActionSettingsSchema,
+	}),
+)
+export interface BaseAction extends z.infer<typeof baseActionSchema> {}
+
+/* CONNECTOR */
+const actionConnectorSettingsSchema = baseActionSettingsSchema
 
 export const actionConnectorSchema = baseStepSchema.merge(
 	z.object({
@@ -56,7 +59,7 @@ export interface ActionConnector extends z.infer<typeof actionConnectorSchema> {
 export interface ActionConnectorSettings extends z.infer<typeof actionConnectorSettingsSchema> {}
 
 /* BRANCH */
-const actionBranchSettingsSchema = baseStepSettingsSchema.merge(
+const actionBranchSettingsSchema = baseActionSettingsSchema.merge(
 	z.object({
 		conditions: z.array(z.array(z.object({}))),
 	}),

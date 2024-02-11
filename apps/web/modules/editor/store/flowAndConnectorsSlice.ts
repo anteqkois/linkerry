@@ -1,3 +1,4 @@
+import { ConnectorMetadata } from '@linkerry/connectors-framework'
 import {
 	Action,
 	CustomError,
@@ -56,6 +57,12 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 		localStorage.setItem('flow', JSON.stringify(flow))
 	},
 	// CONNECTORS
+	editedConnectorMetadata: null,
+	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata) => {
+		set({
+			editedConnectorMetadata: connectorMetadata,
+		})
+	},
 	testConnectorLoading: false,
 	getConnectorOptions: async ({ input, propertyName }: { input: any; propertyName: string }) => {
 		const { editedAction, editedTrigger, flow } = get()
