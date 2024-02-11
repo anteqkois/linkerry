@@ -15,7 +15,7 @@ export const fetchCoin = createAction({
 			// defaultTransformers:[]
 		}),
 		coin_id: Property.DynamicDropdown({
-			displayName: 'Coin ID',
+			displayName: 'Coin',
 			name: 'coin_id',
 			required: true,
 			description: 'Coin which data will be fetched',
@@ -23,11 +23,10 @@ export const fetchCoin = createAction({
 			options: async ({ query }) => {
 				const { coins } = await search(query as string)
 
-				console.log('COIN', coins)
-
 				return {
 					options: coins.map((coin) => ({ label: `${coin.symbol} (${coin.name})`, value: coin.api_symbol })),
 					disabled: false,
+					placeholder: 'Select coin',
 				}
 			},
 			// options: async ({ auth }) => {

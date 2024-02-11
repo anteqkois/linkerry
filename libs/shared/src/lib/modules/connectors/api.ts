@@ -24,6 +24,7 @@ export interface ConnectorsGetOptionsInput {
 }
 
 export interface ConnectorsGetOptionsResponse {
-	disabled: boolean
 	options: { label: string; value: number }[]
+	disabled?: boolean
+	placeholder?: string
 }

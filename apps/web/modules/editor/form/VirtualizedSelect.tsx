@@ -33,6 +33,7 @@ export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
 	const onChangeValue = (newLabel: string) => {
 		const value = property.options.options.find((option) => option.label === newLabel)
 		setValue(property.name, value?.value)
+		setValue(`__temp__${property.name}`, newLabel)
 	}
 
 	return (
@@ -45,13 +46,18 @@ export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
 					<FormControl>
 						<Select
 							disabled={property.options.disabled}
-							onValueChange={(newValue) => {
-								field.onChange(newValue)
+							onValueChange={async (newValue) => {
 								onChangeValue(newValue)
+								// can not field.onChange(newValue) becouse it brokes rendering
+								// field.onChange(newValue)
 							}}
 						>
 							<SelectTrigger>
-								<SelectValue>{field.value}</SelectValue>
+								<SelectValue placeholder={property.options.placeholder} aria-label={field.value}>
+									{/*  can not field.onChange(newValue) becouse it brokes rendering */}
+									{/* {field.value} */}
+									{property.options.options.find((option) => option.label === field.value)?.label}
+								</SelectValue>
 							</SelectTrigger>
 							<SelectContent position="popper" className="max-h-96 overflow-scroll">
 								<VList style={{ height: 500 }}>
