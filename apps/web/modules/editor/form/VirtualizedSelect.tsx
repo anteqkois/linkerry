@@ -1,4 +1,4 @@
-import { StaticDropdownProperty } from '@linkerry/connectors-framework'
+import { DropdownOption, StaticDropdownProperty } from '@linkerry/connectors-framework'
 import {
 	FormControl,
 	FormField,
@@ -17,9 +17,10 @@ import { VList } from 'virtua'
 
 export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	property: StaticDropdownProperty
+	initData?: DropdownOption<any>
 }
 
-export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
+export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps) => {
 	const { setValue, control, getValues } = useFormContext()
 
 	// setup temp field which holds String value based on started value from database
@@ -30,10 +31,21 @@ export const VirtualizedSelect = ({ property }: VirtualizedSelectProps) => {
 		if (selectedOption) setValue(`__temp__${property.name}`, selectedOption.label)
 	}, [])
 
+	useEffect(() => {
+		if (!initData?.label) return
+
+		setValue(property.name, initData.value)
+		setValue(`__temp__${property.name}`, initData.label)
+	}, [initData])
+
 	const onChangeValue = (newLabel: string) => {
 		const value = property.options.options.find((option) => option.label === newLabel)
 		setValue(property.name, value?.value)
-		setValue(`__temp__${property.name}`, newLabel)
+
+		/* add to end of callstack */
+		setTimeout(() => {
+			setValue(`__temp__${property.name}`, newLabel)
+		}, 0)
 	}
 
 	return (
