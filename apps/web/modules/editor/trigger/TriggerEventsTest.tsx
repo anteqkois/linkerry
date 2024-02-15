@@ -27,6 +27,9 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 			editedTrigger,
 		})
 
+	const [record, setRecord] = useState('')
+	const [selectedTriggerEventId, setSelectedTriggerEventId] = useState<string>()
+
 	const { data, status, refetch } = useClientQuery({
 		queryKey: ['trigger-events', editedTrigger.name],
 		queryFn: async () => {
@@ -37,8 +40,7 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 			return data
 		},
 	})
-	const [record, setRecord] = useState('')
-	const [selectedTriggerEventId, setSelectedTriggerEventId] = useState<string>()
+
 	const onChangeTriggerEvent = useCallback(
 		async (newTriggerEventId: Id) => {
 			if (!data) return

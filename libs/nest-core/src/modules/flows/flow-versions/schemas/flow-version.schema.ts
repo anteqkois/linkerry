@@ -1,7 +1,6 @@
 import { ActionConnector, FlowState, FlowVersion, Id, TriggerConnector, TriggerEmpty, TriggerWebhook, User } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { ActionConnectorSchema } from './action.schema'
 
 export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 
@@ -31,7 +30,8 @@ export class FlowVersionModel implements FlowVersion {
   @Prop({ required: true, type: [Object] })
   triggers: (TriggerEmpty | TriggerConnector |  TriggerWebhook)[]
 
-  @Prop({ required: true, type: [ActionConnectorSchema]})
+	// todo discriminatorKey don't work
+  @Prop({ required: true, type: [Object]})
   actions: ActionConnector[]
 }
 

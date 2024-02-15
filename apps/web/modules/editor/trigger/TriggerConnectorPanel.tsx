@@ -26,6 +26,7 @@ import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { DynamicField } from '../form/DynamicField'
+import { ConnectorVersion } from '../steps/ConnectorVersion'
 import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
 import { useEditor } from '../useEditor'
 import { TriggerEventsTest } from './TriggerEventsTest'
@@ -187,6 +188,7 @@ export const TriggerConnectorPanel = () => {
 						{triggerWatcher?.props && Object.values(triggerWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
 					</form>
 				</Form>
+				<ConnectorVersion connectorMetadata={connectorMetadata} className='mt-4'/>
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (

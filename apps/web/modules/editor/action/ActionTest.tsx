@@ -35,6 +35,13 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 		}
 	}
 
+
+	// useEffect(() => {
+	// 	// remve trigger events when trigger changed
+	// 	setRecord('')
+	// 	refetch()
+	// }, [editedTrigger.settings.triggerName])
+
 	// TODO test error response from engine or api !!!!
 
 	return (

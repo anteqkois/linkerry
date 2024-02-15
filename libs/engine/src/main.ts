@@ -181,8 +181,8 @@ const execute = async (): Promise<void> => {
 				console.error('unknown operation')
 				break
 		}
-	} catch (e) {
-		console.error(e)
+	} catch (e: any) {
+		console.error(e, e.stack)
 		await writeOutput({
 			status: EngineResponseStatus.ERROR,
 			response: utils.tryParseJson((e as Error).message),
@@ -190,7 +190,7 @@ const execute = async (): Promise<void> => {
 	}
 }
 
-execute().catch((e) => console.error(e))
+execute().catch((e) => console.error(e, e.stack))
 
 async function writeOutput(result: EngineResponse<unknown>): Promise<void> {
 	await utils.writeToJsonFile(EngineConstants.OUTPUT_FILE, result)

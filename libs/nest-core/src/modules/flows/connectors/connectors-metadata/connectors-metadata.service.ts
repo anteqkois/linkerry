@@ -20,23 +20,6 @@ export class ConnectorsMetadataService {
 		}
 	}
 
-	// async findAll(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
-	// 	const connectors = (
-	// 		await this.connectorMetadataModel.find(
-	// 			filter,
-	// 			{},
-	// 			{
-	// 				sort: {
-	// 					name: 'asc',
-	// 					version: 'desc',
-	// 				},
-	// 			},
-	// 		)
-	// 	).map((connector) => connector.toObject())
-
-	// 	return query.summary ? connectors.map((connector) => this.connectorToSummaryMetadata(connector)) : connectors
-	// }
-
 	async findAllUnique(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
 		const connectors = (
 			await this.connectorMetadataModel.find(

@@ -152,7 +152,7 @@ export class EngineService {
 			const sandboxResponse = await sandbox.runOperation(operation)
 
 			sandboxResponse.standardOutput.split('\n').forEach((f) => {
-				if (f.trim().length > 0) this.logger.debug(f)
+				// if (f.trim().length > 0) this.logger.debug(f)
 			})
 
 			sandboxResponse.standardError.split('\n').forEach((f) => {

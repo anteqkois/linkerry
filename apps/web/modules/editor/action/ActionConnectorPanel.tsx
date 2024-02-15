@@ -26,12 +26,13 @@ import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { DynamicField } from '../form/DynamicField'
+import { ConnectorVersion } from '../steps/ConnectorVersion'
 import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
 import { useEditor } from '../useEditor'
 import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
-	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata, editedConnectorMetadata } = useEditor()
+	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata } = useEditor()
 	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
@@ -184,6 +185,7 @@ export const ActionConnectorPanel = () => {
 						{actionWatcher?.props && Object.values(actionWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
 					</form>
 				</Form>
+				<ConnectorVersion connectorMetadata={connectorMetadata} className='mt-4'/>
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && (
