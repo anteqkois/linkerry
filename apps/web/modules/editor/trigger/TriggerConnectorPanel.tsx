@@ -1,5 +1,5 @@
 import { TriggerBase, TriggerStrategy } from '@linkerry/connectors-framework'
-import { ConnectorGroup, TriggerType, assertNotNullOrUndefined } from '@linkerry/shared'
+import { ConnectorGroup, TriggerType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
 	Form,
 	FormControl,
@@ -28,7 +28,7 @@ import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-
 import { DynamicField } from '../form/DynamicField'
 import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
 import { useEditor } from '../useEditor'
-import { TriggerEvents } from './TriggerEvents'
+import { TriggerEventsTest } from './TriggerEventsTest'
 
 export const TriggerConnectorPanel = () => {
 	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, setEditedConnectorMetadata } = useEditor()
@@ -37,7 +37,8 @@ export const TriggerConnectorPanel = () => {
 
 	const {
 		data: connectorMetadata,
-		isFetching,
+		isFetched,
+		isLoading,
 		error,
 	} = useClientQuery(
 		connectorsMetadataQueryConfig.getOne({
@@ -53,16 +54,16 @@ export const TriggerConnectorPanel = () => {
 
 	// setup form fields on start based on editedTrigger input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
-		if (isFetching || editedTrigger.type !== TriggerType.CONNECTOR || editedTrigger.settings.triggerName === '') return
+		if (!isFetched) return
 		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', {
 			connectorName: editedTrigger.settings.connectorName,
 			connectorVersion: editedTrigger.settings.connectorVersion,
 		})
 		setEditedConnectorMetadata(connectorMetadata)
 
+		if (editedTrigger.type !== TriggerType.CONNECTOR || editedTrigger.settings.triggerName === '') return
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
 		if (!selectedTrigger) return
-
 		triggerForm.setValue('__temp__trigger', selectedTrigger)
 		setTimeout(() => triggerForm.setValue('triggerName', selectedTrigger.name), 0) // add to the end of callstack
 
@@ -72,7 +73,7 @@ export const TriggerConnectorPanel = () => {
 				if (input[key] !== undefined) triggerForm.setValue(key, input[key])
 				else if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
 			})
-	}, [isFetching])
+	}, [isFetched])
 
 	// synchronize with global state and database, merge only new values
 	const handleWatcher = useDebouncedCallback(
@@ -99,7 +100,7 @@ export const TriggerConnectorPanel = () => {
 		return () => subscription.unsubscribe()
 	}, [])
 
-	if (isFetching) return <Spinner />
+	if (isLoading) return <Spinner />
 	if (error) return <ErrorInfo errorObject={error} />
 	if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
 
@@ -131,6 +132,8 @@ export const TriggerConnectorPanel = () => {
 			},
 			nextActionName: '',
 		})
+
+		triggerForm.trigger()
 	}
 
 	return (
@@ -192,7 +195,11 @@ export const TriggerConnectorPanel = () => {
 					maxSize={80}
 					onResize={(size) => setTestDataPanelHeight(size)}
 				>
-					<TriggerEvents panelSize={testDataPanelHeight} />
+					<TriggerEventsTest
+						panelSize={testDataPanelHeight}
+						disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0}
+						disabledMessage={isEmpty(triggerWatcher?.props) ? 'Choose Trigger' : 'First fill all required Trigger fields'}
+					/>
 				</ResizablePanel>
 			)}
 		</ResizablePanelGroup>

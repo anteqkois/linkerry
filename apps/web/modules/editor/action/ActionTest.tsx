@@ -1,18 +1,21 @@
 import { json } from '@codemirror/lang-json'
 import { assertNotNullOrUndefined, isCustomError, isCustomHttpExceptionAxios } from '@linkerry/shared'
-import { Button, Icons, Small } from '@linkerry/ui-components/server'
+import { Icons, Small } from '@linkerry/ui-components/server'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import CodeMirror from '@uiw/react-codemirror'
 import { HTMLAttributes, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
+import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
 import { useEditor } from '../useEditor'
 
 export interface ActionTestProps extends HTMLAttributes<HTMLElement> {
 	panelSize: number
+	disabled: boolean
+	disabledMessage: string
 }
 
-export const ActionTest = ({ panelSize }: ActionTestProps) => {
+export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestProps) => {
 	const { editedAction, testConnectorLoading, testAction } = useEditor()
 	const [errorMessage, setErrorMessage] = useState('')
 	assertNotNullOrUndefined(editedAction?.name, 'editedAction.name')
@@ -32,6 +35,8 @@ export const ActionTest = ({ panelSize }: ActionTestProps) => {
 		}
 	}
 
+	// TODO test error response from engine or api !!!!
+
 	return (
 		<div>
 			<div className="pt-3 pl-1">
@@ -45,10 +50,13 @@ export const ActionTest = ({ panelSize }: ActionTestProps) => {
 							<Icons.True className="text-positive" />
 							Loaded data successfully
 						</h5>
-						<Button variant="secondary" onClick={onClickTest} size={'sm'}>
-							{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test size={'xs'} className="mr-3" />}
-							<span className="whitespace-nowrap">Regenerate Data</span>
-						</Button>
+						<GenerateTestDataButton
+							disabled={disabled}
+							disabledMessage={disabledMessage}
+							text="Regenerate Data"
+							onClick={onClickTest}
+							loading={testConnectorLoading}
+						/>
 					</div>
 					<div className="mt-2">
 						<CodeMirror
@@ -66,10 +74,13 @@ export const ActionTest = ({ panelSize }: ActionTestProps) => {
 			) : (
 				<>
 					<div className="flex h-20 px-1 center">
-						<Button variant="secondary" onClick={onClickTest}>
-							{testConnectorLoading ? <Icons.Spinner className="mr-2" /> : <Icons.Test className="mr-3" />}
-							<span className="whitespace-nowrap">Generate Data</span>
-						</Button>
+						<GenerateTestDataButton
+							disabled={disabled}
+							disabledMessage={disabledMessage}
+							text="Generate Data"
+							onClick={onClickTest}
+							loading={testConnectorLoading}
+						/>
 					</div>
 					{errorMessage && <ErrorInfo message={errorMessage} />}
 				</>

@@ -1,13 +1,20 @@
-import { ConnectorProperty } from '@linkerry/connectors-framework';
-import { Checkbox, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@linkerry/ui-components/client';
-import { useFormContext } from 'react-hook-form';
+import { ConnectorProperty } from '@linkerry/connectors-framework'
+import { Checkbox, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@linkerry/ui-components/client'
+import { useFormContext } from 'react-hook-form'
+import { useDynamicField } from './useFieldCustomValidation'
 
 export const CheckboxField = ({ property }: { property: ConnectorProperty }) => {
-	const { control} = useFormContext()
+	const { control } = useFormContext()
 
-	return <FormField
+	const { rules } = useDynamicField({
+		property,
+	})
+
+	return (
+		<FormField
 			control={control}
 			name={property.name}
+			rules={rules}
 			render={({ field }) => (
 				<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pl-1">
 					<FormControl>
@@ -20,4 +27,5 @@ export const CheckboxField = ({ property }: { property: ConnectorProperty }) => 
 				</FormItem>
 			)}
 		/>
+	)
 }

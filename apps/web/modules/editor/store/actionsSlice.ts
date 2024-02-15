@@ -27,12 +27,12 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	// ACTIONS
 	editedAction: null,
 	setEditedAction: (action: Action) => {
-		const { setDrawer, showDrawer } = get()
+		const { setDrawer } = get()
 
 		setDrawer('action_connector')
 		set({
 			editedAction: action,
-			showDrawer: !showDrawer,
+			showDrawer: true,
 		})
 	},
 	onClickSelectAction(nodeIdName: string) {

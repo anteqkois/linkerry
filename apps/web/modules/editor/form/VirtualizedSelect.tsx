@@ -14,6 +14,7 @@ import {
 import { HTMLAttributes, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { VList } from 'virtua'
+import { useDynamicField } from './useFieldCustomValidation'
 
 export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	property: StaticDropdownProperty
@@ -22,6 +23,10 @@ export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>
 
 export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps) => {
 	const { setValue, control, getValues } = useFormContext()
+
+	const { rules } = useDynamicField({
+		property,
+	})
 
 	// setup temp field which holds String value based on started value from database
 	useEffect(() => {
@@ -47,6 +52,7 @@ export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps
 		<FormField
 			control={control}
 			name={`__temp__${property.name}`}
+			rules={rules}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>{property.displayName}</FormLabel>

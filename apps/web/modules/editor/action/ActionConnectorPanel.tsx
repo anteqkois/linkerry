@@ -1,5 +1,5 @@
 import { ActionBase } from '@linkerry/connectors-framework'
-import { ActionType, ConnectorGroup, assertNotNullOrUndefined } from '@linkerry/shared'
+import { ActionType, ConnectorGroup, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
 	Form,
 	FormControl,
@@ -31,13 +31,14 @@ import { useEditor } from '../useEditor'
 import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
-	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata } = useEditor()
+	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata, editedConnectorMetadata } = useEditor()
 	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
 	const {
 		data: connectorMetadata,
-		isFetching,
+		isFetched,
+		isLoading,
 		error,
 	} = useClientQuery(
 		connectorsMetadataQueryConfig.getOne({
@@ -53,16 +54,17 @@ export const ActionConnectorPanel = () => {
 
 	// setup form fields on start based on editedAction input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
-		if (isFetching || editedAction.type !== ActionType.CONNECTOR || editedAction.settings.actionName === '') return
+		if (!isFetched) return
 		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', {
 			connectorName: editedAction.settings.connectorName,
 			connectorVersion: editedAction.settings.connectorVersion,
 		})
 		setEditedConnectorMetadata(connectorMetadata)
 
+		if (editedAction.type !== ActionType.CONNECTOR || editedAction.settings.actionName === '') return
+
 		const selectedAction = Object.values(connectorMetadata.actions).find((action) => action.name === editedAction.settings.actionName)
 		if (!selectedAction) return
-
 		actionForm.setValue('__temp__action', selectedAction)
 		setTimeout(() => actionForm.setValue('actionName', selectedAction.name), 0) // add to the end of callstack
 
@@ -71,8 +73,9 @@ export const ActionConnectorPanel = () => {
 			Object.entries(selectedAction.props).map(([key, value]) => {
 				if (input[key] !== undefined) actionForm.setValue(key, input[key])
 				else if (typeof value.defaultValue !== 'undefined') actionForm.setValue(key, value.defaultValue)
+				else actionForm.setValue(key, undefined)
 			})
-	}, [isFetching])
+	}, [isFetched])
 
 	// synchronize with global state and database, merge only new values
 	const handleWatcher = useDebouncedCallback(
@@ -99,7 +102,7 @@ export const ActionConnectorPanel = () => {
 		return () => subscription.unsubscribe()
 	}, [])
 
-	if (isFetching) return <Spinner />
+	if (isLoading) return <Spinner />
 	if (error) return <ErrorInfo errorObject={error} />
 	if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
 
@@ -185,7 +188,11 @@ export const ActionConnectorPanel = () => {
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && (
 				<ResizablePanel defaultSize={30} maxSize={80} onResize={(size) => setTestDataPanelHeight(size)}>
-					<ActionTest panelSize={testDataPanelHeight} />
+					<ActionTest
+						panelSize={testDataPanelHeight}
+						disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0}
+						disabledMessage={isEmpty(actionWatcher?.props) ? 'Choose Action' : 'First fill all required Action fields'}
+					/>
 				</ResizablePanel>
 			)}
 		</ResizablePanelGroup>

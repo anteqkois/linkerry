@@ -1,33 +1,26 @@
 import { ConnectorProperty } from '@linkerry/connectors-framework'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@linkerry/ui-components/client'
-import { useEffect, useMemo } from 'react'
-import { RegisterOptions, useFormContext } from 'react-hook-form'
+import { useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
+import { useDynamicField } from './useFieldCustomValidation'
 
-export const TextField = ({ property }: {  property: ConnectorProperty }) => {
+export const TextField = ({ property }: { property: ConnectorProperty }) => {
 	const { control, trigger } = useFormContext()
 
 	useEffect(() => {
 		trigger()
 	}, [])
 
-	const validate = useMemo(() => {
-		const output: RegisterOptions['validate'] = {}
-		for (const validator of property.validators?.concat(...(property.defaultValidators ?? [])) ?? []) {
-			if (!validator.validatorName) continue
-			// @ts-ignore
-			output[validator.validatorName] = (value) => Validators[validator.validatorName](...(validator.args ?? [])).fn(property, value, value)
-		}
-		return output
-	}, [property.validators, property.defaultValidators])
+	const { rules } = useDynamicField({
+		property,
+	})
 
 	return (
 		<FormField
 			control={control}
 			name={property.name}
-			rules={{
-				required: { value: property.required, message: 'Required field' },
-				validate,
-			}}
+			defaultValue={''}
+			rules={rules}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>{property.displayName}</FormLabel>

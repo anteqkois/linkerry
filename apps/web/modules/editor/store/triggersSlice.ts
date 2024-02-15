@@ -28,12 +28,12 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	// TRIGGERS
 	editedTrigger: null,
 	setEditedTrigger: (trigger: Trigger) => {
-		const { setDrawer, showDrawer } = get()
+		const { setDrawer } = get()
 
 		setDrawer('trigger_connector')
 		set({
 			editedTrigger: trigger,
-			showDrawer: !showDrawer,
+			showDrawer: true
 		})
 	},
 	onClickSelectTrigger(trigger: Trigger) {

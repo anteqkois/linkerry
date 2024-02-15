@@ -26,9 +26,12 @@ export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLE
 export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
 	const { getConnectorOptions, editedConnectorMetadata, editedAction } = useEditor()
-	const { getValues, watch, setError, getFieldState } = useFormContext()
+	const { getValues, watch, setError, getFieldState, trigger } = useFormContext()
 	const [options, setOptions] = useState<DynamicDropdownState<any>>(initOptions)
-	const [initValue, setInitValue] = useState<DropdownOption<any>>()
+	const [initValue, setInitValue] = useState<DropdownOption<any>>({
+		label: '',
+		value: '',
+	})
 
 	const refreshOptions = async ({ values }: { values: Record<string, any> }) => {
 		setOptions((options) => ({
@@ -89,13 +92,10 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 	)
 
 	useEffect(() => {
-		const subscription = watch(handleWatcher)
+		if (isEmpty(editedAction?.settings.actionName)) return
 
 		/* check if refreshers are filled, if filled, fetch options */
 		const values = getValues()
-		// const someRefresherValid = property.refreshers
-		// 	.map((refresher) => ({ ...getFieldState(refresher), value: values[refresher], refresher }))
-		// 	.filter((data) => !data.error && !data.invalid && !isEmpty(data.value))
 		const missingRefresherNames: string[] = []
 
 		const allValidRefreshers = property.refreshers
@@ -131,14 +131,18 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 					/* check if current value includes options */
 					if (isEmpty(options)) return
 					const selectedOption = options.find((option) => JSON.stringify(option.value) === JSON.stringify(currentValue))
-					if (isEmpty(options)) return
+					if (!selectedOption) return
+
 					setInitValue(selectedOption)
 				})
 				.catch((error) => console.log(error))
 		}
 
+		trigger()
+
+		const subscription = watch(handleWatcher)
 		return () => subscription.unsubscribe()
-	}, [])
+	}, [editedAction?.settings.actionName])
 
 	return (
 		<VirtualizedSelect
