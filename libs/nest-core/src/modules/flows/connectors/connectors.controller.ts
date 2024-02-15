@@ -18,7 +18,7 @@ export class ConnectorsController {
 		filter: MongoFilter<ConnectorMetadataGetManyQueryDto>,
 		@Query() query: ConnectorMetadataGetManyQueryDto,
 	) {
-		return this.connectorsMetadataService.findAll(filter, query)
+		return this.connectorsMetadataService.findAllUnique(filter, query)
 	}
 
 	@Get(':name')

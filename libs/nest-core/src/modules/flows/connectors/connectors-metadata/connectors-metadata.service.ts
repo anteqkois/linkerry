@@ -20,10 +20,46 @@ export class ConnectorsMetadataService {
 		}
 	}
 
-	async findAll(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
-		const connectors = (await this.connectorMetadataModel.find(filter)).map((connector) => connector.toObject())
+	// async findAll(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
+	// 	const connectors = (
+	// 		await this.connectorMetadataModel.find(
+	// 			filter,
+	// 			{},
+	// 			{
+	// 				sort: {
+	// 					name: 'asc',
+	// 					version: 'desc',
+	// 				},
+	// 			},
+	// 		)
+	// 	).map((connector) => connector.toObject())
 
-		return query.summary ? connectors.map((connector) => this.connectorToSummaryMetadata(connector)) : connectors
+	// 	return query.summary ? connectors.map((connector) => this.connectorToSummaryMetadata(connector)) : connectors
+	// }
+
+	async findAllUnique(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
+		const connectors = (
+			await this.connectorMetadataModel.find(
+				filter,
+				{},
+				{
+					sort: {
+						name: 'asc',
+						version: 'desc',
+					},
+				},
+			)
+		).map((connector) => connector.toObject())
+
+		const distinctConnectors = Array.from(
+			connectors.reduce((acc: Map<string, ConnectorMetadata>, curr) => {
+				if (acc.has(curr.name)) return acc
+				acc.set(curr.name, curr)
+				return acc
+			}, new Map()).values(),
+		)
+
+		return query.summary ? distinctConnectors.map((connector) => this.connectorToSummaryMetadata(connector)) : distinctConnectors
 	}
 
 	async findOne(name: string, query: ConnectorMetadataGetOneQueryDto) {
