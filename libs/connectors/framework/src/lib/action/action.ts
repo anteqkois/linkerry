@@ -48,7 +48,7 @@ type CreateActionParams<ConnectorAuth extends ConnectorAuthProperty, ActionProps
 	errorHandlingOptions?: ErrorHandlingOptionsParam
 }
 
-export const createAction = ({
+export const createAction = <ConnectorAuth extends ConnectorAuthProperty, ActionProps extends ConnectorPropertyMap>({
 	name,
 	displayName,
 	description,
@@ -57,7 +57,7 @@ export const createAction = ({
 	test,
 	requireAuth,
 	errorHandlingOptions,
-}: CreateActionParams<ConnectorAuthProperty, ConnectorPropertyMap>) => {
+}: CreateActionParams<ConnectorAuth, ActionProps>) => {
 	return new ActionInstance(
 		name,
 		displayName,

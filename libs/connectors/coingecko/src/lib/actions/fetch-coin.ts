@@ -1,6 +1,6 @@
 import { Property, createAction } from '@linkerry/connectors-framework'
 import { isEmpty } from '@linkerry/shared'
-import { search } from '../common/search'
+import { CoingeckoApi } from '../common'
 
 export const fetchCoin = createAction({
 	description: 'Fetch coin information based on coingecko list',
@@ -29,36 +29,18 @@ export const fetchCoin = createAction({
 						placeholder: 'Type query first',
 					}
 
-				const { coins } = await search(query as string)
+				const { body } = await CoingeckoApi.search(query as string)
 
 				return {
-					options: coins.map((coin) => ({ label: `${coin.symbol} (${coin.name})`, value: coin.api_symbol })),
+					options: body.coins.map((coin) => ({ label: `${coin.symbol} (${coin.name})`, value: coin.api_symbol })),
 					disabled: false,
 					placeholder: 'Select coin',
 				}
 			},
-			// options: async ({ auth }) => {
-			//   if (!auth) {
-			//     return {
-			//       disabled: true,
-			//     }
-			//   }
-			//   return {
-			//     options: [
-			//       {
-			//         label: 'Option One',
-			//         value: '1',
-			//       },
-			//       {
-			//         label: 'Option Two',
-			//         value: '2',
-			//       },
-			//     ],
-			//   }
-			// },
 		}),
 	},
-	run: async (ctx) => {
-		return []
+	run: async (context) => {
+		const { body } = await CoingeckoApi.getCoin(context.propsValue.coin_id)
+		return body
 	},
 })

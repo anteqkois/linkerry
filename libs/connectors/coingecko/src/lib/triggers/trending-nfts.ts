@@ -1,10 +1,10 @@
 import { DedupeStrategy, Polling, TriggerStrategy, createTrigger, pollingHelper } from '@linkerry/connectors-framework'
-import { coingeckoApi } from '../common'
+import { CoingeckoApi } from '../common'
 
 const polling: Polling<any, any> = {
 	strategy: DedupeStrategy.NEW_ITEMS,
 	items: async ({ auth, propsValue, lastItemsIds }) => {
-		const currentValues = await coingeckoApi.getTrendings()
+		const currentValues = await CoingeckoApi.getTrendings()
 		const items = currentValues.body.nfts.map((item) => ({
 			id: item.id,
 			data: item,

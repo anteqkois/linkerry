@@ -1,5 +1,5 @@
 import { DedupeStrategy, Polling, Property, TriggerStrategy, createTrigger, pollingHelper } from '@linkerry/connectors-framework';
-import { coingeckoApi } from '../common';
+import { CoingeckoApi } from '../common';
 
 const polling: Polling<
 	any,
@@ -11,7 +11,7 @@ const polling: Polling<
 	strategy: DedupeStrategy.TIMEBASED,
 	items: async ({ auth, propsValue, lastFetchEpochMS, store }) => {
 		// const currentValues = (await coingeckoApi.getCoins()) ?? []
-		const { body } = await coingeckoApi.getCoin(propsValue.coin_id)
+		const { body } = await CoingeckoApi.getCoin(propsValue.coin_id)
 		return body as unknown as any[]
 	},
 }

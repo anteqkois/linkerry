@@ -94,20 +94,20 @@ export type BaseActionContext<
 }
 
 type BeginExecutionActionContext<
-  ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty,
-  ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
+  ConnectorAuth extends ConnectorAuthProperty,
+  ActionProps extends ConnectorPropertyMap,
 > = BaseActionContext<ExecutionType.BEGIN, ConnectorAuth, ActionProps>
 
 type ResumeExecutionActionContext<
-  ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty,
-  ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
+  ConnectorAuth extends ConnectorAuthProperty,
+  ActionProps extends ConnectorPropertyMap,
 > = BaseActionContext<ExecutionType.RESUME, ConnectorAuth, ActionProps> & {
   resumePayload: unknown
 }
 
 export type ActionContext<
-  ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty,
-  ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
+  ConnectorAuth extends ConnectorAuthProperty,
+  ActionProps extends ConnectorPropertyMap,
 > = BeginExecutionActionContext<ConnectorAuth, ActionProps> | ResumeExecutionActionContext<ConnectorAuth, ActionProps>
 
 type AppConnectionValue = any
