@@ -1,6 +1,6 @@
 {
 	"name": "@linkerry/coingecko",
-	"version": "0.0.2",
+	"version": "0.0.1",
 	"type": "commonjs",
 	"scripts": {
 		"publish-package": "pnpm publish --no-git-checks"

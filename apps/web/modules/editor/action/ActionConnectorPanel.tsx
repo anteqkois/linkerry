@@ -95,7 +95,7 @@ export const ActionConnectorPanel = () => {
 				})
 		},
 		[],
-		1500,
+		1000,
 	)
 
 	useEffect(() => {

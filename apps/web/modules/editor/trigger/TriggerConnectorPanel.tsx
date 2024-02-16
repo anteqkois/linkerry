@@ -93,7 +93,7 @@ export const TriggerConnectorPanel = () => {
 				})
 		},
 		[],
-		1500,
+		1000,
 	)
 
 	useEffect(() => {

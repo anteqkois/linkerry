@@ -15,7 +15,6 @@ import {
 	flowHelper,
 	generateEmptyTrigger,
 	isConnectorTrigger,
-	isCustomHttpExceptionAxios,
 	retriveStepNumber,
 } from '@linkerry/shared'
 import { FlowVersionApi, TriggerApi } from '../../flows'
@@ -33,7 +32,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		setDrawer('trigger_connector')
 		set({
 			editedTrigger: trigger,
-			showDrawer: true
+			showDrawer: true,
 		})
 	},
 	onClickSelectTrigger(trigger: Trigger) {
@@ -175,13 +174,10 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			})
 			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
 			setFlow({ ...flow, version: newFlowVersion })
-		} catch (error) {
-			if (isCustomHttpExceptionAxios(error)) {
-				console.log(error.response.data)
-			} else console.log(error)
+		} finally {
+			set({ testConnectorLoading: false })
 		}
 
-		set({ testConnectorLoading: false })
 		return testResult
 	},
 })

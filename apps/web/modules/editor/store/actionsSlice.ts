@@ -14,7 +14,6 @@ import {
 	flowHelper,
 	isAction,
 	isConnectorAction,
-	isCustomHttpExceptionAxios,
 	isTrigger,
 } from '@linkerry/shared'
 import dayjs from 'dayjs'
@@ -193,43 +192,36 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			).data
 			assertNotNullOrUndefined(testResult, 'testResult')
 
-			if (!testResult.success && typeof testResult.output === 'string')
-				throw new CustomError(testResult.output, ErrorCode.TEST_ACTION_FAILED, {
-					result: testResult,
+			// if (!testResult.success && typeof testResult.output === 'string')
+			// 	throw new CustomError(testResult.output, ErrorCode.TEST_ACTION_FAILED, {
+			// 		result: testResult,
+			// 	})
+
+			if (testResult.success) {
+				const action = flowHelper.getAction(flow.version, editedAction.name)
+				if (!action || !isConnectorAction(action))
+					throw new CustomError(`Can not find action`, ErrorCode.ENTITY_NOT_FOUND, {
+						action,
+					})
+
+				action.settings.inputUiInfo = {
+					currentSelectedData: testResult.output,
+					lastTestDate: dayjs().format(),
+				}
+				action.valid = true
+
+				updateNode(action.name, {
+					data: {
+						action,
+					},
 				})
-
-			const action = flowHelper.getAction(flow.version, editedAction.name)
-			if (!action || !isConnectorAction(action))
-				throw new CustomError(`Can not find action`, ErrorCode.ENTITY_NOT_FOUND, {
-					action,
-				})
-
-			action.settings.inputUiInfo = {
-				currentSelectedData: testResult.output,
-				lastTestDate: dayjs().format(),
+				newFlowVersion = flowHelper.updateAction(flow.version, action)
+				setFlow({ ...flow, version: newFlowVersion })
 			}
-			action.valid = true
-
-			updateNode(action.name, {
-				data: {
-					action,
-				},
-			})
-			newFlowVersion = flowHelper.updateAction(flow.version, action)
-			setFlow({ ...flow, version: newFlowVersion })
-		} catch (error) {
-			if (isCustomHttpExceptionAxios(error)) {
-				// console.log(error.response.data)
-			} else {
-				// console.log(error)
-			}
-
-			throw error
 		} finally {
 			set({ testConnectorLoading: false })
 		}
 
-		set({ testConnectorLoading: false })
 		return testResult
 	},
 })
