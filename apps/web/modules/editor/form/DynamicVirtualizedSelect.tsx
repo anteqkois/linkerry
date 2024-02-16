@@ -134,6 +134,11 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 					if (!selectedOption) return
 
 					setInitValue(selectedOption)
+					setOptions((options) => ({
+						...options,
+						disabled: false,
+						placeholder: undefined,
+					}))
 				})
 				.catch((error) => console.log(error))
 		}

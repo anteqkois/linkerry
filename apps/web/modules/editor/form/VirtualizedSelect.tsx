@@ -22,7 +22,7 @@ export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>
 }
 
 export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps) => {
-	const { setValue, control, getValues } = useFormContext()
+	const { setValue, control, getValues, trigger } = useFormContext()
 
 	const { rules } = useDynamicField({
 		property,
@@ -41,6 +41,7 @@ export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps
 
 		setValue(property.name, initData.value)
 		setValue(`__temp__${property.name}`, initData.label)
+		trigger()
 	}, [initData])
 
 	const onChangeValue = (newLabel: string) => {
