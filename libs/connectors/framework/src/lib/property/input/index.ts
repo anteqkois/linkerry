@@ -1,5 +1,4 @@
 import { Validators } from '../../validators'
-import { SecretTextProperty } from '../authentication/secret-text'
 import { Properties, PropertyType } from '../base'
 import { CheckboxProperty } from './checkbox'
 import { DynamicDropdownProperty } from './dynamic-dropdown'
@@ -34,9 +33,6 @@ export const Property = {
 		return { ...config, valueSchema: undefined, type: PropertyType.CHECKBOX } as unknown as R extends true
 			? CheckboxProperty<true>
 			: CheckboxProperty<false>
-	},
-	SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
-		return { ...config, type: PropertyType.TEXT } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
 	},
 	StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
 		config: Properties<StaticDropdownProperty<T, R>>,
