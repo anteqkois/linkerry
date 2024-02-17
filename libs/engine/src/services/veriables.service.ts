@@ -1,4 +1,4 @@
-import { ConnectorAuthProperty, ErrorMessages, NonAuthConnectorPropertyMap, PropertyType, formatErrorMessage } from "@linkerry/connectors-framework"
+import { ConnectorAuthProperty, ErrorMessages, InputPropertyMap, PropertyType, formatErrorMessage } from "@linkerry/connectors-framework"
 import { isNull, isString } from "@linkerry/shared"
 import { FlowExecutorContext } from "../handler/context/flow-execution-context"
 
@@ -179,7 +179,7 @@ export class VariableService {
 
 	async applyProcessorsAndValidators(
 			resolvedInput: Record<string, any>,
-			props: NonAuthConnectorPropertyMap,
+			props: InputPropertyMap,
 			auth: ConnectorAuthProperty | undefined,
 	): Promise<{ processedInput: any, errors: any }> {
 			const processedInput = { ...resolvedInput }

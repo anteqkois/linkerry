@@ -16,7 +16,7 @@ export enum PropertyType {
 	// MultiSelectDropdown = 'MultiSelectDropdown',
 	// StaticMultiSelectDropdown = 'StaticMultiSelectDropdown',
 	DYNAMIC_DROPDOWN = 'DYNAMIC_DROPDOWN',
-	DYNAMIC = "DYNAMIC",
+	DYNAMIC = 'DYNAMIC',
 	CUSTOM_AUTH = 'CUSTOM_AUTH',
 	// DateTime = "DateTime",
 	// File = "File"
@@ -27,25 +27,16 @@ export type BaseProperty = {
 	description: string
 }
 
-type ConnectorAuthValidatorParams<AuthValueSchema> = {
-	auth: AuthValueSchema
-}
+export type Properties<T> = Omit<T, 'valueSchema' | 'type' | 'defaultValidators' | 'defaultProcessors'>
 
-export type ConnectorAuthValidatorResponse = { valid: true } | { valid: false; error: string }
-
-export type BaseConnectorAuthSchema<AuthValueSchema> = BaseProperty & {
-	validate?: (params: ConnectorAuthValidatorParams<AuthValueSchema>) => Promise<ConnectorAuthValidatorResponse>
-}
-
-// export type TPropertyValue<T, U extends PropertyType, VALIDATION_INPUT extends ValidationInputType, REQUIRED extends boolean> = {
 export type PropertyValue<S, T extends PropertyType, V extends ValidationInputType, R extends boolean> = {
 	valueSchema: S
 	type: T
 	required: R
-	defaultTransformers?: any[]
-	transformers?: any[]
-	validators?: TypedValidatorFn<V>[];
-	defaultValidators?: TypedValidatorFn<V>[];
+	defaultProcessors?: any[]
+	processors?: any[]
+	validators?: TypedValidatorFn<V>[]
+	defaultValidators?: TypedValidatorFn<V>[]
 	defaultValue?: T extends PropertyType.TEXT
 		? string
 		: T extends PropertyType.LONG_TEXT

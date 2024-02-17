@@ -1,4 +1,4 @@
-import { ConnectorProperty } from '../property'
+import { ConnectorProperty } from "../property"
 
 export type ValidationErrors = Record<string, string[] | Record<string, string[]>>
 

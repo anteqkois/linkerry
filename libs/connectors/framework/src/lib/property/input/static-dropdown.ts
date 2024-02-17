@@ -1,5 +1,5 @@
-import { ValidationInputType } from '../validators/types';
-import { BaseProperty, PropertyType, PropertyValue } from './base';
+import { ValidationInputType } from '../../validators/types';
+import { BaseProperty, PropertyType, PropertyValue } from '../base';
 
 export type StaticDropdownValue = string | number
 

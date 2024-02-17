@@ -1,11 +1,12 @@
-import { StaticPropsValue } from ".";
-import { ValidationInputType } from "../validators/types";
-import { BaseConnectorAuthSchema, PropertyType, PropertyValue } from "./base";
-import { CheckboxProperty } from "./checkbox";
-import { NumberProperty } from "./number";
+import { StaticPropsValue } from "..";
+import { ValidationInputType } from "../../validators/types";
+import { PropertyType, PropertyValue } from "../base";
+import { CheckboxProperty } from "../input/checkbox";
+import { NumberProperty } from "../input/number";
+import { StaticDropdownProperty } from "../input/static-dropdown";
+import { TextProperty } from "../input/text";
+import { BaseConnectorAuthSchema } from "./base";
 import { SecretTextProperty } from "./secret-text";
-import { StaticDropdownProperty } from "./static-dropdown";
-import { TextProperty } from "./text";
 
 
 export type CustomAuthProps = Record<
@@ -23,9 +24,9 @@ export type CustomAuthPropertySchema<T extends CustomAuthProps> = BaseConnectorA
 	props: T
 }
 
-export type CustomAuthProperty<R extends boolean, T extends CustomAuthProps> = CustomAuthPropertySchema<T> & PropertyValue<
+export type CustomAuthProperty<T extends CustomAuthProps> = CustomAuthPropertySchema<T> & PropertyValue<
 	CustomAuthPropertyValue<T>,
 	PropertyType.CUSTOM_AUTH,
 	ValidationInputType.ANY,
-	R
+	true
 >;

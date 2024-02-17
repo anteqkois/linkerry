@@ -1,4 +1,4 @@
-import { isEmpty, isInteger, isNull } from '@linkerry/shared'
+import { isEmpty, isInteger, isNull, isString } from '@linkerry/shared'
 import dayjs, { OpUnitType } from 'dayjs'
 import { ErrorMessages } from './errors'
 import { TypedValidatorFn, ValidationInputType } from './types'
@@ -216,6 +216,18 @@ export class Validators {
 		fn: (property, processedValue, userInput) => {
 			if (isNaN(processedValue)) {
 				return formatErrorMessage(ErrorMessages.NUMBER, { userInput })
+			}
+
+			return null
+		},
+	}
+
+	static string: TypedValidatorFn<ValidationInputType.STRING> = {
+		type: ValidationInputType.STRING,
+		validatorName: 'string',
+		fn: (property, processedValue, userInput) => {
+			if (!isString(processedValue)) {
+				return formatErrorMessage(ErrorMessages.STRING, { userInput })
 			}
 
 			return null

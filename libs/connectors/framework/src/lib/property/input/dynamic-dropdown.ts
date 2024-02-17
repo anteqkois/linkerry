@@ -1,6 +1,6 @@
-import { PropertyContext } from '../context'
-import { ValidationInputType } from '../validators/types'
-import { BaseProperty, PropertyType, PropertyValue } from './base'
+import { PropertyContext } from '../../context'
+import { ValidationInputType } from '../../validators/types'
+import { BaseProperty, PropertyType, PropertyValue } from '../base'
 
 // export type StaticDropdownValue = string | number
 

@@ -12,7 +12,7 @@ export const fetchCoin = createAction({
 			displayName: 'Search Query',
 			required: true,
 			// todo implement validators
-			// defaultTransformers:[]
+			// defaultProcessors:[]
 		}),
 		coin_id: Property.DynamicDropdown({
 			displayName: 'Coin',
