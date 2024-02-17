@@ -89,7 +89,7 @@ export class EngineService {
 		action: Action,
 	): Promise<Sandbox> {
 		switch (action.type) {
-			case ActionType.CONNECTOR: {
+			case ActionType.ACTION: {
 				const {
 					//  packageType,
 					connectorType,

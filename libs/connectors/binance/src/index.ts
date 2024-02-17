@@ -1,6 +1,6 @@
 import { createConnector } from '@linkerry/connectors-framework'
+import { fetchAccountBalance } from './actions/fetch-account-balance'
 import { binanceAuth } from './common/auth'
-
 
 export const coingecko = createConnector({
 	name: '@linkerry/binance',
@@ -10,7 +10,7 @@ export const coingecko = createConnector({
 	triggers: [],
 	description: 'Binance connector for interacting with the bigest cryptocurrency exchange',
 	minimumSupportedRelease: '0.0.0',
-	actions: [],
+	actions: [fetchAccountBalance],
 	auth: binanceAuth,
 	tags: ['cryptocurrency', 'data feed', 'trends', 'exchange', 'trading'],
 })

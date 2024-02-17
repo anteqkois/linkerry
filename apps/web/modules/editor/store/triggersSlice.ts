@@ -45,13 +45,13 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		})
 	},
 	handleSelectTriggerConnector: async (connectorMetadata: ConnectorMetadataSummary) => {
-		const { editedTrigger, updateEditedTrigger, updateNode, setDrawer } = get()
+		const { editedTrigger, updateEditedTrigger, patchNode, setDrawer } = get()
 		assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
 
 		const newTrigger: TriggerConnector = {
 			name: editedTrigger.name,
 			displayName: connectorMetadata.displayName,
-			type: TriggerType.CONNECTOR,
+			type: TriggerType.TRIGGER,
 			valid: false,
 			settings: {
 				connectorName: connectorMetadata.name,
@@ -65,7 +65,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		}
 
 		await updateEditedTrigger(newTrigger)
-		updateNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
+		patchNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
 		setDrawer('trigger_connector')
 	},
 	updateEditedTrigger: async (newTrigger: Trigger) => {
@@ -144,7 +144,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	},
 	testPoolTrigger: async () => {
 		set({ testConnectorLoading: true })
-		const { flow, setFlow, updateNode, editedTrigger } = get()
+		const { flow, setFlow, patchNode, editedTrigger } = get()
 		assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
 		let newFlowVersion: FlowVersion | undefined = undefined
 		let testResult: TriggerEvent[] = []
@@ -169,7 +169,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			}
 			trigger.valid = true
 
-			updateNode(trigger.name, {
+			patchNode(trigger.name, {
 				data: {
 					trigger,
 				},

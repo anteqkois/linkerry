@@ -33,7 +33,7 @@ import { TriggerEventsTest } from './TriggerEventsTest'
 
 export const TriggerConnectorPanel = () => {
 	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, setEditedConnectorMetadata } = useEditor()
-	if (!editedTrigger || editedTrigger?.type !== TriggerType.CONNECTOR) throw new Error('Missing editedTrigger')
+	if (!editedTrigger || editedTrigger?.type !== TriggerType.TRIGGER) throw new Error('Missing editedTrigger')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
 	const {
@@ -58,7 +58,7 @@ export const TriggerConnectorPanel = () => {
 		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata',editedTrigger.settings)
 		setEditedConnectorMetadata(connectorMetadata)
 
-		if (editedTrigger.type !== TriggerType.CONNECTOR || editedTrigger.settings.triggerName === '') return
+		if (editedTrigger.type !== TriggerType.TRIGGER || editedTrigger.settings.triggerName === '') return
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
 		assertNotNullOrUndefined(selectedTrigger, 'selectedTrigger')
 
@@ -132,7 +132,7 @@ export const TriggerConnectorPanel = () => {
 			name: editedTrigger.name,
 			valid: false,
 			displayName: selectedTrigger.displayName,
-			type: TriggerType.CONNECTOR,
+			type: TriggerType.TRIGGER,
 			settings: {
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,

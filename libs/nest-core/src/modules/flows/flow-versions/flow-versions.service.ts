@@ -62,7 +62,7 @@ export class FlowVersionsService {
 		if (!isTrigger(updateTrigger)) throw new UnprocessableEntityException(`Invalid input, expect trigger receive: ${JSON.stringify(updateTrigger)}`)
 
 		switch (updateTrigger.type) {
-			case TriggerType.CONNECTOR:
+			case TriggerType.TRIGGER:
 				triggerConnectorSchema.parse(updateTrigger)
 				break
 			case TriggerType.EMPTY:
@@ -104,7 +104,7 @@ export class FlowVersionsService {
 
 	async updateAction(id: Id, userId: Id, updateAction: Action) {
 		switch (updateAction.type) {
-			case ActionType.CONNECTOR:
+			case ActionType.ACTION:
 				actionConnectorSchema.parse(updateAction)
 				break
 			case ActionType.BRANCH:
@@ -136,7 +136,7 @@ export class FlowVersionsService {
 
 	async addAction(id: Id, userId: Id, { action, parentStepName }: FlowVersionAddActionInput) {
 		switch (action.type) {
-			case ActionType.CONNECTOR:
+			case ActionType.ACTION:
 				actionConnectorSchema.parse(action)
 				break
 			case ActionType.BRANCH:

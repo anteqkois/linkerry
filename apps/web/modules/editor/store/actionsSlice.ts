@@ -19,7 +19,7 @@ import {
 import dayjs from 'dayjs'
 import { FlowVersionApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
-import { defaultEdgeFactory } from '../edges/edgesFactory'
+import { defaultEdgeFactory, generateEdgeId } from '../edges/edgesFactory'
 import { ActionsSlice, CreateSlice } from './types'
 
 export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
@@ -36,7 +36,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	},
 	onClickSelectAction(nodeIdName: string) {
 		get().setDrawer('select_action')
-		const actionName = `action_${get().flow.version.stepsCount}`
+		const actionName = `action_${get().flow.version.stepsCount + 1}`
 		set({
 			showDrawer: true,
 			editStepMetadata: {
@@ -46,13 +46,13 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
-		const { getNodeById, editStepMetadata, setDrawer, updateNode, addNode, flow, setFlow, setEditedAction, addEdge } = get()
+		const { getNodeById, editStepMetadata, setDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge } = get()
 
 		assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
 		const action: ActionConnector = {
 			name: editStepMetadata.actionName,
 			displayName: connectorMetadata.displayName,
-			type: ActionType.CONNECTOR,
+			type: ActionType.ACTION,
 			valid: false,
 			settings: {
 				connectorName: connectorMetadata.name,
@@ -75,9 +75,9 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 
 		// add action name to parent step
 		if ('action' in parentNode.data)
-			updateNode(parentNode.id, { data: { ...parentNode.data, action: { ...parentNode.data.action, nextActionName: editStepMetadata.actionName } } })
+			patchNode(parentNode.id, { data: { ...parentNode.data, action: { ...parentNode.data.action, nextActionName: editStepMetadata.actionName } } })
 		else
-			updateNode(parentNode.id, {
+			patchNode(parentNode.id, {
 				data: { ...parentNode.data, trigger: { ...parentNode.data.trigger, nextActionName: editStepMetadata.actionName } },
 			})
 
@@ -139,7 +139,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	deleteAction: async (actionName: string) => {
-		const { flow, setFlow, deleteNode, setShowDrawer, updateNode } = get()
+		const { flow, setFlow, deleteNode, setShowDrawer, patchNode, deleteEdge } = get()
 
 		const { data: newFlowVersion } = await FlowVersionApi.deleteAction(flow.version._id, actionName)
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
@@ -149,7 +149,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 
 		for (const step of parentSteps) {
 			if (isTrigger(step))
-				updateNode(step.name, {
+				patchNode(step.name, {
 					data: {
 						trigger: {
 							nextActionName: '',
@@ -157,13 +157,15 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 					},
 				})
 			else if (isAction(step))
-				updateNode(step.name, {
+				patchNode(step.name, {
 					data: {
-						trigger: {
+						action: {
 							nextActionName: '',
 						},
 					},
 				})
+
+			deleteEdge(generateEdgeId(step.name, actionName))
 		}
 
 		setShowDrawer(false)
@@ -175,7 +177,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	},
 	testAction: async () => {
 		set({ testConnectorLoading: true })
-		const { flow, setFlow, updateNode, editedAction } = get()
+		const { flow, setFlow, patchNode, editedAction } = get()
 		if (!editedAction || !isConnectorAction(editedAction))
 			throw new CustomError('Invalid action data', ErrorCode.INVALID_TYPE, {
 				editedAction,
@@ -207,7 +209,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 				}
 				action.valid = true
 
-				updateNode(action.name, {
+				patchNode(action.name, {
 					data: {
 						action,
 					},

@@ -34,8 +34,8 @@ export const TriggerConnectorSettingsSchema = SchemaFactory.createForClass(Trigg
 
 @Schema({ _id: false, discriminatorKey: 'type' })
 export class TriggerConnectorModel extends BaseStepModel implements TriggerConnector {
-	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.CONNECTOR })
-	override type: TriggerType.CONNECTOR
+	@Prop({ required: true, type: String, enum: TriggerType, default: TriggerType.TRIGGER })
+	override type: TriggerType.TRIGGER
 
 	@Prop({ required: true, type: TriggerConnectorSettingsSchema })
 	settings: TriggerConnectorSettings

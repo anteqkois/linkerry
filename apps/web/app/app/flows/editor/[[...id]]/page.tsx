@@ -35,7 +35,7 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 				nodes.push(selectTriggerNodeFactory({ trigger }))
 				parentNode = nodes[nodes.length - 1]
 				break
-			case TriggerType.CONNECTOR: {
+			case TriggerType.TRIGGER: {
 				const connectorMetadata = connectorsMetadata.find((metadata) => trigger.settings.connectorName === metadata.name)
 				assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata')
 				nodes.push(triggerNodeFactory({ trigger, connectorMetadata }))
@@ -57,7 +57,7 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 				throw new CustomError(`Unsuported action type`, ErrorCode.INVALID_TYPE, {
 					action,
 				})
-			case ActionType.CONNECTOR: {
+			case ActionType.ACTION: {
 				const connectorMetadata = connectorsMetadata.find((metadata) => action.settings.connectorName === metadata.name)
 				assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata')
 

@@ -33,7 +33,7 @@ import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
 	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata } = useEditor()
-	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
+	if (!editedAction || editedAction?.type !== ActionType.ACTION) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
 	const {
@@ -59,7 +59,7 @@ export const ActionConnectorPanel = () => {
 		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', editedAction.settings)
 		setEditedConnectorMetadata(connectorMetadata)
 
-		if (editedAction.type !== ActionType.CONNECTOR || editedAction.settings.actionName === '') return
+		if (editedAction.type !== ActionType.ACTION || editedAction.settings.actionName === '') return
 
 		const selectedAction = Object.values(connectorMetadata.actions).find((action) => action.name === editedAction.settings.actionName)
 		assertNotNullOrUndefined(selectedAction, 'selectedAction')
@@ -132,7 +132,7 @@ export const ActionConnectorPanel = () => {
 			name: editedAction.name,
 			valid: false,
 			displayName: selectedAction.displayName,
-			type: ActionType.CONNECTOR,
+			type: ActionType.ACTION,
 			settings: {
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,

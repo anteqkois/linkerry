@@ -48,21 +48,15 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 						<p>{connectorMetadata.displayName}</p>
 					</div>
 				</div>
-				<div className="opacity-20 group-hover:opacity-90 absolute top-1/2 -translate-y-1/2 -left-16">
-					<Icons.Delete
-						className="opacity-50 hover:opacity-100 bg-muted rounded-full p-2 text-negative border border-dashed border-negative w-12 h-12 center"
-						onClick={handleDeleteAction}
-						// onClick={(e) => {
-						// 	e.stopPropagation()
-						// 	handleDeleteAction()
-						// }}
-					/>
-				</div>
-				{/* <Handle type="source" position={Position.Bottom} id="addAction" isConnectable={false} className="-bottom-10">
-				<Button size={'icon'} variant={'outline'}>
-				<Icons.Plus />
-				</Button>
-			</Handle> */}
+				{action.nextActionName ? null : (
+					<div className="opacity-20 group-hover:opacity-90 absolute top-1/2 -translate-y-1/2 -left-16">
+						<Icons.Delete
+							className="opacity-50 hover:opacity-100 bg-muted rounded-full p-2 text-negative border border-dashed border-negative w-12 h-12 center"
+							onClick={handleDeleteAction}
+						/>
+					</div>
+				)}
+				<Handle type="source" position={Position.Bottom} isConnectable={false} className="opacity-0"></Handle>
 			</BaseNodeElement>
 			{action.nextActionName ? null : <AddAction nodeId={id} />}
 		</>

@@ -162,7 +162,7 @@ export class TriggerEventsService {
 
 	private _getSourceName(trigger: Trigger) {
 		switch (trigger.type) {
-			case TriggerType.CONNECTOR:
+			case TriggerType.TRIGGER:
 				return `${trigger.settings.connectorName}@${trigger.settings.connectorVersion}:${trigger.settings.triggerName}`
 			case TriggerType.EMPTY:
 			case TriggerType.WEBHOOK:

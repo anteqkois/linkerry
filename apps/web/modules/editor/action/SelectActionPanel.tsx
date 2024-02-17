@@ -15,7 +15,7 @@ export const SelectActionPanel = () => {
 		return data.filter((connectorMetadata) => connectorMetadata.actions)
 	}, [data])
 
-	const handleSelectTrigger = async (row: Row<ConnectorMetadataSummary>) => {
+	const handleSelectAction = async (row: Row<ConnectorMetadataSummary>) => {
 		handleSelectActionConnector(row.original)
 	}
 
@@ -23,7 +23,7 @@ export const SelectActionPanel = () => {
 		<div>
 			<DataTable
 				getRowId={(row) => row._id}
-				onClickRow={handleSelectTrigger}
+				onClickRow={handleSelectAction}
 				data={connectorsWithActions}
 				columns={columns}
 				filterAccessor="displayName"

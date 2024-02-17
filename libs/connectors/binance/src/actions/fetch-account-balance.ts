@@ -37,8 +37,8 @@ export interface Balance {
 export const fetchAccountBalance = createAction({
 	auth: binanceAuth,
 	description: 'Fetch account asset balance ',
-	displayName: 'Fetch asset balance',
-	name: 'fetch_balance',
+	displayName: 'Fetch account balance',
+	name: 'fetch_account_balance',
 	props: {
 		non_zero_assets: Property.Checkbox({
 			description: 'Shoould return only non-zero balance assets',

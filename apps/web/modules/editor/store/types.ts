@@ -29,14 +29,15 @@ export interface ReactFlowSlice {
 	deleteNode: (nodeId: CustomNodeId) => void
 	onNodesChange: OnNodesChange
 	getNodeById: (id: string) => CustomNode | undefined
-	updateNode: (nodeId: CustomNodeId, changes: DeepPartial<CustomNode>) => void
+	patchNode: (nodeId: CustomNodeId, changes: DeepPartial<CustomNode>) => void
 	// EDGES
 	edges: Edge[]
 	setEdges: (nodes: Edge[]) => void
 	addEdge: (edge: Edge) => void
+	deleteEdge: (edgeId: CustomEdgeId) => void
 	onEdgesChange: OnEdgesChange
 	onConnect: OnConnect
-	updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => void
+	patchEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => void
 }
 
 export interface EditorSlice {

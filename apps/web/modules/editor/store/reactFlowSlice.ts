@@ -14,7 +14,7 @@ export const createReactFlowSlice: CreateSlice<ReactFlowSlice> = (set, get) => (
 		// TODO change it in fitire to map to not using filter (performance)?
 		return get().nodes.filter((node) => node.id === id)[0] as CustomNode
 	},
-	updateNode: (id: CustomNodeId, changes: DeepPartial<CustomNode>) => {
+	patchNode: (id: CustomNodeId, changes: DeepPartial<CustomNode>) => {
 		let updated
 		set({
 			nodes: get().nodes.map((node) => {
@@ -29,6 +29,7 @@ export const createReactFlowSlice: CreateSlice<ReactFlowSlice> = (set, get) => (
 	edges: [],
 	setEdges: (edges: Edge[]) => set((state) => ({ edges })),
 	addEdge: (edge: Edge) => set((state) => ({ edges: [...state.edges, edge] })),
+	deleteEdge: (edgeId: CustomEdgeId) => set((state) => ({ edges: state.edges.filter((edge) => edge.id !== edgeId) })),
 	onNodesChange: (changes: NodeChange[]) => {
 		set({
 			nodes: applyNodeChanges<CustomNode['data']>(changes, get().nodes) as CustomNode[],
@@ -39,7 +40,7 @@ export const createReactFlowSlice: CreateSlice<ReactFlowSlice> = (set, get) => (
 			edges: applyEdgeChanges(changes, get().edges),
 		})
 	},
-	updateEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => {
+	patchEdge: (id: CustomEdgeId, changes: Partial<CustomEdge>) => {
 		let updated = false
 		set({
 			edges: get().edges.map((edge) => {

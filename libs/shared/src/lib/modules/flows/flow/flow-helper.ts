@@ -39,7 +39,7 @@ function getAction(flowVersion: FlowVersion, actionName: string): Action | undef
 const updateTrigger = (flowVersion: FlowVersion, triggerData: Trigger) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (triggerData.type) {
-		case TriggerType.CONNECTOR:
+		case TriggerType.TRIGGER:
 		case TriggerType.EMPTY:
 			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
 				if (trigger.name !== triggerData.name) return trigger
@@ -56,7 +56,7 @@ const patchTrigger = (flowVersion: FlowVersion, triggerName: string, updateTrigg
 	assertNotNullOrUndefined(sourceTrigger, 'sourceTrigger')
 
 	switch (sourceTrigger.type) {
-		case TriggerType.CONNECTOR:
+		case TriggerType.TRIGGER:
 		case TriggerType.EMPTY:
 			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
 				if (trigger.name !== triggerName) return trigger
@@ -70,7 +70,7 @@ const patchTrigger = (flowVersion: FlowVersion, triggerName: string, updateTrigg
 const updateAction = (flowVersion: FlowVersion, actionData: Action) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (actionData.type) {
-		case ActionType.CONNECTOR:
+		case ActionType.ACTION:
 			flowVersionClone.actions = flowVersionClone.actions.map((action) => {
 				if (action.name !== actionData.name) return action
 				return actionData
@@ -127,7 +127,7 @@ const removeNextActionName = (flowVersion: FlowVersion, nextActionName: string) 
 	})
 	flowVersion.actions = flowVersion.actions.map((action) => {
 		switch (action.type) {
-			case ActionType.CONNECTOR:
+			case ActionType.ACTION:
 				if (action.nextActionName === nextActionName) {
 					return { ...action, nextActionName: '' }
 				}
@@ -147,12 +147,14 @@ const removeNextActionName = (flowVersion: FlowVersion, nextActionName: string) 
 const addAction = (flowVersion: FlowVersion, parentStepName: string, action: Action) => {
 	flowVersion = addNextActionName(flowVersion, parentStepName, action.name)
 	flowVersion.actions.push(action)
+	flowVersion.stepsCount += 1
 	return flowVersion
 }
 
 const deleteAction = (flowVersion: FlowVersion, actionName: string) => {
 	flowVersion = removeNextActionName(flowVersion, actionName)
 	flowVersion.actions = flowVersion.actions.filter((action) => action.name !== actionName)
+	flowVersion.stepsCount -= 1
 	return flowVersion
 }
 // function deleteAction(

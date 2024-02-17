@@ -3,7 +3,7 @@ import { baseStepSchema, baseStepSettingsSchema, sampleDataSchema } from '../ste
 
 export enum TriggerType {
 	EMPTY = 'EMPTY',
-	CONNECTOR = 'CONNECTOR',
+	TRIGGER = 'TRIGGER',
 	WEBHOOK = 'WEBHOOK',
 }
 
@@ -52,13 +52,13 @@ const triggerConnectorSettingsSchema = baseStepSettingsSchema.merge(
 
 export const triggerConnectorSchema = baseStepSchema.merge(
 	z.object({
-		type: z.enum([TriggerType.CONNECTOR]),
+		type: z.enum([TriggerType.TRIGGER]),
 		settings: triggerConnectorSettingsSchema,
 	}),
 )
 
 export const isConnectorTrigger = (trigger: Trigger): trigger is TriggerConnector => {
-	return trigger.type === TriggerType.CONNECTOR
+	return trigger.type === TriggerType.TRIGGER
 }
 
 export interface TriggerConnector extends z.infer<typeof triggerConnectorSchema> {}
@@ -66,16 +66,11 @@ export interface TriggerConnectorSettings extends z.infer<typeof triggerConnecto
 
 /* TRIGGER */
 export type Trigger = TriggerEmpty | TriggerWebhook | TriggerConnector
-export type TriggerNotEmpty =  TriggerWebhook | TriggerConnector
+export type TriggerNotEmpty = TriggerWebhook | TriggerConnector
 
 export function isTrigger(data: unknown): data is Trigger {
-	const result = baseTriggerSchema.safeParse(data)
-	if (result.success === false) {
-		console.error(result.error.errors)
-		return false
-	}
-
-	return true
+	if (data && typeof data === 'object' && 'type' in data && Object.keys(TriggerType).includes((data.type as string) ?? '')) return true
+	return false
 }
 
 export const generateEmptyTrigger = (name: string): TriggerEmpty => {

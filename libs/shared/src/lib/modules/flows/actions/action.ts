@@ -3,7 +3,7 @@ import { baseStepSchema, baseStepSettingsSchema } from '../steps/base'
 
 export enum ActionType {
 	// Code = 'Code',
-	CONNECTOR = 'CONNECTOR',
+	ACTION = 'ACTION',
 	BRANCH = 'BRANCH',
 	MERGE_BRANCH = 'MERGE_BRANCH',
 	LOOP_ON_ITEMS = 'LOOP_ON_ITEMS',
@@ -46,13 +46,13 @@ const actionConnectorSettingsSchema = baseActionSettingsSchema
 
 export const actionConnectorSchema = baseStepSchema.merge(
 	z.object({
-		type: z.enum([ActionType.CONNECTOR]),
+		type: z.enum([ActionType.ACTION]),
 		settings: actionConnectorSettingsSchema,
 	}),
 )
 
 export const isConnectorAction = (action: Action): action is ActionConnector => {
-	return action.type === ActionType.CONNECTOR
+	return action.type === ActionType.ACTION
 }
 
 export interface ActionConnector extends z.infer<typeof actionConnectorSchema> {}
@@ -74,8 +74,8 @@ export const actionBranchSchema = baseStepSchema.merge(
 	}),
 )
 
-export const isBranchAction = (action: Action): action is ActionConnector => {
-	return action.type === ActionType.CONNECTOR
+export const isBranchAction = (action: Action): action is ActionBranch => {
+	return action.type === ActionType.BRANCH
 }
 
 export interface ActionBranch extends z.infer<typeof actionBranchSchema> {}
@@ -85,11 +85,6 @@ export interface ActionBranchSettings extends z.infer<typeof actionBranchSetting
 export type Action = ActionConnector | ActionBranch
 
 export function isAction(data: unknown): data is Action {
-	const result = baseActionSchema.safeParse(data)
-	if (result.success === false) {
-		console.error(result.error.errors)
-		return false
-	}
-
-	return true
+	if (data && typeof data === 'object' && 'type' in data && Object.keys(ActionType).includes((data.type as string) ?? '')) return true
+	return false
 }
