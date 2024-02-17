@@ -53,27 +53,30 @@ export const TriggerConnectorPanel = () => {
 	})
 	const triggerWatcher = triggerForm.watch('__temp__trigger')
 
-	// setup form fields on start based on editedTrigger input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
 		if (!isFetched) return
-		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', {
-			connectorName: editedTrigger.settings.connectorName,
-			connectorVersion: editedTrigger.settings.connectorVersion,
-		})
+		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata',editedTrigger.settings)
 		setEditedConnectorMetadata(connectorMetadata)
 
 		if (editedTrigger.type !== TriggerType.CONNECTOR || editedTrigger.settings.triggerName === '') return
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === editedTrigger.settings.triggerName)
-		if (!selectedTrigger) return
-		triggerForm.setValue('__temp__trigger', selectedTrigger)
-		setTimeout(() => triggerForm.setValue('triggerName', selectedTrigger.name), 0) // add to the end of callstack
+		assertNotNullOrUndefined(selectedTrigger, 'selectedTrigger')
 
-		const input = editedTrigger.settings.input
+		const initData: Record<string, any> = {}
 		if (selectedTrigger.props)
 			Object.entries(selectedTrigger.props).map(([key, value]) => {
-				if (input[key] !== undefined) triggerForm.setValue(key, input[key])
-				else if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+				if (editedTrigger.settings.input[key] !== undefined) initData[key] = editedTrigger.settings.input[key]
+				else if (typeof value.defaultValue !== 'undefined') initData[key] = value.defaultValue
 			})
+
+		/* add to the end of callstack */
+		setTimeout(() => {
+			triggerForm.reset({
+				__temp__trigger: selectedTrigger,
+				triggerName: selectedTrigger.name,
+				...initData,
+			})
+		}, 0)
 	}, [isFetched])
 
 	// synchronize with global state and database, merge only new values
@@ -85,14 +88,14 @@ export const TriggerConnectorPanel = () => {
 				onlyChanged: true,
 			})
 
-			if (newData)
+			if (Object.keys(newData).length)
 				await patchEditedTriggerConnector({
 					settings: {
 						input: newData,
 					},
 				})
 		},
-		[],
+		[editedTrigger.settings.input],
 		1000,
 	)
 
@@ -108,15 +111,22 @@ export const TriggerConnectorPanel = () => {
 	// build dynamic form based on selected trigger schema -> props from trigger metadata
 	const onChangeTrigger = async (triggerName: string) => {
 		const selectedTrigger = Object.values(connectorMetadata.triggers).find((trigger) => trigger.name === triggerName)
-		if (!selectedTrigger) return
-		triggerForm.setValue('__temp__trigger', selectedTrigger)
+		assertNotNullOrUndefined(selectedTrigger, 'selectedTrigger')
 
 		const input: Record<string, any> = {}
 		if (selectedTrigger.props)
-			Object.entries(selectedTrigger.props).map(([key, value]) => {
-				if (typeof value.defaultValue !== 'undefined') triggerForm.setValue(key, value.defaultValue)
+			Object.entries(selectedTrigger.props).forEach(([key, value]) => {
+				if (typeof value.defaultValue === 'undefined') return
 				input[key] = value.defaultValue
 			})
+
+		triggerForm.reset({
+			// TODO
+			// @ts-ignore
+			__temp__trigger: selectedTrigger,
+			triggerName,
+			...input,
+		})
 
 		await updateEditedTrigger({
 			name: editedTrigger.name,
@@ -185,10 +195,11 @@ export const TriggerConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
-						{triggerWatcher?.props && Object.values(triggerWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
+						{triggerWatcher?.props &&
+							Object.entries(triggerWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
 					</form>
 				</Form>
-				<ConnectorVersion connectorMetadata={connectorMetadata} className='mt-4'/>
+				<ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && triggerWatcher?.type === TriggerStrategy.POLLING && (

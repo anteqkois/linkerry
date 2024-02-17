@@ -4,8 +4,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Icons, Muted, Small } from '@linkerry/ui-components/server'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import CodeMirror from '@uiw/react-codemirror'
+import dayjs from 'dayjs'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
+import { useRelativeTime } from '../../../libs/dayjs'
 import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
@@ -29,6 +31,7 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 
 	const [record, setRecord] = useState('')
 	const [selectedTriggerEventId, setSelectedTriggerEventId] = useState<string>()
+	const { relativeTime, setInitialTime } = useRelativeTime()
 
 	const { data, status, refetch } = useClientQuery({
 		queryKey: ['trigger-events', editedTrigger.name],
@@ -68,15 +71,11 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 
 	useEffect(() => {
 		if (status !== 'success' || !data?.length) return
+		if (!editedTrigger.settings.inputUiInfo.currentSelectedData || !editedTrigger.settings.inputUiInfo.lastTestDate) return
 
-		if (editedTrigger.settings.inputUiInfo.currentSelectedData) {
-			setRecord(prepareCodeMirrorValue(editedTrigger.settings.inputUiInfo.currentSelectedData))
-		} else {
-			const selectedTriggerEvent = data[data.length - 1]
-			setRecord(prepareCodeMirrorValue(selectedTriggerEvent.payload))
-			setSelectedTriggerEventId(selectedTriggerEvent._id)
-		}
-	}, [status, data?.length])
+		setRecord(prepareCodeMirrorValue(editedTrigger.settings.inputUiInfo.currentSelectedData))
+		setInitialTime(editedTrigger.settings.inputUiInfo.lastTestDate)
+	}, [status])
 
 	if (!editedTrigger) return <ErrorInfo message="Can not retrive editedTrigger" />
 	if (status === 'pending') return <Spinner />
@@ -85,7 +84,9 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 		const triggerEvents = await testPoolTrigger()
 		const queryClient = getBrowserQueryCllient()
 		queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEvents)
+		setRecord(prepareCodeMirrorValue(triggerEvents[triggerEvents.length - 1].payload))
 		setSelectedTriggerEventId(triggerEvents[triggerEvents.length - 1]._id)
+		setInitialTime(dayjs().format())
 	}
 
 	// TODO improve rerenndeing (change pane size debounce)
@@ -100,10 +101,13 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 					{/* TODO handle error state */}
 					<div className="flex h-14 px-1 items-center justify-between gap-4">
 						{data?.length ? (
-							<h5 className="flex items-center gap-2">
-								<Icons.True className="text-positive" />
-								Loaded data successfully
-							</h5>
+							<div className="flex flex-row flex-wrap">
+								<h5 className="flex items-center gap-2">
+									<Icons.True className="text-positive" />
+									Loaded data successfully
+								</h5>
+								<Muted className="ml-7">{relativeTime}</Muted>
+							</div>
 						) : null}
 						<GenerateTestDataButton
 							disabled={disabled}

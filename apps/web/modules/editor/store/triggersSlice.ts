@@ -89,6 +89,8 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update', ErrorCode.ENTITY_NOT_FOUND)
 
 		const newTrigger = deepMerge(editedTrigger, update)
+		if (JSON.stringify(newTrigger) === JSON.stringify(editedTrigger)) return console.log('Skip trigger update, data after merge is the same')
+
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 
 		const newFlow: Flow = {
@@ -162,7 +164,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				})
 
 			trigger.settings.inputUiInfo = {
-				currentSelectedData: testResult[0],
+				currentSelectedData: testResult[0].payload,
 				lastTestDate: testResult[0].createdAt,
 			}
 			trigger.valid = true

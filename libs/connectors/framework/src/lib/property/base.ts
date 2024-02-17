@@ -23,7 +23,6 @@ export enum PropertyType {
 }
 
 export type BaseProperty = {
-	name: string
 	displayName: string
 	description: string
 }

@@ -56,26 +56,29 @@ export const ActionConnectorPanel = () => {
 	// setup form fields on start based on editedAction input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
 		if (!isFetched) return
-		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', {
-			connectorName: editedAction.settings.connectorName,
-			connectorVersion: editedAction.settings.connectorVersion,
-		})
+		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', editedAction.settings)
 		setEditedConnectorMetadata(connectorMetadata)
 
 		if (editedAction.type !== ActionType.CONNECTOR || editedAction.settings.actionName === '') return
 
 		const selectedAction = Object.values(connectorMetadata.actions).find((action) => action.name === editedAction.settings.actionName)
-		if (!selectedAction) return
-		actionForm.setValue('__temp__action', selectedAction)
-		setTimeout(() => actionForm.setValue('actionName', selectedAction.name), 0) // add to the end of callstack
+		assertNotNullOrUndefined(selectedAction, 'selectedAction')
 
-		const input = editedAction.settings.input
+		const initData: Record<string, any> = {}
 		if (selectedAction.props)
 			Object.entries(selectedAction.props).map(([key, value]) => {
-				if (input[key] !== undefined) actionForm.setValue(key, input[key])
-				else if (typeof value.defaultValue !== 'undefined') actionForm.setValue(key, value.defaultValue)
-				else actionForm.setValue(key, undefined)
+				if (editedAction.settings.input[key] !== undefined) initData[key] = editedAction.settings.input[key]
+				else if (typeof value.defaultValue !== 'undefined') initData[key] = value.defaultValue
 			})
+
+		/* add to the end of callstack */
+		setTimeout(() => {
+			actionForm.reset({
+				__temp__action: selectedAction,
+				actionName: selectedAction.name,
+				...initData,
+			})
+		}, 0)
 	}, [isFetched])
 
 	// synchronize with global state and database, merge only new values
@@ -87,14 +90,14 @@ export const ActionConnectorPanel = () => {
 				onlyChanged: true,
 			})
 
-			if (newData)
+			if (Object.keys(newData).length)
 				await patchEditedAction({
 					settings: {
 						input: newData,
 					},
 				})
 		},
-		[],
+		[editedAction.settings.input],
 		1000,
 	)
 
@@ -110,15 +113,20 @@ export const ActionConnectorPanel = () => {
 	// build dynamic form based on selected action schema -> props from action metadata
 	const onChangeTrigger = async (actionName: string) => {
 		const selectedAction = Object.values(connectorMetadata.actions).find((action) => action.name === actionName)
-		if (!selectedAction) return
-		actionForm.setValue('__temp__action', selectedAction)
+		assertNotNullOrUndefined(selectedAction, 'selectedAction')
 
 		const input: Record<string, any> = {}
 		if (selectedAction.props)
-			Object.entries(selectedAction.props).map(([key, value]) => {
-				if (typeof value.defaultValue !== 'undefined') actionForm.setValue(key, value.defaultValue)
+			Object.entries(selectedAction.props).forEach(([key, value]) => {
+				if (typeof value.defaultValue === 'undefined') return
 				input[key] = value.defaultValue
 			})
+
+		actionForm.reset({
+			__temp__action: selectedAction,
+			actionName,
+			...input,
+		})
 
 		await updateEditedAction({
 			name: editedAction.name,
@@ -182,10 +190,11 @@ export const ActionConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
-						{actionWatcher?.props && Object.values(actionWatcher.props).map((prop) => <DynamicField property={prop} key={prop.name} />)}
+						{actionWatcher?.props &&
+							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
 					</form>
 				</Form>
-				<ConnectorVersion connectorMetadata={connectorMetadata} className='mt-4'/>
+				<ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.Core && (

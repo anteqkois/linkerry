@@ -5,18 +5,23 @@ import { NumberField } from './NumberField'
 import { TextField } from './TextField'
 import { VirtualizedSelect } from './VirtualizedSelect'
 
-export const DynamicField = ({ property }: { property: ConnectorProperty }) => {
-	switch (property.type) {
+interface DynamicFieldProps {
+	property: ConnectorProperty
+	name: string
+}
+
+export const DynamicField = (props: DynamicFieldProps) => {
+	switch (props.property.type) {
 		case PropertyType.TEXT:
-			return <TextField property={property} />
+			return <TextField {...props} />
 		case PropertyType.NUMBER:
-			return <NumberField property={property} />
+			return <NumberField {...props} />
 		case PropertyType.CHECKBOX:
-			return <CheckboxField property={property} />
+			return <CheckboxField {...props} />
 		case PropertyType.STATIC_DROPDOWN:
-			return <VirtualizedSelect property={property} />
+			return <VirtualizedSelect name={props.name} property={props.property} />
 		case PropertyType.DYNAMIC_DROPDOWN:
-			return <DynamicVirtualizedSelect property={property} />
+			return <DynamicVirtualizedSelect name={props.name} property={props.property} />
 
 		default:
 			break

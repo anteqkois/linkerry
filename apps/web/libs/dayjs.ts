@@ -10,7 +10,6 @@ dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
 
 export const useDayjs = () => {
-
 	return {
 		dayjs,
 	}
@@ -21,6 +20,9 @@ export const useRelativeTime = (time?: string) => {
 	const [initialTime, setInitialTime] = useState(time ?? '')
 
 	useEffect(() => {
+		if (!initialTime) return
+
+		setRelativeTime(dayjs().to(dayjs(initialTime)))
 		const interval = setInterval(() => {
 			setRelativeTime(dayjs().to(dayjs(initialTime)))
 		}, 10_000)
@@ -31,6 +33,6 @@ export const useRelativeTime = (time?: string) => {
 	return {
 		relativeTime,
 		setInitialTime,
-		dayjs
+		dayjs,
 	}
 }

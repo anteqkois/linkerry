@@ -19,9 +19,10 @@ import { useDynamicField } from './useFieldCustomValidation'
 export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	property: StaticDropdownProperty
 	initData?: DropdownOption<any>
+	name: string
 }
 
-export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps) => {
+export const VirtualizedSelect = ({ property, initData, name }: VirtualizedSelectProps) => {
 	const { setValue, control, getValues, trigger } = useFormContext()
 
 	const { rules } = useDynamicField({
@@ -30,29 +31,29 @@ export const VirtualizedSelect = ({ property, initData }: VirtualizedSelectProps
 
 	// setup temp field which holds String value based on started value from database
 	useEffect(() => {
-		const startedValueString = JSON.stringify(getValues(property.name) || '')
+		const startedValueString = JSON.stringify(getValues(name) || '')
 		if (!startedValueString) return
 		const selectedOption = property.options.options.find((option) => JSON.stringify(option.value) === startedValueString)
-		if (selectedOption) setValue(`__temp__${property.name}`, selectedOption.label)
+		if (selectedOption) setValue(`__temp__${name}`, selectedOption.label)
 	}, [])
 
 	useEffect(() => {
 		if (!initData?.label) return
 
-		setValue(property.name, initData.value)
-		setValue(`__temp__${property.name}`, initData.label)
+		setValue(name, initData.value)
+		setValue(`__temp__${name}`, initData.label)
 		trigger()
 	}, [initData])
 
 	const onChangeValue = (newLabel: string) => {
 		const value = property.options.options.find((option) => option.label === newLabel)
-		setValue(property.name, value?.value)
+		setValue(name, value?.value)
 	}
 
 	return (
 		<FormField
 			control={control}
-			name={`__temp__${property.name}`}
+			name={`__temp__${name}`}
 			rules={rules}
 			render={({ field }) => (
 				<FormItem>

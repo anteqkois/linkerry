@@ -21,9 +21,10 @@ const initOptions = {
 
 export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	property: DynamicDropdownProperty
+	name: string
 }
 
-export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectProps) => {
+export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
 	const { getConnectorOptions, editedConnectorMetadata, editedAction } = useEditor()
 	const { getValues, watch, setError, getFieldState, trigger } = useFormContext()
@@ -46,7 +47,7 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 
 		try {
 			const response = await getConnectorOptions({
-				propertyName: property.name,
+				propertyName: name,
 				input,
 			})
 
@@ -56,7 +57,7 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 				placeholder: response.placeholder,
 			})
 
-			return { options: response.options, currentValue: values[property.name] }
+			return { options: response.options, currentValue: values[name] }
 		} catch (error) {
 			if (isCustomHttpExceptionAxios(error))
 				toast({
@@ -70,7 +71,7 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 				})
 				console.log(error)
 			}
-			setError(`__temp__${property.name}`, {
+			setError(`__temp__${name}`, {
 				message: 'Can not retive options',
 			})
 			setOptions((options) => ({
@@ -119,7 +120,7 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 
 			/* Move to end of callstack */
 			setTimeout(() => {
-				setError(`__temp__${property.name}`, {
+				setError(`__temp__${name}`, {
 					message: `First fill options: ${missingRefreshers}`,
 				})
 			}, 0)
@@ -156,6 +157,7 @@ export const DynamicVirtualizedSelect = ({ property }: DynamicVirtualizedSelectP
 				type: PropertyType.STATIC_DROPDOWN,
 				options,
 			}}
+			name={name}
 			initData={initValue}
 		/>
 	)

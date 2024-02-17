@@ -4,7 +4,12 @@ import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useDynamicField } from './useFieldCustomValidation'
 
-export const NumberField = ({ property }: { property: ConnectorProperty }) => {
+interface NumberFieldProps {
+	property: ConnectorProperty
+	name: string
+}
+
+export const NumberField = ({ property, name }: NumberFieldProps) => {
 	const { control, trigger } = useFormContext()
 
 	useEffect(() => {
@@ -18,13 +23,14 @@ export const NumberField = ({ property }: { property: ConnectorProperty }) => {
 	return (
 		<FormField
 			control={control}
-			name={property.name}
+			name={name}
+			defaultValue={''}
 			rules={rules}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>{property.displayName}</FormLabel>
 					<FormControl>
-						<Input {...field} type="number" />
+						<Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
 					</FormControl>
 					<FormMessage />
 				</FormItem>

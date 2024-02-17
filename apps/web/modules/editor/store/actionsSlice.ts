@@ -106,6 +106,8 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		assertNotNullOrUndefined(editedAction, 'editedAction')
 
 		const newAction = deepMerge<Action>(editedAction, update)
+		if (JSON.stringify(newAction) === JSON.stringify(editedAction)) return console.log('Skip action update, data after merge is the same')
+
 		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
 
 		const newFlow: Flow = {
@@ -191,11 +193,6 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 				})
 			).data
 			assertNotNullOrUndefined(testResult, 'testResult')
-
-			// if (!testResult.success && typeof testResult.output === 'string')
-			// 	throw new CustomError(testResult.output, ErrorCode.TEST_ACTION_FAILED, {
-			// 		result: testResult,
-			// 	})
 
 			if (testResult.success) {
 				const action = flowHelper.getAction(flow.version, editedAction.name)

@@ -72,7 +72,6 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 									Loaded data successfully
 								</h5>
 								<Muted className="ml-7">{relativeTime}</Muted>
-								{/* <Muted className="ml-7">{dayjs().to(dayjs(editedAction.settings.inputUiInfo.lastTestDate))}</Muted> */}
 							</div>
 						) : (
 							<h5 className="flex items-center gap-2">

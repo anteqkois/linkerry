@@ -3,7 +3,12 @@ import { Checkbox, FormControl, FormDescription, FormField, FormItem, FormLabel 
 import { useFormContext } from 'react-hook-form'
 import { useDynamicField } from './useFieldCustomValidation'
 
-export const CheckboxField = ({ property }: { property: ConnectorProperty }) => {
+interface CheckboxFieldProps {
+	property: ConnectorProperty
+	name: string
+}
+
+export const CheckboxField = ({ property, name }: CheckboxFieldProps) => {
 	const { control } = useFormContext()
 
 	const { rules } = useDynamicField({
@@ -13,7 +18,7 @@ export const CheckboxField = ({ property }: { property: ConnectorProperty }) => 
 	return (
 		<FormField
 			control={control}
-			name={property.name}
+			name={name}
 			rules={rules}
 			render={({ field }) => (
 				<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pl-1">

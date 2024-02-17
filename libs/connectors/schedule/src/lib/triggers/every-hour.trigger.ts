@@ -9,7 +9,7 @@ export const everyHourTrigger = createTrigger({
   props: {
     run_on_weekends: Property.Checkbox({
       displayName: 'Run on weekends (Sat,Sun)',
-      name: 'run_on_weekends',
+      // name: 'run_on_weekends',
       description: 'Decide if flow should be triggered during weekends',
       required: true,
       defaultValue: false,

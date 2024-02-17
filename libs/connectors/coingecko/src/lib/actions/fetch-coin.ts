@@ -10,14 +10,12 @@ export const fetchCoin = createAction({
 		query: Property.Text({
 			description: 'Type query phrase to search for coin',
 			displayName: 'Search Query',
-			name: 'query',
 			required: true,
 			// todo implement validators
 			// defaultTransformers:[]
 		}),
 		coin_id: Property.DynamicDropdown({
 			displayName: 'Coin',
-			name: 'coin_id',
 			required: true,
 			description: 'Coin which data will be fetched',
 			refreshers: ['query'],

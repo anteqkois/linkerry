@@ -7,7 +7,6 @@ export const cronExpressionTrigger = createTrigger({
 	description: 'Trigger based on cron expression',
 	props: {
 		expression: Property.Text({
-			name: 'expression',
 			displayName: 'Cron Expression',
 			description: 'Cron expression to trigger',
 			required: true,
@@ -17,7 +16,6 @@ export const cronExpressionTrigger = createTrigger({
 		}),
 		timezone: Property.StaticDropdown<string>({
 			displayName: 'Timezone',
-			name: 'timezone',
 			description: 'Timezone to use',
 			options: {
 				options: timezoneOptions,
