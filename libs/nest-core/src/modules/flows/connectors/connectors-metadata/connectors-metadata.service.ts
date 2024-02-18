@@ -6,11 +6,11 @@ import { FilterQuery, Model } from 'mongoose'
 import { MongoFilter } from '../../../../lib/mongodb/decorators/filter.decorator'
 import { ConnectorMetadataGetManyQueryDto } from './dto/getMany.dto'
 import { ConnectorMetadataGetOneQueryDto } from './dto/getOne.dto'
-import { ConnectorMetadataModel } from './schemas/connector.schema'
+import { ConnectorsMetadataModel } from './schemas/connector.schema'
 
 @Injectable()
 export class ConnectorsMetadataService {
-	constructor(@InjectModel(ConnectorMetadataModel.name) private readonly connectorMetadataModel: Model<ConnectorMetadataModel>) {}
+	constructor(@InjectModel(ConnectorsMetadataModel.name) private readonly connectorMetadataModel: Model<ConnectorsMetadataModel>) {}
 
 	connectorToSummaryMetadata(connectorMetadata: ConnectorMetadata): ConnectorMetadataSummary {
 		return {
@@ -46,7 +46,7 @@ export class ConnectorsMetadataService {
 	}
 
 	async findOne(name: string, query: ConnectorMetadataGetOneQueryDto) {
-		const filter: FilterQuery<ConnectorMetadataModel> = {
+		const filter: FilterQuery<ConnectorsMetadataModel> = {
 			name,
 		}
 

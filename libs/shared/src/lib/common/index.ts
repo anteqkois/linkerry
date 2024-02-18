@@ -1,6 +1,7 @@
 export * from './api'
 export * from './assertions'
 export * from './auth'
+export * from './crypto'
 export * from './database'
 export * from './error'
 export * from './flags'

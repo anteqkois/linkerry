@@ -39,6 +39,7 @@ export const fetchAccountBalance = createAction({
 	description: 'Fetch account asset balance ',
 	displayName: 'Fetch account balance',
 	name: 'fetch_account_balance',
+	requireAuth: true,
 	props: {
 		non_zero_assets: Property.Checkbox({
 			description: 'Shoould return only non-zero balance assets',
@@ -48,6 +49,21 @@ export const fetchAccountBalance = createAction({
 		}),
 	},
 	run: async ({ auth, propsValue }) => {
+		BinanceClient.setAuth(auth)
+
+		const balanceInfo = (await BinanceClient.exchange.fetchBalance()).info as Info
+
+		const balances = propsValue.non_zero_assets
+			? balanceInfo.balances.filter((balance) => {
+					return +balance.free !== 0 || +balance.locked !== 0
+			  })
+			: balanceInfo.balances
+
+		if (!balances.length) return 'Empty account balance'
+
+		return balances
+	},
+	test: async ({ auth, propsValue }) => {
 		BinanceClient.setAuth(auth)
 
 		const balanceInfo = (await BinanceClient.exchange.fetchBalance()).info as Info

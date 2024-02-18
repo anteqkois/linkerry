@@ -3,10 +3,10 @@ import { ConnectorGroup, ConnectorType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
-export type ConnectorMetadataDocument = mongoose.HydratedDocument<ConnectorMetadata>
+export type ConnectorsMetadataDocument = mongoose.HydratedDocument<ConnectorMetadata>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'connectors_metadata' })
-export class ConnectorMetadataModel implements ConnectorMetadata {
+export class ConnectorsMetadataModel implements ConnectorMetadata {
 	_id: string
 
 	@Prop({ required: true, type: String })
@@ -49,14 +49,14 @@ export class ConnectorMetadataModel implements ConnectorMetadata {
 	connectorType: ConnectorType
 }
 
-export const ConnectorMetadataSchema = SchemaFactory.createForClass(ConnectorMetadataModel)
-ConnectorMetadataSchema.index({ name: 1, version: 1 }, { unique: true, sparse: true })
+export const ConnectorsMetadataSchema = SchemaFactory.createForClass(ConnectorsMetadataModel)
+ConnectorsMetadataSchema.index({ name: 1, version: 1 }, { unique: true, sparse: true })
 
-export const ConnectorMetadataModelFactory: AsyncModelFactory = {
-	name: ConnectorMetadataModel.name,
+export const ConnectorsMetadataModelFactory: AsyncModelFactory = {
+	name: ConnectorsMetadataModel.name,
 	imports: [],
 	useFactory: () => {
-		const schema = ConnectorMetadataSchema
+		const schema = ConnectorsMetadataSchema
 		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},

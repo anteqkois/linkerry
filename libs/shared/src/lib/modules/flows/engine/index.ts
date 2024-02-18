@@ -1,7 +1,7 @@
 import { Id } from '../../../common'
+import { AppConnectionValue } from '../../app-connection'
 import { ConnectorPackage } from '../../connectors'
 import { ExecutionState, ExecutionType } from '../../flow-runs'
-import { AppConnectionValue } from '../app-connection/app-connection'
 import { FlowVersion } from '../flow'
 
 export enum EngineOperationType {

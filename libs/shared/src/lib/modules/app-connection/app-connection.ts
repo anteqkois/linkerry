@@ -1,5 +1,5 @@
-import { TimestampDatabase } from '../../../common'
-import { OAuth2GrantType } from './dto/upsert-app-connection-request'
+import { EncryptedObject, Id, TimestampDatabase } from '../../common'
+import { OAuth2GrantType } from './api/upsert'
 import { OAuth2AuthorizationMethod } from './oauth2-authorization-method'
 
 export type AppConnectionId = string
@@ -77,29 +77,32 @@ export type AppConnectionValue<T extends AppConnectionType = AppConnectionType> 
 	? CustomAuthConnectionValue
 	: never
 
-export type AppConnection<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
+export type AppConnectionDecrypted<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
+	user: Id
 	name: string
 	type: Type
 	connectorName: string
-	projectId: string
+	// projectId: string
 	status: AppConnectionStatus
 	value: AppConnectionValue<Type>
 }
-// export type AppConnection<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase<AppConnectionId> & {
-//     name: string
-//     type: Type
-//     connectorName: string
-//     projectId: string
-//     status: AppConnectionStatus
-//     value: AppConnectionValue<Type>
-// }
 
-export type OAuth2AppConnection = AppConnection<AppConnectionType.OAUTH2>
-export type SecretKeyAppConnection = AppConnection<AppConnectionType.SECRET_TEXT>
-export type CloudAuth2Connection = AppConnection<AppConnectionType.CLOUD_OAUTH2>
-export type PlatformOAuth2Connection = AppConnection<AppConnectionType.PLATFORM_OAUTH2>
-export type BasicAuthConnection = AppConnection<AppConnectionType.BASIC_AUTH>
-export type CustomAuthConnection = AppConnection<AppConnectionType.CUSTOM_AUTH>
+export type AppConnectionEncrypted<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
+	user: Id
+	name: string
+	type: Type
+	connectorName: string
+	// projectId: string
+	status: AppConnectionStatus
+	value: EncryptedObject
+}
+
+export type OAuth2AppConnection = AppConnectionEncrypted<AppConnectionType.OAUTH2>
+export type SecretKeyAppConnection = AppConnectionEncrypted<AppConnectionType.SECRET_TEXT>
+export type CloudAuth2Connection = AppConnectionEncrypted<AppConnectionType.CLOUD_OAUTH2>
+export type PlatformOAuth2Connection = AppConnectionEncrypted<AppConnectionType.PLATFORM_OAUTH2>
+export type BasicAuthConnection = AppConnectionEncrypted<AppConnectionType.BASIC_AUTH>
+export type CustomAuthConnection = AppConnectionEncrypted<AppConnectionType.CUSTOM_AUTH>
 
 // export const AppConnectionWithoutSensitiveData = Type.Object(
 // 	{
@@ -116,3 +119,4 @@ export type CustomAuthConnection = AppConnection<AppConnectionType.CUSTOM_AUTH>
 // )
 
 // export type AppConnectionWithoutSensitiveData = Static<typeof AppConnectionWithoutSensitiveData> & { __brand: 'AppConnectionWithoutSensitiveData' }
+export type AppConnectionWithoutSensitiveData = Omit<AppConnectionDecrypted, 'value'>

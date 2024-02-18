@@ -6,4 +6,5 @@ export * from './modules/events'
 export * from './modules/flows'
 export * from './modules/flows/connectors'
 export * from './modules/users'
+export * from './modules/app-connections'
 

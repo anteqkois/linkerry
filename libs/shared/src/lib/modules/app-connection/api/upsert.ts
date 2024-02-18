@@ -1,14 +1,29 @@
 // import { Static, Type } from '@sinclair/typebox'
 
+import { AppConnectionType } from '../app-connection'
+
 // const commonAuthProps = {
 //     name: Type.String({}),
 //     connectorName: Type.String({}),
 //     projectId: Type.String({}),
 // }
 
+interface CommonAuthProps {
+	name: string
+	connectorName: string
+}
+
 export enum OAuth2GrantType {
-    AUTHORIZATION_CODE = 'authorization_code',
-    CLIENT_CREDENTIALS = 'client_credentials',
+	AUTHORIZATION_CODE = 'authorization_code',
+	CLIENT_CREDENTIALS = 'client_credentials',
+}
+
+export interface UpsertCustomAuthRequest extends CommonAuthProps {
+	type: AppConnectionType.CUSTOM_AUTH
+	value: {
+		type: AppConnectionType.CUSTOM_AUTH
+		props: any
+	}
 }
 
 // export const UpsertCustomAuthRequest = Type.Object({
@@ -41,7 +56,6 @@ export enum OAuth2GrantType {
 //     title: 'Platform OAuth2',
 //     description: 'Platform OAuth2',
 // })
-
 
 // export const UpsertCloudOAuth2Request = Type.Object({
 //     ...commonAuthProps,
@@ -115,6 +129,11 @@ export enum OAuth2GrantType {
 //     UpsertBasicAuthRequest,
 //     UpsertCustomAuthRequest,
 // ])
+
+export interface UpsertAppConnectionBody extends CommonAuthProps{
+	type: AppConnectionType
+	value: any
+}
 
 // export type UpsertCloudOAuth2Request = Static<typeof UpsertCloudOAuth2Request>
 // export type UpsertPlatformOAuth2Request = Static<typeof UpsertPlatformOAuth2Request>

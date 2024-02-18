@@ -25,6 +25,7 @@ import { useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
+import { ConnectionsSelect } from '../form/ConnectionsSelect'
 import { DynamicField } from '../form/DynamicField'
 import { ConnectorVersion } from '../steps/ConnectorVersion'
 import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
@@ -190,6 +191,7 @@ export const ActionConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
+						{actionWatcher?.requireAuth && connectorMetadata.auth ? <ConnectionsSelect name="auth" auth={connectorMetadata.auth} /> : null}
 						{actionWatcher?.props &&
 							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
 					</form>
