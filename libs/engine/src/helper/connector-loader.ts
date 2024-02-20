@@ -1,9 +1,11 @@
 import { Action, Connector } from '@linkerry/connectors-framework'
 import {
+	CustomError,
+	ErrorCode,
 	ExecutePropsOptions,
 	assertNotNullOrUndefined,
 	extractConnectorFromModule,
-	getPackageAliasForConnector
+	getPackageAliasForConnector,
 } from '@linkerry/shared'
 
 const loadConnectorOrThrow = async ({
@@ -21,19 +23,29 @@ const loadConnectorOrThrow = async ({
 		connectorSource,
 	})
 
-	const module = await import(packageName)
-	const connector = extractConnectorFromModule<Connector>({
-		module,
-		connectorName,
-		connectorVersion,
-	})
+	try {
+		const module = await import(packageName)
+		const connector = extractConnectorFromModule<Connector>({
+			module,
+			connectorName,
+			connectorVersion,
+		})
 
-	assertNotNullOrUndefined(connector, 'connector', {
-		connectorName,
-		connectorVersion,
-	})
+		assertNotNullOrUndefined(connector, 'connector', {
+			connectorName,
+			connectorVersion,
+		})
 
-	return connector
+		return connector
+	} catch (error) {
+		console.error(error)
+		throw new CustomError(`Can not load ${packageName} connector`, ErrorCode.CONNECTOR_NOT_FOUND, {
+			packageName,
+			connectorName,
+			connectorVersion,
+			connectorSource,
+		})
+	}
 }
 
 const getConnectorAndActionOrThrow = async (params: {

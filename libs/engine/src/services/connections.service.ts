@@ -1,5 +1,5 @@
 import {
-	AppConnection,
+	AppConnectionDecrypted,
 	AppConnectionType,
 	BasicAuthConnectionValue,
 	CloudOAuth2ConnectionValue,
@@ -30,7 +30,7 @@ export const createConnectionService = ({
 				if (!response.ok) {
 					throw new Error('Connection information failed to load. URL: ' + url)
 				}
-				const result: AppConnection | null = await response.json()
+				const result: AppConnectionDecrypted | null = await response.json()
 				if (result === null) {
 					return null
 				}

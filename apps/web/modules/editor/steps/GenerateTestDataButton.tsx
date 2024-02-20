@@ -7,7 +7,6 @@ export interface GenerateTestDataButtonProps extends HTMLAttributes<HTMLButtonEl
 	disabledMessage: string
 	text: string
 	loading: boolean
-	// onClick: (e: MouseEventHandler<HTMLButtonElement> | undefined) => void
 }
 
 export const GenerateTestDataButton = ({ disabled, disabledMessage, text, loading, onClick }: GenerateTestDataButtonProps) => {
@@ -16,7 +15,7 @@ export const GenerateTestDataButton = ({ disabled, disabledMessage, text, loadin
 			<Tooltip>
 				<TooltipTrigger disabled={!disabled} asChild>
 					<Button variant="secondary" onClick={onClick} disabled={disabled} size={'sm'}>
-						{loading ? <Icons.Spinner className="mr-2" /> : <Icons.Test size={'xs'} className="mr-3 animate-pulse" />}
+						{loading ? <Icons.Spinner size={'xs'} className="mr-3" /> : <Icons.Test size={'xs'} className="mr-3 animate-pulse" />}
 						<span className="whitespace-nowrap">{text}</span>
 					</Button>
 				</TooltipTrigger>

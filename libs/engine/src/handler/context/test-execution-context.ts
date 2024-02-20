@@ -42,9 +42,9 @@ export const testExecutionContext = {
                 //     break
                 // }
 								// case ActionType.Code:
-                case ActionType.CONNECTOR:
+                case ActionType.ACTION:
                 case TriggerType.EMPTY:
-                case TriggerType.CONNECTOR:
+                case TriggerType.TRIGGER:
                 case TriggerType.WEBHOOK:
                     flowExecutionContext = flowExecutionContext.upsertStep(step.name, GenricStepOutput.create({
                         input: step.settings,

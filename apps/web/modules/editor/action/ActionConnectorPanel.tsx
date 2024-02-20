@@ -54,6 +54,10 @@ export const ActionConnectorPanel = () => {
 	})
 	const actionWatcher = actionForm.watch('__temp__action')
 
+	// useEffect(() => {
+	// 	actionForm.reset()
+	// }, [editedAction])
+
 	// setup form fields on start based on editedAction input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
 		if (!isFetched) return
@@ -80,7 +84,7 @@ export const ActionConnectorPanel = () => {
 				...initData,
 			})
 		}, 0)
-	}, [isFetched])
+	}, [isFetched, editedAction])
 
 	// synchronize with global state and database, merge only new values
 	const handleWatcher = useDebouncedCallback(
@@ -98,14 +102,14 @@ export const ActionConnectorPanel = () => {
 					},
 				})
 		},
-		[editedAction.settings.input],
+		[editedAction.settings.input, editedAction],
 		1000,
 	)
 
 	useEffect(() => {
 		const subscription = actionForm.watch(handleWatcher)
 		return () => subscription.unsubscribe()
-	}, [])
+	}, [editedAction])
 
 	if (isLoading) return <Spinner />
 	if (error) return <ErrorInfo errorObject={error} />
@@ -198,6 +202,8 @@ export const ActionConnectorPanel = () => {
 								connector={{ name: connectorMetadata.name, displayName: connectorMetadata.displayName }}
 							/>
 						) : null}
+						{/* {JSON.stringify(actionForm.getValues())} */}
+						{/* {JSON.stringify(actionWatcher?.props)} */}
 						{actionWatcher?.props &&
 							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
 					</form>

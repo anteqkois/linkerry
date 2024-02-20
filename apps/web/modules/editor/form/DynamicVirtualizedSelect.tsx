@@ -51,6 +51,15 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 				input,
 			})
 
+			if (!response.options.length) {
+				setOptions({
+					options: response.options,
+					disabled: true,
+					placeholder: 'Options not found',
+				})
+				return { options: [], currentValue: undefined }
+			}
+
 			setOptions({
 				options: response.options,
 				disabled: response.disabled,
@@ -114,7 +123,9 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 			const selectedActionProps = Object.values(editedConnectorMetadata.actions).find(
 				(action) => action.name === editedAction.settings.actionName,
 			)?.props
-			assertNotNullOrUndefined(selectedActionProps, 'selectedActionProps')
+			console.log('selectedActionProps', { selectedActionProps, 'editedConnectorMetadata.actions': editedConnectorMetadata.actions })
+			if (!selectedActionProps) return
+			// assertNotNullOrUndefined(selectedActionProps, 'selectedActionProps')
 
 			const missingRefreshers = property.refreshers.filter((refresherName) => selectedActionProps[refresherName].displayName)
 

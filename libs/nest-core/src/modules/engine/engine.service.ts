@@ -164,7 +164,7 @@ export class EngineService {
 			}
 
 			const result = tryParseJson<Result>(sandboxResponse.output)
-
+			console.log({ result, output: sandboxResponse.output })
 			const response = {
 				status: sandboxResponse.verdict,
 				result,

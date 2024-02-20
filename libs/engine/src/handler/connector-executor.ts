@@ -49,7 +49,7 @@ const executeAction: ActionHandler<ActionConnector> = async ({ action, execution
 
 	const stepOutput = GenricStepOutput.create({
 		input: censoredInput,
-		type: ActionType.CONNECTOR,
+		type: ActionType.ACTION,
 		status: StepOutputStatus.SUCCEEDED,
 	})
 	try {

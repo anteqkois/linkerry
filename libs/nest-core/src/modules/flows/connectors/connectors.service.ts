@@ -32,6 +32,7 @@ export class ConnectorsService {
 			stepName: body.stepName,
 		})
 
+		console.log(result)
 		if (typeof result === 'string') throw new CustomError(result, ErrorCode.ENGINE_OPERATION_FAILURE)
 
 		return result

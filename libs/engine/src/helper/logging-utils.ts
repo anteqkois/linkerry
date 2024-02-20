@@ -23,7 +23,7 @@ async function trimStepOutput(stepOutput: StepOutput): Promise<StepOutput> {
         case ActionType.BRANCH:
         case TriggerType.WEBHOOK:
         case TriggerType.EMPTY:
-        case TriggerType.CONNECTOR:
+        case TriggerType.TRIGGER:
             modified.output = await applyFunctionToValues(modified.output, trim)
             break
         case ActionType.LOOP_ON_ITEMS: {
@@ -35,7 +35,7 @@ async function trimStepOutput(stepOutput: StepOutput): Promise<StepOutput> {
             break
         }
         // case ActionType.Code:
-        case ActionType.CONNECTOR:
+        case ActionType.ACTION:
     }
     modified.errorMessage = await applyFunctionToValues(modified.errorMessage, trim)
     return modified

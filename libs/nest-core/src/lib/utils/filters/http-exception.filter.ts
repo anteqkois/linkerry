@@ -20,6 +20,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 		let humanMessage: string
 		let fieldPath: string | undefined
 
+		console.log(exception)
 		if (exception instanceof DtoException) {
 			status = HttpStatus.UNPROCESSABLE_ENTITY
 			const errorResponse = exception.getResponse()

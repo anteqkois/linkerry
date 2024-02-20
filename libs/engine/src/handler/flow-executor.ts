@@ -11,7 +11,7 @@ const executeFunction: Record<ActionType, BaseExecutor<Action>> = {
     // [ActionType.Code]: codeExecutor,
     // [ActionType.Branch]: branchExecutor,
     // [ActionType.LoopOnItems]: loopExecutor,
-    [ActionType.CONNECTOR]: connectorExecutor,
+    [ActionType.ACTION]: connectorExecutor,
     [ActionType.MERGE_BRANCH]: connectorExecutor, // todo implement
 }
 
