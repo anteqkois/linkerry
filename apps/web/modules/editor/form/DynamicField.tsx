@@ -2,6 +2,7 @@ import { ConnectorProperty, PropertyType } from '@linkerry/connectors-framework'
 import { CheckboxField } from './CheckboxField'
 import { DynamicVirtualizedSelect } from './DynamicVirtualizedSelect'
 import { NumberField } from './NumberField'
+import { SecretTextField } from './SecretTextField'
 import { TextField } from './TextField'
 import { VirtualizedSelect } from './VirtualizedSelect'
 
@@ -14,6 +15,8 @@ export const DynamicField = (props: DynamicFieldProps) => {
 	switch (props.property.type) {
 		case PropertyType.TEXT:
 			return <TextField {...props} />
+		case PropertyType.SECRET_TEXT:
+			return <SecretTextField {...props} />
 		case PropertyType.NUMBER:
 			return <NumberField {...props} />
 		case PropertyType.CHECKBOX:

@@ -1,6 +1,6 @@
 import { ConnectorMetadata } from 'libs/connectors/framework/src'
 import { mongo } from 'mongoose'
-import { getDb } from '../../database'
+import { getDb } from '../../db/database'
 
 export const insertMetadata = async (data: Omit<ConnectorMetadata, '_id'>[]) => {
 	const db = await getDb()

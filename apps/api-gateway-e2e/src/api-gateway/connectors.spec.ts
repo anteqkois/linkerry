@@ -55,7 +55,7 @@ describe('GET /api/connectors', () => {
   it('should return empty array for filtration when no results', async () => {
     const { data } = await axios.get<ConnectorMetadata[]>(`/connectors`, {
       params: {
-        displayName: 'unknown connecotr',
+        displayName: 'unknown connector',
       },
     })
 

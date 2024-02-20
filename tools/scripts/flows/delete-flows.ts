@@ -1,6 +1,6 @@
 import { Flow, FlowVersion } from 'libs/shared/src'
 import { createInterface } from 'node:readline/promises'
-import { getDb } from '../../database'
+import { getDb } from '../../db/database'
 
 const deleteFlowsArtifacts = async () => {
 	console.log('Start deleting flow artifacts')

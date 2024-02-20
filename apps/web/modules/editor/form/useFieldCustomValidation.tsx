@@ -1,15 +1,18 @@
-import { ConnectorProperty } from '@linkerry/connectors-framework'
+import { ConnectorProperty, Validators } from '@linkerry/connectors-framework'
 import { useMemo } from 'react'
 import { RegisterOptions } from 'react-hook-form'
 
-// TODO move all duplicated logic to this hook
 export const useDynamicField = ({ property }: { property: ConnectorProperty }) => {
 	const validate = useMemo(() => {
 		const output: RegisterOptions['validate'] = {}
 		for (const validator of property.validators?.concat(...(property.defaultValidators ?? [])) ?? []) {
 			if (!validator.validatorName) continue
-			// @ts-ignore
-			output[validator.validatorName] = (value) => Validators[validator.validatorName](...(validator.args ?? [])).fn(property, value, value)
+			output[validator.validatorName] = (value) => {
+				// @ts-ignore
+				const validatorEntry = Validators[validator.validatorName]
+				if (typeof validatorEntry === 'function') return validatorEntry(...(validator.args ?? [])).fn(property, value, value)
+				return validatorEntry.fn(property, value, value)
+			}
 		}
 		return output
 	}, [property.validators, property.defaultValidators])

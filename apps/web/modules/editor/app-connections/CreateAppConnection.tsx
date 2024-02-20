@@ -1,38 +1,138 @@
-import { DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label } from '@linkerry/ui-components/client'
-import { Button } from '@linkerry/ui-components/server'
-import { HTMLAttributes } from 'react'
+import { ConnectorAuthProperty, ConnectorMetadata, PropertyType } from '@linkerry/connectors-framework'
+import { AppConnectionType, AppConnectionWithoutSensitiveData, UpsertAppConnectionInput, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import {
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+	Input,
+	useToast,
+} from '@linkerry/ui-components/client'
+import { Button, Icons } from '@linkerry/ui-components/server'
+import dayjs from 'dayjs'
+import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import Markdown from 'react-markdown'
+import { AppConnectionsApi } from '../../app-connections'
+import { CustomAuth } from './CustomAuth'
 
 export interface CreateAppConnectionProps extends HTMLAttributes<HTMLElement> {
-	onCreateAppConnection: () => void
+	onCreateAppConnection: (newConnection: AppConnectionWithoutSensitiveData) => void
+	auth: ConnectorAuthProperty
+	connector: Pick<ConnectorMetadata, 'displayName' | 'name'>
+	setShowDialog: Dispatch<SetStateAction<boolean>>
 }
 
-export const CreateAppConnection = ({ onCreateAppConnection }: CreateAppConnectionProps) => {
+export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, setShowDialog }: CreateAppConnectionProps) => {
+	const appConnectionForm = useForm<{ name: string } & Record<string, any>>({
+		mode: 'all',
+		defaultValues: {
+			name: `${connector.name.replace('@linkerry/', '').toLocaleLowerCase()}-${dayjs().unix()}`,
+		},
+	})
+	const [loading, setLoading] = useState(false)
+
+	const { toast } = useToast()
+
+	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		if (!appConnectionForm.formState.isValid) return
+		setLoading(true)
+		appConnectionForm.clearErrors()
+
+		const { name, ...formData } = appConnectionForm.getValues()
+
+		let input: UpsertAppConnectionInput
+
+		switch (auth.type) {
+			case PropertyType.CUSTOM_AUTH:
+				input = {
+					connectorName: connector.name,
+					name: name,
+					type: AppConnectionType.CUSTOM_AUTH,
+					value: {
+						type: AppConnectionType.CUSTOM_AUTH,
+						props: formData,
+					},
+				}
+				break
+			case PropertyType.BASIC_AUTH:
+			case PropertyType.SECRET_TEXT:
+				setLoading(false)
+				throw new Error(`Unsupoerted auth type ${auth.type}`)
+		}
+
+		try {
+			const { data } = await AppConnectionsApi.upsert(input)
+
+			toast({
+				title: `Connection ${data.name} was succesfully saved`,
+				variant: 'success',
+			})
+
+			onCreateAppConnection(data)
+			setShowDialog(false)
+		} catch (error: any) {
+			if (isCustomHttpExceptionAxios(error))
+				appConnectionForm.setError('root', {
+					message: error.response.data.message,
+				})
+			else {
+				appConnectionForm.setError('root', {
+					message: 'Unknwon error occures, try again or inform our IT team',
+				})
+			}
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	// TODO przetestować poprawne klucze
 	return (
 		<>
 			<DialogHeader>
-				<DialogTitle>Edit profile</DialogTitle>
-				<DialogDescription>Make changes to your profile here. Click save when done.</DialogDescription>
+				<DialogTitle>New Connection</DialogTitle>
+				<DialogDescription>This connection will be able to be used by {connector.displayName} connector </DialogDescription>
 			</DialogHeader>
-			<div className="grid gap-4 py-4">
-				<div className="grid grid-cols-4 items-center gap-4">
-					<Label htmlFor="name" className="text-right">
-						Name
-					</Label>
-					<Input id="name" value="Pedro Duarte" className="col-span-3" />
-				</div>
-				<div className="grid grid-cols-4 items-center gap-4">
-					<Label htmlFor="username" className="text-right">
-						Username
-					</Label>
-					<Input id="username" value="@peduarte" className="col-span-3" />
-				</div>
-			</div>
-			<DialogFooter>
-				<Button type="reset" variant={'outline'}>
-					Cancel
-				</Button>
-				<Button type="submit">Save</Button>
-			</DialogFooter>
+			<Form {...appConnectionForm}>
+				<form className="space-y-5" onSubmit={onSubmit}>
+					<FormField
+						control={appConnectionForm.control}
+						name={'name'}
+						rules={{
+							required: { value: true, message: 'Required field' },
+						}}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Connection Name</FormLabel>
+								<FormControl>
+									<Input {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<Markdown>{auth.description}</Markdown>
+					{auth.type === PropertyType.CUSTOM_AUTH && <CustomAuth props={auth.props} />}
+					<div className="h-1">
+						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
+					</div>
+					<DialogFooter>
+						<Button onClick={() => setShowDialog(false)} disabled={loading} variant={'outline'}>
+							Cancel
+						</Button>
+						<Button type="submit" disabled={!appConnectionForm.formState.isValid}>
+							{loading ? <Icons.Spinner className="h-4 w-8 animate-spin" /> : 'Save'}
+						</Button>
+					</DialogFooter>
+				</form>
+			</Form>
 		</>
 	)
 }

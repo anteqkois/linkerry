@@ -5,7 +5,7 @@ import { UserModel } from '../../users'
 
 export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'flows' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'app-connections' })
 export class AppConnectionsModel implements AppConnectionEncrypted {
 	_id: string
 
@@ -34,6 +34,7 @@ export class AppConnectionsModel implements AppConnectionEncrypted {
 				type: String,
 			},
 		},
+		_id: false,
 	})
 	value: EncryptedObject
 }

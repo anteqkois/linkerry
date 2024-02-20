@@ -291,7 +291,7 @@ export class EngineService {
 	async executeValidateAuth(
 		operation: Omit<ExecuteValidateAuthOperation, EngineConstants>,
 	): Promise<EngineHelperResponse<EngineHelperValidateAuthResult>> {
-		this.logger.debug(`#executeValidateAuth`, { connecotr: operation.connector })
+		this.logger.debug(`#executeValidateAuth`, { connector: operation.connector })
 
 		const { connector } = operation
 

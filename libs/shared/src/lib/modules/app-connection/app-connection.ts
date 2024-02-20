@@ -9,6 +9,7 @@ export enum AppConnectionStatus {
 	ERROR = 'ERROR',
 }
 
+// this is the same type as PropertyType in connector framework
 export enum AppConnectionType {
 	OAUTH2 = 'OAUTH2',
 	PLATFORM_OAUTH2 = 'PLATFORM_OAUTH2',

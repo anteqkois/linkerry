@@ -1,8 +1,8 @@
-import { ConnectorAuthProperty } from '@linkerry/connectors-framework'
+import { ConnectorAuthProperty, ConnectorMetadata } from '@linkerry/connectors-framework'
+import { AppConnectionWithoutSensitiveData } from '@linkerry/shared'
 import {
 	Dialog,
 	DialogContent,
-	DialogTrigger,
 	FormControl,
 	FormField,
 	FormItem,
@@ -10,106 +10,85 @@ import {
 	FormMessage,
 	Select,
 	SelectContent,
+	SelectItem,
 	SelectTrigger,
 	SelectValue,
 } from '@linkerry/ui-components/client'
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
+import { appConnectionsQueryConfig } from '../../app-connections/query-configs'
 import { CreateAppConnection } from '../app-connections/CreateAppConnection'
 
 export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
-	// property: StaticDropdownProperty
-	// initData?: DropdownOption<any>
 	name: string
 	auth: ConnectorAuthProperty
+	connector: Pick<ConnectorMetadata, 'displayName' | 'name'>
 }
 
-// export const ConnectionsSelect = ({ property, initData, name }: ConnectionsSelectProps) => {
-export const ConnectionsSelect = ({ auth, name }: ConnectionsSelectProps) => {
-	const { setValue, control, getValues, trigger } = useFormContext()
+export const ConnectionsSelect = ({ auth, name, connector }: ConnectionsSelectProps) => {
+	const { setValue, control } = useFormContext()
+	const [showDialog, setShowDialog] = useState(false)
+	const { data: appConnections, isFetched } = useClientQuery(appConnectionsQueryConfig.getMany())
 
-	// const { rules } = useDynamicField({
-	// 	property,
-	// })
+	const connectorConnections = useMemo(() => {
+		if (!isFetched) return []
+		return appConnections?.filter((appConnection) => appConnection.connectorName === connector.name)
+	}, [appConnections, isFetched])
 
-	// // setup temp field which holds String value based on started value from database
-	// useEffect(() => {
-	// 	const startedValueString = JSON.stringify(getValues(name) || '')
-	// 	if (!startedValueString) return
-	// 	const selectedOption = property.options.options.find((option) => JSON.stringify(option.value) === startedValueString)
-	// 	if (selectedOption) setValue(`__temp__${name}`, selectedOption.label)
-	// }, [])
-
-	// useEffect(() => {
-	// 	if (!initData?.label) return
-
-	// 	setValue(name, initData.value)
-	// 	setValue(`__temp__${name}`, initData.label)
-	// 	trigger()
-	// }, [initData])
-
-	// const onChangeValue = (newLabel: string) => {
-	// 	const value = property.options.options.find((option) => option.label === newLabel)
-	// 	setValue(name, value?.value)
-	// }
-
-	// const onClickAddNewConnection = ()=>{}
+	const handleAddedConnection = (newConnection: AppConnectionWithoutSensitiveData) => {
+		const queryClient = getBrowserQueryCllient()
+		queryClient.setQueryData(appConnectionsQueryConfig.getMany().queryKey, appConnections?.concat(newConnection))
+		setValue(name, `{{connections['${newConnection.name}']}}`)
+	}
 
 	return (
 		<>
-			<Dialog>
-				<FormField
-					control={control}
-					name={`__temp__${name}`}
-					rules={{
-						required: { value: true, message: 'Required field' },
-					}}
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>{auth.displayName}</FormLabel>
-							<FormControl>
-								<Select
-								// onValueChange={async (newValue) => {
-								// onChangeValue(newValue)
-								// /* add to end of callstack, can not witjout it becouse it brokes rendering  */
-								// setTimeout(() => {
-								// field.onChange(newValue)
-								// }, 0)
-								// }}
-								>
-									<SelectTrigger>
-										<SelectValue placeholder="Select connection" aria-label={field.value}>
-											{field.value}
-										</SelectValue>
-									</SelectTrigger>
-									<SelectContent position="popper" className="max-h-96 overflow-scroll">
-										<DialogTrigger asChild>
-											<div key={'add-connection'}>
-												<p className="'flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground font-bold hover:bg-accent">
-													+ New Connection
-												</p>
-											</div>
-										</DialogTrigger>
-										{/* {property.options.options.map((option) => (
-											<SelectItem value={option.label} key={option.value}>
+			<FormField
+				control={control}
+				name={name}
+				rules={{
+					required: { value: true, message: 'Required field' },
+				}}
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel className="flex justify-between py-1">
+							<span>{auth.displayName}</span>
+							<div onClick={() => setShowDialog(true)} className="font-bold underline underline-offset-2 cursor-pointer hover:text-primary">
+								+ New Connection
+							</div>
+						</FormLabel>
+						<FormControl>
+							<Select onValueChange={field.onChange}>
+								<SelectTrigger>
+									<SelectValue placeholder={field.value ? undefined : 'Select connection'} aria-label={field.value}>
+										{connectorConnections?.find((appConnection) => field.value?.includes(appConnection.name))?.name}
+									</SelectValue>
+								</SelectTrigger>
+								<SelectContent position="popper" className="max-h-96 overflow-scroll">
+									{!connectorConnections?.length ? (
+										<p className="'flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground">
+											No connections avaible
+										</p>
+									) : (
+										connectorConnections.map((appConnection) => (
+											<SelectItem value={`{{connections['${appConnection.name}']}}`} key={appConnection.name}>
 												<span className="flex gap-2 items-center">
-													<p>{option.label}</p>
+													<p>{appConnection.name}</p>
 												</span>
 											</SelectItem>
-										))} */}
-									</SelectContent>
-								</Select>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+										))
+									)}
+								</SelectContent>
+							</Select>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+			<Dialog open={showDialog} onOpenChange={setShowDialog}>
 				<DialogContent className="sm:max-w-[425px]">
-					<CreateAppConnection
-						onCreateAppConnection={() => {
-							//
-						}}
-					/>
+					<CreateAppConnection onCreateAppConnection={handleAddedConnection} auth={auth} connector={connector} setShowDialog={setShowDialog} />
 				</DialogContent>
 			</Dialog>
 		</>

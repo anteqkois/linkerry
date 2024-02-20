@@ -191,7 +191,13 @@ export const ActionConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
-						{actionWatcher?.requireAuth && connectorMetadata.auth ? <ConnectionsSelect name="auth" auth={connectorMetadata.auth} /> : null}
+						{actionWatcher?.requireAuth && connectorMetadata.auth ? (
+							<ConnectionsSelect
+								name="auth"
+								auth={connectorMetadata.auth}
+								connector={{ name: connectorMetadata.name, displayName: connectorMetadata.displayName }}
+							/>
+						) : null}
 						{actionWatcher?.props &&
 							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
 					</form>

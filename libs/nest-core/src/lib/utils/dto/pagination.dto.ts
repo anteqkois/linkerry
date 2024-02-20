@@ -1,8 +1,8 @@
-import { IPaginationQuery } from '@linkerry/shared'
+import { PaginationQuery } from '@linkerry/shared'
 import { Transform } from 'class-transformer'
 import { IsInt, IsOptional, Max } from 'class-validator'
 
-export class PaginationDto implements IPaginationQuery {
+export class PaginationDto implements PaginationQuery {
   @IsInt()
   @Max(300)
   @IsOptional()

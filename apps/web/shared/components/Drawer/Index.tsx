@@ -26,8 +26,8 @@ export const Drawer = ({ show, setShow, children, title }: DrawerProps) => {
     <aside className={cn(variants({ state: show }))}>
       <header className="flex justify-between items-center pb-1">
         <H5>{title}</H5>
-        <Button size={'sm'} variant={'ghost'} onClick={() => setShow((prev) => !prev)}>
-          <Icons.Close />
+        <Button size={'icon'} variant={'ghost'} onClick={() => setShow((prev) => !prev)}>
+          <Icons.Close size={'xs'} />
         </Button>
       </header>
       {children}

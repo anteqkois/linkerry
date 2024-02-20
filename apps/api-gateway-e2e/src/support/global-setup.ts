@@ -1,4 +1,4 @@
-import { seedDatabase } from '../../../../tools/seedTestDataBase'
+import { seedDatabase } from '../../../../tools/db/seedTestDataBase'
 
 /* eslint-disable */
 var __TEARDOWN_MESSAGE__: string

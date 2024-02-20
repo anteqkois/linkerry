@@ -1,6 +1,6 @@
 import { FlowStatus } from '@linkerry/shared'
 import axios from 'axios'
-import { alwaysExistingUser } from 'tools/models.mock'
+import { alwaysExistingUser } from 'tools/db/models.mock'
 import { login } from '../support/login'
 
 describe('POST /api/flows', () => {

@@ -9,7 +9,7 @@ import {
 	EngineResponseStatus,
 	ErrorCode,
 	Id,
-	UpsertAppConnectionBody,
+	UpsertAppConnectionInput,
 	assertNotNullOrUndefined,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
@@ -38,7 +38,7 @@ export class AppConnectionsService {
 			user: userId,
 		})
 
-		return appConnections.map(this._decryptConnection)
+		return appConnections.map((appConnection) => this._decryptConnection(appConnection.toObject()))
 	}
 
 	async findOne({ name, userId }: { userId: Id; name: string }) {
@@ -48,28 +48,19 @@ export class AppConnectionsService {
 		})
 	}
 
-	async upsert(userId: Id, body: UpsertAppConnectionBody) {
+	async upsert(userId: Id, body: UpsertAppConnectionInput) {
 		const validatedConnectionValue = await this._validateConnectionValue({
 			connection: body,
 		})
-
-		console.log('encryptObject')
-		console.dir(
-			{
-				...validatedConnectionValue,
-				...body.value,
-			},
-			{ depth: null },
-		)
 
 		const encryptedConnectionValue = this.cryptoService.encryptObject({
 			...validatedConnectionValue,
 			...body.value,
 		})
 
-		this.appConnectionsModel.findByIdAndUpdate(
+		await this.appConnectionsModel.findOneAndUpdate(
 			{
-				userId,
+				user: userId,
 				name: body.name,
 			},
 			{
@@ -90,16 +81,16 @@ export class AppConnectionsService {
 
 		assertNotNullOrUndefined(updatedConnection, 'updatedConnection')
 
-		return this._decryptConnection(updatedConnection)
+		return this._decryptConnection(updatedConnection.toObject())
 	}
 
 	private async _validateConnectionValue({
 		connection,
 	}: {
-		connection: UpsertAppConnectionBody
+		connection: UpsertAppConnectionInput
 		//  projectId: ProjectId;
 	}): Promise<AppConnectionValue> {
-		switch (connection.value.type) {
+		switch (connection.value.type as AppConnectionType) {
 			// case AppConnectionType.PLATFORM_OAUTH2:
 			//     return oauth2Handler[connection.value.type].claim({
 			//         projectId,
@@ -149,11 +140,15 @@ export class AppConnectionsService {
 				await this._engineValidateAuth({
 					connectorName: connection.connectorName,
 					// projectId,
-					auth: connection.value,
+					auth: connection.value as AppConnectionValue,
 				})
-		}
 
-		return connection.value
+				break
+			default:
+				throw new Error(`Unimplemented auth type ${connection.value.type}`)
+		}
+		// TODO remove any types
+		return connection.value as AppConnectionValue
 	}
 
 	private async _engineValidateAuth({
@@ -196,7 +191,7 @@ export class AppConnectionsService {
 		return connection
 	}
 
-	removeSensitiveData = (appConnection: AppConnectionDecrypted): AppConnectionWithoutSensitiveData => {
+	removeSensitiveData(appConnection: AppConnectionDecrypted): AppConnectionWithoutSensitiveData {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { value: _, ...appConnectionWithoutSensitiveData } = appConnection
 		return appConnectionWithoutSensitiveData

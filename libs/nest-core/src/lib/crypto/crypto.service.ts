@@ -14,10 +14,6 @@ export class CryptoService {
 		this.secret = this.configService.getOrThrow<string>('ENCRYPTION_KEY')
 	}
 
-	randomString() {
-		return randomBytes(16)
-	}
-
 	encryptString(inputString: string): EncryptedObject {
 		const iv = randomBytes(this.ivLength) // Generate a random initialization vector
 		const key = Buffer.from(this.secret, 'binary')

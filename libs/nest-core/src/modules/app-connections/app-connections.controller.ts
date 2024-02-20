@@ -1,10 +1,10 @@
-import { RequestUser, UpsertAppConnectionBody } from '@linkerry/shared'
-import { Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { RequestUser, UpsertAppConnectionInput } from '@linkerry/shared'
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from '../../lib/auth'
 import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
 import { AppConnectionsService } from './app-connections.service'
 
-@Controller('connections')
+@Controller('app-connections')
 export class AppConnectionsController {
 	constructor(private readonly appConnectionsService: AppConnectionsService) {}
 
@@ -17,7 +17,7 @@ export class AppConnectionsController {
 
 	@UseGuards(JwtAuthGuard)
 	@Post()
-	async upsert(@ReqJwtUser() user: RequestUser, body: UpsertAppConnectionBody) {
+	async upsert(@ReqJwtUser() user: RequestUser, @Body() body: UpsertAppConnectionInput) {
 		const appConnection = await this.appConnectionsService.upsert(user.id, body)
 		return this.appConnectionsService.removeSensitiveData(appConnection)
 	}

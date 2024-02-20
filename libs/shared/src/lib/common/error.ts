@@ -49,7 +49,8 @@ export class CustomError extends Error {
 		metadata?: CustomErrorMetadata,
 		// isOperational = true
 	) {
-		super(`${code} ${message}`)
+		super(message)
+		// super(`${code} ${message}`)
 		this.metadata = metadata
 		this.code = code
 		Error.captureStackTrace(this, this.constructor)

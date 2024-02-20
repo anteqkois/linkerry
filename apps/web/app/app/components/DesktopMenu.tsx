@@ -67,7 +67,7 @@ export function DesktopMenu({ children }: DesktopProps) {
                 <MenubarShortcut>{/* <Icons.plus /> */}</MenubarShortcut>
               </MenubarItem>
             </Link>
-            <Link href="/app/connecotrs/connections" prefetch={false}>
+            <Link href="/app/connectors/connections" prefetch={false}>
               <MenubarItem>Your Connected Apps</MenubarItem>
             </Link>
             <MenubarSeparator />

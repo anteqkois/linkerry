@@ -1,12 +1,4 @@
-// import { Static, Type } from '@sinclair/typebox'
-
 import { AppConnectionType } from '../app-connection'
-
-// const commonAuthProps = {
-//     name: Type.String({}),
-//     connectorName: Type.String({}),
-//     projectId: Type.String({}),
-// }
 
 interface CommonAuthProps {
 	name: string
@@ -18,25 +10,13 @@ export enum OAuth2GrantType {
 	CLIENT_CREDENTIALS = 'client_credentials',
 }
 
-export interface UpsertCustomAuthRequest extends CommonAuthProps {
+export interface UpsertCustomAuthInput extends CommonAuthProps {
 	type: AppConnectionType.CUSTOM_AUTH
 	value: {
 		type: AppConnectionType.CUSTOM_AUTH
-		props: any
+		props: Record<string, unknown>
 	}
 }
-
-// export const UpsertCustomAuthRequest = Type.Object({
-//     ...commonAuthProps,
-//     type: Type.Literal(AppConnectionType.CUSTOM_AUTH),
-//     value: Type.Object({
-//         type: Type.Literal(AppConnectionType.CUSTOM_AUTH),
-//         props: Type.Record(Type.String(), Type.Unknown()),
-//     }),
-// }, {
-//     title: 'Custom Auth',
-//     description: 'Custom Auth',
-// })
 
 // export const UpsertPlatformOAuth2Request = Type.Object({
 //     ...commonAuthProps,
@@ -75,17 +55,13 @@ export interface UpsertCustomAuthRequest extends CommonAuthProps {
 //     description: 'Cloud OAuth2',
 // })
 
-// export const UpsertSecretTextRequest = Type.Object({
-//     ...commonAuthProps,
-//     type: Type.Literal(AppConnectionType.SECRET_TEXT),
-//     value: Type.Object({
-//         type: Type.Literal(AppConnectionType.SECRET_TEXT),
-//         secret_text: Type.String({}),
-//     }),
-// }, {
-//     title: 'Secret Text',
-//     description: 'Secret Text',
-// })
+export interface UpsertSecretTextInput extends CommonAuthProps {
+	type: AppConnectionType.SECRET_TEXT
+	value: {
+		type: AppConnectionType.CUSTOM_AUTH
+		secret_text: string
+	}
+}
 
 // export const UpsertOAuth2Request = Type.Object({
 //     ...commonAuthProps,
@@ -130,10 +106,11 @@ export interface UpsertCustomAuthRequest extends CommonAuthProps {
 //     UpsertCustomAuthRequest,
 // ])
 
-export interface UpsertAppConnectionBody extends CommonAuthProps{
-	type: AppConnectionType
-	value: any
-}
+export type UpsertAppConnectionInput = UpsertCustomAuthInput | UpsertSecretTextInput
+// export interface UpsertAppConnectionInput extends CommonAuthProps {
+// 	type: AppConnectionType
+// 	value: any
+// }
 
 // export type UpsertCloudOAuth2Request = Static<typeof UpsertCloudOAuth2Request>
 // export type UpsertPlatformOAuth2Request = Static<typeof UpsertPlatformOAuth2Request>
