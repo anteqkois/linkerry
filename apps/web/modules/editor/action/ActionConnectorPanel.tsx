@@ -54,10 +54,6 @@ export const ActionConnectorPanel = () => {
 	})
 	const actionWatcher = actionForm.watch('__temp__action')
 
-	// useEffect(() => {
-	// 	actionForm.reset()
-	// }, [editedAction])
-
 	// setup form fields on start based on editedAction input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
 		if (!isFetched) return
@@ -84,7 +80,8 @@ export const ActionConnectorPanel = () => {
 				...initData,
 			})
 		}, 0)
-	}, [isFetched, editedAction])
+		// }, [isFetched, editedAction])
+	}, [isFetched])
 
 	// synchronize with global state and database, merge only new values
 	const handleWatcher = useDebouncedCallback(

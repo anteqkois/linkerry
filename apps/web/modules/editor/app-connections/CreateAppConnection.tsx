@@ -28,7 +28,6 @@ export interface CreateAppConnectionProps extends HTMLAttributes<HTMLElement> {
 	connector: Pick<ConnectorMetadata, 'displayName' | 'name'>
 	setShowDialog: Dispatch<SetStateAction<boolean>>
 }
-
 export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, setShowDialog }: CreateAppConnectionProps) => {
 	const appConnectionForm = useForm<{ name: string } & Record<string, any>>({
 		mode: 'all',

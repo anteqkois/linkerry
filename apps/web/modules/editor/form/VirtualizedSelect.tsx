@@ -63,10 +63,7 @@ export const VirtualizedSelect = ({ property, initData, name }: VirtualizedSelec
 							disabled={property.options.disabled}
 							onValueChange={async (newValue) => {
 								onChangeValue(newValue)
-								/* add to end of callstack, can not witjout it becouse it brokes rendering  */
-								setTimeout(() => {
-									field.onChange(newValue)
-								}, 0)
+								field.onChange(newValue)
 							}}
 						>
 							<SelectTrigger>

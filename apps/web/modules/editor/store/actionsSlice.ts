@@ -102,7 +102,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		setEditedAction(action)
 	},
 	async patchEditedAction(update: DeepPartial<Action>) {
-		const { editedAction, flow, setFlow } = get()
+		const { editedAction, flow, setFlow, patchNode } = get()
 		assertNotNullOrUndefined(editedAction, 'editedAction')
 
 		const newAction = deepMerge<Action>(editedAction, update)
@@ -110,6 +110,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 
 		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
 
+		patchNode(newAction.name, { data: { action: newAction } })
 		const newFlow: Flow = {
 			...flow,
 			version: data,

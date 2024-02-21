@@ -159,7 +159,8 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 
 		const subscription = watch(handleWatcher)
 		return () => subscription.unsubscribe()
-	}, [editedAction?.settings.actionName])
+		// }, [editedAction?.settings.actionName])
+	}, [])
 
 	return (
 		<VirtualizedSelect
