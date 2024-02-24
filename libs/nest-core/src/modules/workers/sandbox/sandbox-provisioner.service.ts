@@ -35,7 +35,7 @@ export class SandboxProvisionerService {
 	}
 
 	async releaseSandbox({ sandbox }: ReleaseParams): Promise<void> {
-		this.logger.debug(`#releaseSandbox`, { boxId: sandbox.boxId, cacheKey: sandbox.cacheKey })
+		this.logger.debug(`#releaseSandbox:`, { boxId: sandbox.boxId, cacheKey: sandbox.cacheKey })
 
 		await this.sandboxManagerService.release(sandbox.boxId)
 

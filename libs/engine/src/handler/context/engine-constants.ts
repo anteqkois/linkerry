@@ -13,7 +13,7 @@ const DEFAULT_RETRY_CONSTANTS: RetryConstants = {
 }
 
 export class EngineConstants {
-    public static readonly API_URL = 'http://127.0.0.1:3000/'
+    public static readonly API_URL = 'http://127.0.0.1:3000/api'
     // public static readonly BASE_CODE_DIRECTORY = process.env.BASE_CODE_DIRECTORY ?? './codes'
     public static readonly INPUT_FILE = './input.json'
     public static readonly OUTPUT_FILE = './output.json'

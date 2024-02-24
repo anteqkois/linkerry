@@ -12,7 +12,9 @@ export class RegistryConnectorManager extends ConnectorManager {
 	protected override async installDependencies({ projectPath, connectors }: InstallParams): Promise<void> {
 		// await this.savePackageArchivesToDiskIfNotCached(projectId, connectors)
 		const dependencies = connectors.map((connector) => this.connectorToDependency(connector))
-		this.logger.debug(`#installDependencies dependencies:${JSON.stringify(dependencies)}`)
+		this.logger.debug(`#installDependencies dependencies:`,{
+			dependencies
+		})
 
 		await packageManager.add({
 			path: projectPath,

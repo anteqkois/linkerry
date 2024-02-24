@@ -44,10 +44,11 @@ export interface JwtWorkerTokenPayload {
 
 export type JwtTokenPayload = JwtCustomerTokenPayload | JwtWorkerTokenPayload
 
-export interface RequestUser {
+export interface RequestUser extends Omit<JwtCustomerTokenPayload, 'sub' | 'iss'> {
 	id: string
 	name: string
 }
+export interface RequestWorker extends Omit<JwtWorkerTokenPayload, 'sub' | 'iss'> {}
 
 export enum AuthStatus {
 	LOADING = 'LOADING',

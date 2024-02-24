@@ -28,7 +28,11 @@ export class CachedSandbox {
 	}
 
 	async init(): Promise<void> {
-		this.logger.debug(`#init ${JSON.stringify({ key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })}`)
+		this.logger.debug(`#init:`, {
+			key: this.key,
+			state: this._state,
+			activeSandboxes: this._activeSandboxCount,
+		})
 
 		if (this._state !== CachedSandboxState.CREATED) {
 			return
@@ -37,14 +41,16 @@ export class CachedSandbox {
 		await this.deletePathIfExists()
 
 		const fullPath = this.path()
-		this.logger.debug(`#init fullPath: ${fullPath}`)
+		this.logger.debug(`#init fullPath:`, {
+			fullPath,
+		})
 		await mkdir(fullPath, { recursive: true })
 		this._state = CachedSandboxState.INITIALIZED
 	}
 
 	// async prepare({ projectId, connectors, codeSteps = [] }: PrepareParams): Promise<void> {
 	async prepare({ connectors, codeSteps = [] }: PrepareParams): Promise<void> {
-		this.logger.debug(`#prepare: ${JSON.stringify({ key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })}`)
+		this.logger.debug(`#prepare:`, { key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
 
 		try {
 			const notInitialized = this._state === CachedSandboxState.CREATED
@@ -90,7 +96,7 @@ export class CachedSandbox {
 	}
 
 	async decrementActiveSandboxCount(): Promise<void> {
-		this.logger.debug(`#decrementActiveSandboxCount`, { key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
+		this.logger.debug(`#decrementActiveSandboxCount:`, { key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
 
 		if (this._activeSandboxCount === 0) {
 			return

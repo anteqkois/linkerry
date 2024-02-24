@@ -22,7 +22,7 @@ import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/utils'
     // To register as a global guard
     // {
     //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
+    //   useClass: JwtCookiesAuthGuard,
     // },
   ],
   exports: [],

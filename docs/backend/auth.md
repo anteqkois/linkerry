@@ -1,2 +1,2 @@
 @UseGuards(LocalAuthGuard) - zwraca model Usera
-@UseGuards(JwtAuthGuard) = zwraca jedynie przetworzony payload JWT
+@UseGuards(JwtCookiesAuthGuard) = zwraca jedynie przetworzony payload JWT

@@ -144,7 +144,7 @@ export class EngineService {
 		input: EngineOperation,
 	): Promise<EngineHelperResponse<Result>> {
 		try {
-			this.logger.debug(`#execute`, { operation, sandboxId: sandbox.boxId })
+			this.logger.debug(`#execute:`, { operation, sandboxId: sandbox.boxId })
 
 			const sandboxPath = sandbox.getSandboxFolderPath()
 
@@ -182,7 +182,7 @@ export class EngineService {
 		sandbox: Sandbox,
 		operation: Omit<BeginExecuteFlowOperation, EngineConstants> | Omit<ResumeExecuteFlowOperation, EngineConstants>,
 	): Promise<EngineHelperResponse<EngineHelperFlowResult>> {
-		this.logger.debug(`#executeFlow`, {
+		this.logger.debug(`#executeFlow:`, {
 			executionType: operation.executionType,
 			flowRunId: operation.flowRunId,
 			// projectId: operation.projectId,
@@ -193,7 +193,7 @@ export class EngineService {
 			...operation,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
-					sub: '',
+					sub: `${operation.flowVersion._id}-executeFlow-${operation.flowRunId}`,
 					type: JWTPrincipalType.WORKER,
 				},
 			}),
@@ -203,7 +203,7 @@ export class EngineService {
 	}
 
 	async executeProp(operation: Omit<ExecutePropsOptions, EngineConstants>): Promise<EngineHelperResponse<EngineHelperPropResult>> {
-		this.logger.debug(`#executeProp`, {
+		this.logger.debug(`#executeProp:`, {
 			connector: operation.connector,
 			// projectId: operation.projectId,
 			stepName: operation.stepName,
@@ -230,7 +230,8 @@ export class EngineService {
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
-					sub: '',
+					// TODO implement projectId
+					sub: `${operation.flowVersion._id}-executeProp-${operation.propertyName}`,
 					type: JWTPrincipalType.WORKER,
 				},
 			}),
@@ -240,7 +241,7 @@ export class EngineService {
 	}
 
 	async extractPieceMetadata(operation: ExecuteExtractConnectorMetadata): Promise<EngineHelperResponse<EngineHelperExtractConnectorInformation>> {
-		this.logger.debug(`#extractPieceMetadata`, { operation })
+		this.logger.debug(`#extractPieceMetadata:`, { operation })
 
 		const { connectorName, connectorVersion } = operation
 		const connector = operation
@@ -257,7 +258,7 @@ export class EngineService {
 	}
 
 	async executeAction(operation: Omit<ExecuteStepOperation, EngineConstants>): Promise<EngineHelperResponse<EngineHelperActionResult>> {
-		this.logger.debug(`#executeAction`, {
+		this.logger.debug(`#executeAction:`, {
 			flowVersionId: operation.flowVersion._id,
 			stepName: operation.stepName,
 		})
@@ -279,7 +280,7 @@ export class EngineService {
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
-					sub: '',
+					sub: `${operation.flowVersion._id}-executeAction-${step.settings.actionName}`,
 					type: JWTPrincipalType.WORKER,
 				},
 			}),
@@ -291,7 +292,7 @@ export class EngineService {
 	async executeValidateAuth(
 		operation: Omit<ExecuteValidateAuthOperation, EngineConstants>,
 	): Promise<EngineHelperResponse<EngineHelperValidateAuthResult>> {
-		this.logger.debug(`#executeValidateAuth`, { connector: operation.connector })
+		this.logger.debug(`#executeValidateAuth:`, { connector: operation.connector })
 
 		const { connector } = operation
 
@@ -314,7 +315,7 @@ export class EngineService {
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
-					sub: '',
+					sub: `executeValidateAuth-${operation.connector.connectorName}`,
 					type: JWTPrincipalType.WORKER,
 				},
 			}),
@@ -326,7 +327,9 @@ export class EngineService {
 	async executeTrigger<T extends TriggerHookType>(
 		operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>,
 	): Promise<EngineHelperResponse<EngineHelperTriggerResult<T>>> {
-		this.logger.debug(`#executeTrigger hookType: ${operation.hookType}`)
+		this.logger.debug(`#executeTrigger hookType:`, {
+			operation,
+		})
 
 		// todo lock flow version
 		const clonedFlowVersion = clone(operation.flowVersion)
@@ -355,7 +358,10 @@ export class EngineService {
 				},
 			],
 		})
-		this.logger.debug(`#executeTrigger provised sandbox: ${sandbox.boxId}`)
+
+		this.logger.debug(`#executeTrigger provised sandbox:`, {
+			sandbox,
+		})
 
 		const input = {
 			...operation,
@@ -371,7 +377,7 @@ export class EngineService {
 			// workerToken: await generateWorkerToken({ projectId: operation.projectId }),
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
-					sub: '',
+					sub: `${operation.flowVersion._id}-executeTrigger-${trigger.settings.triggerName}`,
 					type: JWTPrincipalType.WORKER,
 				},
 			}),
@@ -381,7 +387,7 @@ export class EngineService {
 	}
 
 	async executeTest(sandbox: Sandbox, operation: Omit<EngineTestOperation, EngineConstants>): Promise<EngineHelperResponse<EngineHelperFlowResult>> {
-		this.logger.debug(`#executeTest`, {
+		this.logger.debug(`#executeTest:`, {
 			flowVersionId: operation.sourceFlowVersion._id,
 			// projectId: operation.projectId,
 			sandboxId: sandbox.boxId,
@@ -393,7 +399,7 @@ export class EngineService {
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
-					sub: '',
+					sub: `${operation.flowVersion._id}-executeTest-${operation.flowRunId}`,
 					type: JWTPrincipalType.WORKER,
 				},
 			}),

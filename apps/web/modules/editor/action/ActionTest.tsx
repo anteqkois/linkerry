@@ -6,6 +6,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
 import { useRelativeTime } from '../../../libs/dayjs'
+import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
 import { useEditor } from '../useEditor'
 
@@ -20,6 +21,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 	const [testData, setTestData] = useState<RunActionResponse | undefined>()
 	assertNotNullOrUndefined(editedAction?.name, 'editedAction.name')
 	const { relativeTime, setInitialTime, dayjs } = useRelativeTime()
+	const [errorMessage, setErrorMessage] = useState<string>('')
 
 	const onClickTest = async () => {
 		try {
@@ -35,14 +37,15 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 			} else {
 				errorMessage = 'Unknwon error occured. Check your action options and try again'
 			}
+
+			setErrorMessage(errorMessage)
+
 			setTestData({
 				output: errorMessage,
 				standardError: '',
 				standardOutput: '',
 				success: false,
 			})
-
-			console.error(error)
 		}
 	}
 
@@ -88,16 +91,20 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 						/>
 					</div>
 					<div className="mt-2">
-						<CodeMirror
-							readOnly={true}
-							value={prepareCodeMirrorValue(testData.output)}
-							style={{
-								overflow: 'scroll',
-								height: `calc(${panelSize}vh - 130px)`,
-							}}
-							theme={vscodeDark}
-							extensions={[json()]}
-						/>
+						{errorMessage.length ? (
+							<ErrorInfo message={errorMessage} />
+						) : (
+							<CodeMirror
+								readOnly={true}
+								value={prepareCodeMirrorValue(testData.output)}
+								style={{
+									overflow: 'scroll',
+									height: `calc(${panelSize}vh - 130px)`,
+								}}
+								theme={vscodeDark}
+								extensions={[json()]}
+							/>
+						)}
 					</div>
 				</>
 			) : (

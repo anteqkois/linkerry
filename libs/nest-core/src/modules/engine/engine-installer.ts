@@ -9,7 +9,7 @@ const logger = new Logger('EngineInstaller')
  */
 export const engineInstaller = {
 	async install({ path }: InstallParams): Promise<void> {
-		logger.debug(`#install: ${path}`)
+		logger.debug(`#install`, { path })
 
 		if (!engineExecutablePath) throw new Error('Missing ENGINE_EXECUTABLE_PATH env')
 		await copyFile(engineExecutablePath, `${path}/main.js`)

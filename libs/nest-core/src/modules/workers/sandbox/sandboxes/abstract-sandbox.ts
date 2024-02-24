@@ -28,7 +28,7 @@ export abstract class AbstractSandbox {
     protected abstract setupCache(): Promise<void>
 
     public async assignCache({ cacheKey, cachePath }: AssignCacheParams): Promise<void> {
-			logger.debug(`[#assignCache]`, { boxId: this.boxId, cacheKey, cachePath })
+			logger.debug(`#assignCache`, { boxId: this.boxId, cacheKey, cachePath })
 
         this._cacheKey = cacheKey
         this._cachePath = cachePath

@@ -30,7 +30,7 @@ export type PackageInfo = {
 const runCommand = async (path: string, command: Command, ...args: string[]): Promise<PackageManagerOutput> => {
 	const commandLine = `pnpm ${command} ${args.join(' ')}`
 	try {
-		logger.debug(`#runCommand ${JSON.stringify({ commandLine, path })}`)
+		logger.debug(`#runCommand:`, { commandLine, path })
 		return await exec(commandLine, { cwd: path })
 	} catch (error: any) {
 		logger.error(error)

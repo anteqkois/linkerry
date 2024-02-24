@@ -1,6 +1,6 @@
 import { RequestUser } from '@linkerry/shared'
 import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
-import { JwtAuthGuard } from '../../../lib/auth'
+import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../../lib/auth/decorators/req-user.decorator'
 import { DeleteDto } from './dto/delete.dto'
 import { GetManyDto } from './dto/get-many.dto'
@@ -11,19 +11,19 @@ import { TriggerEventsService } from './trigger-events.service'
 export class TriggerEventsController {
 	constructor(private readonly triggerEventsService: TriggerEventsService) {}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtCookiesAuthGuard)
 	@Get('')
 	getTriggerEvents(@ReqJwtUser() user: RequestUser, @Query() query: GetManyDto) {
 		return this.triggerEventsService.getMany(query, user.id)
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtCookiesAuthGuard)
 	@Delete('')
 	deleteTriggerEvents(@ReqJwtUser() user: RequestUser, @Body() body: DeleteDto) {
 		return this.triggerEventsService.deleteMany(body, user.id)
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtCookiesAuthGuard)
 	@Post('/test/pool')
 	create(@ReqJwtUser() user: RequestUser, @Body() poolTestDto: PoolTestDto) {
 		return this.triggerEventsService.performPoolTest(poolTestDto, user.id)

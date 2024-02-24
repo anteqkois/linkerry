@@ -13,14 +13,16 @@ export class FileSandbox extends AbstractSandbox {
 	}
 
 	public override async recreate(): Promise<void> {
-		this.logger.debug(`[#recreate] ${JSON.stringify({ boxId: this.boxId })}`)
+		this.logger.debug(`#recreate:`, {
+			boxId: this.boxId,
+		})
 
 		const sandboxFolderPath = this.getSandboxFolderPath()
 
 		try {
 			await rm(sandboxFolderPath, { recursive: true })
 		} catch (e) {
-			this.logger.debug(`[#recreate] rm failure; sandboxFolderPath:`, sandboxFolderPath)
+			this.logger.error(`#recreate rm failure; sandboxFolderPath`, { sandboxFolderPath })
 		}
 
 		await mkdir(sandboxFolderPath, { recursive: true })
@@ -61,7 +63,7 @@ export class FileSandbox extends AbstractSandbox {
 	}
 
 	protected override async setupCache(): Promise<void> {
-		this.logger.debug(`[#setupCache]`, { boxId: this.boxId, cacheKey: this._cacheKey, cachePath: this._cachePath })
+		this.logger.debug(`#setupCache:`, { boxId: this.boxId, cacheKey: this._cacheKey, cachePath: this._cachePath })
 
 		if (this._cachePath) {
 			await cp(this._cachePath, this.getSandboxFolderPath(), { recursive: true })

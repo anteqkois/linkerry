@@ -61,7 +61,7 @@ export class AuthController {
     return res.send({ user: userRes, error: undefined })
   }
 
-  // @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtCookiesAuthGuard)
   @Post('logout')
   // async logut(@ReqJWTUser() user: User, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
   async logut(@Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
