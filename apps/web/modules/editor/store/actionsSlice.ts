@@ -123,11 +123,12 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	async updateEditedAction(newAction: Action) {
-		const { flow, setFlow } = get()
+		const { flow, setFlow, patchNode } = get()
 
 		const { data: newFlowVersion } = await FlowVersionApi.updateAction(flow.version._id, newAction)
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
 
+		patchNode(newAction.name, { data: { action: newAction } })
 		const newFlow: Flow = {
 			...flow,
 			version: newFlowVersion,

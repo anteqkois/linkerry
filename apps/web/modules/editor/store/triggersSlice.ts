@@ -64,15 +64,16 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			nextActionName: '',
 		}
 
-		await updateEditedTrigger(newTrigger)
 		patchNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
+		await updateEditedTrigger(newTrigger)
 		setDrawer('trigger_connector')
 	},
 	updateEditedTrigger: async (newTrigger: Trigger) => {
-		const { flow, setFlow } = get()
+		const { flow, setFlow, patchNode } = get()
 
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 
+		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
 		const newFlow: Flow = {
 			...flow,
 			version: data,
@@ -85,7 +86,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		})
 	},
 	patchEditedTriggerConnector: async (update: DeepPartial<TriggerConnector>) => {
-		const { editedTrigger, flow, setFlow } = get()
+		const { editedTrigger, flow, setFlow, patchNode } = get()
 		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update', ErrorCode.ENTITY_NOT_FOUND)
 
 		const newTrigger = deepMerge(editedTrigger, update)
@@ -93,6 +94,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 
+		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
 		const newFlow: Flow = {
 			...flow,
 			version: data,
@@ -107,7 +109,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	resetTrigger: async (triggerName: string) => {
 		let emptyTrigger: TriggerEmpty | undefined = undefined
 		// eslint-disable-next-line prefer-const
-		let { nodes, flow, setFlow } = get()
+		let { nodes, flow, setFlow, patchNode } = get()
 
 		const stepNumber = retriveStepNumber(triggerName)
 		nodes = nodes.map((node: CustomNode) => {
@@ -134,6 +136,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		})
 		await FlowVersionApi.updateTrigger(flow.version._id, emptyTrigger)
 
+		patchNode(triggerName, { data: { trigger: emptyTrigger } })
 		setFlow(flow)
 		set({
 			nodes,

@@ -49,8 +49,12 @@ export const ActionConnectorPanel = () => {
 		}),
 	)
 
-	const actionForm = useForm<{ __temp__action: ActionBase; actionName: ActionBase['name'] } & Record<string, any>>({
+	const actionForm = useForm<{ __temp__action: ActionBase | null; actionName: ActionBase['name'] } & Record<string, any>>({
 		mode: 'all',
+		defaultValues: {
+			__temp__action: null,
+			actionName: '',
+		},
 	})
 	const actionWatcher = actionForm.watch('__temp__action')
 
@@ -60,7 +64,13 @@ export const ActionConnectorPanel = () => {
 		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', editedAction.settings)
 		setEditedConnectorMetadata(connectorMetadata)
 
-		if (editedAction.type !== ActionType.ACTION || editedAction.settings.actionName === '') return
+		if (editedAction.type !== ActionType.ACTION || editedAction.settings.actionName === '') {
+			actionForm.reset({
+				__temp__action: null,
+				actionName: '',
+			})
+			return
+		}
 
 		const selectedAction = Object.values(connectorMetadata.actions).find((action) => action.name === editedAction.settings.actionName)
 		assertNotNullOrUndefined(selectedAction, 'selectedAction')
@@ -80,8 +90,7 @@ export const ActionConnectorPanel = () => {
 				...initData,
 			})
 		}, 0)
-		// }, [isFetched, editedAction])
-	}, [isFetched])
+	}, [isFetched, editedAction.settings.connectorName])
 
 	// synchronize with global state and database, merge only new values
 	const handleWatcher = useDebouncedCallback(
@@ -106,14 +115,14 @@ export const ActionConnectorPanel = () => {
 	useEffect(() => {
 		const subscription = actionForm.watch(handleWatcher)
 		return () => subscription.unsubscribe()
-	}, [editedAction])
+	}, [editedAction.settings.connectorName])
 
 	if (isLoading) return <Spinner />
 	if (error) return <ErrorInfo errorObject={error} />
 	if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
 
 	// build dynamic form based on selected action schema -> props from action metadata
-	const onChangeTrigger = async (actionName: string) => {
+	const onChangeAction = async (actionName: string) => {
 		const selectedAction = Object.values(connectorMetadata.actions).find((action) => action.name === actionName)
 		assertNotNullOrUndefined(selectedAction, 'selectedAction')
 
@@ -169,7 +178,7 @@ export const ActionConnectorPanel = () => {
 											value={field.value}
 											onValueChange={(v) => {
 												field.onChange(v)
-												onChangeTrigger(v)
+												onChangeAction(v)
 											}}
 										>
 											<SelectTrigger>
@@ -199,8 +208,6 @@ export const ActionConnectorPanel = () => {
 								connector={{ name: connectorMetadata.name, displayName: connectorMetadata.displayName }}
 							/>
 						) : null}
-						{/* {JSON.stringify(actionForm.getValues())} */}
-						{/* {JSON.stringify(actionWatcher?.props)} */}
 						{actionWatcher?.props &&
 							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
 					</form>

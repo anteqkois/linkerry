@@ -58,30 +58,28 @@ export const ConnectionsSelect = ({ auth, name, connector }: ConnectionsSelectPr
 								+ New Connection
 							</div>
 						</FormLabel>
-						<FormControl>
-							<Select onValueChange={field.onChange}>
+						<Select onValueChange={field.onChange}>
+							<FormControl>
 								<SelectTrigger>
-									<SelectValue placeholder={field.value ? undefined : 'Select connection'} aria-label={field.value}>
-										{connectorConnections?.find((appConnection) => field.value?.includes(appConnection.name))?.name}
-									</SelectValue>
+									<SelectValue placeholder={field.value ? undefined : 'Select connection'} aria-label={field.value} />
 								</SelectTrigger>
-								<SelectContent position="popper" className="max-h-96 overflow-scroll">
-									{!connectorConnections?.length ? (
-										<p className="'flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground">
-											No connections avaible
-										</p>
-									) : (
-										connectorConnections.map((appConnection) => (
-											<SelectItem value={`{{connections['${appConnection.name}']}}`} key={appConnection.name}>
-												<span className="flex gap-2 items-center">
-													<p>{appConnection.name}</p>
-												</span>
-											</SelectItem>
-										))
-									)}
-								</SelectContent>
-							</Select>
-						</FormControl>
+							</FormControl>
+							<SelectContent position="popper" className="max-h-96 overflow-scroll">
+								{!connectorConnections?.length ? (
+									<p className="'flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground">
+										No connections avaible
+									</p>
+								) : (
+									connectorConnections.map((appConnection) => (
+										<SelectItem value={`{{connections['${appConnection.name}']}}`} key={appConnection.name}>
+											<span className="flex gap-2 items-center">
+												<p>{appConnection.name}</p>
+											</span>
+										</SelectItem>
+									))
+								)}
+							</SelectContent>
+						</Select>
 						<FormMessage />
 					</FormItem>
 				)}

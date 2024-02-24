@@ -56,7 +56,7 @@ export interface FlowAndConnectorsSlice {
 	setFlow: (flow: Flow) => void
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
-	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata) => void
+	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void
 	testConnectorLoading: boolean
 	getConnectorOptions: ({ input, propertyName }: { input: any; propertyName: string }) => Promise<ConnectorsGetOptionsResponse>
 }

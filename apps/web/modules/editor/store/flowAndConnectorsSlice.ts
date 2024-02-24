@@ -58,7 +58,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 	},
 	// CONNECTORS
 	editedConnectorMetadata: null,
-	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata) => {
+	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => {
 		set({
 			editedConnectorMetadata: connectorMetadata,
 		})

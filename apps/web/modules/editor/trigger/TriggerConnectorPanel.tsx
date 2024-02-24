@@ -55,7 +55,7 @@ export const TriggerConnectorPanel = () => {
 
 	useEffect(() => {
 		if (!isFetched) return
-		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata',editedTrigger.settings)
+		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', editedTrigger.settings)
 		setEditedConnectorMetadata(connectorMetadata)
 
 		if (editedTrigger.type !== TriggerType.TRIGGER || editedTrigger.settings.triggerName === '') return
@@ -70,6 +70,7 @@ export const TriggerConnectorPanel = () => {
 			})
 
 		/* add to the end of callstack */
+		console.log('RESET TRIGGER 2')
 		setTimeout(() => {
 			triggerForm.reset({
 				__temp__trigger: selectedTrigger,
@@ -120,6 +121,7 @@ export const TriggerConnectorPanel = () => {
 				input[key] = value.defaultValue
 			})
 
+		console.log('RESET TRIGGER')
 		triggerForm.reset({
 			// TODO
 			// @ts-ignore

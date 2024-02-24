@@ -62,6 +62,9 @@ export const metadata = {
 		apple: '/apple-touch-icon.png',
 	},
 	manifest: `${siteConfig.url}/site.webmanifest`,
+	// other: {
+	// 	google: 'notranslate',
+	// },
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {

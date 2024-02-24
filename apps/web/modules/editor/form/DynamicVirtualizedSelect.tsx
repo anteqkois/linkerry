@@ -103,6 +103,8 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 
 	useEffect(() => {
 		if (isEmpty(editedAction?.settings.actionName)) return
+		/* to prevent triggering options endpoint when selected edited action changed, not all veriables changed at once */
+		if (editedConnectorMetadata?.name !== editedAction?.settings.connectorName) return
 
 		/* check if refreshers are filled, if filled, fetch options */
 		const values = getValues()
@@ -125,7 +127,6 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 			)?.props
 			console.log('selectedActionProps', { selectedActionProps, 'editedConnectorMetadata.actions': editedConnectorMetadata.actions })
 			if (!selectedActionProps) return
-			// assertNotNullOrUndefined(selectedActionProps, 'selectedActionProps')
 
 			const missingRefreshers = property.refreshers.filter((refresherName) => selectedActionProps[refresherName].displayName)
 
@@ -159,7 +160,6 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 
 		const subscription = watch(handleWatcher)
 		return () => subscription.unsubscribe()
-		// }, [editedAction?.settings.actionName])
 	}, [])
 
 	return (
