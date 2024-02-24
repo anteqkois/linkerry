@@ -36,6 +36,12 @@ export const ConnectionsSelect = ({ auth, name, connector }: ConnectionsSelectPr
 		return appConnections?.filter((appConnection) => appConnection.connectorName === connector.name)
 	}, [appConnections, isFetched])
 
+	// useEffect(()=>{
+	// 	console.log(object);
+	// },[
+
+	// ])
+
 	const handleAddedConnection = (newConnection: AppConnectionWithoutSensitiveData) => {
 		const queryClient = getBrowserQueryCllient()
 		queryClient.setQueryData(appConnectionsQueryConfig.getMany().queryKey, appConnections?.concat(newConnection))
@@ -58,7 +64,7 @@ export const ConnectionsSelect = ({ auth, name, connector }: ConnectionsSelectPr
 								+ New Connection
 							</div>
 						</FormLabel>
-						<Select onValueChange={field.onChange}>
+						<Select onValueChange={field.onChange} value={field.value}>
 							<FormControl>
 								<SelectTrigger>
 									<SelectValue placeholder={field.value ? undefined : 'Select connection'} aria-label={field.value} />

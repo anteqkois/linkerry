@@ -82,6 +82,10 @@ export const ActionConnectorPanel = () => {
 				else if (typeof value.defaultValue !== 'undefined') initData[key] = value.defaultValue
 			})
 
+		if (selectedAction.requireAuth) {
+			if (editedAction.settings.input.auth !== undefined) initData['auth'] = editedAction.settings.input['auth']
+		}
+
 		/* add to the end of callstack */
 		setTimeout(() => {
 			actionForm.reset({
