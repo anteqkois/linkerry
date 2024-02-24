@@ -1,8 +1,10 @@
+import { Id } from '../../../common'
 import { AppConnectionType } from '../app-connection'
 
 interface CommonAuthProps {
 	name: string
 	connectorName: string
+	projectId: Id
 }
 
 export enum OAuth2GrantType {

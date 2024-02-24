@@ -1,10 +1,8 @@
 import { Id, TimestampDatabase } from '../../../common'
 
-export type StoreEntryId = Id
-
 export type StoreEntry = {
 	key: string
-	// projectId: ProjectId
+	projectId: Id
 	value: unknown
 } & TimestampDatabase
 

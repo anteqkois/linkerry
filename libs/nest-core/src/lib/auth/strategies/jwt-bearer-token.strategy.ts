@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
+// TODO move to modules/users
 @Injectable()
 export class JwtBearerTokenStrategy extends PassportStrategy(Strategy, 'jwt-bearer-token') {
 	constructor(private configService: ConfigService) {
@@ -11,7 +12,7 @@ export class JwtBearerTokenStrategy extends PassportStrategy(Strategy, 'jwt-bear
 			jwtFromRequest: ExtractJwt.fromExtractors([JwtBearerTokenStrategy.extractTokenFromHeader]),
 			ignoreExpiration: false,
 			secretOrKey: configService.get('JWT_SECRET'),
-			usernameField: 'name',
+			usernameField: 'sub',
 			// TODO implement issuer and audience security
 			// issuer: If defined the token issuer (iss) will be verified against this value.
 			// audience: If defined, the token audience (aud) will be verified against this value.
@@ -28,9 +29,9 @@ export class JwtBearerTokenStrategy extends PassportStrategy(Strategy, 'jwt-bear
 		console.log('JWT payload', payload)
 		switch (payload.type) {
 			case JWTPrincipalType.CUSTOMER:
-				return { id: payload.sub, name: payload.name, exp: payload.exp, type: JWTPrincipalType.CUSTOMER } as RequestUser
+				return { id: payload.sub,  exp: payload.exp, type: JWTPrincipalType.CUSTOMER, projectId: payload.projectId } as RequestUser
 			case JWTPrincipalType.WORKER:
-				return { id: payload.sub, exp: payload.exp, type: JWTPrincipalType.WORKER } as RequestWorker
+				return { id: payload.sub, exp: payload.exp, type: JWTPrincipalType.WORKER, projectId: payload.projectId } as RequestWorker
 		}
 	}
 }

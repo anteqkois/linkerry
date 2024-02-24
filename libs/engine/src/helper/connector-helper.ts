@@ -23,7 +23,17 @@ import { connectorLoader } from './connector-loader'
 
 export const connectorHelper = {
 	// to retrive options
-	async executeProps({ params, connectorSource }: { params: ExecutePropsOptions; connectorSource: string }) {
+	async executeProps({
+		params,
+		connectorSource,
+		constants,
+		executionState
+	}: {
+		executionState: FlowExecutorContext
+		params: ExecutePropsOptions
+		connectorSource: string
+		constants: EngineConstants
+	}) {
 		const property = await connectorLoader.getPropOrThrow({
 			params,
 			connectorSource,
@@ -31,11 +41,12 @@ export const connectorHelper = {
 
 		try {
 			const { resolvedInput } = await variableService({
-				// projectId: params.projectId,
+				projectId: params.projectId,
 				workerToken: params.workerToken,
 			}).resolve<StaticPropsValue<ConnectorPropertyMap>>({
 				unresolvedInput: params.input,
-				executionState: FlowExecutorContext.empty(),
+				executionState,
+				// executionState: FlowExecutorContext.empty(),
 			})
 			const ctx = {
 				server: {
@@ -43,6 +54,9 @@ export const connectorHelper = {
 					apiUrl: EngineConstants.API_URL,
 					publicUrl: params.serverUrl,
 				},
+				projct:{
+					id: params.projectId
+				}
 			}
 
 			if (property.type === PropertyType.DYNAMIC) {

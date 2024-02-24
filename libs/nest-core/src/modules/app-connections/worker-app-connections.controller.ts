@@ -1,7 +1,7 @@
-import { RequestWorker } from '@linkerry/shared'
-import { Controller, Get, UseGuards } from '@nestjs/common'
+import { CustomError, ErrorCode, RequestWorker, isNil } from '@linkerry/shared'
+import { Controller, Get, Param, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
-import { ReqJwtWorker } from '../../lib/auth/decorators/req-worker.decorator'
+import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { AppConnectionsService } from './app-connections.service'
 
 @Controller('worker/app-connections')
@@ -10,9 +10,15 @@ export class WorkerAppConnectionsController {
 
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Get(':connectionName')
-	async find(@ReqJwtWorker() worker: RequestWorker) {
-		return worker
-		// const appConnections = await this.appConnectionsService.findOne(user.id)
-		// return appConnections.map(this.appConnectionsService.removeSensitiveData)
+	async find(@ReqJwtWorker() worker: RequestWorker, @Param('connectionName') connectionName: string) {
+		const appConnection = await this.appConnectionsService.findOne({ name: connectionName, projectId: worker.projectId })
+
+		if (isNil(appConnection)) {
+			throw new CustomError(`Can not find app-connection`, ErrorCode.APP_CONNECTION_NOT_FOUND, {
+				connectionName,
+			})
+		}
+
+		return this.appConnectionsService.removeSensitiveData(appConnection.toObject())
 	}
 }

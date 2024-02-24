@@ -1,4 +1,4 @@
-import { isNull } from '@linkerry/shared'
+import { isNil } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { Sandbox } from '../sandboxes/sandbox'
 
@@ -11,7 +11,7 @@ export class SandboxManagerService {
 	private readonly logger = new Logger(SandboxManagerService.name)
 
 	async allocate(): Promise<Sandbox> {
-		// this.logger.debug('[#allocate]')
+		// this.logger.debug('#allocate')
 
 		const sandbox = this._getSandbox()
 
@@ -19,7 +19,7 @@ export class SandboxManagerService {
 			await sandbox.recreate()
 			return sandbox
 		} catch (e) {
-			this.logger.error(`[#allocate]`, e)
+			this.logger.error(`#allocate`, e)
 			await this.release(sandbox.boxId)
 			throw e
 		}
@@ -28,7 +28,7 @@ export class SandboxManagerService {
 	_getSandbox() {
 		const sandbox = sandboxes.find(byNotInUse)
 
-		if (isNull(sandbox)) {
+		if (isNil(sandbox)) {
 			throw new Error('[#allocate] all sandboxes are in-use')
 		}
 
@@ -41,7 +41,7 @@ export class SandboxManagerService {
 
 		const sandbox = sandboxes[sandboxId]
 
-		if (isNull(sandbox)) {
+		if (isNil(sandbox)) {
 			throw new Error(`[#release] sandbox not found id=${sandboxId}`)
 		}
 

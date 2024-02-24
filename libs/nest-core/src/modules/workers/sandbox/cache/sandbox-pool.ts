@@ -1,4 +1,4 @@
-import { Environment, extractProvisionCacheKey, isNull, ProvisionCacheInfo, SandBoxCacheType } from '@linkerry/shared'
+import { Environment, extractProvisionCacheKey, isNil, ProvisionCacheInfo, SandBoxCacheType } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { CachedSandbox } from './sandbox-cache'
 
@@ -54,7 +54,7 @@ export const sandboxCachePool = process.env['NODE_ENV'] === Environment.Dev ? sa
 const getOrThrow = ({ key }: GetOrThrowParams): CachedSandbox => {
 	const cachedSandbox = cachedSandboxes.get(key)
 
-	if (isNull(cachedSandbox)) {
+	if (isNil(cachedSandbox)) {
 		throw new Error(`sandbox not found key=${key}`)
 	}
 
@@ -73,7 +73,7 @@ const deleteOldestNotInUseOrThrow = (): void => {
 
 	for (const cachedSandbox of cachedSandboxes.values()) {
 		if (!cachedSandbox.isInUse()) {
-			if (isNull(oldestNotInUseCachedSandbox)) {
+			if (isNil(oldestNotInUseCachedSandbox)) {
 				oldestNotInUseCachedSandbox = cachedSandbox
 				continue
 			}
@@ -84,7 +84,7 @@ const deleteOldestNotInUseOrThrow = (): void => {
 		}
 	}
 
-	if (isNull(oldestNotInUseCachedSandbox)) {
+	if (isNil(oldestNotInUseCachedSandbox)) {
 		throw new Error('[SandboxCachePool#getOldestNotInUseOrThrow] all sandboxes are in use')
 	}
 

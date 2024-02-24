@@ -1,7 +1,7 @@
 import { Flow, FlowStatus, FlowVersion, Id } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { UserModel } from '../../../users'
+import { ProjectsModel } from '../../../projects/schemas/projects.schema'
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema'
 
 export type FlowDocument = mongoose.HydratedDocument<Flow>
@@ -10,8 +10,8 @@ export type FlowDocument = mongoose.HydratedDocument<Flow>
 export class FlowModel implements Flow {
   _id: string
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })
-  user: Id
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
+  projectId: Id
 
   @Prop({ required: true, type: String, enum: FlowStatus, default: FlowStatus.Unpublished })
   status: FlowStatus

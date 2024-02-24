@@ -1,4 +1,4 @@
-import { isNull } from '@linkerry/shared';
+import { isNil } from '@linkerry/shared';
 import { Store } from '../context';
 
 interface TimebasedPolling<AuthValue, PropsValue> {
@@ -61,18 +61,18 @@ export const pollingHelper = {
 
 				const lastItemIndex = items.findIndex((f) => f.id === lastItemId)
 				let newItems = []
-				if (isNull(lastItemId) || lastItemIndex == -1) {
+				if (isNil(lastItemId) || lastItemIndex == -1) {
 					newItems = items ?? []
 				} else {
 					newItems = items?.slice(0, lastItemIndex) ?? []
 				}
 				// Sorted from newest to oldest
-				if (!isNull(maxItemsToPoll)) {
+				if (!isNil(maxItemsToPoll)) {
 					// Get the last polling.maxItemsToPoll items
 					newItems = newItems.slice(-maxItemsToPoll)
 				}
 				const newLastItem = newItems?.[0]?.id
-				if (!isNull(newLastItem)) {
+				if (!isNil(newLastItem)) {
 					await store.put('lastItem', newLastItem)
 				}
 				return newItems.map((item) => item.data)
@@ -86,11 +86,11 @@ export const pollingHelper = {
 				let newItems = items.filter((item) => !lastItemsIds.includes(item.id))
 
 				// Sorted from newest to oldest
-				if (!isNull(maxItemsToPoll)) {
+				if (!isNil(maxItemsToPoll)) {
 					// Get the last polling.maxItemsToPoll items
 					newItems = newItems.slice(-maxItemsToPoll)
 				}
-				if (!isNull(items)) {
+				if (!isNil(items)) {
 					await store.put(
 						'lastItemsIds',
 						items.map((item) => item.id),
@@ -112,7 +112,7 @@ export const pollingHelper = {
 			case DedupeStrategy.LAST_ITEM: {
 				const items = await polling.items({ store, auth, propsValue, lastItemId: null })
 				const lastItemId = items?.[0]?.id
-				if (!isNull(lastItemId)) {
+				if (!isNil(lastItemId)) {
 					await store.put('lastItem', lastItemId)
 				} else {
 					await store.delete('lastItem')
@@ -121,7 +121,7 @@ export const pollingHelper = {
 			}
 			case DedupeStrategy.NEW_ITEMS: {
 				const items = await polling.items({ store, auth, propsValue, lastItemsIds: null })
-				if (!isNull(items)) {
+				if (!isNil(items)) {
 					await store.put(
 						'lastItemsIds',
 						items.map((item) => item.id),

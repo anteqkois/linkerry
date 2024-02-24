@@ -1,6 +1,8 @@
-import { ConnectorsGetOptionsInput } from '@linkerry/shared'
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
+import { ConnectorsGetOptionsInput, RequestUser } from '@linkerry/shared'
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
+import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { MongoFilter, QueryToMongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
+import { ReqJwtUser } from '../../users/auth'
 import { ConnectorsMetadataService } from './connectors-metadata/connectors-metadata.service'
 import { ConnectorMetadataGetManyQueryDto } from './connectors-metadata/dto/getMany.dto'
 import { ConnectorMetadataGetOneQueryDto } from './connectors-metadata/dto/getOne.dto'
@@ -26,8 +28,9 @@ export class ConnectorsController {
 		return this.connectorsMetadataService.findOne(name, query)
 	}
 
+	@UseGuards(JwtCookiesAuthGuard)
 	@Post('/options')
-	getPropertyOptions(@Body() body: ConnectorsGetOptionsInput) {
-		return this.connectorsService.getPropertyOptions(body)
+	getPropertyOptions(@ReqJwtUser() user: RequestUser, @Body() body: ConnectorsGetOptionsInput) {
+		return this.connectorsService.getPropertyOptions(user.projectId, body)
 	}
 }

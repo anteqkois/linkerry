@@ -7,4 +7,6 @@ export * from './modules/flows'
 export * from './modules/flows/connectors'
 export * from './modules/users'
 export * from './modules/app-connections'
+export * from './modules/projects'
+export * from './modules/users/auth'
 

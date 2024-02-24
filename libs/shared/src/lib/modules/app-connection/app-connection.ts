@@ -79,21 +79,19 @@ export type AppConnectionValue<T extends AppConnectionType = AppConnectionType> 
 	: never
 
 export type AppConnectionDecrypted<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
-	user: Id
 	name: string
 	type: Type
-	connectorName: string
-	// projectId: string
+	connectorName: Id
+	projectId: string
 	status: AppConnectionStatus
 	value: AppConnectionValue<Type>
 }
 
 export type AppConnectionEncrypted<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
-	user: Id
 	name: string
 	type: Type
 	connectorName: string
-	// projectId: string
+	projectId: Id
 	status: AppConnectionStatus
 	value: EncryptedObject
 }

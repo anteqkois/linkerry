@@ -1,4 +1,4 @@
-import { Action, ActionType, isNull } from '@linkerry/shared'
+import { Action, ActionType, isNil } from '@linkerry/shared'
 import { BaseExecutor } from './base-executor'
 // import { branchExecutor } from './branch-executor'
 import { EngineConstants } from './context/engine-constants'
@@ -18,7 +18,7 @@ const executeFunction: Record<ActionType, BaseExecutor<Action>> = {
 export const flowExecutor = {
     getExecutorForAction(type: ActionType): BaseExecutor<Action> {
         const executor = executeFunction[type]
-        if (isNull(executor)) {
+        if (isNil(executor)) {
             throw new Error('Not implemented')
         }
         return executor
@@ -31,7 +31,7 @@ export const flowExecutor = {
         const startTime = new Date().getMilliseconds()
         let flowExecutionContext = executionState
         let currentAction: Action | undefined = action
-        while (!isNull(currentAction)) {
+        while (!isNil(currentAction)) {
             const handler = this.getExecutorForAction(currentAction.type)
             flowExecutionContext = await handler.handle({
                 action: currentAction,

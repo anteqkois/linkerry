@@ -1,4 +1,4 @@
-import { isEmpty, isInteger, isNull, isString } from '@linkerry/shared'
+import { isEmpty, isInteger, isNil, isString } from '@linkerry/shared'
 import dayjs, { OpUnitType } from 'dayjs'
 import { ErrorMessages } from './errors'
 import { TypedValidatorFn, ValidationInputType } from './types'
@@ -308,7 +308,7 @@ export class Validators {
 		type: ValidationInputType.DATE_TIME,
 		validatorName: 'datetimeIso',
 		fn: (property, processedValue, userInput) => {
-			if (property.required && isNull(processedValue)) {
+			if (property.required && isNil(processedValue)) {
 				return formatErrorMessage(ErrorMessages.ISO_DATE, { userInput })
 			}
 			return null
@@ -318,7 +318,7 @@ export class Validators {
 	// static file: TypedValidatorFn<ValidationInputType.FILE> = {
 	//   type: ValidationInputType.FILE,
 	//   fn: (property, processedValue, userInput) => {
-	//     if (property.required && isNull(processedValue)) {
+	//     if (property.required && isNil(processedValue)) {
 	//       return formatErrorMessage(ErrorMessages.FILE, { userInput });
 	//     }
 	//     return null;

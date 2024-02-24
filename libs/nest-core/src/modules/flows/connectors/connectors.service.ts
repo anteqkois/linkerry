@@ -1,4 +1,4 @@
-import { CustomError, ErrorCode, assertNotNullOrUndefined } from '@linkerry/shared'
+import { CustomError, ErrorCode, Id, assertNotNullOrUndefined } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { EngineService } from '../../engine/engine.service'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
@@ -10,7 +10,7 @@ export class ConnectorsService {
 		//
 	}
 
-	async getPropertyOptions(body: ConnectorsGetOptionsInputDto) {
+	async getPropertyOptions(projectId: Id, body: ConnectorsGetOptionsInputDto) {
 		const flowVersion = await this.flowVersionsService.findOne({
 			filter: {
 				_id: body.flowVersionId,
@@ -26,6 +26,7 @@ export class ConnectorsService {
 				connectorType: body.connectorType,
 				connectorVersion: body.connectorVersion,
 			},
+			projectId,
 			flowVersion,
 			input: body.input,
 			propertyName: body.propertyName,

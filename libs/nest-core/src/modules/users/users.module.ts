@@ -7,7 +7,7 @@ import { UsersService } from './users.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([userModelFactory])
+    MongooseModule.forFeatureAsync([userModelFactory]),
   ],
   controllers: [UsersController],
   providers: [UsersService, HashService]

@@ -1,11 +1,12 @@
-import { JWTPrincipalType, JwtCustomerTokenPayload, JwtWorkerTokenPayload, User, UserRole } from '@linkerry/shared'
+import { JWTPrincipalType, JwtWorkerTokenPayload, NotificationStatus, User, UserRole } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { UserDocument, UserModel, UsersService } from '../../modules/users'
+import { UserDocument, UserModel, UsersService } from '..'
+import { HashService } from '../../../lib/auth/hash.service'
+import { JWTService } from '../../../lib/auth/jwt.service'
+import { ProjectsService } from '../../projects/projects.service'
 import { SignUpDto } from './dto/sign-up.dto'
-import { HashService } from './hash.service'
-import { JWTService } from './jwt.service'
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
 		private usersService: UsersService,
 		private jwtService: JWTService,
 		private hashService: HashService,
+		private projectsService: ProjectsService,
 		@InjectModel(UserModel.name) private userModel: Model<UserDocument>,
 	) {}
 
@@ -28,9 +30,9 @@ export class AuthService {
 		return null
 	}
 
-	createCustomerJWTPayload(user: Pick<UserDocument, 'name' | 'id'>): Omit<JwtCustomerTokenPayload, 'iss' | 'exp'> {
-		return { name: user.name, sub: user.id, type: JWTPrincipalType.CUSTOMER }
-	}
+	// createCustomerJWTPayload(user: Omit<JwtCustomerTokenPayload, 'iss' | 'exp'>) {
+	// 	return { name: user.name, sub: user.id, type: JWTPrincipalType.CUSTOMER, projectId:  }
+	// }
 
 	generateWorkerToken({ payload }: { payload: Omit<JwtWorkerTokenPayload, 'iss' | 'exp'> }): string {
 		return this.jwtService.generateToken({
@@ -45,22 +47,37 @@ export class AuthService {
 		const user = await this.userModel.create({ ...signUpDto, roles: [UserRole.Customer] })
 		this.logger.debug(`New signUp: ${signUpDto.email}`)
 
-		const payload = this.createCustomerJWTPayload(user)
+		/* create also default project for new user */
+		const newProject = await this.projectsService.create({
+			displayName: `${user.name}'s project`,
+			notifyStatus: NotificationStatus.ALWAYS,
+			ownerId: user.id,
+			users: [user.id],
+		})
+
 		return {
 			user,
 			access_token: this.jwtService.generateToken({
-				payload,
+				payload: {
+					projectId: newProject.id,
+					sub: user.id,
+					type: JWTPrincipalType.CUSTOMER,
+				},
 			}),
 		}
 	}
 
 	async login(user: User) {
-		const payload = this.createCustomerJWTPayload(user)
+		const userProjects = await this.projectsService.findManyUserProjects(user._id)
 
 		return {
 			user,
 			access_token: this.jwtService.generateToken({
-				payload,
+				payload: {
+					sub: user._id,
+					type: JWTPrincipalType.CUSTOMER,
+					projectId: userProjects[0].id,
+				},
 			}),
 		}
 	}

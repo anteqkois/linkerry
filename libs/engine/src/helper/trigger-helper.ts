@@ -25,7 +25,7 @@ export const triggerHelper = {
         }
 
         const { resolvedInput } = await variableService({
-            // projectId: params.projectId,
+            projectId: params.projectId,
             workerToken: params.workerToken,
         }).resolve<StaticPropsValue<ConnectorPropertyMap>>({
             unresolvedInput: input,
@@ -33,7 +33,7 @@ export const triggerHelper = {
         })
 
         const { processedInput, errors } = await variableService({
-            // projectId: params.projectId,
+            projectId: params.projectId,
             workerToken: params.workerToken,
         }).applyProcessorsAndValidators(resolvedInput, trigger.props, connector.auth)
 
@@ -68,10 +68,10 @@ export const triggerHelper = {
             auth: processedInput[AUTHENTICATION_PROPERTY_NAME],
             propsValue: processedInput,
             payload: params.triggerPayload ?? {},
-            // project: {
-            //     id: params.projectId,
-            //     externalId: constants.externalProjectId,
-            // },
+            project: {
+                id: params.projectId,
+                // externalId: constants.externalProjectId,
+            },
         }
         switch (params.hookType) {
             case TriggerHookType.ON_DISABLE:

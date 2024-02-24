@@ -29,8 +29,8 @@ export interface IAuthLogoutResponse {
 
 export interface JwtCustomerTokenPayload {
 	sub: string
-	name: string
 	type: JWTPrincipalType.CUSTOMER
+	projectId: string
 	exp: number
 	iss: 'linkerry'
 }
@@ -38,6 +38,7 @@ export interface JwtCustomerTokenPayload {
 export interface JwtWorkerTokenPayload {
 	sub: string
 	type: JWTPrincipalType.WORKER
+	projectId: string
 	exp: number
 	iss: 'linkerry'
 }

@@ -62,10 +62,11 @@ export class ConnectorsMetadataService {
 	async getExactPieceVersion({
 		name,
 		version,
+		// projectId
 	}: {
 		name: string
 		version: string
-		// projectId: ProjectId
+		// projectId: Id
 	}): Promise<string> {
 		const isExactVersion = EXACT_VERSION_PATTERN.test(version)
 

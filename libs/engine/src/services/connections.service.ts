@@ -3,6 +3,8 @@ import {
 	AppConnectionType,
 	BasicAuthConnectionValue,
 	CloudOAuth2ConnectionValue,
+	CustomError,
+	ErrorCode,
 	OAuth2ConnectionValueWithApp,
 } from '@linkerry/shared'
 import { EngineConstants } from '../handler/context/engine-constants'
@@ -11,15 +13,14 @@ export const createConnectionService = ({
 	// projectId,
 	workerToken,
 }: {
-	// projectId: string,
+	projectId: string
 	workerToken: string
 }) => {
 	return {
 		async obtain(
 			connectionName: string,
 		): Promise<null | OAuth2ConnectionValueWithApp | CloudOAuth2ConnectionValue | BasicAuthConnectionValue | string | Record<string, unknown>> {
-			// const url = EngineConstants.API_URL + `v1/worker/app-connections/${encodeURIComponent(connectionName)}?projectId=${projectId}`
-			const url = EngineConstants.API_URL + `v1/worker/app-connections/${encodeURIComponent(connectionName)}`
+			const url = EngineConstants.API_URL + `/worker/app-connections/${encodeURIComponent(connectionName)}`
 			try {
 				const response = await fetch(url, {
 					method: 'GET',
@@ -28,7 +29,9 @@ export const createConnectionService = ({
 					},
 				})
 				if (!response.ok) {
-					throw new Error('Connection information failed to load. URL: ' + url)
+					throw new CustomError(`Connection information failed to load`, ErrorCode.APP_CONNECTION_NOT_FOUND, {
+						url,
+					})
 				}
 				const result: AppConnectionDecrypted | null = await response.json()
 				if (result === null) {
@@ -41,8 +44,11 @@ export const createConnectionService = ({
 					return result.value.props
 				}
 				return result.value
-			} catch (e) {
-				throw new Error('Connection information failed to load. URL: ' + url + ' Error: ' + e)
+			} catch (error) {
+				throw new CustomError(`Connection information failed to load`, ErrorCode.APP_CONNECTION_NOT_FOUND, {
+					url,
+					error,
+				})
 			}
 		},
 	}

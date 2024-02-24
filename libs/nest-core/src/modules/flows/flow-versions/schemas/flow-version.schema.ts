@@ -1,4 +1,4 @@
-import { ActionConnector, FlowState, FlowVersion, Id, TriggerConnector, TriggerEmpty, TriggerWebhook, User } from '@linkerry/shared'
+import { ActionConnector, FlowState, FlowVersion, Id, TriggerConnector, TriggerEmpty, TriggerWebhook } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
@@ -7,9 +7,6 @@ export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow_versions', minimize: false })
 export class FlowVersionModel implements FlowVersion {
   _id: string
-
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'user' })
-  user: User
 
   @Prop({ required: true, type: String })
   displayName: string

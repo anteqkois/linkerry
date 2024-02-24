@@ -15,23 +15,23 @@ export class FlowsService {
 		return this.flowModel.findOne(filter).populate(['version'])
 	}
 
-	async deleteOne(id: Id, userId: Id) {
+	async deleteOne(id: Id, projectId: Id) {
 		await this.flowModel.deleteOne({
 			_id: id,
-			user: userId,
+			projectId
 		})
 
 		await this.flowVersionService.deleteRelatedToFlow(id)
 	}
 
-	async createEmpty(userId: Id) {
+	async createEmpty(projectId: Id) {
 		const flowId = generateId()
-		const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString(), userId)
+		const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString())
 
 		return (
 			await this.flowModel.create({
 				_id: flowId,
-				user: userId,
+				projectId,
 				version: emptyFlowVersion.id,
 			})
 		).populate(['version'])

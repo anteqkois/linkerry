@@ -1,5 +1,5 @@
 import { ConnectorAuthProperty, ErrorMessages, InputPropertyMap, PropertyType, formatErrorMessage } from '@linkerry/connectors-framework'
-import { isNull, isString } from '@linkerry/shared'
+import { Id, isNil, isString } from '@linkerry/shared'
 import { FlowExecutorContext } from '../handler/context/flow-execution-context'
 import { createConnectionService } from './connections.service'
 
@@ -8,12 +8,12 @@ export const AUTHENTICATION_PROPERTY_NAME = 'auth'
 export class VariableService {
 	private VARIABLE_TOKEN = RegExp('\\{\\{(.*?)\\}\\}', 'g')
 	private workerToken: string
-	// private projectId: string
+	private projectId: string
 	private static CONNECTIONS = 'connections'
 
-	constructor(data: { workerToken: string }) {
+	constructor(data: { workerToken: string; projectId: Id }) {
 		this.workerToken = data.workerToken
-		// this.projectId = data.projectId
+		this.projectId = data.projectId
 	}
 
 	private async resolveInput(input: string, valuesMap: Record<string, unknown>, logs: boolean): Promise<any> {
@@ -45,7 +45,7 @@ export class VariableService {
 		// Need to be resolved dynamically
 		const connectionName = this.findConnectionName(path)
 		console.log('connectionName', connectionName)
-		if (isNull(connectionName)) {
+		if (isNil(connectionName)) {
 			return ''
 		}
 		if (censorConnections) {
@@ -57,13 +57,14 @@ export class VariableService {
 
 		const connection = await createConnectionService({
 			workerToken: this.workerToken,
-			// projectId: this.projectId,
+			projectId: this.projectId,
 		}).obtain(connectionName)
+
 		if (newPath.length === 0) {
 			return connection
 		}
 		const context: Record<string, unknown> = {}
-		context.connection = connection
+		context['connection'] = connection
 		return this.evalInScope(newPath, context)
 	}
 
@@ -108,7 +109,7 @@ export class VariableService {
 	}
 
 	private async resolveInternally(unresolvedInput: any, valuesMap: any, logs: boolean): Promise<any> {
-		if (isNull(unresolvedInput)) {
+		if (isNil(unresolvedInput)) {
 			return unresolvedInput
 		}
 
@@ -138,7 +139,7 @@ export class VariableService {
 	}> {
 		const { unresolvedInput, executionState } = params
 
-		if (isNull(unresolvedInput)) {
+		if (isNil(unresolvedInput)) {
 			return {
 				resolvedInput: unresolvedInput as unknown as T,
 				censoredInput: unresolvedInput as unknown,
@@ -201,16 +202,16 @@ export class VariableService {
 			const propErrors = []
 			// Short Circuit
 			// If the value is required, we don't allow it to be undefined or null
-			if (isNull(value) && property.required) {
+			if (isNil(value) && property.required) {
 				errors[key] = [formatErrorMessage(ErrorMessages.REQUIRED, { userInput: value })]
 				continue
 			}
 			// If the value is not required, we allow it to be undefined or null
-			if (isNull(value) && !property.required) continue
+			if (isNil(value) && !property.required) continue
 
 			for (const validator of validators) {
 				const error = validator.fn(property, processedInput[key], value)
-				if (!isNull(error)) propErrors.push(error)
+				if (!isNil(error)) propErrors.push(error)
 			}
 			if (propErrors.length) errors[key] = propErrors
 		}
@@ -218,5 +219,4 @@ export class VariableService {
 	}
 }
 
-// export const variableService = ({ projectId, workerToken }: { projectId: string, workerToken: string }) => new VariableService({ projectId, workerToken })
-export const variableService = ({ workerToken }: { workerToken: string }) => new VariableService({ workerToken })
+export const variableService = ({ workerToken, projectId }: { workerToken: string; projectId: Id }) => new VariableService({ workerToken, projectId })

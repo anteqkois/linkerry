@@ -1,4 +1,4 @@
-import { isNull, isString } from "../types-and-resolvers"
+import { isNil, isString } from "../types-and-resolvers"
 
 export function deleteProperties(obj: Record<string, unknown>, props: string[]) {
     const copy = { ...obj }
@@ -10,7 +10,7 @@ export function deleteProperties(obj: Record<string, unknown>, props: string[]) 
 
 
 export const spreadIfDefined = <T>(key: string, value: T | undefined | null): Record<string, T> => {
-    if (isNull(value)) {
+    if (isNil(value)) {
         return {}
     }
     return {
@@ -31,7 +31,7 @@ export function deleteProps<T extends Record<string, unknown>, K extends keyof T
 
 
 export function applyFunctionToValuesSync<T>(obj: unknown, apply: (str: unknown) => unknown): T {
-    if (isNull(obj)) {
+    if (isNil(obj)) {
         return obj as T
     }
     else if (isString(obj)) {
@@ -54,7 +54,7 @@ export function applyFunctionToValuesSync<T>(obj: unknown, apply: (str: unknown)
 
 
 export async function applyFunctionToValues<T>(obj: unknown, apply: (str: unknown) => Promise<unknown>): Promise<T> {
-    if (isNull(obj)) {
+    if (isNil(obj)) {
         return obj as T
     }
     else if (isString(obj)) {

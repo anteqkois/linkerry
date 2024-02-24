@@ -3,20 +3,22 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import { MongooseModule } from '@nestjs/mongoose'
 import { PassportModule } from '@nestjs/passport'
-import { UserModel, UserSchema, UsersModule, UsersService } from '../../modules/users'
+import { UserModel, UserSchema, UsersModule, UsersService } from '..'
+import { HashService } from '../../../lib/auth/hash.service'
+import { JWTService } from '../../../lib/auth/jwt.service'
+import { JwtBearerTokenStrategy } from '../../../lib/auth/strategies/jwt-bearer-token.strategy'
+import { JwtCookiesStrategy } from '../../../lib/auth/strategies/jwt-cookies.strategy'
+import { LocalStrategy } from '../../../lib/auth/strategies/local.strategy'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { HashService } from './hash.service'
-import { JWTService } from './jwt.service'
-import { JwtBearerTokenStrategy } from './strategies/jwt-bearer-token.strategy'
-import { JwtCookiesStrategy } from './strategies/jwt-cookies.strategy'
-import { LocalStrategy } from './strategies/local.strategy'
+import { ProjectsModule } from '../../projects'
 
 @Module({
 	imports: [
 		UsersModule,
 		PassportModule,
 		ConfigModule,
+		ProjectsModule,
 		JwtModule.registerAsync({
 			imports: [ConfigModule],
 			useFactory: (configService: ConfigService) => {

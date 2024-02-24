@@ -1,5 +1,4 @@
 import { Id, TimestampDatabase } from '../../../common/database'
-import { User } from '../../user'
 import { Action } from '../actions/action'
 import { Trigger } from '../triggers/trigger'
 
@@ -16,8 +15,7 @@ export enum FlowState {
 
 export interface Flow extends TimestampDatabase {
   _id: Id
-  user: Id
-  // projectId: Id
+  projectId: Id
   // folderId: Id
   version: FlowVersion
   status: FlowStatus
@@ -25,7 +23,6 @@ export interface Flow extends TimestampDatabase {
 
 export interface FlowVersion extends TimestampDatabase {
   _id: Id
-  user: Id | User
   displayName: string
   flow: Id
   triggers: Trigger[]

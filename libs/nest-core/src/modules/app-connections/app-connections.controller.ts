@@ -1,7 +1,7 @@
 import { RequestUser, UpsertAppConnectionInput } from '@linkerry/shared'
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../lib/auth'
-import { ReqJwtUser } from '../../lib/auth/decorators/req-user.decorator'
+import { ReqJwtUser } from '../users/auth/decorators/req-jwt-user.decorator'
 import { AppConnectionsService } from './app-connections.service'
 
 @Controller('app-connections')
@@ -18,7 +18,7 @@ export class AppConnectionsController {
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
 	async upsert(@ReqJwtUser() user: RequestUser, @Body() body: UpsertAppConnectionInput) {
-		const appConnection = await this.appConnectionsService.upsert(user.id, body)
+		const appConnection = await this.appConnectionsService.upsert(user.projectId, body)
 		return this.appConnectionsService.removeSensitiveData(appConnection)
 	}
 }

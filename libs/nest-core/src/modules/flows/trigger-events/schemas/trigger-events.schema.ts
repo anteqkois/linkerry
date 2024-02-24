@@ -1,6 +1,7 @@
 import { Id, TriggerEvent } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import { ProjectsModel } from '../../../projects/schemas/projects.schema'
 import { FlowModel } from '../../flows/schemas/flow.schema'
 
 export type TriggerEventDocument = mongoose.HydratedDocument<TriggerEvent>
@@ -11,6 +12,9 @@ export class TriggerEventModel implements TriggerEvent {
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })
 	flowId: Id
+
+	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
+	projectId: Id
 
 	@Prop({ required: true, type: Object })
 	payload: any

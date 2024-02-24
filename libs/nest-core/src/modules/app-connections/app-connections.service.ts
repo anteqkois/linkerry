@@ -18,14 +18,14 @@ import { Model } from 'mongoose'
 import { CryptoService } from '../../lib/crypto'
 import { EngineService } from '../engine/engine.service'
 import { ConnectorsMetadataService } from '../flows'
-import { AppConnectionsDocument, AppConnectionsModel } from './schemas/connections.schema'
+import { AppConnectionsModel } from './schemas/connections.schema'
 
 @Injectable()
 export class AppConnectionsService {
 	private readonly logger = new Logger(AppConnectionsService.name)
 
 	constructor(
-		@InjectModel(AppConnectionsModel.name) private readonly appConnectionsModel: Model<AppConnectionsDocument>,
+		@InjectModel(AppConnectionsModel.name) private readonly appConnectionsModel: Model<AppConnectionsModel>,
 		private readonly engineService: EngineService,
 		private readonly connectorsMetadataService: ConnectorsMetadataService,
 		private readonly cryptoService: CryptoService,
@@ -41,16 +41,17 @@ export class AppConnectionsService {
 		return appConnections.map((appConnection) => this._decryptConnection(appConnection.toObject()))
 	}
 
-	async findOne({ name, userId }: { userId: Id; name: string }) {
+	async findOne({ name, projectId }: { projectId: Id; name: string }) {
 		return this.appConnectionsModel.findOne({
-			user: userId,
+			projectId,
 			name,
 		})
 	}
 
-	async upsert(userId: Id, body: UpsertAppConnectionInput) {
+	async upsert(projectId: Id, body: UpsertAppConnectionInput) {
 		const validatedConnectionValue = await this._validateConnectionValue({
 			connection: body,
+			projectId,
 		})
 
 		const encryptedConnectionValue = this.cryptoService.encryptObject({
@@ -60,14 +61,14 @@ export class AppConnectionsService {
 
 		await this.appConnectionsModel.findOneAndUpdate(
 			{
-				user: userId,
+				projectId,
 				name: body.name,
 			},
 			{
 				...body,
 				status: AppConnectionStatus.ACTIVE,
 				value: encryptedConnectionValue,
-				// projectId,
+				projectId,
 			},
 			{
 				upsert: true,
@@ -75,7 +76,7 @@ export class AppConnectionsService {
 		)
 
 		const updatedConnection = await this.findOne({
-			userId,
+			projectId,
 			name: body.name,
 		})
 
@@ -86,9 +87,10 @@ export class AppConnectionsService {
 
 	private async _validateConnectionValue({
 		connection,
+		projectId,
 	}: {
 		connection: UpsertAppConnectionInput
-		//  projectId: ProjectId;
+		projectId: Id
 	}): Promise<AppConnectionValue> {
 		switch (connection.value.type as AppConnectionType) {
 			// case AppConnectionType.PLATFORM_OAUTH2:
@@ -139,7 +141,7 @@ export class AppConnectionsService {
 			case AppConnectionType.SECRET_TEXT:
 				await this._engineValidateAuth({
 					connectorName: connection.connectorName,
-					// projectId,
+					projectId,
 					auth: connection.value as AppConnectionValue,
 				})
 
@@ -154,9 +156,10 @@ export class AppConnectionsService {
 	private async _engineValidateAuth({
 		auth,
 		connectorName,
+		projectId,
 	}: {
 		connectorName: string
-		//  projectId: ProjectId;
+		projectId: Id
 		auth: AppConnectionValue
 	}): Promise<void> {
 		const connectorMetadata = await this.connectorsMetadataService.findOne(connectorName, {})
@@ -168,7 +171,7 @@ export class AppConnectionsService {
 				connectorType: connectorMetadata.connectorType,
 				connectorVersion: connectorMetadata.version,
 			},
-			// 	projectId,
+			projectId,
 		})
 
 		if (engineResponse.status !== EngineResponseStatus.OK) {

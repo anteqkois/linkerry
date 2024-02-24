@@ -40,7 +40,7 @@ export const connectorExecutor: BaseExecutor<ActionConnector> = {
 
 const executeAction: ActionHandler<ActionConnector> = async ({ action, executionState, constants }) => {
 	const { censoredInput, resolvedInput } = await variableService({
-		// projectId: constants.projectId,
+		projectId: constants.projectId,
 		workerToken: constants.workerToken,
 	}).resolve<StaticPropsValue<ConnectorPropertyMap>>({
 		unresolvedInput: action.settings.input,
@@ -112,7 +112,7 @@ const executeAction: ActionHandler<ActionConnector> = async ({ action, execution
 			propsValue: processedInput,
 			// tags: createTagsManager(hookResponse),
 			connections: createConnectionManager({
-				// projectId: constants.projectId,
+				projectId: constants.projectId,
 				workerToken: constants.workerToken,
 				hookResponse,
 			}),
@@ -123,6 +123,10 @@ const executeAction: ActionHandler<ActionConnector> = async ({ action, execution
 				pause: createPauseHook(hookResponse),
 			},
 			resumePayload: constants.resumePayload,
+			project: {
+				id: constants.projectId,
+				// externalId: constants.externalProjectId,
+			},
 		}
 		const output = await connectorAction.run(context)
 		const newExecutionContext = executionState.addTags(hookResponse.tags)
@@ -167,10 +171,10 @@ const executeAction: ActionHandler<ActionConnector> = async ({ action, execution
 
 const createConnectionManager = ({
 	workerToken,
-	// projectId,
+	projectId,
 	hookResponse,
 }: {
-	// projectId: string
+	projectId: string
 	workerToken: string
 	hookResponse: HookResponse
 }): ConnectionsManager => {
@@ -178,7 +182,7 @@ const createConnectionManager = ({
 		get: async (key: string) => {
 			try {
 				const connection = await createConnectionService({
-					//  projectId,
+					projectId,
 					workerToken,
 				}).obtain(key)
 				hookResponse.tags.push(`connection:${key}`)

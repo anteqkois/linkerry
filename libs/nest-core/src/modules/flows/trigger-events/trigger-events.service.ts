@@ -55,11 +55,11 @@ export class TriggerEventsService {
 		})
 	}
 
-	async deleteMany({ flowId, triggerName }: DeleteDto, userId: Id) {
+	async deleteMany({ flowId, triggerName }: DeleteDto, projectId: Id) {
 		const flow = await this.flowService.findOne({
 			filter: {
 				_id: flowId,
-				user: userId,
+				projectId
 			},
 		})
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
@@ -73,12 +73,11 @@ export class TriggerEventsService {
 		})
 	}
 
-	async performPoolTest(poolDto: PoolTestDto, userId: Id) {
-		// const flow = await this.flowService.findOne(poolDto.flowId, userId)
+	async performPoolTest(poolDto: PoolTestDto, projectId: Id) {
 		const flow = await this.flowService.findOne({
 			filter: {
 				_id: poolDto.flowId,
-				user: userId,
+				projectId
 			},
 		})
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
@@ -97,6 +96,7 @@ export class TriggerEventsService {
 			hookType: TriggerHookType.TEST,
 			triggerName: flowTrigger.name,
 			webhookUrl: '', // TODO implement webhook url
+			projectId
 		})
 
 		if (!result.success) {
@@ -117,10 +117,12 @@ export class TriggerEventsService {
 				flowId: flow.id,
 				sourceName,
 				payload,
+				projectId
 			})
 		}
 
 		await this.flowVersionsService.patchTrigger({
+			projectId,
 			flowVersionId: flow.version._id,
 			triggerName: flowTrigger.name,
 			trigger: {
@@ -140,11 +142,11 @@ export class TriggerEventsService {
 		})
 	}
 
-	async getMany(query: GetManyDto, userId: Id) {
+	async getMany(query: GetManyDto, projectId: Id) {
 		const flowVersion = await this.flowVersionsService.findOne({
 			filter: {
 				flow: query.flowId,
-				user: userId,
+				projectId
 			},
 		})
 		if (!flowVersion) throw new UnprocessableEntityException('Can not retrive flow version')

@@ -8,21 +8,22 @@ import { RunActionDto } from './dto/run.dto'
 export class ActionsService {
 	constructor(private readonly engineService: EngineService, private readonly flowVersionsService: FlowVersionsService) {}
 
-	async run(runDto: RunActionDto, userId: Id) {
+	async run(projectId: Id, body: RunActionDto) {
 		const flowVersion = await this.flowVersionsService.findOne({
 			filter: {
-				_id: runDto.flowVersionId,
-				user: userId,
+				_id: body.flowVersionId,
+				projectId
 			},
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
-		const action = flowHelper.getAction(flowVersion, runDto.actionName)
+		const action = flowHelper.getAction(flowVersion, body.actionName)
 		assertNotNullOrUndefined(action, 'action')
 
 		const { result, standardError, standardOutput } = await this.engineService.executeAction({
 			flowVersion,
-			stepName: runDto.actionName,
+			stepName: body.actionName,
+			projectId,
 		})
 
 		return {

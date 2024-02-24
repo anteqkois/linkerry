@@ -1,27 +1,27 @@
 import {
-	Action,
-	ActionType,
-	CustomError,
-	EngineOperationType,
-	EngineResponse,
-	EngineResponseStatus,
-	EngineTestOperation,
-	ErrorCode,
-	ExecuteActionResponse,
-	ExecuteExtractConnectorMetadata,
-	ExecuteFlowOperation,
-	ExecutePropsOptions,
-	ExecuteStepOperation,
-	ExecuteTriggerOperation,
-	ExecuteValidateAuthOperation,
-	ExecutionOutput,
-	ExecutionType,
-	GenricStepOutput,
-	StepOutputStatus,
-	TriggerHookType,
-	assertNotNullOrUndefined,
-	flowHelper,
-	isNull,
+    Action,
+    ActionType,
+    CustomError,
+    EngineOperationType,
+    EngineResponse,
+    EngineResponseStatus,
+    EngineTestOperation,
+    ErrorCode,
+    ExecuteActionResponse,
+    ExecuteExtractConnectorMetadata,
+    ExecuteFlowOperation,
+    ExecutePropsOptions,
+    ExecuteStepOperation,
+    ExecuteTriggerOperation,
+    ExecuteValidateAuthOperation,
+    ExecutionOutput,
+    ExecutionType,
+    GenricStepOutput,
+    StepOutputStatus,
+    TriggerHookType,
+    assertNotNullOrUndefined,
+    flowHelper,
+    isNil,
 } from '@linkerry/shared'
 import { argv } from 'node:process'
 import { EngineConstants } from './handler/context/engine-constants'
@@ -51,7 +51,7 @@ const executeFlow = async (input: ExecuteFlowOperation, context: FlowExecutorCon
 
 async function executeStep(input: ExecuteStepOperation): Promise<ExecuteActionResponse> {
 	const step = flowHelper.getStep(input.flowVersion, input.stepName) as Action | undefined
-	if (isNull(step) || !Object.values(ActionType).includes(step.type))
+	if (isNil(step) || !Object.values(ActionType).includes(step.type))
 		throw new CustomError('Step not found or not supported', ErrorCode.INVALID_TYPE, {
 			step,
 		})
@@ -61,7 +61,7 @@ async function executeStep(input: ExecuteStepOperation): Promise<ExecuteActionRe
 		executionState: await testExecutionContext.stateFromFlowVersion({
 			flowVersion: input.flowVersion,
 			excludedStepName: step.name,
-			// projectId: input.projectId,
+			projectId: input.projectId,
 			workerToken: input.workerToken,
 		}),
 		constants: EngineConstants.fromExecuteStepInput(input),
@@ -124,6 +124,12 @@ const execute = async (): Promise<void> => {
 				const output = await connectorHelper.executeProps({
 					params: input,
 					connectorSource: EngineConstants.CONNECTOR_SOURCES,
+					executionState: await testExecutionContext.stateFromFlowVersion({
+						flowVersion: input.flowVersion,
+						projectId: input.projectId,
+						workerToken: input.workerToken,
+					}),
+					constants: EngineConstants.fromExecutePropertyInput(input),
 				})
 				await writeOutput({
 					status: EngineResponseStatus.OK,
@@ -170,7 +176,7 @@ const execute = async (): Promise<void> => {
 				const input: EngineTestOperation = await utils.parseJsonFile(EngineConstants.INPUT_FILE)
 				const testExecutionState = await testExecutionContext.stateFromFlowVersion({
 					flowVersion: input.sourceFlowVersion,
-					// projectId: input.projectId,
+					projectId: input.projectId,
 					workerToken: input.workerToken,
 				})
 				const output = await executeFlow(input, testExecutionState)

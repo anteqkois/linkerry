@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-export const tryParseJson = <T = unknown>(value: any): T=> {
+export const tryParseJson = <T = unknown>(value: any): T => {
 	try {
 		return JSON.parse(value as string)
 	} catch (e) {
@@ -27,8 +27,8 @@ export function isEmpty<T>(value: T | null | undefined): boolean {
 	return false
 }
 
-export const isNull = (value: unknown): value is null | undefined => {
-	return value == null
+export const isNil = <T>(value: T | null | undefined): value is null | undefined => {
+	return value === null || value === undefined
 }
 
 export const isInteger = (value: unknown) => {

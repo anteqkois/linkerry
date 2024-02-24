@@ -6,6 +6,10 @@ type BaseContext<ConnectorAuth extends ConnectorAuthProperty, Props extends Conn
 	auth: ConnectorPropValueSchema<ConnectorAuth>
 	propsValue: StaticPropsValue<Props>
 	store: Store
+	project: {
+    id: Id;
+    // externalId: () => Promise<string | undefined>;
+  };
 }
 
 export type TriggerPayload =
@@ -134,6 +138,10 @@ export enum StoreScope {
 
 export type PropertyContext = {
 	server: ServerContext
+	project: {
+    id: Id;
+    // externalId: () => Promise<string | undefined>;
+  };
 }
 
 export type ServerContext = {

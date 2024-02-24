@@ -1,12 +1,12 @@
 import {
-	ActionType,
-	ExecutionOutput,
-	ExecutionOutputStatus,
-	PauseMetadata,
-	StepOutput,
-	StepOutputStatus,
-	StopResponse,
-	isNull,
+    ActionType,
+    ExecutionOutput,
+    ExecutionOutputStatus,
+    PauseMetadata,
+    StepOutput,
+    StepOutputStatus,
+    StopResponse,
+    isNil,
 } from '@linkerry/shared'
 import { loggingUtils } from '../../helper/logging-utils'
 import { StepExecutionPath } from './step-execution-path'
@@ -57,7 +57,7 @@ export class FlowExecutorContext {
 	public isCompleted({ stepName }: { stepName: string }): boolean {
 		const stateAtPath = getStateAtPath({ currentPath: this.currentPath, steps: this.steps })
 		const stepOutput = stateAtPath[stepName]
-		if (isNull(stepOutput)) {
+		if (isNil(stepOutput)) {
 			return false
 		}
 		return stepOutput.status !== StepOutputStatus.PAUSED

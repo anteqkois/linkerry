@@ -2,10 +2,10 @@ import { ActionType, BranchStepOutput, FlowVersion, GenricStepOutput, StepOutput
 import { FlowExecutorContext } from './flow-execution-context'
 
 export const testExecutionContext = {
-    async stateFromFlowVersion({ flowVersion, excludedStepName, workerToken }: {
+    async stateFromFlowVersion({ flowVersion, excludedStepName }: {
         flowVersion: FlowVersion
         excludedStepName?: string
-        // projectId: string
+        projectId: string
         workerToken: string
     }): Promise<FlowExecutorContext> {
         const flowSteps = flowHelper.getAllSteps(flowVersion)

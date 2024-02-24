@@ -10,10 +10,10 @@ import {
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { FastifyReply } from 'fastify'
+import { LocalAuthGuard } from '../../../lib/auth/guards/local-auth.guard'
 import { AuthService } from './auth.service'
-import { ReqJwtUser } from './decorators/req-user.decorator'
+import { ReqJwtUser } from './decorators/req-jwt-user.decorator'
 import { SignUpDto } from './dto/sign-up.dto'
-import { LocalAuthGuard } from './guards/local-auth.guard'
 
 @Controller('auth')
 export class AuthController {

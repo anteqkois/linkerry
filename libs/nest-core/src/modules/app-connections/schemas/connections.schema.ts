@@ -1,7 +1,7 @@
 import { AppConnectionEncrypted, AppConnectionStatus, AppConnectionType, EncryptedObject, Id } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { UserModel } from '../../users'
+import { ProjectsModel } from '../../projects/schemas/projects.schema'
 
 export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 
@@ -9,8 +9,8 @@ export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncr
 export class AppConnectionsModel implements AppConnectionEncrypted {
 	_id: string
 
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })
-	user: Id
+	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
+	projectId: Id
 
 	@Prop({ required: true, type: String })
 	connectorName: string

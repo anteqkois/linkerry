@@ -77,7 +77,6 @@ export abstract class ConnectorManager {
 }
 
 type InstallParams = {
-	// projectId: string
 	projectPath: string
 	connectors: ConnectorPackage[]
 }

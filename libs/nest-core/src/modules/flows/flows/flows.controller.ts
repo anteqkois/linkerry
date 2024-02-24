@@ -1,7 +1,7 @@
 import { Id, RequestUser } from '@linkerry/shared'
 import { Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { ReqJwtUser } from '../../../lib/auth/decorators/req-user.decorator'
+import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowsService } from './flows.service'
 
 @Controller('flows')
@@ -14,7 +14,7 @@ export class FlowsController {
 		return this.flowsService.findOne({
 			filter: {
 				_id: id,
-				user: user.id,
+				projectId: user.projectId,
 			},
 		})
 	}
@@ -22,7 +22,7 @@ export class FlowsController {
 	@UseGuards(JwtCookiesAuthGuard)
 	@Delete(':id')
 	delteFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
-		return this.flowsService.deleteOne(id, user.id)
+		return this.flowsService.deleteOne(id, user.projectId)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)

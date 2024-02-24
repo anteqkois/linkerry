@@ -32,8 +32,8 @@ import {
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import fs from 'fs/promises'
-import { AuthService } from '../../lib/auth/auth.service'
 import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
+import { AuthService } from '../users/auth/auth.service'
 import { SandboxProvisionerService } from '../workers/sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../workers/sandbox/sandboxes/sandbox'
 
@@ -101,7 +101,6 @@ export class EngineService {
 					connectorType,
 					connectorName,
 					connectorVersion,
-					// projectId,
 				}
 
 				return this.sandboxProvisionerService.provisionSandbox({
@@ -109,7 +108,6 @@ export class EngineService {
 					connectorName: connector.connectorName,
 					connectorVersion: connector.connectorVersion,
 					connectors: [connector],
-					// projectId,
 				})
 			}
 			// case ActionType.CODE: {
@@ -185,7 +183,7 @@ export class EngineService {
 		this.logger.debug(`#executeFlow:`, {
 			executionType: operation.executionType,
 			flowRunId: operation.flowRunId,
-			// projectId: operation.projectId,
+			projectId: operation.projectId,
 			sandboxId: sandbox.boxId,
 		})
 
@@ -193,6 +191,7 @@ export class EngineService {
 			...operation,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
+					projectId: operation.projectId,
 					sub: `${operation.flowVersion._id}-executeFlow-${operation.flowRunId}`,
 					type: JWTPrincipalType.WORKER,
 				},
@@ -205,7 +204,7 @@ export class EngineService {
 	async executeProp(operation: Omit<ExecutePropsOptions, EngineConstants>): Promise<EngineHelperResponse<EngineHelperPropResult>> {
 		this.logger.debug(`#executeProp:`, {
 			connector: operation.connector,
-			// projectId: operation.projectId,
+			projectId: operation.projectId,
 			stepName: operation.stepName,
 		})
 
@@ -214,13 +213,11 @@ export class EngineService {
 		connector.connectorVersion = await this.connectorsMetadataService.getExactPieceVersion({
 			name: connector.connectorName,
 			version: connector.connectorVersion,
-			// projectId: operation.projectId,
 		})
 
 		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
 			type: SandBoxCacheType.CONNECTOR,
 			connectorName: connector.connectorName,
-			// projectId: operation.projectId,
 			connectorVersion: connector.connectorVersion,
 			connectors: [connector],
 		})
@@ -230,7 +227,7 @@ export class EngineService {
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
-					// TODO implement projectId
+					projectId: operation.projectId,
 					sub: `${operation.flowVersion._id}-executeProp-${operation.propertyName}`,
 					type: JWTPrincipalType.WORKER,
 				},
@@ -250,7 +247,6 @@ export class EngineService {
 			type: SandBoxCacheType.CONNECTOR,
 			connectorName,
 			connectorVersion,
-			// projectId: operation.projectId,
 			connectors: [connector],
 		})
 
@@ -261,6 +257,7 @@ export class EngineService {
 		this.logger.debug(`#executeAction:`, {
 			flowVersionId: operation.flowVersion._id,
 			stepName: operation.stepName,
+			projectId: operation.projectId,
 		})
 		// const lockedFlowVersion = await lockPieceAction(operation)
 		const clonedFlowVersion = clone(operation.flowVersion)
@@ -276,10 +273,11 @@ export class EngineService {
 			// flowVersion: lockedFlowVersion,
 			flowVersion: clonedFlowVersion,
 			stepName: operation.stepName,
-			// projectId: operation.projectId,
+			projectId: operation.projectId,
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
+					projectId: operation.projectId,
 					sub: `${operation.flowVersion._id}-executeAction-${step.settings.actionName}`,
 					type: JWTPrincipalType.WORKER,
 				},
@@ -292,14 +290,13 @@ export class EngineService {
 	async executeValidateAuth(
 		operation: Omit<ExecuteValidateAuthOperation, EngineConstants>,
 	): Promise<EngineHelperResponse<EngineHelperValidateAuthResult>> {
-		this.logger.debug(`#executeValidateAuth:`, { connector: operation.connector })
+		this.logger.debug(`#executeValidateAuth:`, { connector: operation.connector, projectId: operation.projectId })
 
 		const { connector } = operation
 
 		connector.connectorVersion = await this.connectorsMetadataService.getExactPieceVersion({
 			name: connector.connectorName,
 			version: connector.connectorVersion,
-			// projectId: operation.projectId,
 		})
 
 		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
@@ -307,7 +304,6 @@ export class EngineService {
 			connectorName: connector.connectorName,
 			connectorVersion: connector.connectorVersion,
 			connectors: [connector],
-			// projectId: operation.projectId,
 		})
 
 		const input = {
@@ -315,6 +311,7 @@ export class EngineService {
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
+					projectId: operation.projectId,
 					sub: `executeValidateAuth-${operation.connector.connectorName}`,
 					type: JWTPrincipalType.WORKER,
 				},
@@ -342,13 +339,11 @@ export class EngineService {
 		const connectorMetadataFixedVersion = await this.connectorsMetadataService.getExactPieceVersion({
 			name: connectorName,
 			version: connectorVersion,
-			// projectId: operation.projectId,
 		})
 
 		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
 			type: SandBoxCacheType.CONNECTOR,
 			connectorName,
-			// projectId: operation.projectId,
 			connectorVersion: connectorMetadataFixedVersion,
 			connectors: [
 				{
@@ -374,9 +369,9 @@ export class EngineService {
 			// }),
 			serverUrl: this.serverUrl,
 			// webhookSecret: await getWebhookSecret(operation.flowVersion),
-			// workerToken: await generateWorkerToken({ projectId: operation.projectId }),
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
+					projectId: operation.projectId,
 					sub: `${operation.flowVersion._id}-executeTrigger-${trigger.settings.triggerName}`,
 					type: JWTPrincipalType.WORKER,
 				},
@@ -389,7 +384,7 @@ export class EngineService {
 	async executeTest(sandbox: Sandbox, operation: Omit<EngineTestOperation, EngineConstants>): Promise<EngineHelperResponse<EngineHelperFlowResult>> {
 		this.logger.debug(`#executeTest:`, {
 			flowVersionId: operation.sourceFlowVersion._id,
-			// projectId: operation.projectId,
+			projectId: operation.projectId,
 			sandboxId: sandbox.boxId,
 			executionType: operation.executionType,
 		})
@@ -399,6 +394,7 @@ export class EngineService {
 			serverUrl: this.serverUrl,
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
+					projectId: operation.projectId,
 					sub: `${operation.flowVersion._id}-executeTest-${operation.flowRunId}`,
 					type: JWTPrincipalType.WORKER,
 				},

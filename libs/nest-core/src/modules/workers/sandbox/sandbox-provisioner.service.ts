@@ -10,12 +10,12 @@ export class SandboxProvisionerService {
 
 	constructor(private readonly sandboxManagerService: SandboxManagerService) {}
 
+	// async provisionSandbox({ connectors = [], codeSteps = [], ...cacheInfo }: GetParams) {
 	async provisionSandbox({ connectors = [], ...cacheInfo }: GetParams) {
 		try {
 			const cachedSandbox = await sandboxCachePool.findOrCreate(cacheInfo)
 
 			await cachedSandbox.prepare({
-				// projectId,
 				connectors,
 				// codeSteps,
 			})
@@ -49,7 +49,6 @@ export class SandboxProvisionerService {
 
 type GetParams<T extends SandBoxCacheType = SandBoxCacheType> = TypedProvisionCacheInfo<T> & {
 	connectors?: ConnectorPackage[]
-	// projectId: ProjectId
 	// codeSteps?: CodeArtifact[]
 }
 

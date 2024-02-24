@@ -1,4 +1,4 @@
-import { ConnectorPackage } from '@linkerry/shared'
+import { ConnectorPackage, CustomError, ErrorCode } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import dayjs from 'dayjs'
 import { mkdir, rm } from 'node:fs/promises'
@@ -48,7 +48,6 @@ export class CachedSandbox {
 		this._state = CachedSandboxState.INITIALIZED
 	}
 
-	// async prepare({ projectId, connectors, codeSteps = [] }: PrepareParams): Promise<void> {
 	async prepare({ connectors, codeSteps = [] }: PrepareParams): Promise<void> {
 		this.logger.debug(`#prepare:`, { key: this.key, state: this._state, activeSandboxes: this._activeSandboxCount })
 
@@ -67,7 +66,6 @@ export class CachedSandbox {
 			}
 
 			await connectorManager.install({
-				// projectId,
 				projectPath: this.path(),
 				connectors,
 			})
@@ -80,7 +78,8 @@ export class CachedSandbox {
 
 			this._state = CachedSandboxState.READY
 		} catch (error) {
-			const contextValue = {
+			this.logger.error(error)
+			throw new CustomError(`Can not prepare snadbox`, ErrorCode.ENGINE_OPERATION_FAILURE, {
 				args: { connectors, codeSteps },
 				state: this._state,
 				activeSandboxes: this._activeSandboxCount,
@@ -88,10 +87,7 @@ export class CachedSandbox {
 				lastUsedAt: this.lastUsedAt(),
 				isInUse: this.isInUse(),
 				path: this.path(),
-			}
-
-			this.logger.error(error)
-			throw new Error(`Can not prepare snadbox ${JSON.stringify(contextValue)}`)
+			})
 		}
 	}
 
@@ -122,7 +118,6 @@ export class CachedSandbox {
 }
 
 type PrepareParams = {
-	// projectId: string
 	connectors: ConnectorPackage[]
 	codeSteps?: any[]
 	// codeSteps?: CodeArtifact[]
