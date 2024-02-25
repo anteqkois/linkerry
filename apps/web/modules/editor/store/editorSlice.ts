@@ -1,5 +1,5 @@
 import { SetStateAction } from 'react'
-import { EditorDrawer } from '../../../shared/components/drawer/types'
+import { EditorDrawer } from '../types'
 import { CreateSlice, EditorSlice } from './types'
 
 export const editorDrawers: EditorDrawer[] = [

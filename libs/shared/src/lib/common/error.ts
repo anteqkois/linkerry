@@ -35,7 +35,7 @@ export const isCustomHttpExceptionAxios = (object: unknown): object is { respons
 }
 
 // TODO implement every cusotm code with typed props
-type CustomErrorMetadata = Record<string, any>
+type CustomErrorMetadata = { userMessage?: string } & Record<string, any>
 
 export class CustomError extends Error {
 	override name = 'CustomError'

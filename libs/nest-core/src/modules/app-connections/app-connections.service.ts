@@ -33,9 +33,9 @@ export class AppConnectionsService {
 		//
 	}
 
-	async find(userId: Id) {
+	async find(projectId: Id) {
 		const appConnections = await this.appConnectionsModel.find({
-			user: userId,
+			projectId,
 		})
 
 		return appConnections.map((appConnection) => this._decryptConnection(appConnection.toObject()))
@@ -181,6 +181,7 @@ export class AppConnectionsService {
 
 		const validateAuthResult = engineResponse.result
 
+		console.log('validateAuthResult', validateAuthResult)
 		if (!validateAuthResult.valid && 'error' in validateAuthResult)
 			throw new CustomError(validateAuthResult.error, ErrorCode.INVALID_APP_CONNECTION, validateAuthResult)
 	}

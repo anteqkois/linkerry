@@ -12,7 +12,7 @@ import { ConfigService } from '@nestjs/config'
 import { FastifyReply } from 'fastify'
 import { LocalAuthGuard } from '../../../lib/auth/guards/local-auth.guard'
 import { AuthService } from './auth.service'
-import { ReqJwtUser } from './decorators/req-jwt-user.decorator'
+import { ReqUser } from './decorators/req-user.decorator'
 import { SignUpDto } from './dto/sign-up.dto'
 
 @Controller('auth')
@@ -43,7 +43,8 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@ReqJwtUser() user: User, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLoginResponse> {
+  async login(@ReqUser() user: User, @Res({ passthrough: true }) res: FastifyReply): Promise<IAuthLoginResponse> {
+		console.log(user);
     const { access_token, user: userRes } = await this.authService.login(user)
     const expireDateUnix = +this.configService.get('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
 

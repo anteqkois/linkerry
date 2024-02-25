@@ -11,7 +11,7 @@ export class AppConnectionsController {
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get()
 	async find(@ReqJwtUser() user: RequestUser) {
-		const appConnections = await this.appConnectionsService.find(user.id)
+		const appConnections = await this.appConnectionsService.find(user.projectId)
 		return appConnections.map(this.appConnectionsService.removeSensitiveData)
 	}
 

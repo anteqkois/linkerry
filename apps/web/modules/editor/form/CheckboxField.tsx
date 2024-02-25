@@ -1,5 +1,6 @@
 import { ConnectorProperty } from '@linkerry/connectors-framework'
 import { Checkbox, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@linkerry/ui-components/client'
+import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useDynamicField } from './useFieldCustomValidation'
 
@@ -9,11 +10,14 @@ interface CheckboxFieldProps {
 }
 
 export const CheckboxField = ({ property, name }: CheckboxFieldProps) => {
-	const { control } = useFormContext()
-
+	const { control, trigger } = useFormContext()
 	const { rules } = useDynamicField({
 		property,
 	})
+
+	useEffect(() => {
+		trigger(name)
+	}, [])
 
 	return (
 		<FormField

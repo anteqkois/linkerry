@@ -8,14 +8,17 @@ export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 export class FlowVersionModel implements FlowVersion {
   _id: string
 
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flow' })
+  flow: Id
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'projects' })
+  projectId: Id
+
   @Prop({ required: true, type: String })
   displayName: string
 
   @Prop({ required: true, type: Number })
   stepsCount: number
-
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flow' })
-  flow: Id
 
   @Prop({ required: true, type: Boolean })
   valid: boolean

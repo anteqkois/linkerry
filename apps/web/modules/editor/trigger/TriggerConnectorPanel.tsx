@@ -70,7 +70,6 @@ export const TriggerConnectorPanel = () => {
 			})
 
 		/* add to the end of callstack */
-		console.log('RESET TRIGGER 2')
 		setTimeout(() => {
 			triggerForm.reset({
 				__temp__trigger: selectedTrigger,
@@ -121,7 +120,6 @@ export const TriggerConnectorPanel = () => {
 				input[key] = value.defaultValue
 			})
 
-		console.log('RESET TRIGGER')
 		triggerForm.reset({
 			// TODO
 			// @ts-ignore

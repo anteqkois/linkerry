@@ -28,6 +28,6 @@ export class FlowsController {
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
 	createEmptyFlow(@ReqJwtUser() user: RequestUser) {
-		return this.flowsService.createEmpty(user.id)
+		return this.flowsService.createEmpty(user.projectId)
 	}
 }

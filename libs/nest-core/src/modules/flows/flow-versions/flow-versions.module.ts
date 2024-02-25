@@ -5,9 +5,9 @@ import { FlowVersionsService } from './flow-versions.service'
 import { flowVersionModelFactory } from './schemas/flow-version.schema'
 
 @Module({
-  imports: [MongooseModule.forFeatureAsync([flowVersionModelFactory])],
-  controllers: [FlowVersionsController],
-  providers: [FlowVersionsService],
-  exports: [FlowVersionsService],
+	imports: [MongooseModule.forFeatureAsync([flowVersionModelFactory])],
+	controllers: [FlowVersionsController],
+	providers: [FlowVersionsService],
+	exports: [FlowVersionsService],
 })
 export class FlowVersionsModule {}

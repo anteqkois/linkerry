@@ -14,9 +14,8 @@ import {
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
 import { StoreApi } from 'zustand'
-import { EditorDrawer } from '../../../shared/components/drawer/types'
 import { CustomEdge, CustomEdgeId } from '../edges/types'
-import { CustomNode, CustomNodeId } from '../types'
+import { CustomNode, CustomNodeId, EditorDrawer } from '../types'
 
 // type EditorNode = Node | CustomNode
 type EditorNode = CustomNode

@@ -26,7 +26,6 @@ export class JwtBearerTokenStrategy extends PassportStrategy(Strategy, 'jwt-bear
 
 	async validate(payload: JwtTokenPayload) {
 		// todo check for privilages using calb ? Logic to get privilages from db
-		console.log('JWT payload', payload)
 		switch (payload.type) {
 			case JWTPrincipalType.CUSTOMER:
 				return { id: payload.sub,  exp: payload.exp, type: JWTPrincipalType.CUSTOMER, projectId: payload.projectId } as RequestUser

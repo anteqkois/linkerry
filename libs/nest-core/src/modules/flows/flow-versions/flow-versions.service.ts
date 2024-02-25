@@ -30,13 +30,14 @@ export class FlowVersionsService {
 		return (await this.flowVersionModel.findOne(filter))?.toObject()
 	}
 
-	async createEmpty(flowId: Id) {
+	async createEmpty(flowId: Id, projectId: Id) {
 		const emptyTrigger = generateEmptyTrigger('trigger_1')
 
 		return this.flowVersionModel.create({
+			flow: flowId,
+			projectId,
 			displayName: 'Untitled',
 			state: FlowState.Draft,
-			flow: flowId,
 			valid: false,
 			stepsCount: 1,
 			triggers: [emptyTrigger],
@@ -54,7 +55,7 @@ export class FlowVersionsService {
 	async updateTrigger(id: Id, projectId: Id, updateTrigger: Trigger) {
 		const flowVersion = await this.flowVersionModel.findOne({
 			_id: id,
-			projectId
+			projectId,
 		})
 
 		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
@@ -88,7 +89,17 @@ export class FlowVersionsService {
 		return newFlowVersion
 	}
 
-	async patchTrigger({ flowVersionId, triggerName, trigger, projectId }: { flowVersionId: Id; triggerName: string; trigger: Partial<Trigger>, projectId: Id }) {
+	async patchTrigger({
+		flowVersionId,
+		triggerName,
+		trigger,
+		projectId,
+	}: {
+		flowVersionId: Id
+		triggerName: string
+		trigger: Partial<Trigger>
+		projectId: Id
+	}) {
 		const flowVersion = await this.flowVersionModel.findById(flowVersionId)
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 		const newFlowVersion = flowHelper.patchTrigger(flowVersion, triggerName, trigger)
@@ -96,7 +107,7 @@ export class FlowVersionsService {
 		await this.flowVersionModel.updateOne(
 			{
 				_id: flowVersionId,
-				projectId
+				projectId,
 			},
 			{ $set: newFlowVersion },
 		)
@@ -116,7 +127,7 @@ export class FlowVersionsService {
 
 		const flowVersion = await this.flowVersionModel.findOne({
 			_id: id,
-			projectId
+			projectId,
 		})
 
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
@@ -125,7 +136,7 @@ export class FlowVersionsService {
 		const response = await this.flowVersionModel.updateOne(
 			{
 				_id: id,
-				projectId
+				projectId,
 			},
 			{ $set: newFlowVersion },
 		)
@@ -148,7 +159,7 @@ export class FlowVersionsService {
 
 		const flowVersion = await this.flowVersionModel.findOne({
 			_id: id,
-			projectId
+			projectId,
 		})
 
 		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
@@ -158,7 +169,7 @@ export class FlowVersionsService {
 		await this.flowVersionModel.updateOne(
 			{
 				_id: id,
-				projectId
+				projectId,
 			},
 			{ $set: newFlowVersion },
 		)
@@ -169,7 +180,7 @@ export class FlowVersionsService {
 	async deleteAction(id: Id, projectId: Id, actionName: string) {
 		const flowVersion = await this.flowVersionModel.findOne({
 			_id: id,
-			projectId
+			projectId,
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
@@ -178,7 +189,7 @@ export class FlowVersionsService {
 		await this.flowVersionModel.updateOne(
 			{
 				_id: id,
-				projectId
+				projectId,
 			},
 			{ $set: newFlowVersion },
 		)

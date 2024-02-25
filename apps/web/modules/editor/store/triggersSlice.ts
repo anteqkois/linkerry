@@ -64,8 +64,8 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			nextActionName: '',
 		}
 
-		patchNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
 		await updateEditedTrigger(newTrigger)
+		patchNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
 		setDrawer('trigger_connector')
 	},
 	updateEditedTrigger: async (newTrigger: Trigger) => {
@@ -148,11 +148,11 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	testPoolTrigger: async () => {
 		set({ testConnectorLoading: true })
 		const { flow, setFlow, patchNode, editedTrigger } = get()
-		assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
 		let newFlowVersion: FlowVersion | undefined = undefined
 		let testResult: TriggerEvent[] = []
 
 		try {
+			assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
 			testResult = (
 				await TriggerApi.poolTest({
 					flowId: flow._id,
@@ -178,6 +178,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				},
 			})
 			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
+			set({ editedTrigger: trigger })
 			setFlow({ ...flow, version: newFlowVersion })
 		} finally {
 			set({ testConnectorLoading: false })

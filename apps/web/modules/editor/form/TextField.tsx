@@ -11,14 +11,13 @@ interface TextFieldProps {
 
 export const TextField = ({ property, name }: TextFieldProps) => {
 	const { control, trigger } = useFormContext()
-
-	useEffect(() => {
-		trigger()
-	}, [])
-
 	const { rules } = useDynamicField({
 		property,
 	})
+
+	useEffect(() => {
+		trigger(name)
+	}, [])
 
 	return (
 		<FormField

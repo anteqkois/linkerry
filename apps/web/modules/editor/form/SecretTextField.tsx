@@ -11,14 +11,13 @@ interface SecretTextFieldProps {
 
 export const SecretTextField = ({ property, name }: SecretTextFieldProps) => {
 	const { control, trigger } = useFormContext()
-
-	useEffect(() => {
-		trigger()
-	}, [])
-
 	const { rules } = useDynamicField({
 		property,
 	})
+
+	useEffect(() => {
+		trigger(name)
+	}, [])
 
 	return (
 		<FormField

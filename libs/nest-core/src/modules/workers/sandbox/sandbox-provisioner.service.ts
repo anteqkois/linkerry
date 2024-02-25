@@ -30,7 +30,9 @@ export class SandboxProvisionerService {
 			return sandbox
 		} catch (error: any) {
 			this.logger.error(error)
-			throw new CustomError(`Can not provisionSandbox`, ErrorCode.ENTITY_NOT_FOUND, { connectors })
+			throw new CustomError(`Can not provision Sandbox`, ErrorCode.ENTITY_NOT_FOUND, {
+				connectors,
+			})
 		}
 	}
 

@@ -49,11 +49,11 @@ export const ActionConnectorPanel = () => {
 		}),
 	)
 
-	const actionForm = useForm<{ __temp__action: ActionBase | null; actionName: ActionBase['name'] } & Record<string, any>>({
+	const actionForm = useForm<{ __temp__action: ActionBase | null; actionName: ActionBase['name'] | null } & Record<string, any>>({
 		mode: 'all',
 		defaultValues: {
 			__temp__action: null,
-			actionName: '',
+			actionName: null,
 		},
 	})
 	const actionWatcher = actionForm.watch('__temp__action')
@@ -67,7 +67,7 @@ export const ActionConnectorPanel = () => {
 		if (editedAction.type !== ActionType.ACTION || editedAction.settings.actionName === '') {
 			actionForm.reset({
 				__temp__action: null,
-				actionName: '',
+				actionName: null,
 			})
 			return
 		}
@@ -179,7 +179,7 @@ export const ActionConnectorPanel = () => {
 									<FormLabel>Action</FormLabel>
 									<FormControl>
 										<Select
-											value={field.value}
+											value={field.value === null ? undefined : field.value}
 											onValueChange={(v) => {
 												field.onChange(v)
 												onChangeAction(v)

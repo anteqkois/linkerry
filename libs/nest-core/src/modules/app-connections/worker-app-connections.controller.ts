@@ -9,8 +9,8 @@ export class WorkerAppConnectionsController {
 	constructor(private readonly appConnectionsService: AppConnectionsService) {}
 
 	@UseGuards(JwtBearerTokenAuthGuard)
-	@Get(':connectionName')
-	async find(@ReqJwtWorker() worker: RequestWorker, @Param('connectionName') connectionName: string) {
+	@Get(':connection-name')
+	async findOne(@ReqJwtWorker() worker: RequestWorker, @Param('connection-name') connectionName: string) {
 		const appConnection = await this.appConnectionsService.findOne({ name: connectionName, projectId: worker.projectId })
 
 		if (isNil(appConnection)) {

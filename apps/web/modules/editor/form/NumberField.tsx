@@ -11,14 +11,13 @@ interface NumberFieldProps {
 
 export const NumberField = ({ property, name }: NumberFieldProps) => {
 	const { control, trigger } = useFormContext()
-
-	useEffect(() => {
-		trigger()
-	}, [])
-
 	const { rules } = useDynamicField({
 		property,
 	})
+
+	useEffect(() => {
+		trigger(name)
+	}, [])
 
 	return (
 		<FormField

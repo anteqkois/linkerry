@@ -27,20 +27,15 @@ export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>
 }
 
 export const ConnectionsSelect = ({ auth, name, connector }: ConnectionsSelectProps) => {
-	const { setValue, control } = useFormContext()
+	const { setValue, control, trigger } = useFormContext()
 	const [showDialog, setShowDialog] = useState(false)
 	const { data: appConnections, isFetched } = useClientQuery(appConnectionsQueryConfig.getMany())
 
 	const connectorConnections = useMemo(() => {
 		if (!isFetched) return []
+		trigger(name)
 		return appConnections?.filter((appConnection) => appConnection.connectorName === connector.name)
 	}, [appConnections, isFetched])
-
-	// useEffect(()=>{
-	// 	console.log(object);
-	// },[
-
-	// ])
 
 	const handleAddedConnection = (newConnection: AppConnectionWithoutSensitiveData) => {
 		const queryClient = getBrowserQueryCllient()

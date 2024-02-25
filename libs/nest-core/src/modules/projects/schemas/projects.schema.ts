@@ -5,7 +5,7 @@ import { UserModel } from '../../users'
 
 export type ProjectsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'app-connections' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'projects' })
 export class ProjectsModel implements Project {
 	_id: string
 

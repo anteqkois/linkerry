@@ -217,6 +217,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 					},
 				})
 				newFlowVersion = flowHelper.updateAction(flow.version, action)
+				set({ editedAction: action })
 				setFlow({ ...flow, version: newFlowVersion })
 			}
 		} finally {

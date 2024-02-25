@@ -156,7 +156,8 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 				.catch((error) => console.log(error))
 		}
 
-		trigger()
+		/* triggered at  VirtualizedSelect */
+		// trigger(name)
 
 		const subscription = watch(handleWatcher)
 		return () => subscription.unsubscribe()

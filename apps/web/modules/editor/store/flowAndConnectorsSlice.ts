@@ -20,10 +20,10 @@ import { CreateSlice, FlowAndConnectorsSlice } from './types'
 const emptyFlow: Flow = {
 	_id: '1234567890',
 	status: FlowStatus.Unpublished,
-	user: '1234567890',
+	projectId: '1919191919',
 	version: {
 		_id: '123456789',
-		user: '1234567890',
+		projectId: '1919191919',
 		displayName: 'Untitled',
 		state: FlowState.Draft,
 		flow: '1234567890',

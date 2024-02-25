@@ -2,6 +2,11 @@ import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { Action, Trigger } from '@linkerry/shared'
 import { NodeProps, Node as ReactFlowNode } from 'reactflow'
 
+export interface EditorDrawer {
+	name: 'select_trigger' | 'trigger_connector' | 'action_connector' | 'select_action'
+	title: string
+}
+
 export interface ICustomNode<T extends string, D extends object = any> extends ReactFlowNode<D, `${T}Node`> {
 	// id: `${T}_${`${string}`}`
 	id: string

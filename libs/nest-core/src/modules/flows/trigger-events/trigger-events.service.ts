@@ -59,7 +59,7 @@ export class TriggerEventsService {
 		const flow = await this.flowService.findOne({
 			filter: {
 				_id: flowId,
-				projectId
+				projectId,
 			},
 		})
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
@@ -77,7 +77,7 @@ export class TriggerEventsService {
 		const flow = await this.flowService.findOne({
 			filter: {
 				_id: poolDto.flowId,
-				projectId
+				projectId,
 			},
 		})
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
@@ -96,12 +96,12 @@ export class TriggerEventsService {
 			hookType: TriggerHookType.TEST,
 			triggerName: flowTrigger.name,
 			webhookUrl: '', // TODO implement webhook url
-			projectId
+			projectId,
 		})
 
 		if (!result.success) {
-			throw new CustomError('Execute trigger failed', ErrorCode.TEST_TRIGGER_FAILED, {
-				message: result.message,
+			throw new CustomError(result?.message ?? 'Execute trigger failed', ErrorCode.TEST_TRIGGER_FAILED, {
+				userMessage: 'Execute trigger failed',
 			})
 		}
 
@@ -117,7 +117,7 @@ export class TriggerEventsService {
 				flowId: flow.id,
 				sourceName,
 				payload,
-				projectId
+				projectId,
 			})
 		}
 
@@ -146,7 +146,7 @@ export class TriggerEventsService {
 		const flowVersion = await this.flowVersionsService.findOne({
 			filter: {
 				flow: query.flowId,
-				projectId
+				projectId,
 			},
 		})
 		if (!flowVersion) throw new UnprocessableEntityException('Can not retrive flow version')

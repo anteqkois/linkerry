@@ -1,4 +1,5 @@
 import { Language } from '../modules/language'
+import { Id } from './database'
 
 export interface IAuthSignUpInput {
 	email: string
@@ -30,7 +31,7 @@ export interface IAuthLogoutResponse {
 export interface JwtCustomerTokenPayload {
 	sub: string
 	type: JWTPrincipalType.CUSTOMER
-	projectId: string
+	projectId?: Id
 	exp: number
 	iss: 'linkerry'
 }
@@ -38,7 +39,7 @@ export interface JwtCustomerTokenPayload {
 export interface JwtWorkerTokenPayload {
 	sub: string
 	type: JWTPrincipalType.WORKER
-	projectId: string
+	projectId: Id
 	exp: number
 	iss: 'linkerry'
 }
@@ -48,6 +49,7 @@ export type JwtTokenPayload = JwtCustomerTokenPayload | JwtWorkerTokenPayload
 export interface RequestUser extends Omit<JwtCustomerTokenPayload, 'sub' | 'iss'> {
 	id: string
 	name: string
+	projectId: Id
 }
 export interface RequestWorker extends Omit<JwtWorkerTokenPayload, 'sub' | 'iss'> {}
 

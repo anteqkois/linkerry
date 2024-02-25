@@ -29,7 +29,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 			fieldPath = exception.field
 			errorCode = ErrorCode.VALIDATION
 		} else if (exception instanceof ZodError) {
-			// todo handle all errors, not only one
+			// TODO handle all errors, not only one
 			status = HttpStatus.UNPROCESSABLE_ENTITY
 			console.dir(exception.format(), { depth: null })
 			const formatedError = this.formatZodIssue(exception.errors[0])
@@ -56,7 +56,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 		} else if (isCustomError(exception)) {
 			status = HttpStatus.UNPROCESSABLE_ENTITY
 			errorMessage = exception.message
-			humanMessage = exception.message
+			humanMessage = exception.metadata?.userMessage ?? exception.message
 			errorCode = exception.code
 		} else {
 			console.log(exception)

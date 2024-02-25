@@ -30,10 +30,6 @@ export class AuthService {
 		return null
 	}
 
-	// createCustomerJWTPayload(user: Omit<JwtCustomerTokenPayload, 'iss' | 'exp'>) {
-	// 	return { name: user.name, sub: user.id, type: JWTPrincipalType.CUSTOMER, projectId:  }
-	// }
-
 	generateWorkerToken({ payload }: { payload: Omit<JwtWorkerTokenPayload, 'iss' | 'exp'> }): string {
 		return this.jwtService.generateToken({
 			payload,
@@ -76,7 +72,7 @@ export class AuthService {
 				payload: {
 					sub: user._id,
 					type: JWTPrincipalType.CUSTOMER,
-					projectId: userProjects[0].id,
+					projectId: userProjects[0]?.id,
 				},
 			}),
 		}

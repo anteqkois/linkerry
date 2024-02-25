@@ -42,7 +42,7 @@ export const VirtualizedSelect = ({ property, initData, name }: VirtualizedSelec
 
 		setValue(name, initData.value)
 		setValue(`__temp__${name}`, initData.label)
-		trigger()
+		trigger(name)
 	}, [initData])
 
 	const onChangeValue = (newLabel: string) => {
