@@ -4,6 +4,7 @@ import {
 	DynamicDropdownProperty,
 	DynamicDropdownState,
 	DynamicProperties,
+	PropertyContext,
 	PropertyType,
 	StaticPropsValue,
 } from '@linkerry/connectors-framework'
@@ -27,7 +28,7 @@ export const connectorHelper = {
 		params,
 		connectorSource,
 		constants,
-		executionState
+		executionState,
 	}: {
 		executionState: FlowExecutorContext
 		params: ExecutePropsOptions
@@ -48,15 +49,15 @@ export const connectorHelper = {
 				executionState,
 				// executionState: FlowExecutorContext.empty(),
 			})
-			const ctx = {
+			const ctx: PropertyContext = {
 				server: {
 					token: params.workerToken,
 					apiUrl: EngineConstants.API_URL,
 					publicUrl: params.serverUrl,
 				},
-				projct:{
-					id: params.projectId
-				}
+				project: {
+					id: params.projectId,
+				},
 			}
 
 			if (property.type === PropertyType.DYNAMIC) {

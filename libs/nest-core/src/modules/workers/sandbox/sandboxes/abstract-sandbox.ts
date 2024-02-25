@@ -72,7 +72,7 @@ export type SandboxCtorParams = {
 }
 
 export type ExecuteSandboxResult = {
-    output: unknown
+    output: unknown // object with success property and output or errormessage
     timeInSeconds: number
     verdict: EngineResponseStatus
     standardOutput: string

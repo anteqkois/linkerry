@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 // import { store } from '../../features/common/store';
 // import fingerprint from '../../utils/fingerprint'
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL
+export const API_URL = process.env.NEXT_PUBLIC_API_HOST
 
 const apiClient = axios.create({
   withCredentials: true,

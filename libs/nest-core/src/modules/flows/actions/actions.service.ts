@@ -12,7 +12,7 @@ export class ActionsService {
 		const flowVersion = await this.flowVersionsService.findOne({
 			filter: {
 				_id: body.flowVersionId,
-				projectId
+				projectId,
 			},
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
@@ -27,7 +27,7 @@ export class ActionsService {
 		})
 
 		return {
-			success: result.success,
+			success: result.success ?? false,
 			output: result.output,
 			standardError,
 			standardOutput,

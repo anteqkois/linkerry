@@ -31,11 +31,14 @@ export class FileSandbox extends AbstractSandbox {
 	public override async runOperation(operation: string): Promise<ExecuteSandboxResult> {
 		const startTime = Date.now()
 		const connectorsSources = process.env['CONNECTORS_SOURCE']
+		const apiUrl = process.env['API_GATEWAY_URL']
 
 		const command = [
 			`cd ${this.getSandboxFolderPath()}`,
 			'&&',
-			`env -i CONNECTORS_SOURCE=${connectorsSources} NODE_OPTIONS='--enable-source-maps'`,
+			`env -i CONNECTORS_SOURCE=${connectorsSources}`,
+			`API_GATEWAY_URL=${apiUrl}`,
+			`NODE_OPTIONS='--enable-source-maps'`,
 			AbstractSandbox.nodeExecutablePath,
 			'main.js',
 			operation,

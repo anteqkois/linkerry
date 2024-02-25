@@ -31,12 +31,17 @@ export const createConnectionService = ({
 				if (!response.ok) {
 					throw new CustomError(`Connection information failed to load`, ErrorCode.APP_CONNECTION_NOT_FOUND, {
 						url,
+						response: await response.json(),
+						status: await response.status,
+						statusText: await response.statusText,
 					})
 				}
 				const result: AppConnectionDecrypted | null = await response.json()
 				if (result === null) {
 					return null
 				}
+
+				console.dir(result, { depth: null })
 				if (result.value.type === AppConnectionType.SECRET_TEXT) {
 					return result.value.secret_text
 				}
@@ -45,6 +50,7 @@ export const createConnectionService = ({
 				}
 				return result.value
 			} catch (error) {
+				console.error(error)
 				throw new CustomError(`Connection information failed to load`, ErrorCode.APP_CONNECTION_NOT_FOUND, {
 					url,
 					error,

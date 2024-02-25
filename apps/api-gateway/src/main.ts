@@ -12,7 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
 
   const configService = app.get(ConfigService)
-  const frontednUrl = configService.get('FRONTEND_URL')
+  const frontednUrl = configService.get('FRONTEND_HOST')
 
   app.enableCors({
     origin: [frontednUrl],
@@ -26,7 +26,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix(globalPrefix)
 
-  const port = process.env.PORT_API || 3001
+  const port = process.env.PORT_API_GATEWAY || 3001
 
   app.useGlobalPipes(
     new ValidationPipe({

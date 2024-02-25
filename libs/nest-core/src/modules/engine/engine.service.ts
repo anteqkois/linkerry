@@ -77,7 +77,7 @@ export class EngineService {
 		private readonly authService: AuthService,
 		private readonly configService: ConfigService,
 	) {
-		this.serverUrl = this.configService.getOrThrow('SERVER_URL')
+		this.serverUrl = this.configService.getOrThrow('SERVER_HOST')
 		assertNotNullOrUndefined(this.serverUrl, 'serverUrl', {
 			serverUrl: this.serverUrl,
 		})
@@ -161,8 +161,8 @@ export class EngineService {
 				throw new CustomError('Engine execution timeout', ErrorCode.EXECUTION_TIMEOUT)
 			}
 
-			const result = tryParseJson<Result>(sandboxResponse.output)
-			console.log({ result, output: sandboxResponse.output })
+			const result = tryParseJson<Result>(sandboxResponse)
+
 			const response = {
 				status: sandboxResponse.verdict,
 				result,

@@ -2,7 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       // common
-      PORT_API: string,
+      PORT_API_GATEWAY: string,
       PORT_EXTERNAL_ALERTS: string,
       PORT_CONDITION_EVENT_CONSUMER: string,
 
