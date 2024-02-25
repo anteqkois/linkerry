@@ -12,7 +12,7 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue,
+	SelectValue
 } from '@linkerry/ui-components/client'
 import { HTMLAttributes, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -21,33 +21,36 @@ import { appConnectionsQueryConfig } from '../../app-connections/query-configs'
 import { CreateAppConnection } from '../app-connections/CreateAppConnection'
 
 export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
-	name: string
 	auth: ConnectorAuthProperty
 	connector: Pick<ConnectorMetadata, 'displayName' | 'name'>
 }
 
-export const ConnectionsSelect = ({ auth, name, connector }: ConnectionsSelectProps) => {
+export const ConnectionsSelect = ({ auth, connector }: ConnectionsSelectProps) => {
 	const { setValue, control, trigger } = useFormContext()
 	const [showDialog, setShowDialog] = useState(false)
 	const { data: appConnections, isFetched } = useClientQuery(appConnectionsQueryConfig.getMany())
 
 	const connectorConnections = useMemo(() => {
 		if (!isFetched) return []
-		trigger(name)
+		trigger('auth')
 		return appConnections?.filter((appConnection) => appConnection.connectorName === connector.name)
 	}, [appConnections, isFetched])
 
 	const handleAddedConnection = (newConnection: AppConnectionWithoutSensitiveData) => {
 		const queryClient = getBrowserQueryCllient()
 		queryClient.setQueryData(appConnectionsQueryConfig.getMany().queryKey, appConnections?.concat(newConnection))
-		setValue(name, `{{connections['${newConnection.name}']}}`)
+
+		/* add to end of callback */
+		setTimeout(() => {
+			setValue('auth', `{{connections['${newConnection.name}']}}`)
+		}, 0)
 	}
 
 	return (
 		<>
 			<FormField
 				control={control}
-				name={name}
+				name={'auth'}
 				rules={{
 					required: { value: true, message: 'Required field' },
 				}}
@@ -62,7 +65,7 @@ export const ConnectionsSelect = ({ auth, name, connector }: ConnectionsSelectPr
 						<Select onValueChange={field.onChange} value={field.value}>
 							<FormControl>
 								<SelectTrigger>
-									<SelectValue placeholder={field.value ? undefined : 'Select connection'} aria-label={field.value} />
+									<SelectValue placeholder={field.value ? undefined : 'Select connection'} />
 								</SelectTrigger>
 							</FormControl>
 							<SelectContent position="popper" className="max-h-96 overflow-scroll">

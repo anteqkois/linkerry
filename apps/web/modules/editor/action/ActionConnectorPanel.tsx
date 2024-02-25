@@ -207,7 +207,6 @@ export const ActionConnectorPanel = () => {
 						/>
 						{actionWatcher?.requireAuth && connectorMetadata.auth ? (
 							<ConnectionsSelect
-								name="auth"
 								auth={connectorMetadata.auth}
 								connector={{ name: connectorMetadata.name, displayName: connectorMetadata.displayName }}
 							/>
