@@ -11,7 +11,7 @@ export class WorkerAppConnectionsController {
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Get(':name')
 	async findOne(@ReqJwtWorker() worker: RequestWorker, @Param('name') connectionName: string) {
-		const appConnection = await this.appConnectionsService.findOne({ name: connectionName, projectId: worker.projectId })
+		const appConnection = await this.appConnectionsService.getOne({ name: connectionName, projectId: worker.projectId })
 
 		if (isNil(appConnection)) {
 			throw new CustomError(`Can not find app-connection`, ErrorCode.APP_CONNECTION_NOT_FOUND, {

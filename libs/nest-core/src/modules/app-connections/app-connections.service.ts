@@ -11,13 +11,16 @@ import {
 	Id,
 	UpsertAppConnectionInput,
 	assertNotNullOrUndefined,
+	isNil,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { CryptoService } from '../../lib/crypto'
+import { RedisLockService } from '../../lib/redis-lock'
 import { EngineService } from '../engine/engine.service'
 import { ConnectorsMetadataService } from '../flows'
+import { oauth2Util } from './oauth2'
 import { AppConnectionsModel } from './schemas/connections.schema'
 
 @Injectable()
@@ -29,8 +32,105 @@ export class AppConnectionsService {
 		private readonly engineService: EngineService,
 		private readonly connectorsMetadataService: ConnectorsMetadataService,
 		private readonly cryptoService: CryptoService,
+		private readonly redisLockService: RedisLockService,
 	) {
 		//
+	}
+
+	async _refresh(connection: AppConnectionDecrypted): Promise<AppConnectionDecrypted> {
+		// /Users/anteqkois/Code/Projects/me/activepieces/packages/backend/src/app/app-connection/app-connection-service/app-connection-service.ts
+		// switch (connection.value.type) {
+		// 	case AppConnectionType.PLATFORM_OAUTH2:
+		// 		connection.value = await oauth2Handler[connection.value.type].refresh({
+		// 			pieceName: connection.pieceName,
+		// 			projectId: connection.projectId,
+		// 			connectionValue: connection.value,
+		// 		})
+		// 		break
+		// 	case AppConnectionType.CLOUD_OAUTH2:
+		// 		connection.value = await oauth2Handler[connection.value.type].refresh({
+		// 			pieceName: connection.pieceName,
+		// 			projectId: connection.projectId,
+		// 			connectionValue: connection.value,
+		// 		})
+		// 		break
+		// 	case AppConnectionType.OAUTH2:
+		// 		connection.value = await oauth2Handler[connection.value.type].refresh({
+		// 			pieceName: connection.pieceName,
+		// 			projectId: connection.projectId,
+		// 			connectionValue: connection.value,
+		// 		})
+		// 		break
+		// 	default:
+		// 		break
+		// }
+		return connection
+	}
+
+	/**
+	 * We should make sure this is accessed only once, as a race condition could occur where the token needs to be
+	 * refreshed and it gets accessed at the same time, which could result in the wrong request saving incorrect data.
+	 */
+	async _lockAndRefreshConnection({ projectId, name }: { projectId: Id; name: string }) {
+		const refreshLock = await this.redisLockService.acquireLock({
+			key: `${projectId}_${name}`,
+			timeout: 20000,
+		})
+
+		let appConnectionDecrypted: AppConnectionDecrypted | null = null
+
+		try {
+			const encryptedAppConnection = await this.findOne({
+				projectId,
+				name,
+			})
+			if (isNil(encryptedAppConnection)) {
+				return encryptedAppConnection
+			}
+			appConnectionDecrypted = this._decryptConnection(encryptedAppConnection)
+			if (!this._needRefresh(appConnectionDecrypted)) {
+				return appConnectionDecrypted
+			}
+			const refreshedAppConnection = await this._refresh(appConnectionDecrypted)
+
+			await this.appConnectionsModel.updateOne(
+				{
+					_id: appConnectionDecrypted._id,
+				},
+				{
+					status: AppConnectionStatus.ACTIVE,
+					value: this.cryptoService.encryptObject(refreshedAppConnection.value),
+				},
+			)
+			return refreshedAppConnection
+		} catch (err) {
+			this.logger.error(err)
+			if (!isNil(appConnectionDecrypted)) {
+				appConnectionDecrypted.status = AppConnectionStatus.ERROR
+				await this.appConnectionsModel.updateOne(
+					{
+						_id: appConnectionDecrypted._id,
+					},
+					{
+						status: appConnectionDecrypted.status,
+					},
+				)
+			}
+		} finally {
+			await refreshLock.release()
+		}
+		return appConnectionDecrypted
+	}
+
+	_needRefresh(connection: AppConnectionDecrypted): boolean {
+		switch (connection.value.type) {
+			case AppConnectionType.PLATFORM_OAUTH2:
+			case AppConnectionType.CLOUD_OAUTH2:
+			case AppConnectionType.OAUTH2:
+				return oauth2Util.isExpired(connection.value)
+			default:
+				return false
+		}
 	}
 
 	async find(projectId: Id) {
@@ -46,6 +146,23 @@ export class AppConnectionsService {
 			projectId,
 			name,
 		})
+	}
+
+	async getOne({ name, projectId }: { projectId: Id; name: string }) {
+		const encryptedConnection = await this.findOne({
+			name,
+			projectId,
+		})
+
+		if (isNil(encryptedConnection)) return null
+
+		const decryptedConnection = this._decryptConnection(encryptedConnection)
+
+		if (!this._needRefresh(decryptedConnection)) {
+			return decryptedConnection
+		}
+
+		return this._lockAndRefreshConnection({ projectId, name })
 	}
 
 	async upsert(projectId: Id, body: UpsertAppConnectionInput) {
