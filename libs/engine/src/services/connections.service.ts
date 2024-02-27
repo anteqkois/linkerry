@@ -41,7 +41,6 @@ export const createConnectionService = ({
 					return null
 				}
 
-				console.dir(result, { depth: null })
 				if (result.value.type === AppConnectionType.SECRET_TEXT) {
 					return result.value.secret_text
 				}

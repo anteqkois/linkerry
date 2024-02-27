@@ -142,17 +142,17 @@ export class AppConnectionsService {
 	}
 
 	async findOne({ name, projectId }: { projectId: Id; name: string }) {
-		return this.appConnectionsModel.findOne({
+		return (await this.appConnectionsModel.findOne({
 			projectId,
 			name,
-		})
+		}))?.toObject()
 	}
 
 	async getOne({ name, projectId }: { projectId: Id; name: string }) {
-		const encryptedConnection = await this.findOne({
+		const encryptedConnection =( await this.findOne({
 			name,
 			projectId,
-		})
+		}))
 
 		if (isNil(encryptedConnection)) return null
 
@@ -199,7 +199,7 @@ export class AppConnectionsService {
 
 		assertNotNullOrUndefined(updatedConnection, 'updatedConnection')
 
-		return this._decryptConnection(updatedConnection.toObject())
+		return this._decryptConnection(updatedConnection)
 	}
 
 	private async _validateConnectionValue({

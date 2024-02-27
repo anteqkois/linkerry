@@ -23,7 +23,7 @@ export const CheckboxField = ({ property, name }: CheckboxFieldProps) => {
 		<FormField
 			control={control}
 			name={name}
-			rules={rules}
+			rules={{ ...rules, required: false }}
 			render={({ field }) => (
 				<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pl-1">
 					<FormControl>

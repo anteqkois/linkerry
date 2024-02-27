@@ -47,18 +47,6 @@ const executeAction: ActionHandler<ActionConnector> = async ({ action, execution
 		executionState,
 	})
 
-	console.log('VERIABLE')
-	console.dir(
-		{
-			censoredInput,
-			resolvedInput,
-			workerToken: constants.workerToken,
-			// 'action.settings.input': action.settings.input,
-			// executionState
-		},
-		{ depth: null },
-	)
-
 	const stepOutput = GenricStepOutput.create({
 		input: censoredInput,
 		type: ActionType.ACTION,

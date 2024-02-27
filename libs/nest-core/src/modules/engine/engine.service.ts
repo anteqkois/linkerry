@@ -161,7 +161,7 @@ export class EngineService {
 				throw new CustomError('Engine execution timeout', ErrorCode.EXECUTION_TIMEOUT)
 			}
 
-			const result = tryParseJson<Result>(sandboxResponse)
+			const result = tryParseJson<Result>(sandboxResponse.output)
 
 			const response = {
 				status: sandboxResponse.verdict,

@@ -102,6 +102,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		setEditedAction(action)
 	},
 	async patchEditedAction(update: DeepPartial<Action>) {
+		// TODO handle errors -> back to previous form version ?
 		const { editedAction, flow, setFlow, patchNode } = get()
 		assertNotNullOrUndefined(editedAction, 'editedAction')
 

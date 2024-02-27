@@ -20,14 +20,9 @@ export class VariableService {
 		// If input contains only a variable token, return the value of the variable while maintaining the variable type.
 		const matchedTokens = input.match(this.VARIABLE_TOKEN)
 
-		console.log('resolveInput')
-		console.dir(matchedTokens, { depth: null })
-
 		if (matchedTokens !== null && matchedTokens.length === 1 && matchedTokens[0] === input) {
 			const variableName = input.substring(2, input.length - 2)
 			if (variableName.startsWith(VariableService.CONNECTIONS)) {
-				console.log('CONECTION')
-				console.dir({ variableName, logs }, { depth: null })
 				return this.handleTypeAndResolving(variableName, logs)
 			}
 			return this.evalInScope(variableName, valuesMap)
@@ -44,7 +39,6 @@ export class VariableService {
 	private async handleTypeAndResolving(path: string, censorConnections: boolean): Promise<any> {
 		// Need to be resolved dynamically
 		const connectionName = this.findConnectionName(path)
-		console.log('connectionName', connectionName)
 		if (isNil(connectionName)) {
 			return ''
 		}

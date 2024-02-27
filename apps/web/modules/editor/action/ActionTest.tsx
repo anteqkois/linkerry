@@ -25,6 +25,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 
 	const onClickTest = async () => {
 		try {
+			setErrorMessage('')
 			const result = await testAction()
 			setTestData(result)
 			setInitialTime(dayjs().format())

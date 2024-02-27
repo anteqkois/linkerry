@@ -95,14 +95,14 @@ export const TriggerConnectorPanel = () => {
 					},
 				})
 		},
-		[editedTrigger.settings.input],
+		[...Object.values(editedTrigger.settings.input)],
 		1000,
 	)
 
 	useEffect(() => {
 		const subscription = triggerForm.watch(handleWatcher)
 		return () => subscription.unsubscribe()
-	}, [])
+	}, [editedTrigger.settings.connectorName, handleWatcher])
 
 	if (isLoading) return <Spinner />
 	if (error) return <ErrorInfo errorObject={error} />

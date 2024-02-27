@@ -112,14 +112,14 @@ export const ActionConnectorPanel = () => {
 					},
 				})
 		},
-		[editedAction.settings.input, editedAction],
+		[...Object.values(editedAction.settings.input)],
 		1000,
 	)
 
 	useEffect(() => {
 		const subscription = actionForm.watch(handleWatcher)
 		return () => subscription.unsubscribe()
-	}, [editedAction.settings.connectorName])
+	}, [editedAction.settings.connectorName, handleWatcher])
 
 	if (isLoading) return <Spinner />
 	if (error) return <ErrorInfo errorObject={error} />
