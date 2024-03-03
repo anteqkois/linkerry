@@ -16,7 +16,7 @@ interface DesktopProps {
 
 export function DesktopMenu({ children }: DesktopProps) {
   return (
-    <nav className="hidden sm:block fixed top-1 left-1/2 -translate-x-1/2">
+    <nav className="hidden sm:block fixed top-1 left-1">
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>Flows</MenubarTrigger>

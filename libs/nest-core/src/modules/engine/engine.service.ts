@@ -32,8 +32,10 @@ import {
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import fs from 'fs/promises'
+import { AppEventRoutingService } from '../app-event-routing'
 import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
 import { AuthService } from '../users/auth/auth.service'
+import { WebhookSecretsService } from '../webhooks'
 import { SandboxProvisionerService } from '../workers/sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../workers/sandbox/sandboxes/sandbox'
 
@@ -76,6 +78,8 @@ export class EngineService {
 		private readonly sandboxProvisionerService: SandboxProvisionerService,
 		private readonly authService: AuthService,
 		private readonly configService: ConfigService,
+		private readonly appEventRoutingService: AppEventRoutingService,
+		private readonly webhookSecretsService: WebhookSecretsService,
 	) {
 		this.serverUrl = this.configService.getOrThrow('SERVER_HOST')
 		assertNotNullOrUndefined(this.serverUrl, 'serverUrl', {
@@ -324,7 +328,7 @@ export class EngineService {
 	async executeTrigger<T extends TriggerHookType>(
 		operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>,
 	): Promise<EngineHelperResponse<EngineHelperTriggerResult<T>>> {
-		this.logger.debug(`#executeTrigger hookType:`, {
+		this.logger.debug(`#executeTrigger:`, {
 			operation,
 		})
 
@@ -363,12 +367,11 @@ export class EngineService {
 			connectorVersion: connectorMetadataFixedVersion,
 			flowVersion: clonedFlowVersion,
 			// edition: getEdition(),
-			appWebhookUrl: '',
-			// appWebhookUrl: await appEventRoutingService.getAppWebhookUrl({
-			// 		appName: connectorName,
-			// }),
+			appWebhookUrl: this.appEventRoutingService.getAppWebhookUrl({
+				appName: connectorName,
+			}),
 			serverUrl: this.serverUrl,
-			// webhookSecret: await getWebhookSecret(operation.flowVersion),
+			webhookSecret: this.webhookSecretsService.getWebhookSecret(connectorName),
 			workerToken: this.authService.generateWorkerToken({
 				payload: {
 					projectId: operation.projectId,

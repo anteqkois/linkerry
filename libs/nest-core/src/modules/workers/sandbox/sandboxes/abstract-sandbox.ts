@@ -2,7 +2,7 @@ import { EngineResponse, EngineResponseStatus } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
-import { fileExists } from '../../../../lib/utils'
+import { fileExists } from '../../../../lib/nest-utils'
 
 const logger = new Logger('AbstractSandbox')
 export abstract class AbstractSandbox {

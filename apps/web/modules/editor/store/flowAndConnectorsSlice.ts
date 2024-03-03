@@ -4,8 +4,8 @@ import {
 	CustomError,
 	ErrorCode,
 	Flow,
-	FlowState,
 	FlowStatus,
+	FlowVersionState,
 	Id,
 	Trigger,
 	assertNotNullOrUndefined,
@@ -19,19 +19,21 @@ import { CreateSlice, FlowAndConnectorsSlice } from './types'
 
 const emptyFlow: Flow = {
 	_id: '1234567890',
-	status: FlowStatus.Unpublished,
+	status: FlowStatus.DISABLED,
 	projectId: '1919191919',
 	version: {
 		_id: '123456789',
 		projectId: '1919191919',
 		displayName: 'Untitled',
-		state: FlowState.Draft,
+		state: FlowVersionState.DRAFT,
 		flow: '1234567890',
 		valid: false,
 		stepsCount: 1,
 		triggers: [],
 		actions: [],
 	},
+	publishedVersionId: null,
+	schedule: null
 }
 
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({

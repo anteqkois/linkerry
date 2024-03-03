@@ -1,9 +1,10 @@
+import { BullModule } from '@nestjs/bullmq'
 import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_FILTER } from '@nestjs/core'
 import { MongodbModule } from './lib/mongodb'
+import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/nest-utils'
 import { RedisLockModule } from './lib/redis-lock'
-import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/utils'
 
 @Module({
 	imports: [
@@ -24,6 +25,25 @@ import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/utils'
 			}),
 			inject: [ConfigService],
 		}),
+		BullModule.forRootAsync({
+			useFactory: (configService: ConfigService) => ({
+				connection: {
+					host: configService.getOrThrow('REDIS_HOST'),
+					port: +configService.get('REDIS_PORT'),
+					password: configService.get('REDIS_PASSWORD'),
+				},
+				defaultJobOptions:{
+
+				}
+			}),
+			inject: [ConfigService],
+		}),
+		// BullModule.forRoot({
+		//   connection: {
+		//     host: 'localhost',
+		//     port: 6379,
+		//   },
+		// }),
 		// SandboxModule,
 		// EngineModule,
 	],

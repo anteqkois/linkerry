@@ -2,7 +2,7 @@ import { Id } from '../../../common'
 import { AppConnectionValue } from '../../app-connection'
 import { ConnectorPackage } from '../../connectors'
 import { ExecutionState, ExecutionType } from '../../flow-runs'
-import { FlowVersion } from '../flow'
+import { FlowVersion } from '../flow-versions'
 
 export enum EngineOperationType {
 	EXTRACT_CONNECTOR_METADATA = 'EXTRACT_CONNECTOR_METADATA',
@@ -18,6 +18,7 @@ export enum TriggerHookType {
 	ON_ENABLE = 'ON_ENABLE',
 	ON_DISABLE = 'ON_DISABLE',
 	HANDSHAKE = 'HANDSHAKE',
+	RENEW = 'RENEW',
 	RUN = 'RUN',
 	TEST = 'TEST',
 }

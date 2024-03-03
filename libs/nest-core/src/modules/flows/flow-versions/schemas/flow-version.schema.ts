@@ -1,4 +1,4 @@
-import { ActionConnector, FlowState, FlowVersion, Id, TriggerConnector, TriggerEmpty, TriggerWebhook } from '@linkerry/shared'
+import { ActionConnector, FlowVersion, FlowVersionState, Id, TriggerConnector, TriggerEmpty, TriggerWebhook } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
@@ -6,7 +6,7 @@ export type FlowVersionDocument = mongoose.HydratedDocument<FlowVersion>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow_versions', minimize: false })
 export class FlowVersionModel implements FlowVersion {
-  _id: string
+  _id: Id
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flow' })
   flow: Id
@@ -23,8 +23,8 @@ export class FlowVersionModel implements FlowVersion {
   @Prop({ required: true, type: Boolean })
   valid: boolean
 
-  @Prop({ required: true, type: String, enum: FlowState, default: FlowState.Draft })
-  state: FlowState
+  @Prop({ required: true, type: String, enum: FlowVersionState, default: FlowVersionState.DRAFT })
+  state: FlowVersionState
 
 	// todo discriminatorKey don't work
   @Prop({ required: true, type: [Object] })

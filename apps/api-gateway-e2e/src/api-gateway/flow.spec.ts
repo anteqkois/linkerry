@@ -9,7 +9,7 @@ describe('POST /api/flows', () => {
     const res = await axios.post(`/flows`)
 
     expect(res.data.user).toBe(alwaysExistingUser._id)
-    expect(res.data.status).toBe(FlowStatus.Unpublished)
+    expect(res.data.status).toBe(FlowStatus.DISABLED)
     expect(res.data.version).toBeInstanceOf(Object)
   })
 })

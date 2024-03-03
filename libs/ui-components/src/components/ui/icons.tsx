@@ -9,6 +9,7 @@ import {
 	Component1Icon,
 	ComponentInstanceIcon,
 	CopyIcon,
+	CounterClockwiseClockIcon,
 	Cross1Icon,
 	Cross2Icon,
 	CubeIcon,
@@ -18,6 +19,7 @@ import {
 	GearIcon,
 	HamburgerMenuIcon,
 	HomeIcon,
+	LightningBoltIcon,
 	MagicWandIcon,
 	Pencil2Icon,
 	PlayIcon,
@@ -25,9 +27,10 @@ import {
 	QuestionMarkCircledIcon,
 	QuestionMarkIcon,
 	ReaderIcon,
+	Share2Icon,
 	StarFilledIcon,
 	TrashIcon,
-	UpdateIcon,
+	UpdateIcon
 } from '@radix-ui/react-icons'
 import { VariantProps, cva } from 'class-variance-authority'
 import { cn } from '../../utils'
@@ -35,8 +38,8 @@ import { cn } from '../../utils'
 const iconVariants = cva('', {
 	variants: {
 		size: {
-			xs: 'h-4 w-4',
-			sm: 'h-6 w-6',
+			xs: 'h-3 w-3',
+			sm: 'h-4 w-4',
 			md: 'h-8 w-8',
 			lg: 'h-14 w-14',
 		},
@@ -60,6 +63,9 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	Power: (props: RadixIconProps) => <LightningBoltIcon {...defaultRadixProps(props)} />,
+	Version: (props: RadixIconProps) => <CounterClockwiseClockIcon {...defaultRadixProps(props)} />,
+	Publish: (props: RadixIconProps) => <Share2Icon {...defaultRadixProps(props)} />,
 	Run: (props: RadixIconProps) => <PlayIcon {...defaultRadixProps(props)} />,
 	Test: (props: RadixIconProps) => <MagicWandIcon {...defaultRadixProps(props)} />,
 	Change: (props: RadixIconProps) => <UpdateIcon {...defaultRadixProps(props)} />,

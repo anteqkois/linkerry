@@ -1,0 +1,323 @@
+import {
+	CustomError,
+	ErrorCode,
+	ExecutionOutputStatus,
+	ExecutionType,
+	FlowRetryStrategy,
+	FlowRun,
+	Id,
+	PauseType,
+	RunEnvironment,
+	RunTerminationReason,
+	assertNotNullOrUndefined,
+	isNil,
+	spreadIfDefined,
+} from '@linkerry/shared'
+import { Injectable, Logger } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import dayjs from 'dayjs'
+import { Model } from 'mongoose'
+import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, QueueJobsService, RepeatableJobType } from '../../workers/flow-worker'
+import { FlowVersionsService } from '../flow-versions/flow-versions.service'
+import { FlowsService } from '../flows/flows.service'
+import { FlowResponseService } from './flow-response.service'
+import { FlowRunsHooks } from './flow-runs.hooks'
+import { FlowRunModel } from './schemas/flow-runs.schema'
+import { GetOrCreateParams, HookType, PauseParams, RetryParams, SideEffectPauseParams, SideEffectStartParams, StartParams, TestParams } from './types'
+
+@Injectable()
+export class FlowRunsService {
+	private readonly logger = new Logger(FlowRunsService.name)
+
+	constructor(
+		@InjectModel(FlowRunModel.name) private readonly flowRunModel: Model<FlowRunModel>,
+		private readonly queueJobsService: QueueJobsService,
+		private readonly flowVersionsService: FlowVersionsService,
+		private readonly flowsService: FlowsService,
+		private readonly flowRunsHooks: FlowRunsHooks,
+		private readonly flowResponseService: FlowResponseService,
+	) {}
+
+	private _calculateDelayForResumeJob(resumeDateTimeIsoString: string): number {
+		const now = dayjs()
+		const resumeDateTime = dayjs(resumeDateTimeIsoString)
+		const delayInMilliSeconds = resumeDateTime.diff(now)
+		const resumeDateTimeAlreadyPassed = delayInMilliSeconds < 0
+
+		if (resumeDateTimeAlreadyPassed) {
+			return 0
+		}
+
+		return delayInMilliSeconds
+	}
+
+	private async _finishSideEffect({ flowRun }: { flowRun: FlowRun }): Promise<void> {
+		await this.flowRunsHooks.onFinish({ projectId: flowRun.projectId, tasks: flowRun.tasks! })
+		// TODO implement notifications system
+		// await notifications.notifyRun({
+		//     flowRun,
+		// })
+	}
+
+	private async _startSideEffect({ flowRun, executionType, payload, synchronousHandlerId, hookType }: SideEffectStartParams): Promise<void> {
+		this.logger.debug(`#startSideEffect`, {
+			executionType,
+			id: flowRun._id,
+		})
+
+		this.queueJobsService.addToQueue({
+			id: flowRun._id,
+			type: JobType.ONE_TIME,
+			priority: isNil(synchronousHandlerId) ? 'medium' : 'high',
+			data: {
+				synchronousHandlerId,
+				projectId: flowRun.projectId,
+				environment: flowRun.environment,
+				runId: flowRun._id,
+				flowVersionId: flowRun.flowVersionId,
+				payload,
+				executionType,
+				hookType,
+			},
+		})
+	}
+
+	private async _pauseSideEffect({ flowRun }: SideEffectPauseParams) {
+		this.logger.debug(`#pauseSideEffect`, { id: flowRun._id, pauseType: flowRun.pauseMetadata?.type })
+
+		const { pauseMetadata } = flowRun
+
+		if (isNil(pauseMetadata))
+			throw new CustomError(`pauseMetadata is undefined`, ErrorCode.VALIDATION, {
+				flowRun,
+			})
+		switch (pauseMetadata.type) {
+			case PauseType.DELAY:
+				this.queueJobsService.addToQueue({
+					id: flowRun._id,
+					type: JobType.DELAYED,
+					data: {
+						schemaVersion: LATEST_JOB_DATA_SCHEMA_VERSION,
+						runId: flowRun._id,
+						projectId: flowRun.projectId,
+						environment: flowRun.environment,
+						jobType: RepeatableJobType.DELAYED_FLOW,
+						flowVersionId: flowRun.flowVersionId,
+					},
+					delay: this._calculateDelayForResumeJob(pauseMetadata.resumeDateTime),
+				})
+				break
+			case PauseType.WEBHOOK:
+				break
+		}
+	}
+
+	private async _addToQueueReasume({
+		flowRunId,
+		payload,
+		executionType,
+	}: {
+		flowRunId: Id
+		payload: Record<string, unknown>
+		executionType: ExecutionType
+	}): Promise<void> {
+		this.logger.debug(`#_addToQueueReasume`, flowRunId)
+
+		const flowRunToResume = await this.flowRunModel.findOne({
+			_id: flowRunId,
+		})
+
+		if (isNil(flowRunToResume))
+			throw new CustomError(`Can not find flow run`, ErrorCode.FLOW_RUN_NOT_FOUND, {
+				id: flowRunId,
+			})
+
+		await this.start({
+			payload,
+			flowRunId: flowRunToResume.id,
+			projectId: flowRunToResume.projectId,
+			flowVersionId: flowRunToResume.flowVersionId,
+			executionType,
+			environment: RunEnvironment.PRODUCTION,
+		})
+	}
+
+	async getFlowRunOrCreate(params: GetOrCreateParams): Promise<FlowRun> {
+		const { id, projectId, flowId, flowVersionId, flowDisplayName, environment } = params
+
+		// TODO implement flow run model
+		if (id) {
+			const flowRun = await this.flowRunModel.findOne({
+				_id: id,
+				projectId,
+			})
+			assertNotNullOrUndefined(flowRun, 'flowRun')
+			return flowRun.toObject()
+		}
+
+		return this.flowRunModel.create({
+			projectId,
+			flowId,
+			status: ExecutionOutputStatus.RUNNING,
+			flowVersionId,
+			environment,
+			flowDisplayName,
+			startTime: new Date().toISOString(),
+		})
+	}
+
+	async retry({ flowRunId, strategy }: RetryParams): Promise<void> {
+		switch (strategy) {
+			case FlowRetryStrategy.FROM_FAILED_STEP:
+				await this._addToQueueReasume({
+					flowRunId,
+					payload: {},
+					executionType: ExecutionType.RESUME,
+				})
+				break
+			case FlowRetryStrategy.ON_LATEST_VERSION: {
+				throw new CustomError(`Unsuporrted FlowRetryStrategy`, ErrorCode.VALIDATION, { strategy })
+				// const flowRun = await this.flowRunModel.findOne({_id: flowRunId})
+				// assertNotNullOrUndefined(flowRun, 'flowRun')
+				// const flowVersion = await flowVersionService.getLatestLockedVersionOrThrow(flowRun.flowId)
+				// await flowRunRepo.update(flowRunId, {
+				// 	flowVersionId: flowVersion.id,
+				// })
+
+				// await this._addToQueueReasume({
+				// 	flowRunId,
+				// 	payload: {},
+				// 	executionType: ExecutionType.BEGIN,
+				// })
+				// break
+			}
+		}
+	}
+
+	async start({
+		projectId,
+		flowVersionId,
+		flowRunId,
+		payload,
+		environment,
+		executionType,
+		synchronousHandlerId,
+		hookType,
+	}: StartParams): Promise<FlowRun> {
+		this.logger.debug(`#start`, {
+			flowRunId,
+			executionType,
+		})
+
+		const flowVersion = await this.flowVersionsService.findOne({
+			filter: {
+				_id: flowVersionId,
+			},
+		})
+		assertNotNullOrUndefined(flowVersion, 'flowVersion')
+
+		const flow = await this.flowsService.findOne({
+			filter: {
+				_id: flowVersion.flow,
+				projectId,
+			},
+		})
+		assertNotNullOrUndefined(flow, 'flow')
+
+		await this.flowRunsHooks.onPreStart({ projectId })
+
+		const flowRun = await this.getFlowRunOrCreate({
+			id: flowRunId,
+			projectId: flow.projectId,
+			flowId: flowVersion.flow,
+			flowVersionId: flowVersion._id,
+			environment,
+			flowDisplayName: flowVersion.displayName,
+		})
+
+		await this._startSideEffect({
+			flowRun,
+			payload,
+			synchronousHandlerId,
+			executionType,
+			hookType,
+		})
+
+		return flowRun
+	}
+
+	async finish({
+		flowRunId,
+		status,
+		tasks,
+		logsFileId,
+		tags,
+		terminationReason,
+	}: {
+		flowRunId: Id
+		status: ExecutionOutputStatus
+		tasks: number
+		terminationReason?: RunTerminationReason
+		tags: string[]
+		logsFileId: Id | null
+	}): Promise<FlowRun> {
+		this.flowRunModel.updateOne(
+			{
+				_id: flowRunId,
+			},
+			{
+				...spreadIfDefined('logsFileId', logsFileId),
+				status,
+				tasks,
+				terminationReason,
+				tags,
+				finishTime: new Date().toISOString(),
+			},
+		)
+
+		const flowRun = await this.flowRunModel.findOne({ _id: flowRunId, projectId: undefined })
+		assertNotNullOrUndefined(flowRun, 'flowRun')
+
+		await this._finishSideEffect({ flowRun })
+		return flowRun
+	}
+
+	async test({ projectId, flowVersionId }: TestParams): Promise<FlowRun> {
+		const flowVersion = await this.flowVersionsService.findOne({ filter: { _id: flowVersionId } })
+		assertNotNullOrUndefined(flowVersion, 'flowVersion')
+
+		const payload = flowVersion.triggers[0].settings.inputUiInfo.currentSelectedData
+
+		return this.start({
+			projectId,
+			flowVersionId,
+			payload,
+			environment: RunEnvironment.TESTING,
+			executionType: ExecutionType.BEGIN,
+			synchronousHandlerId: this.flowResponseService.getHandlerId(),
+			hookType: HookType.AFTER_LOG,
+		})
+	}
+
+	async pause(params: PauseParams): Promise<void> {
+		this.logger.debug(`#paus`, { id: params.flowRunId, pauseType: params.pauseMetadata.type })
+
+		const { flowRunId, logFileId, pauseMetadata } = params
+
+		await this.flowRunModel.updateOne(
+			{
+				_id: flowRunId,
+			},
+			{
+				status: ExecutionOutputStatus.PAUSED,
+				logsFileId: logFileId,
+				pauseMetadata,
+			},
+		)
+
+		const flowRun = await this.flowRunModel.findOne({ _id: flowRunId })
+		assertNotNullOrUndefined(flowRun, 'flowRun')
+
+		await this._pauseSideEffect({ flowRun })
+	}
+}

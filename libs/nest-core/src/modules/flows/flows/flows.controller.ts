@@ -1,5 +1,5 @@
-import { Id, RequestUser } from '@linkerry/shared'
-import { Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { FlowPublishInput, Id, RequestUser, UpdateStatusInput } from '@linkerry/shared'
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowsService } from './flows.service'
@@ -30,4 +30,28 @@ export class FlowsController {
 	createEmptyFlow(@ReqJwtUser() user: RequestUser) {
 		return this.flowsService.createEmpty(user.projectId)
 	}
+
+	@UseGuards(JwtCookiesAuthGuard)
+	@Patch(':id/publish')
+	publishFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: FlowPublishInput) {
+		return this.flowsService.publish(id, user.projectId, body)
+	}
+
+	@UseGuards(JwtCookiesAuthGuard)
+	@Patch(':id/status')
+	changeStatusFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: UpdateStatusInput) {
+		return this.flowsService.changeStatus(id, user.projectId, body)
+	}
+
+	// @UseGuards(JwtCookiesAuthGuard)
+	// @Patch(':id/use-as-draft')
+	// changeStatusFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: UpdateStatusInput) {
+	// 	return this.flowsService.changeStatus(id, user.projectId, body)
+	// }
+
+	// @UseGuards(JwtCookiesAuthGuard)
+	// @Patch(':id/lock')
+	// changeStatusFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: UpdateStatusInput) {
+	// 	return this.flowsService.changeStatus(id, user.projectId, body)
+	// }
 }

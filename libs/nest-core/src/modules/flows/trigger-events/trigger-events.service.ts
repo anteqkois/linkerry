@@ -1,4 +1,4 @@
-import { CustomError, ErrorCode, Flow, Id, Trigger, TriggerEvent, TriggerHookType, TriggerType, WithoutId, flowHelper } from '@linkerry/shared'
+import { CustomError, ErrorCode, Id, PopulatedFlow, Trigger, TriggerEvent, TriggerHookType, TriggerType, WithoutId, flowHelper } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { EngineService } from '../../engine/engine.service'
 import { FlowsService } from '../flows/flows.service'
@@ -34,7 +34,7 @@ export class TriggerEventsService {
 		return this.triggerEventsModel.create(data)
 	}
 
-	async findMany({ flowLike, triggerName }: { flowLike: Id | Flow; triggerName: string }) {
+	async findMany({ flowLike, triggerName }: { flowLike: Id | PopulatedFlow; triggerName: string }) {
 		const flow =
 			typeof flowLike === 'string'
 				? await this.flowService.findOne({

@@ -1,8 +1,8 @@
 import {
 	Action,
 	ActionType,
-	FlowState,
 	FlowVersionAddActionInput,
+	FlowVersionState,
 	Id,
 	Trigger,
 	TriggerType,
@@ -37,7 +37,7 @@ export class FlowVersionsService {
 			flow: flowId,
 			projectId,
 			displayName: 'Untitled',
-			state: FlowState.Draft,
+			state: FlowVersionState.DRAFT,
 			valid: false,
 			stepsCount: 1,
 			triggers: [emptyTrigger],

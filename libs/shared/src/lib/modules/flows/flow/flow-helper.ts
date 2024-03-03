@@ -1,7 +1,7 @@
 import { CustomError, ErrorCode, assertNotNullOrUndefined, clone, deepMerge } from '../../../common'
 import { Action, ActionType } from '../actions/action'
+import { FlowVersion } from '../flow-versions'
 import { Trigger, TriggerType } from '../triggers/trigger'
-import { FlowVersion } from './flow'
 
 type Step = Action | Trigger
 

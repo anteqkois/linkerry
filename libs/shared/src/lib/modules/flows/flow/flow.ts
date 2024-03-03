@@ -1,34 +1,32 @@
+import { Nullable } from '../../../common'
 import { Id, TimestampDatabase } from '../../../common/database'
-import { Action } from '../actions/action'
-import { Trigger } from '../triggers/trigger'
+import { FlowVersion } from '../flow-versions'
 
 export enum FlowStatus {
-	Active = 'Active',
-	Inactive = 'Inactive',
-	Unpublished = 'Unpublished',
+	ENABLED = 'ENABLED',
+	DISABLED = 'DISABLED',
 }
 
-export enum FlowState {
-	Draft = 'Draft',
-	Valid = 'Valid',
+export enum ScheduleType {
+	CRON_EXPRESSION = 'CRON_EXPRESSION',
+}
+
+export interface FlowScheduleOptions {
+	type: ScheduleType
+	cronExpression: string
+	timezone: string
 }
 
 export interface Flow extends TimestampDatabase {
 	_id: Id
 	projectId: Id
 	// folderId: Id
-	version: FlowVersion
+	version: FlowVersion | Id
 	status: FlowStatus
+	publishedVersionId: Nullable<Id>
+	schedule: Nullable<FlowScheduleOptions>
 }
 
-export interface FlowVersion extends TimestampDatabase {
-	_id: Id
-	flow: Id
-	projectId: Id
-	displayName: string
-	triggers: Trigger[]
-	actions: Action[]
-	valid: boolean
-	state: FlowState
-	stepsCount: number
+export interface PopulatedFlow extends Omit<Flow, 'version'> {
+	version: FlowVersion
 }
