@@ -15,9 +15,9 @@ import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullm
 import { Logger } from '@nestjs/common'
 import { Job, Queue, UnrecoverableError } from 'bullmq'
 import { FlowRunsService } from '../../flows/flow-runs'
-import { FlowVersionsService } from '../../flows/flow-versions/flow-versions.service'
+import { FlowVersionsService } from '../../flows/flow-versions'
 import { FlowsService } from '../../flows/flows/flows.service'
-import { TriggerHooks } from '../../flows/triggers/trigger-hooks/trigger-hooks.service'
+import { TriggerHooks } from '../../flows/triggers/trigger-hooks'
 import { QueuesService } from './queues/queues.service'
 import { DelayedJobData, RenewWebhookJobData, RepeatableJobType, RepeatingJobData, SCHEDULED_JOB_QUEUE, ScheduledJobData } from './queues/types'
 

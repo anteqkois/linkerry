@@ -9,7 +9,6 @@ export class WebhookSecretsService {
 
 	constructor(private readonly configService: ConfigService) {
 		const webhookSecretsString = configService.getOrThrow('APP_WEBHOOK_SECRETS')
-		console.log(webhookSecretsString);
 		this.WEBHOOK_SECRETS = JSON.parse(webhookSecretsString)
 	}
 

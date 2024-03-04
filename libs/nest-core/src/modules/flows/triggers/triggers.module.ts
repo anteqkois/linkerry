@@ -1,15 +1,12 @@
-import { Module, forwardRef } from '@nestjs/common'
-// import { QueueModule } from '../../workers/flow-worker'
+import { Module } from '@nestjs/common'
 import { EngineModule } from '../../engine'
 import { WebhooksModule } from '../../webhooks'
-// import { QueueModule } from '../../workers/flow-worker'
-import { FlowWorkerModule } from '../../workers/flow-worker'
 import { QueuesModule } from '../../workers/flow-worker/queues/queues.module'
-import { ConnectorsModule } from '../connectors'
+import { ConnectorsMetadataModule } from '../connectors/connectors-metadata'
 import { TriggerHooks } from './trigger-hooks/trigger-hooks.service'
 
 @Module({
-	imports: [WebhooksModule, EngineModule, ConnectorsModule, forwardRef(() => FlowWorkerModule), QueuesModule],
+	imports: [WebhooksModule, EngineModule, QueuesModule, ConnectorsMetadataModule],
 	providers: [TriggerHooks],
 	exports: [TriggerHooks],
 })

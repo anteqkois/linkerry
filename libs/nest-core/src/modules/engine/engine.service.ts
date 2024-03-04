@@ -1,4 +1,3 @@
-import { ConnectorMetadata, DynamicPropsValue, StaticDropdownState } from '@linkerry/connectors-framework'
 import {
 	Action,
 	ActionType,
@@ -9,16 +8,12 @@ import {
 	EngineResponseStatus,
 	EngineTestOperation,
 	ErrorCode,
-	ExecuteActionResponse,
 	ExecuteExtractConnectorMetadata,
 	ExecuteFlowOperation,
 	ExecutePropsOptions,
 	ExecuteStepOperation,
 	ExecuteTriggerOperation,
-	ExecuteTriggerResponse,
 	ExecuteValidateAuthOperation,
-	ExecuteValidateAuthResponse,
-	ExecutionOutput,
 	JWTPrincipalType,
 	ResumeExecuteFlowOperation,
 	SandBoxCacheType,
@@ -27,46 +22,18 @@ import {
 	clone,
 	flowHelper,
 	isConnectorTrigger,
-	tryParseJson,
+	tryParseJson
 } from '@linkerry/shared'
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import fs from 'fs/promises'
 import { AppEventRoutingService } from '../app-event-routing'
-import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
+import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata'
 import { AuthService } from '../users/auth/auth.service'
 import { WebhookSecretsService } from '../webhooks'
 import { SandboxProvisionerService } from '../workers/sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../workers/sandbox/sandboxes/sandbox'
-
-export type EngineHelperFlowResult = ExecutionOutput
-
-export type EngineHelperTriggerResult<T extends TriggerHookType = TriggerHookType> = ExecuteTriggerResponse<T>
-
-export type EngineHelperPropResult = StaticDropdownState<unknown> | Record<string, DynamicPropsValue>
-
-export type EngineHelperActionResult = ExecuteActionResponse
-
-export type EngineHelperValidateAuthResult = ExecuteValidateAuthResponse
-
-export type EngineHelperCodeResult = ExecuteActionResponse
-export type EngineHelperExtractConnectorInformation = Omit<ConnectorMetadata, 'name' | 'version'>
-
-export type EngineHelperResult =
-	| EngineHelperFlowResult
-	| EngineHelperTriggerResult
-	| EngineHelperPropResult
-	| EngineHelperCodeResult
-	| EngineHelperExtractConnectorInformation
-	| EngineHelperActionResult
-	| EngineHelperValidateAuthResult
-
-export type EngineHelperResponse<Result extends EngineHelperResult> = {
-	status: EngineResponseStatus
-	result: Result
-	standardError: string
-	standardOutput: string
-}
+import { EngineHelperActionResult, EngineHelperExtractConnectorInformation, EngineHelperFlowResult, EngineHelperPropResult, EngineHelperResponse, EngineHelperResult, EngineHelperTriggerResult, EngineHelperValidateAuthResult } from './types'
 
 @Injectable()
 export class EngineService {

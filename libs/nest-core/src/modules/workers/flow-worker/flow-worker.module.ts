@@ -1,5 +1,5 @@
 import { BullModule, RegisterQueueOptions } from '@nestjs/bullmq'
-import { Module, forwardRef } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { FlowVersionsModule, FlowsModule } from '../../flows'
 import { FlowRunsModule } from '../../flows/flow-runs'
 import { TriggersModule } from '../../flows/triggers/triggers.module'
@@ -19,10 +19,10 @@ const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
 
 @Module({
 	imports: [
-		forwardRef(() => FlowRunsModule),
-		forwardRef(() => FlowsModule),
+		FlowRunsModule,
+		FlowsModule,
+		TriggersModule,
 		FlowVersionsModule,
-		forwardRef(() => TriggersModule),
 		BullModule.registerQueue({
 			name: ONE_TIME_JOB_QUEUE,
 			defaultJobOptions,

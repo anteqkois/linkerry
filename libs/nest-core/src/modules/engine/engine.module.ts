@@ -1,6 +1,6 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { AppEventRoutingModule } from '../app-event-routing'
-import { ConnectorsModule } from '../flows/connectors/connectors.module'
+import { ConnectorsMetadataModule } from '../flows/connectors/connectors-metadata'
 import { AuthModule } from '../users/auth'
 import { WebhooksModule } from '../webhooks'
 import { SandboxModule } from '../workers/sandbox/sandbox.module'
@@ -12,7 +12,7 @@ import { EngineService } from './engine.service'
 		AuthModule,
 		AppEventRoutingModule,
 		WebhooksModule,
-		forwardRef(() => ConnectorsModule),
+		ConnectorsMetadataModule
 	],
 	providers: [EngineService],
 	exports: [EngineService],
