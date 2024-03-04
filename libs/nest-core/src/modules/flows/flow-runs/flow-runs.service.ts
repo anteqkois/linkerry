@@ -17,7 +17,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import { Model } from 'mongoose'
-import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, QueueJobsService, RepeatableJobType } from '../../workers/flow-worker'
+import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, QueuesService, RepeatableJobType } from '../../workers/flow-worker/queues'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowsService } from '../flows/flows.service'
 import { FlowResponseService } from './flow-response.service'
@@ -31,7 +31,8 @@ export class FlowRunsService {
 
 	constructor(
 		@InjectModel(FlowRunModel.name) private readonly flowRunModel: Model<FlowRunModel>,
-		private readonly queueJobsService: QueueJobsService,
+		// private readonly queueJobsService: QueueJobsService,
+		private readonly queuesService: QueuesService,
 		private readonly flowVersionsService: FlowVersionsService,
 		private readonly flowsService: FlowsService,
 		private readonly flowRunsHooks: FlowRunsHooks,
@@ -65,7 +66,7 @@ export class FlowRunsService {
 			id: flowRun._id,
 		})
 
-		this.queueJobsService.addToQueue({
+		this.queuesService.addToQueue({
 			id: flowRun._id,
 			type: JobType.ONE_TIME,
 			priority: isNil(synchronousHandlerId) ? 'medium' : 'high',
@@ -93,7 +94,7 @@ export class FlowRunsService {
 			})
 		switch (pauseMetadata.type) {
 			case PauseType.DELAY:
-				this.queueJobsService.addToQueue({
+				this.queuesService.addToQueue({
 					id: flowRun._id,
 					type: JobType.DELAYED,
 					data: {

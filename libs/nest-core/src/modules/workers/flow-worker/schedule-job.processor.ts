@@ -18,8 +18,8 @@ import { FlowRunsService } from '../../flows/flow-runs'
 import { FlowVersionsService } from '../../flows/flow-versions/flow-versions.service'
 import { FlowsService } from '../../flows/flows/flows.service'
 import { TriggerHooks } from '../../flows/triggers/trigger-hooks/trigger-hooks.service'
-import { DelayedJobData, RenewWebhookJobData, RepeatableJobType, RepeatingJobData, SCHEDULED_JOB_QUEUE, ScheduledJobData } from './queue'
-import { QueueJobsService } from './queue/job.service'
+import { QueuesService } from './queues/queues.service'
+import { DelayedJobData, RenewWebhookJobData, RepeatableJobType, RepeatingJobData, SCHEDULED_JOB_QUEUE, ScheduledJobData } from './queues/types'
 
 @Processor(SCHEDULED_JOB_QUEUE, {
 	concurrency: 10,
@@ -32,7 +32,7 @@ export class ScheduleJobProcessor extends WorkerHost {
 		private readonly flowsService: FlowsService,
 		private readonly flowVersionsService: FlowVersionsService,
 		private readonly triggerHooks: TriggerHooks,
-		private readonly queueJobsService: QueueJobsService,
+		private readonly queuesService: QueuesService,
 		private readonly flowRunsService: FlowRunsService,
 	) {
 		super()
@@ -56,7 +56,7 @@ export class ScheduleJobProcessor extends WorkerHost {
 				})
 
 				if (isNil(flowVersion)) {
-					await this.queueJobsService.removeRepeatingJob({
+					await this.queuesService.removeRepeatingJob({
 						id: data.flowVersionId,
 					})
 				} else {

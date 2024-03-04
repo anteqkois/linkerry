@@ -5,7 +5,7 @@ import { Queue } from 'bullmq'
 import { AddParams, JobType, ONE_TIME_JOB_QUEUE, RemoveParams, SCHEDULED_JOB_QUEUE, repeatingJobKey } from './types'
 
 @Injectable()
-export class QueueJobsService {
+export class QueuesService {
 	private readonly logger = new Logger()
 	constructor(@InjectQueue(ONE_TIME_JOB_QUEUE) readonly oneTimeJobQueue: Queue, @InjectQueue(SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue) {}
 

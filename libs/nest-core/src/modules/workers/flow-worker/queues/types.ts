@@ -1,17 +1,6 @@
 import { ExecutionType, FlowRetryPayload, Id, RunEnvironment, ScheduleOptions, TriggerType } from "@linkerry/shared"
-import { RegisterQueueOptions } from "@nestjs/bullmq"
 
 export const repeatingJobKey = (id: Id): string => `linkerry:repeatJobKey:${id}`
-
-const EIGHT_MINUTES_IN_MILLISECONDS = 8 * 60 * 1000
-export const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
-	attempts: 5,
-	backoff: {
-		type: 'exponential',
-		delay: EIGHT_MINUTES_IN_MILLISECONDS,
-	},
-	removeOnComplete: true,
-}
 
 export const LATEST_JOB_DATA_SCHEMA_VERSION = 1
 

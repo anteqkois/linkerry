@@ -4,7 +4,8 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { EngineHelperResponse, EngineHelperTriggerResult, EngineService } from '../../../engine'
 import { WebhooksService } from '../../../webhooks/webhooks.service'
-import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, QueueJobsService, RepeatableJobType } from '../../../workers/flow-worker'
+import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../../workers/flow-worker/queues'
+import { QueuesService } from '../../../workers/flow-worker/queues/queues.service'
 import { ConnectorsMetadataService } from '../../connectors'
 import { DisableParams, EnableTriggerHookParams, ExecuteHandshakeParams, ExecuteTrigger, RenewWebhookParams } from './types'
 
@@ -18,7 +19,7 @@ export class TriggerHooks {
 		private readonly webhookService: WebhooksService,
 		private readonly engineService: EngineService,
 		private readonly configService: ConfigService,
-		private readonly queueJobsService: QueueJobsService,
+		private readonly queuesService: QueuesService,
 	) {
 		this.POLLING_FREQUENCY_CRON_EXPRESSON = `*/${configService.get('TRIGGER_DEFAULT_POLL_INTERVAL') ?? 5} * * * *`
 	}
@@ -41,7 +42,7 @@ export class TriggerHooks {
 			// 	break
 			// }
 			case TriggerStrategy.POLLING:
-				await this.queueJobsService.removeRepeatingJob({
+				await this.queuesService.removeRepeatingJob({
 					id: flowVersion._id,
 				})
 				break
@@ -203,7 +204,7 @@ export class TriggerHooks {
 					// }
 					// // END EE
 				}
-				await this.queueJobsService.addToQueue({
+				await this.queuesService.addToQueue({
 					id: flowVersion._id,
 					type: JobType.REPEATING,
 					data: {
