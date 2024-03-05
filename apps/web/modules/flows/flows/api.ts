@@ -1,9 +1,9 @@
-import { Flow, Id } from '@linkerry/shared'
+import { FlowPublishInput, Id, PopulatedFlow } from '@linkerry/shared'
 import { apiClient } from '../../../libs/api-client'
 
 export class FlowApi {
   static async get(id: Id) {
-    return apiClient.get<Flow | null>(`/flows/${id}`, {
+    return apiClient.get<PopulatedFlow | null>(`/flows/${id}`, {
       paramsSerializer: {
         indexes: null, // no brackets at all
       },
@@ -18,10 +18,14 @@ export class FlowApi {
   }
 
   static async create() {
-    return apiClient.post<Flow>('/flows')
+    return apiClient.post<PopulatedFlow>('/flows')
   }
 
-  static async patch(id: Id, flow: Partial<Omit<Flow, 'version'>>) {
-    return apiClient.patch<Flow>(`/flows/${id}`)
+  static async patch(id: Id, flow: Partial<Omit<PopulatedFlow, 'version'>>) {
+    return apiClient.patch<PopulatedFlow>(`/flows/${id}`)
+  }
+
+  static async publish(id: Id, body: FlowPublishInput) {
+    return apiClient.patch<PopulatedFlow>(`/flows/${id}/publish`, body)
   }
 }

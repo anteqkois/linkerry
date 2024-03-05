@@ -121,7 +121,7 @@ export class TriggerEventsService {
 			})
 		}
 
-		await this.flowVersionsService.patchTrigger({
+		const flowVersion = await this.flowVersionsService.patchTrigger({
 			projectId,
 			flowVersionId: flow.version._id,
 			triggerName: flowTrigger.name,
@@ -136,10 +136,15 @@ export class TriggerEventsService {
 			},
 		})
 
-		return this.findMany({
+		const triggerEvents = await this.findMany({
 			flowLike: flow,
 			triggerName: flowTrigger.name,
 		})
+
+		return {
+			triggerEvents,
+			flowVersion
+		}
 	}
 
 	async getMany(query: GetManyDto, projectId: Id) {

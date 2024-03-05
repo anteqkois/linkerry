@@ -3,19 +3,18 @@ import {
 	CustomError,
 	DeepPartial,
 	ErrorCode,
-	Flow,
-	FlowVersion,
+	PopulatedFlow,
 	Trigger,
 	TriggerConnector,
 	TriggerEmpty,
-	TriggerEvent,
+	TriggerTestPoolResponse,
 	TriggerType,
 	assertNotNullOrUndefined,
 	deepMerge,
 	flowHelper,
 	generateEmptyTrigger,
 	isConnectorTrigger,
-	retriveStepNumber,
+	retriveStepNumber
 } from '@linkerry/shared'
 import { FlowVersionApi, TriggerApi } from '../../flows'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../common/nodeFactory'
@@ -74,7 +73,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 
 		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
-		const newFlow: Flow = {
+		const newFlow: PopulatedFlow = {
 			...flow,
 			version: data,
 		}
@@ -95,7 +94,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 
 		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
-		const newFlow: Flow = {
+		const newFlow: PopulatedFlow = {
 			...flow,
 			version: data,
 		}
@@ -148,8 +147,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	testPoolTrigger: async () => {
 		set({ testConnectorLoading: true })
 		const { flow, setFlow, patchNode, editedTrigger } = get()
-		let newFlowVersion: FlowVersion | undefined = undefined
-		let testResult: TriggerEvent[] = []
+		let testResult: TriggerTestPoolResponse
 
 		try {
 			assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
@@ -160,30 +158,23 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				})
 			).data
 
-			const trigger = flowHelper.getTrigger(flow.version, editedTrigger.name)
+			const trigger = flowHelper.getTrigger(testResult.flowVersion, editedTrigger.name)
 			if (!trigger || !isConnectorTrigger(trigger))
 				throw new CustomError(`Can not find trigger`, ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND, {
 					trigger,
 				})
-
-			trigger.settings.inputUiInfo = {
-				currentSelectedData: testResult[0].payload,
-				lastTestDate: testResult[0].createdAt,
-			}
-			trigger.valid = true
 
 			patchNode(trigger.name, {
 				data: {
 					trigger,
 				},
 			})
-			newFlowVersion = flowHelper.updateTrigger(flow.version, trigger)
 			set({ editedTrigger: trigger })
-			setFlow({ ...flow, version: newFlowVersion })
+			setFlow({ ...flow, version: testResult.flowVersion })
 		} finally {
 			set({ testConnectorLoading: false })
 		}
 
-		return testResult
+		return testResult.triggerEvents
 	},
 })

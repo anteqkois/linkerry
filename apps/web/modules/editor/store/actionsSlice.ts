@@ -6,17 +6,15 @@ import {
 	CustomError,
 	DeepPartial,
 	ErrorCode,
-	Flow,
-	FlowVersion,
+	PopulatedFlow,
 	RunActionResponse,
 	assertNotNullOrUndefined,
 	deepMerge,
 	flowHelper,
 	isAction,
 	isConnectorAction,
-	isTrigger,
+	isTrigger
 } from '@linkerry/shared'
-import dayjs from 'dayjs'
 import { FlowVersionApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
 import { defaultEdgeFactory, generateEdgeId } from '../edges/edgesFactory'
@@ -112,7 +110,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
 
 		patchNode(newAction.name, { data: { action: newAction } })
-		const newFlow: Flow = {
+		const newFlow: PopulatedFlow = {
 			...flow,
 			version: data,
 		}
@@ -130,7 +128,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
 
 		patchNode(newAction.name, { data: { action: newAction } })
-		const newFlow: Flow = {
+		const newFlow: PopulatedFlow = {
 			...flow,
 			version: newFlowVersion,
 		}
@@ -187,7 +185,6 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			})
 
 		assertNotNullOrUndefined(editedAction, 'editedAction')
-		let newFlowVersion: FlowVersion | undefined = undefined
 		let testResult: RunActionResponse | undefined = undefined
 
 		try {
@@ -200,31 +197,25 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			assertNotNullOrUndefined(testResult, 'testResult')
 
 			if (testResult.success) {
-				const action = flowHelper.getAction(flow.version, editedAction.name)
+				const action = flowHelper.getAction(testResult.flowVersion, editedAction.name)
 				if (!action || !isConnectorAction(action))
 					throw new CustomError(`Can not find action`, ErrorCode.ENTITY_NOT_FOUND, {
 						action,
 					})
-
-				action.settings.inputUiInfo = {
-					currentSelectedData: testResult.output,
-					lastTestDate: dayjs().format(),
-				}
-				action.valid = true
 
 				patchNode(action.name, {
 					data: {
 						action,
 					},
 				})
-				newFlowVersion = flowHelper.updateAction(flow.version, action)
 				set({ editedAction: action })
-				setFlow({ ...flow, version: newFlowVersion })
+				setFlow({ ...flow, version: testResult.flowVersion })
 			}
 		} finally {
 			set({ testConnectorLoading: false })
 		}
 
-		return testResult
+		const {flowVersion, ...response} =testResult
+		return response
 	},
 })

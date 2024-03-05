@@ -3,8 +3,8 @@ import {
 	Action,
 	ConnectorsGetOptionsResponse,
 	DeepPartial,
-	Flow,
 	Id,
+	PopulatedFlow,
 	RunActionResponse,
 	Trigger,
 	TriggerConnector,
@@ -50,9 +50,12 @@ export interface EditorSlice {
 
 export interface FlowAndConnectorsSlice {
 	// FLOW
-	flow: Flow
-	loadFlow: (id: Id) => Promise<Flow | null>
-	setFlow: (flow: Flow) => void
+	loaded: boolean
+	publishLoading: boolean
+	flow: PopulatedFlow
+	loadFlow: (id: Id) => Promise<PopulatedFlow | null>
+	setFlow: (flow: PopulatedFlow) => void
+	publishFlow: () => Promise<void>
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
 	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void
@@ -79,7 +82,7 @@ export interface ActionsSlice {
 	patchEditedAction: (update: DeepPartial<Action>) => Promise<void>
 	updateEditedAction: (newAction: Action) => Promise<void>
 	deleteAction: (actionName: string) => Promise<void>
-	testAction: () => Promise<RunActionResponse | undefined>
+	testAction: () => Promise<Omit<RunActionResponse, 'flowVersion'> | undefined>
 }
 
 export interface StepsSlice {

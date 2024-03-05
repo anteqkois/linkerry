@@ -3,21 +3,21 @@ import {
 	Action,
 	CustomError,
 	ErrorCode,
-	Flow,
 	FlowStatus,
 	FlowVersionState,
 	Id,
+	PopulatedFlow,
 	Trigger,
 	assertNotNullOrUndefined,
 	isConnectorAction,
 	isConnectorTrigger,
-	isStepBaseSettings,
+	isStepBaseSettings
 } from '@linkerry/shared'
 import { FlowApi } from '../../flows'
 import { ConnectorsApi } from '../../flows/connectors/api/api'
 import { CreateSlice, FlowAndConnectorsSlice } from './types'
 
-const emptyFlow: Flow = {
+const emptyFlow: PopulatedFlow = {
 	_id: '1234567890',
 	status: FlowStatus.DISABLED,
 	projectId: '1919191919',
@@ -33,16 +33,18 @@ const emptyFlow: Flow = {
 		actions: [],
 	},
 	publishedVersionId: null,
-	schedule: null
+	schedule: null,
 }
 
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
 	// FLOW
+	loaded: false,
+	publishLoading: false,
 	flow: emptyFlow,
 	loadFlow: async (id: Id) => {
-		let flow: string | Flow | null = localStorage.getItem('flow')
+		let flow: string | PopulatedFlow | null = localStorage.getItem('flow')
 		if (flow) {
-			flow = JSON.parse(flow) as Flow
+			flow = JSON.parse(flow) as PopulatedFlow
 		} else {
 			const { data } = await FlowApi.get(id)
 			flow = data
@@ -51,12 +53,37 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 
 		assertNotNullOrUndefined(flow, 'flow')
 
-		set({ flow })
+		set({ flow, loaded: true })
 		return flow
 	},
-	setFlow: (flow: Flow) => {
+	setFlow: (flow: PopulatedFlow) => {
 		set({ flow })
 		localStorage.setItem('flow', JSON.stringify(flow))
+	},
+	publishFlow: async () => {
+		const { flow } = get()
+		set({
+			publishLoading: true,
+		})
+
+		let newFlow: PopulatedFlow | undefined
+		try {
+			const { data } = await FlowApi.publish(flow._id, {
+				flowVersionId: flow.version._id,
+			})
+			newFlow = data
+		} finally {
+			if (newFlow) {
+				set({
+					flow: newFlow,
+					publishLoading: false,
+				})
+			} else {
+				set({
+					publishLoading: false,
+				})
+			}
+		}
 	},
 	// CONNECTORS
 	editedConnectorMetadata: null,

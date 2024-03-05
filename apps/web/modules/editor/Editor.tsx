@@ -3,7 +3,7 @@ import 'reactflow/dist/style.css'
 
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'reactflow'
-import { Drawer } from '../../shared/components/drawer/Index'
+import { Drawer } from '../../shared/components/Drawer/Index'
 import { ActionConnectorPanel } from './action/ActionConnectorPanel'
 import { ActionNodeElement } from './action/ActionNode'
 import { SelectActionPanel } from './action/SelectActionPanel'
@@ -37,7 +37,7 @@ interface EditorProps {
 }
 
 export const Editor = ({ mode }: EditorProps) => {
-	const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showDrawer, setShowDrawer, drawer } = useEditor()
+	const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showDrawer, setShowDrawer, drawer, loaded } = useEditor()
 	const reactFlowWrapper = useRef(null)
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ export const Editor = ({ mode }: EditorProps) => {
 
 	return (
 		<ReactFlowProvider>
-			<EditorFlowMenu />
+			{loaded ? <EditorFlowMenu /> : null}
 			<div style={{ width: '100vw', height: '100vh' }} ref={reactFlowWrapper}>
 				<ReactFlow
 					nodes={nodes}

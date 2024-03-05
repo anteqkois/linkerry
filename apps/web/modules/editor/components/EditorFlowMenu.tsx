@@ -1,28 +1,54 @@
-import { Menubar, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
+import { isCustomHttpExceptionAxios } from '@linkerry/shared'
+import { Menubar, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, useToast } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
-import { HTMLAttributes, useMemo } from 'react'
+import { HTMLAttributes, useCallback, useMemo } from 'react'
 import { useEditor } from '../useEditor'
 
 export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
 
 export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
-	const { flow } = useEditor()
+	const { flow, publishFlow, publishLoading } = useEditor()
 	const flowValidity = useMemo(() => {
+		console.log('RE MEMO')
+		// minimum 2 steps required
 		if (flow.version.stepsCount < 2) return { invalid: true, message: 'Add one more step. Two steps are required for flow.' }
-		const isAnyStepInvalid = flow.version.triggers.some((trigger) => trigger.valid == false) || flow.version.actions.some((action) => action.valid === false)
-		if (isAnyStepInvalid) return { invalid: true, message: 'All steps must be tested nad valid.' }
+
+		if (!flow.version.valid) return { invalid: true, message: 'All steps must be tested and valid.' }
+
+		// can not run any flow operation
+		if (publishLoading) return { invalid: true, message: 'Flow operation is running...' }
+
 		return { invalid: false }
-	}, [...flow.version.actions.map((action) => action.valid), flow.version.stepsCount])
+	}, [flow.version.valid, flow.version.stepsCount, publishLoading])
+
+	const { toast } = useToast()
+
+	const onPublishFlow = useCallback(async () => {
+		try {
+			await publishFlow()
+		} catch (error) {
+			let message = 'Unknown error occured, can not publish yout flow. Try again and inform our IT team.'
+			if (isCustomHttpExceptionAxios(error)) {
+				message = error.response.data.message
+			}
+			toast({
+				content: message,
+				variant: 'destructive',
+			})
+		}
+	}, [])
 
 	return (
 		<nav className="hidden sm:block fixed top-1 left-1/2 -translate-x-1/2 z-40">
 			<Menubar>
-				<TooltipProvider delayDuration={200}>
+				<TooltipProvider delayDuration={100}>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Button className="h-7 rounded-sm" disabled={flowValidity.invalid}>
-								Publish
-							</Button>
+							<div>
+								<Button className="h-7 rounded-sm" disabled={flowValidity.invalid} onClick={onPublishFlow}>
+									Publish
+								</Button>
+							</div>
 						</TooltipTrigger>
 						{flowValidity.invalid ? (
 							<TooltipContent>

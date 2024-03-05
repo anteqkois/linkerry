@@ -1,6 +1,7 @@
 import {
 	Action,
 	ActionType,
+	FlowVersion,
 	FlowVersionAddActionInput,
 	FlowVersionState,
 	Id,
@@ -26,7 +27,7 @@ import { FlowVersionModel } from './schemas/flow-version.schema'
 export class FlowVersionsService {
 	constructor(@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>) {}
 
-	async findOne({ filter }: { filter: MongoFilter<FlowVersionModel> }) {
+	async findOne({ filter }: { filter: MongoFilter<FlowVersionModel> }): Promise<FlowVersion | undefined> {
 		return (await this.flowVersionModel.findOne(filter))?.toObject()
 	}
 
@@ -49,6 +50,12 @@ export class FlowVersionsService {
 		return this.flowVersionModel.deleteMany({
 			flowId: flowId,
 		})
+	}
+
+	async update(id: Id, flowVersion: FlowVersion) {
+		return this.flowVersionModel.updateOne({
+			_id: id,
+		}, flowVersion)
 	}
 
 	/* STEPS */
@@ -76,6 +83,7 @@ export class FlowVersionsService {
 		}
 
 		const newFlowVersion = flowHelper.updateTrigger(flowVersion.toObject(), updateTrigger)
+		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
 
 		const response = await this.flowVersionModel.updateOne(
 			{
@@ -111,6 +119,8 @@ export class FlowVersionsService {
 			},
 			{ $set: newFlowVersion },
 		)
+
+		return newFlowVersion
 	}
 
 	async updateAction(id: Id, projectId: Id, updateAction: Action) {
@@ -132,6 +142,7 @@ export class FlowVersionsService {
 
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 		const newFlowVersion = flowHelper.updateAction(flowVersion.toObject(), updateAction)
+		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
 
 		const response = await this.flowVersionModel.updateOne(
 			{
@@ -165,6 +176,7 @@ export class FlowVersionsService {
 		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
 
 		const newFlowVersion = flowHelper.addAction(flowVersion.toObject(), parentStepName, action)
+		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
 
 		await this.flowVersionModel.updateOne(
 			{
@@ -185,6 +197,7 @@ export class FlowVersionsService {
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
 		const newFlowVersion = flowHelper.deleteAction(flowVersion.toObject(), actionName)
+		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
 
 		await this.flowVersionModel.updateOne(
 			{

@@ -6,13 +6,8 @@ import { Trigger, TriggerType } from '../triggers/trigger'
 type Step = Action | Trigger
 
 function isValid(flowVersion: FlowVersion) {
-	let valid = true
 	const steps = flowHelper.getAllSteps(flowVersion)
-	for (let i = 0; i < steps.length; i++) {
-		const step = steps[i]
-		valid = valid && step.valid
-	}
-	return valid
+	return steps.every((step) => step.valid)
 }
 
 function isAction(type: ActionType | TriggerType | undefined): boolean {

@@ -112,7 +112,7 @@ export const ActionConnectorPanel = () => {
 					},
 				})
 		},
-		[...Object.values(editedAction.settings.input)],
+		[Object.values(editedAction.settings.input)],
 		1000,
 	)
 

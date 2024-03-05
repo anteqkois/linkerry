@@ -18,7 +18,7 @@ export interface ActionTestProps extends HTMLAttributes<HTMLElement> {
 
 export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestProps) => {
 	const { editedAction, testConnectorLoading, testAction } = useEditor()
-	const [testData, setTestData] = useState<RunActionResponse | undefined>()
+	const [testData, setTestData] = useState<Omit<RunActionResponse, 'flowVersion'> | undefined>()
 	assertNotNullOrUndefined(editedAction?.name, 'editedAction.name')
 	const { relativeTime, setInitialTime, dayjs } = useRelativeTime()
 	const [errorMessage, setErrorMessage] = useState<string>('')
