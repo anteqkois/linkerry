@@ -24,7 +24,7 @@ export const sampleDataSettingsObjectSchema = z.object({
 })
 
 export const baseStepSettingsSchema = z.object({
-	connectorName: z.string(), // '@market-connector/binance'
+	connectorName: z.string(), // '@linkerry/binance'
 	connectorVersion: z.string(),
 	connectorType: z.nativeEnum(ConnectorType), // Officail, Custom
 	input: z.record(z.any()).and(z.object({ auth: z.string().optional() })),

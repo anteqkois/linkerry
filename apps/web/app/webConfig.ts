@@ -1,13 +1,13 @@
 import { SiteConfig } from "../types"
 
 export const siteConfig: SiteConfig = {
-  name: "Market Connector",
+  name: "Linkerry",
   description:
     "---",
   url: "https://tx.shadcn.com",
   ogImage: "https://tx.shadcn.com/og.jpg",
   links: {
-    twitter: "https://twitter.com/market-connector",
-    github: "https://github.com/shadcn/market-connector",
+    twitter: "https://twitter.com/linkerry",
+    github: "https://github.com/shadcn/linkerry",
   },
 }

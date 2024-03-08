@@ -1,4 +1,4 @@
-# MarketConnector
+# Linkerry
 
 # Development Rules
 - all models should be in @core lib, to be sherabled beetwen apps
