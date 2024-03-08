@@ -1,6 +1,5 @@
-import { Id, PauseMetadata, StopResponse } from '@linkerry/shared'
+import { ExecutionType, Id, PauseMetadata, StopResponse, TriggerStrategy } from '@linkerry/shared'
 import { ConnectorAuthProperty, ConnectorPropValueSchema, ConnectorPropertyMap, StaticPropsValue } from './property'
-import { TriggerStrategy } from './trigger/trigger'
 
 type BaseContext<ConnectorAuth extends ConnectorAuthProperty, Props extends ConnectorPropertyMap> = {
 	auth: ConnectorPropValueSchema<ConnectorAuth>
@@ -57,11 +56,6 @@ export type TriggerHookContext<
 	: S extends TriggerStrategy.WEBHOOK
 	? WebhookTriggerHookContext<ConnectorAuth, TriggerProps>
 	: never
-
-export enum ExecutionType {
-	BEGIN = 'BEGIN',
-	RESUME = 'RESUME',
-}
 
 export type StopHookParams = {
 	response: StopResponse

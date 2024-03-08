@@ -108,7 +108,7 @@ export interface UpsertSecretTextInput extends CommonAuthProps {
 //     UpsertCustomAuthRequest,
 // ])
 
-export type UpsertAppConnectionInput = UpsertCustomAuthInput | UpsertSecretTextInput
+export type UpsertAppConnectionInput = Omit<UpsertCustomAuthInput | UpsertSecretTextInput, 'projectId'>
 // export interface UpsertAppConnectionInput extends CommonAuthProps {
 // 	type: AppConnectionType
 // 	value: any

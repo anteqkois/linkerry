@@ -31,6 +31,7 @@ const emptyFlow: PopulatedFlow = {
 		stepsCount: 1,
 		triggers: [],
 		actions: [],
+		updatedBy: 'unknown'
 	},
 	publishedVersionId: null,
 	schedule: null,

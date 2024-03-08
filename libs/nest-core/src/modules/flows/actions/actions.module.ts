@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EngineModule } from '../../engine/engine.module';
-import { FlowVersionsModule } from '../flow-versions';
+import { FlowVersionsModule } from '../flow-versions/flow-versions.module';
 import { ActionsController } from './actions.controller';
 import { ActionsService } from './actions.service';
 

@@ -14,6 +14,9 @@ export class FlowVersionModel implements FlowVersion {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'projects' })
   projectId: Id
 
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'users' })
+  updatedBy: Id
+
   @Prop({ required: true, type: String })
   displayName: string
 

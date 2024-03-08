@@ -1,6 +1,7 @@
-import { FlowPublishInput, FlowStatus, Id, PopulatedFlow, UpdateStatusInput, assertNotNullOrUndefined } from '@linkerry/shared'
-import { Injectable } from '@nestjs/common'
+import { FlowPublishInput, FlowStatus, FlowVersion, Id, PopulatedFlow, UpdateStatusInput, assertNotNullOrUndefined } from '@linkerry/shared'
+import { ConflictException, Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import dayjs from 'dayjs'
 import { Document, Model } from 'mongoose'
 import { generateId } from '../../../lib/mongodb'
 import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
@@ -11,6 +12,8 @@ import { FlowDocument, FlowModel } from './schemas/flow.schema'
 
 @Injectable()
 export class FlowsService {
+	private readonly logger = new Logger(FlowsService.name)
+
 	constructor(
 		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
 		private readonly flowVersionService: FlowVersionsService,
@@ -50,9 +53,9 @@ export class FlowsService {
 		)
 	}
 
-	async createEmpty(projectId: Id) {
+	async createEmpty(projectId: Id, userId: Id) {
 		const flowId = generateId()
-		const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString(), projectId)
+		const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString(), projectId, userId)
 
 		return (
 			await this.flowModel.create({
@@ -63,15 +66,7 @@ export class FlowsService {
 		).populate(['version'])
 	}
 
-	async publish(id: Id, projectId: Id, body: FlowPublishInput): Promise<PopulatedFlow> {
-		// // BEGIN EE
-		// const currentTime = dayjs()
-		// const userId = await extractUserIdFromPrincipal(request.principal)
-
-		// if (!isNil(flow.version.updatedBy) && flow.version.updatedBy !== userId && currentTime.diff(dayjs(flow.version.updated), 'minute') <= 1) {
-		// 	return reply.status(StatusCodes.CONFLICT).send()
-		// }
-		// // END EE
+	async publish(id: Id, projectId: Id, userId:Id, body: FlowPublishInput): Promise<PopulatedFlow> {
 		const flowToUpdate = await this.flowModel.findOne({
 			_id: id,
 			projectId,
@@ -84,6 +79,12 @@ export class FlowsService {
 			},
 		})
 		assertNotNullOrUndefined(flowVersionToPublish, 'flowVersionToPublish')
+
+		// prevent confict when two users updates the same flowVesion
+		if(dayjs(flowVersionToPublish.updatedAt).add(1, 'minutes').isAfter(dayjs()) && flowVersionToPublish.updatedBy !== userId){
+			this.logger.error(`#publish conflict when ${userId} wants to update flowVersion`)
+			throw new ConflictException()
+		}
 
 		const flowLock = await this.redisLockService.acquireLock({
 			key: id,
@@ -163,4 +164,10 @@ export class FlowsService {
 			},
 		})
 	}
+}
+
+export interface LockFlowVersionIfNotLockedParams {
+	flowVersion: FlowVersion
+	userId: Id
+	projectId: Id
 }

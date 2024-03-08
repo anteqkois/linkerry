@@ -1,17 +1,20 @@
 import { CustomError, ErrorCode, Id, assertNotNullOrUndefined } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
 import { EngineService } from '../../engine/engine.service'
-import { FlowVersionsService } from '../flow-versions/flow-versions.service'
+import { FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { ConnectorsGetOptionsInputDto } from './dto/get-options-input.dto'
 
 @Injectable()
 export class ConnectorsService {
-	constructor(private readonly flowVersionsService: FlowVersionsService, private readonly engineService: EngineService) {
-		//
-	}
+	constructor(
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
+		private readonly engineService: EngineService,
+	) {}
 
 	async getPropertyOptions(projectId: Id, body: ConnectorsGetOptionsInputDto) {
-		const flowVersion = await this.flowVersionsService.findOne({
+		const flowVersion = await this.flowVersionModel.findOne({
 			filter: {
 				_id: body.flowVersionId,
 				flow: body.flowId,

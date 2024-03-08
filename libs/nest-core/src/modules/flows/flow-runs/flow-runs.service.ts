@@ -17,8 +17,9 @@ import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import { Model } from 'mongoose'
-import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, QueuesService, RepeatableJobType } from '../../workers/flow-worker/queues'
-import { FlowVersionsService } from '../flow-versions/flow-versions.service'
+import { QueuesService } from '../../workers/flow-worker/queues/queues.service'
+import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../workers/flow-worker/queues/types'
+import { FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { FlowModel } from '../flows/schemas/flow.schema'
 import { FlowResponseService } from './flow-response.service'
 import { FlowRunsHooks } from './flow-runs.hooks'
@@ -32,8 +33,8 @@ export class FlowRunsService {
 	constructor(
 		@InjectModel(FlowRunModel.name) private readonly flowRunModel: Model<FlowRunModel>,
 		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
 		private readonly queuesService: QueuesService,
-		private readonly flowVersionsService: FlowVersionsService,
 		private readonly flowRunsHooks: FlowRunsHooks,
 		private readonly flowResponseService: FlowResponseService,
 	) {}
@@ -209,7 +210,7 @@ export class FlowRunsService {
 			executionType,
 		})
 
-		const flowVersion = await this.flowVersionsService.findOne({
+		const flowVersion = await this.flowVersionModel.findOne({
 			filter: {
 				_id: flowVersionId,
 			},
@@ -283,7 +284,7 @@ export class FlowRunsService {
 	}
 
 	async test({ projectId, flowVersionId }: TestParams): Promise<FlowRun> {
-		const flowVersion = await this.flowVersionsService.findOne({ filter: { _id: flowVersionId } })
+		const flowVersion = await this.flowVersionModel.findOne({ filter: { _id: flowVersionId } })
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
 		const payload = flowVersion.triggers[0].settings.inputUiInfo.currentSelectedData

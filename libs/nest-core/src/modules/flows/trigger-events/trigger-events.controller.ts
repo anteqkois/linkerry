@@ -4,7 +4,7 @@ import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { DeleteDto } from './dto/delete.dto'
 import { GetManyDto } from './dto/get-many.dto'
-import { PoolTestDto } from './dto/pool-test.dto'
+import { TestDto } from './dto/pool-test.dto'
 import { TriggerEventsService } from './trigger-events.service'
 
 @Controller('trigger-events')
@@ -25,7 +25,7 @@ export class TriggerEventsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post('/test/pool')
-	create(@ReqJwtUser() user: RequestUser, @Body() poolTestDto: PoolTestDto) {
-		return this.triggerEventsService.performPoolTest(poolTestDto, user.projectId)
+	create(@ReqJwtUser() user: RequestUser, @Body() poolTestDto: TestDto) {
+		return this.triggerEventsService.test(poolTestDto, user.projectId, user.id)
 	}
 }

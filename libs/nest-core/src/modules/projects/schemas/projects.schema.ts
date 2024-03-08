@@ -1,7 +1,7 @@
 import { AppConnectionEncrypted, Id, NotificationStatus, Project } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { UserModel } from '../../users'
+import { UserModel } from '../../users/schemas/user.schema'
 
 export type ProjectsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 

@@ -1,8 +1,8 @@
-import { ConnectorGroup, ConnectorType } from '@linkerry/shared'
+import { ConnectorGroup, ConnectorType, TriggerStrategy, TriggerTestStrategy } from '@linkerry/shared'
 import { ErrorHandlingOptionsParam } from './action/action'
 import { ConnectorAuthProperty, ConnectorPropertyMap } from './property'
 import { ConnectorTag } from './tags'
-import { TriggerStrategy, WebhookHandshakeConfiguration } from './trigger/trigger'
+import {  WebhookHandshakeConfiguration, WebhookRenewConfiguration } from './trigger/trigger'
 
 export type ConnectorBase = {
 	_id: string
@@ -32,6 +32,8 @@ export type TriggerBase = Omit<StepBase, 'requireAuth'> & {
 	type: TriggerStrategy
 	sampleData: unknown
 	handshakeConfiguration?: WebhookHandshakeConfiguration
+	renewConfiguration: WebhookRenewConfiguration,
+	testStrategy: TriggerTestStrategy;
 }
 
 export type ConnectorMetadata = ConnectorBase & {

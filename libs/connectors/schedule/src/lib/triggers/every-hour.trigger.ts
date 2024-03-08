@@ -1,4 +1,5 @@
-import { Property, TriggerStrategy, createTrigger } from '@linkerry/connectors-framework'
+import { Property, createTrigger } from '@linkerry/connectors-framework'
+import { TriggerStrategy } from '@linkerry/shared'
 
 export const everyHourTrigger = createTrigger({
   name: 'every_hour',

@@ -1,5 +1,5 @@
-import { TriggerBase, TriggerStrategy } from '@linkerry/connectors-framework'
-import { ConnectorGroup, TriggerType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
+import { TriggerBase  } from '@linkerry/connectors-framework'
+import { ConnectorGroup, TriggerStrategy, TriggerType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
 	Form,
 	FormControl,

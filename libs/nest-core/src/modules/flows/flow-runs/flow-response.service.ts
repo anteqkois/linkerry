@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Types } from 'mongoose'
+import { generateId } from '../../../lib/mongodb'
 
 @Injectable()
 export class FlowResponseService {
@@ -16,7 +17,7 @@ export class FlowResponseService {
 	}
 
 	getHandlerId(): string {
-		return new Types.ObjectId().toString()
+		return generateId().toString()
 }
 
 }

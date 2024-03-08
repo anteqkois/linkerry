@@ -9,13 +9,8 @@ export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
 export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 	const { flow, publishFlow, publishLoading } = useEditor()
 	const flowValidity = useMemo(() => {
-		console.log('RE MEMO')
-		// minimum 2 steps required
 		if (flow.version.stepsCount < 2) return { invalid: true, message: 'Add one more step. Two steps are required for flow.' }
-
 		if (!flow.version.valid) return { invalid: true, message: 'All steps must be tested and valid.' }
-
-		// can not run any flow operation
 		if (publishLoading) return { invalid: true, message: 'Flow operation is running...' }
 
 		return { invalid: false }
@@ -28,11 +23,12 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 			await publishFlow()
 		} catch (error) {
 			let message = 'Unknown error occured, can not publish yout flow. Try again and inform our IT team.'
-			if (isCustomHttpExceptionAxios(error)) {
+
+			if (isCustomHttpExceptionAxios(error))
 				message = error.response.data.message
-			}
+
 			toast({
-				content: message,
+				title: message,
 				variant: 'destructive',
 			})
 		}

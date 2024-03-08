@@ -13,11 +13,13 @@ import {
 } from '@linkerry/shared'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
 import { Job, Queue, UnrecoverableError } from 'bullmq'
-import { FlowRunsService } from '../../flows/flow-runs'
-import { FlowVersionsService } from '../../flows/flow-versions'
-import { FlowsService } from '../../flows/flows/flows.service'
-import { TriggerHooks } from '../../flows/triggers/trigger-hooks'
+import { Model } from 'mongoose'
+import { FlowRunsService } from '../../flows/flow-runs/flow-runs.service'
+import { FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
+import { FlowModel } from '../../flows/flows/schemas/flow.schema'
+import { TriggerHooks } from '../../flows/triggers/trigger-hooks/trigger-hooks.service'
 import { QueuesService } from './queues/queues.service'
 import { DelayedJobData, RenewWebhookJobData, RepeatableJobType, RepeatingJobData, SCHEDULED_JOB_QUEUE, ScheduledJobData } from './queues/types'
 
@@ -29,8 +31,8 @@ export class ScheduleJobProcessor extends WorkerHost {
 
 	constructor(
 		@InjectQueue(SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue,
-		private readonly flowsService: FlowsService,
-		private readonly flowVersionsService: FlowVersionsService,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
+		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
 		private readonly triggerHooks: TriggerHooks,
 		private readonly queuesService: QueuesService,
 		private readonly flowRunsService: FlowRunsService,
@@ -41,15 +43,13 @@ export class ScheduleJobProcessor extends WorkerHost {
 	private async _consumeRepeatingJob(data: RepeatingJobData): Promise<void> {
 		try {
 			// TODO REMOVE AND FIND PERMANENT SOLUTION -> ACTIVEPIECES NOTE
-			const flow = await this.flowsService.findOne({
-				filter: {
-					id: data.flowId,
-					projectId: data.projectId,
-				},
+			const flow = await this.flowModel.findOne({
+				id: data.flowId,
+				projectId: data.projectId,
 			})
 
 			if (isNil(flow) || flow.status !== FlowStatus.ENABLED || flow.publishedVersionId !== data.flowVersionId) {
-				const flowVersion = await this.flowVersionsService.findOne({
+				const flowVersion = await this.flowVersionModel.findOne({
 					filter: {
 						_id: data.flowVersionId,
 					},
@@ -79,18 +79,20 @@ export class ScheduleJobProcessor extends WorkerHost {
 		} catch (error: any) {
 			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED) {
 				this.logger.debug(`#consumeRepeatingJob removing project._id=${data.projectId} run out of flow quota`)
-				await this.flowsService.patch({
-					flowId: data.flowId,
-					update: {
+				await this.flowModel.updateOne(
+					{
+						_id: data.flowId,
+					},
+					{
 						status: FlowStatus.DISABLED,
 					},
-				})
+				)
 			} else throw new CustomError(error.message, ErrorCode.JOB_FAILURE)
 		}
 	}
 
 	private async _consumeConnectorTrigger(data: RepeatingJobData): Promise<void> {
-		const flowVersion = await this.flowVersionsService.findOne({
+		const flowVersion = await this.flowVersionModel.findOne({
 			filter: {
 				_id: data.flowVersionId,
 			},
@@ -137,9 +139,11 @@ export class ScheduleJobProcessor extends WorkerHost {
 			flowVersionId: data.flowVersionId,
 		})
 
-		const flowVersion = await this.flowVersionsService.findOne({filter:{
-			_id:data.flowVersionId,
-		}})
+		const flowVersion = await this.flowVersionModel.findOne({
+			filter: {
+				_id: data.flowVersionId,
+			},
+		})
 
 		assertNotNullOrUndefined(flowVersion, 'flowVersion ')
 

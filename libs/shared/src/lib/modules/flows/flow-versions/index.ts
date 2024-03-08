@@ -17,4 +17,5 @@ export interface FlowVersion extends TimestampDatabase {
 	valid: boolean
 	state: FlowVersionState
 	stepsCount: number
+	updatedBy: Id
 }

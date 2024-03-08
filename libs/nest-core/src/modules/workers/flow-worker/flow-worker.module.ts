@@ -1,7 +1,11 @@
 import { BullModule, RegisterQueueOptions } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
-import { FlowVersionsModule, FlowsModule } from '../../flows'
-import { FlowRunsModule } from '../../flows/flow-runs'
+import { MongooseModule } from '@nestjs/mongoose'
+import { FlowRunsModule } from '../../flows/flow-runs/flow-runs.module'
+import { FlowVersionsModule } from "../../flows/flow-versions/flow-versions.module"
+import { flowVersionModelFactory } from '../../flows/flow-versions/schemas/flow-version.schema'
+import { FlowsModule } from '../../flows/flows/flows.module'
+import { FlowModelFactory } from '../../flows/flows/schemas/flow.schema'
 import { TriggersModule } from '../../flows/triggers/triggers.module'
 import { QueuesService } from './queues/queues.service'
 import { ONE_TIME_JOB_QUEUE, SCHEDULED_JOB_QUEUE } from './queues/types'
@@ -19,6 +23,7 @@ const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
 
 @Module({
 	imports: [
+		MongooseModule.forFeatureAsync([flowVersionModelFactory, FlowModelFactory]),
 		FlowRunsModule,
 		FlowsModule,
 		TriggersModule,

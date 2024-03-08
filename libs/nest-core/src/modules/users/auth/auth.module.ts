@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import { MongooseModule } from '@nestjs/mongoose'
 import { PassportModule } from '@nestjs/passport'
-import { UserModel, UserSchema, UsersModule, UsersService } from '..'
 import { HashService } from '../../../lib/auth/hash.service'
 import { JWTService } from '../../../lib/auth/jwt.service'
 import { JwtBearerTokenStrategy } from '../../../lib/auth/strategies/jwt-bearer-token.strategy'
@@ -11,7 +10,10 @@ import { JwtCookiesStrategy } from '../../../lib/auth/strategies/jwt-cookies.str
 import { LocalStrategy } from '../../../lib/auth/strategies/local.strategy'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { ProjectsModule } from '../../projects'
+import { ProjectsModule } from '../../projects/projects.module'
+import { UsersModule } from '../users.module'
+import { UserModel, UserSchema } from '../schemas/user.schema'
+import { UsersService } from '../users.service'
 
 @Module({
 	imports: [

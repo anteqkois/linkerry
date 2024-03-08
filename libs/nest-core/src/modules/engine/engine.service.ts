@@ -22,18 +22,27 @@ import {
 	clone,
 	flowHelper,
 	isConnectorTrigger,
-	tryParseJson
+	tryParseJson,
 } from '@linkerry/shared'
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import fs from 'fs/promises'
-import { AppEventRoutingService } from '../app-event-routing'
-import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata'
+import { AppEventRoutingService } from '../app-event-routing/app-event-routing.service'
+import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
 import { AuthService } from '../users/auth/auth.service'
-import { WebhookSecretsService } from '../webhooks'
+import { WebhookSecretsService } from '../webhooks/webhook-secrets/webhook-secrets.service'
 import { SandboxProvisionerService } from '../workers/sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../workers/sandbox/sandboxes/sandbox'
-import { EngineHelperActionResult, EngineHelperExtractConnectorInformation, EngineHelperFlowResult, EngineHelperPropResult, EngineHelperResponse, EngineHelperResult, EngineHelperTriggerResult, EngineHelperValidateAuthResult } from './types'
+import {
+	EngineHelperActionResult,
+	EngineHelperExtractConnectorInformation,
+	EngineHelperFlowResult,
+	EngineHelperPropResult,
+	EngineHelperResponse,
+	EngineHelperResult,
+	EngineHelperTriggerResult,
+	EngineHelperValidateAuthResult,
+} from './types'
 
 @Injectable()
 export class EngineService {
@@ -296,7 +305,11 @@ export class EngineService {
 		operation: Omit<ExecuteTriggerOperation<T>, EngineConstants>,
 	): Promise<EngineHelperResponse<EngineHelperTriggerResult<T>>> {
 		this.logger.debug(`#executeTrigger:`, {
-			operation,
+			hookType: operation.hookType,
+			projectId: operation.projectId,
+			triggerName: operation.triggerName,
+			triggerPayload: operation.triggerPayload,
+			webhookUrl: operation.webhookUrl,
 		})
 
 		// todo lock flow version
@@ -326,7 +339,9 @@ export class EngineService {
 		})
 
 		this.logger.debug(`#executeTrigger provised sandbox:`, {
-			sandbox,
+			inUse: sandbox.inUse,
+			boxId: sandbox.boxId,
+			cacheKey: sandbox.cacheKey,
 		})
 
 		const input = {

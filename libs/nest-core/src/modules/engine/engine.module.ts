@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { AppEventRoutingModule } from '../app-event-routing'
-import { ConnectorsMetadataModule } from '../flows/connectors/connectors-metadata'
+import { AppEventRoutingModule } from '../app-event-routing/app-event-routing.module'
+import { ConnectorsMetadataModule } from '../flows/connectors/connectors-metadata/connectors-metadata.module'
 import { AuthModule } from '../users/auth'
-import { WebhooksModule } from '../webhooks'
+import { WebhookSecretsModule } from '../webhooks/webhook-secrets/webhook-secrets.module'
 import { SandboxModule } from '../workers/sandbox/sandbox.module'
 import { EngineService } from './engine.service'
 
@@ -11,7 +11,7 @@ import { EngineService } from './engine.service'
 		SandboxModule,
 		AuthModule,
 		AppEventRoutingModule,
-		WebhooksModule,
+		WebhookSecretsModule,
 		ConnectorsMetadataModule
 	],
 	providers: [EngineService],

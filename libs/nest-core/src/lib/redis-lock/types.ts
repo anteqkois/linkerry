@@ -15,6 +15,10 @@ export interface RedisModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'>
 	inject?: any[]
 }
 
+export type ApLock = {
+	release(): Promise<unknown>
+}
+
 export interface AcquireLockParams {
 	key: string
 	timeout: number

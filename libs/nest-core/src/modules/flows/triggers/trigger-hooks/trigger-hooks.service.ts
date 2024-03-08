@@ -1,11 +1,22 @@
-import { TriggerBase, TriggerStrategy, WebhookHandshakeStrategy, WebhookResponse } from '@linkerry/connectors-framework'
-import { EngineResponseStatus, FlowVersion, RunEnvironment, TriggerConnector, TriggerHookType, TriggerType, isNil } from '@linkerry/shared'
+import { TriggerBase, WebhookHandshakeStrategy, WebhookResponse } from '@linkerry/connectors-framework'
+import {
+	EngineResponseStatus,
+	FlowVersion,
+	RunEnvironment,
+	TriggerConnector,
+	TriggerHookType,
+	TriggerStrategy,
+	TriggerType,
+	isNil,
+} from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { EngineHelperResponse, EngineHelperTriggerResult, EngineService } from '../../../engine'
-import { WebhooksService } from '../../../webhooks/webhooks.service'
-import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, QueuesService, RepeatableJobType } from '../../../workers/flow-worker/queues'
-import { ConnectorsMetadataService } from '../../connectors'
+import { EngineService } from '../../../engine/engine.service'
+import { EngineHelperResponse, EngineHelperTriggerResult } from '../../../engine/types'
+import { WebhookUrlsService } from '../../../webhooks/webhook-urls/webhook-urls.service'
+import { QueuesService } from '../../../workers/flow-worker/queues/queues.service'
+import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../../workers/flow-worker/queues/types'
+import { ConnectorsMetadataService } from '../../connectors/connectors-metadata/connectors-metadata.service'
 import { DisableParams, EnableTriggerHookParams, ExecuteHandshakeParams, ExecuteTrigger, RenewWebhookParams } from './types'
 
 @Injectable()
@@ -15,10 +26,10 @@ export class TriggerHooks {
 
 	constructor(
 		private readonly connectorsMetadataService: ConnectorsMetadataService,
-		private readonly webhookService: WebhooksService,
 		private readonly engineService: EngineService,
 		private readonly configService: ConfigService,
 		private readonly queuesService: QueuesService,
+		private readonly webhookUrlsService: WebhookUrlsService,
 	) {
 		this.POLLING_FREQUENCY_CRON_EXPRESSON = `*/${configService.get('TRIGGER_DEFAULT_POLL_INTERVAL') ?? 5} * * * *`
 	}
@@ -55,7 +66,7 @@ export class TriggerHooks {
 			hookType: TriggerHookType.HANDSHAKE,
 			flowVersion,
 			triggerPayload: payload,
-			webhookUrl: await this.webhookService.getWebhookUrl({
+			webhookUrl: await this.webhookUrlsService.getWebhookUrl({
 				flowId: flowVersion.flow,
 				simulate: false,
 			}),
@@ -132,7 +143,7 @@ export class TriggerHooks {
 		const flowTrigger = flowVersion.triggers[0] as TriggerConnector
 		const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
 
-		const webhookUrl = await this.webhookService.getWebhookUrl({
+		const webhookUrl = await this.webhookUrlsService.getWebhookUrl({
 			flowId: flowVersion.flow,
 			simulate,
 		})
@@ -142,7 +153,7 @@ export class TriggerHooks {
 			flowVersion,
 			webhookUrl,
 			projectId,
-			triggerName: connectorTrigger.name,
+			triggerName: flowTrigger.name,
 		})
 
 		if (engineHelperResponse.status !== EngineResponseStatus.OK) return engineHelperResponse
@@ -233,14 +244,14 @@ export class TriggerHooks {
 		const flowTrigger = flowVersion.triggers[0] as TriggerConnector
 		const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
 
-		const webhookUrl = await this.webhookService.getWebhookUrl({
+		const webhookUrl = await this.webhookUrlsService.getWebhookUrl({
 			flowId: flowVersion.flow,
 			simulate,
 		})
 
 		try {
 			return await this.engineService.executeTrigger({
-				triggerName: connectorTrigger.name,
+				triggerName: flowTrigger.name,
 				hookType: TriggerHookType.ON_DISABLE,
 				flowVersion,
 				webhookUrl,
@@ -263,12 +274,12 @@ export class TriggerHooks {
 		switch (flowTrigger.type) {
 			case TriggerType.TRIGGER: {
 				const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
-				const webhookUrl = await this.webhookService.getWebhookUrl({
+				const webhookUrl = await this.webhookUrlsService.getWebhookUrl({
 					flowId: flowVersion.flow,
 					simulate,
 				})
 				const { result } = await this.engineService.executeTrigger({
-					triggerName: connectorTrigger.name,
+					triggerName: flowTrigger.name,
 					hookType: TriggerHookType.RUN,
 					flowVersion,
 					triggerPayload: payload,
@@ -299,7 +310,7 @@ export class TriggerHooks {
 				triggerName: params.flowVersion.triggers[0].name,
 				hookType: TriggerHookType.RENEW,
 				flowVersion,
-				webhookUrl: await this.webhookService.getWebhookUrl({
+				webhookUrl: await this.webhookUrlsService.getWebhookUrl({
 					flowId: flowVersion.flow,
 					simulate,
 				}),

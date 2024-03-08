@@ -1,26 +1,19 @@
-import { EventPayload, Flow, Id } from "@linkerry/shared"
-
-export type WebhookUrlSuffix = '' | '/simulate'
-
-export interface GetWebhookUrlParams {
-    flowId: Id
-    simulate?: boolean
-}
+import { EventPayload, PopulatedFlow } from "@linkerry/shared"
 
 export interface CallbackParams  {
-    flow: Flow
+    flow: PopulatedFlow
     payload: EventPayload
 }
 
 export interface HandshakeParams  {
-    flow: Flow
+    flow: PopulatedFlow
     payload: EventPayload
     simulate: boolean
 }
 
 
 export interface SyncParams  {
-    flow: Flow
+    flow: PopulatedFlow
     payload: EventPayload
     synchronousHandlerId?: string
 }

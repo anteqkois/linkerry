@@ -7,6 +7,12 @@ export enum TriggerType {
 	WEBHOOK = 'WEBHOOK',
 }
 
+export enum TriggerStrategy {
+	POLLING = 'POLLING',
+	WEBHOOK = 'WEBHOOK',
+	APP_WEBHOOK = 'APP_WEBHOOK',
+}
+
 /* BASE */
 export const baseTriggerSchema = baseStepSchema.merge(
 	z.object({

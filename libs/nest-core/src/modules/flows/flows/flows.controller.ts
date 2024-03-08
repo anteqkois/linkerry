@@ -28,13 +28,13 @@ export class FlowsController {
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
 	createEmptyFlow(@ReqJwtUser() user: RequestUser) {
-		return this.flowsService.createEmpty(user.projectId)
+		return this.flowsService.createEmpty(user.projectId, user.id)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Patch(':id/publish')
 	publishFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: FlowPublishInput) {
-		return this.flowsService.publish(id, user.projectId, body)
+		return this.flowsService.publish(id, user.projectId, user.id, body)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)

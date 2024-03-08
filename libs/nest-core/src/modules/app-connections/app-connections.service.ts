@@ -19,7 +19,7 @@ import { Model } from 'mongoose'
 import { CryptoService } from '../../lib/crypto'
 import { RedisLockService } from '../../lib/redis-lock'
 import { EngineService } from '../engine/engine.service'
-import { ConnectorsMetadataService } from '../flows'
+import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
 import { oauth2Util } from './oauth2'
 import { AppConnectionsModel } from './schemas/connections.schema'
 
