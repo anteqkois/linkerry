@@ -1,5 +1,5 @@
 import { ButtonClient, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
-import { Button, Icons } from '@linkerry/ui-components/server'
+import { Icons } from '@linkerry/ui-components/server'
 import { HTMLAttributes } from 'react'
 
 export interface GenerateTestDataButtonProps extends HTMLAttributes<HTMLButtonElement> {

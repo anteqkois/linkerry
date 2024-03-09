@@ -2,12 +2,12 @@ import { CustomError, ErrorCode, isNil } from '@linkerry/shared'
 import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable, Logger } from '@nestjs/common'
 import { Queue } from 'bullmq'
-import { AddParams, JobType, ONE_TIME_JOB_QUEUE, RemoveParams, SCHEDULED_JOB_QUEUE, repeatingJobKey } from './types'
+import { AddParams, JobType, QUEUES, RemoveParams, repeatingJobKey } from './types'
 
 @Injectable()
 export class QueuesService {
 	private readonly logger = new Logger()
-	constructor(@InjectQueue(ONE_TIME_JOB_QUEUE) readonly oneTimeJobQueue: Queue, @InjectQueue(SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue) {}
+	constructor(@InjectQueue(QUEUES.NAMES.ONE_TIME_JOB_QUEUE) readonly oneTimeJobQueue: Queue, @InjectQueue(QUEUES.NAMES.SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue) {}
 
 	async removeRepeatingJob({ id }: RemoveParams): Promise<void> {
 		const client = await this.scheduleJobQueue.client

@@ -1,10 +1,14 @@
+import { FastifyAdapter } from '@bull-board/fastify'
+import { BullBoardModule } from '@bull-board/nestjs'
+// import * as basicAuth from '@fastify/basic-auth';
 import { BullModule } from '@nestjs/bullmq'
-import { MiddlewareConsumer, Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_FILTER } from '@nestjs/core'
 import { MongodbModule } from './lib/mongodb'
 import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/nest-utils'
 import { RedisLockModule } from './lib/redis-lock'
+import { QUEUES } from './modules/workers/flow-worker/queues/types'
 
 @Module({
 	imports: [
@@ -25,18 +29,24 @@ import { RedisLockModule } from './lib/redis-lock'
 			}),
 			inject: [ConfigService],
 		}),
-		BullModule.forRootAsync({
+		BullModule.forRootAsync(QUEUES.CONFIG_KEYS.FLOW, {
 			useFactory: (configService: ConfigService) => ({
 				connection: {
 					host: configService.getOrThrow('REDIS_HOST'),
 					port: +configService.get('REDIS_PORT'),
 					password: configService.get('REDIS_PASSWORD'),
 				},
-				defaultJobOptions:{
-
-				}
 			}),
 			inject: [ConfigService],
+		}),
+		BullBoardModule.forRoot({
+			route: '/anteq/queues',
+			adapter: FastifyAdapter,
+			boardOptions:{
+				uiConfig:{
+					boardTitle:'Linkerry',
+				},
+			}
 		}),
 		// BullModule.forRoot({
 		//   connection: {
@@ -61,7 +71,7 @@ import { RedisLockModule } from './lib/redis-lock'
 	],
 	exports: [],
 })
-export class CoreModule {
+export class CoreModule implements NestModule {
 	// Add a middleware on all routes
 	configure(consumer: MiddlewareConsumer) {
 		consumer.apply(RequestLoggerMiddleware).forRoutes('*')
