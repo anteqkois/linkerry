@@ -1,6 +1,7 @@
 import { ConnectorAuthProperty, ConnectorMetadata, PropertyType } from '@linkerry/connectors-framework'
 import { AppConnectionType, AppConnectionWithoutSensitiveData, UpsertAppConnectionInput, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import {
+	ButtonClient,
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
@@ -14,7 +15,7 @@ import {
 	Input,
 	useToast,
 } from '@linkerry/ui-components/client'
-import { Button, Icons } from '@linkerry/ui-components/server'
+import { Button } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'
 import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -72,6 +73,7 @@ export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, se
 
 			toast({
 				title: `Connection ${data.name} was succesfully saved`,
+				description: 'You can now use this connection through all of your flows.',
 				variant: 'success',
 			})
 
@@ -84,7 +86,7 @@ export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, se
 				})
 			else {
 				appConnectionForm.setError('root', {
-					message: 'Unknwon error occures, try again or inform our IT team',
+					message: 'Unknwon error occures, try again or inform our Team',
 				})
 			}
 		} finally {
@@ -126,9 +128,9 @@ export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, se
 						<Button onClick={() => setShowDialog(false)} disabled={loading} variant={'outline'}>
 							Cancel
 						</Button>
-						<Button type="submit" disabled={!appConnectionForm.formState.isValid}>
-							{loading ? <Icons.Spinner className="h-4 w-8 animate-spin" /> : 'Save'}
-						</Button>
+						<ButtonClient loading={loading} type="submit" disabled={!appConnectionForm.formState.isValid}>
+							Save
+						</ButtonClient>
 					</DialogFooter>
 				</form>
 			</Form>

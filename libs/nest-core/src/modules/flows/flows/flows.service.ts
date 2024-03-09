@@ -1,8 +1,8 @@
-import { FlowPublishInput, FlowStatus, FlowVersion, Id, PopulatedFlow, UpdateStatusInput, assertNotNullOrUndefined } from '@linkerry/shared'
+import { FlowPopulated, FlowPublishInput, FlowStatus, FlowVersion, Id, UpdateStatusInput, assertNotNullOrUndefined } from '@linkerry/shared'
 import { ConflictException, Injectable, Logger } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
+import { InjectConnection, InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
-import { Document, Model } from 'mongoose'
+import mongoose, { Document, Model } from 'mongoose'
 import { generateId } from '../../../lib/mongodb'
 import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { RedisLockService } from '../../../lib/redis-lock'
@@ -16,22 +16,20 @@ export class FlowsService {
 
 	constructor(
 		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
+		@InjectConnection() private readonly mongoConnection: mongoose.Connection,
 		private readonly flowVersionService: FlowVersionsService,
 		private readonly redisLockService: RedisLockService,
 		private readonly flowHooks: FlowHooks,
 	) {}
 
-	// async lockFlowVersionIfNotLocked({}: LockFlowVersionIfNotLockedParams) {}
-
 	async findOne({ filter }: { filter: MongoFilter<FlowDocument> }): Promise<
-		| (Document<unknown, object, PopulatedFlow> &
-				PopulatedFlow &
+		| (Document<unknown, object, FlowPopulated> &
+				FlowPopulated &
 				Required<{
 					_id: string
 				}>)
 		| null
 	> {
-		// PopulatedFlow
 		return this.flowModel.findOne(filter).populate(['version'])
 	}
 
@@ -66,7 +64,7 @@ export class FlowsService {
 		).populate(['version'])
 	}
 
-	async publish(id: Id, projectId: Id, userId:Id, body: FlowPublishInput): Promise<PopulatedFlow> {
+	async publishAndLock(id: Id, projectId: Id, userId: Id, body: FlowPublishInput): Promise<FlowPopulated> {
 		const flowToUpdate = await this.flowModel.findOne({
 			_id: id,
 			projectId,
@@ -81,7 +79,7 @@ export class FlowsService {
 		assertNotNullOrUndefined(flowVersionToPublish, 'flowVersionToPublish')
 
 		// prevent confict when two users updates the same flowVesion
-		if(dayjs(flowVersionToPublish.updatedAt).add(1, 'minutes').isAfter(dayjs()) && flowVersionToPublish.updatedBy !== userId){
+		if (dayjs(flowVersionToPublish.updatedAt).add(1, 'minutes').isAfter(dayjs()) && flowVersionToPublish.updatedBy !== userId) {
 			this.logger.error(`#publish conflict when ${userId} wants to update flowVersion`)
 			throw new ConflictException()
 		}
@@ -96,14 +94,16 @@ export class FlowsService {
 			flowVersionToPublish: flowVersionToPublish,
 		})
 
+		const session = await this.mongoConnection.startSession()
+		session.startTransaction()
 		try {
-			// TODO use db transaction
-			// TODO lock flows
-			// const lockedFlowVersion = await this.lockFlowVersionIfNotLocked({
-			// 	flowVersion: flowVersionToPublish,
-			// 	userId,
-			// 	projectId,
-			// })
+			const lockedFlowVersion = await this.flowVersionService.lockFlowVersionIfNotLocked({
+				flowVersion: flowVersionToPublish,
+				userId,
+				projectId,
+				session,
+			})
+			assertNotNullOrUndefined(lockedFlowVersion, 'lockedFlowVersion')
 
 			const updateFlowResult = await this.flowModel.findOneAndUpdate(
 				{
@@ -111,7 +111,7 @@ export class FlowsService {
 				},
 				{
 					$set: {
-						publishedVersionId: flowVersionToPublish._id,
+						publishedVersionId: lockedFlowVersion._id,
 						status: FlowStatus.ENABLED,
 						schedule: scheduleOptions,
 					},
@@ -122,18 +122,22 @@ export class FlowsService {
 			)
 			assertNotNullOrUndefined(updateFlowResult, 'updateResult')
 
+			await session.commitTransaction()
 			return {
 				...updateFlowResult?.toObject(),
-				// version: lockedFlowVersion
-				version: flowVersionToPublish,
+				version: lockedFlowVersion,
 			}
+		} catch (error) {
+			await session.abortTransaction()
+			throw error
 		} finally {
-			await flowLock?.release()
+			session.endSession()
+			await flowLock.release()
 		}
 	}
 
 	async changeStatus(id: Id, projectId: Id, { newStatus }: UpdateStatusInput) {
-		const flowToUpdate = await this.flowModel.findOne({ _id: id, projectId })
+		const flowToUpdate = await this.flowModel.findOne({ _id: id, projectId }).populate('version')
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
 
 		if (flowToUpdate.status === newStatus) return flowToUpdate
@@ -143,31 +147,90 @@ export class FlowsService {
 			newStatus,
 		})
 
-		await this.flowModel.findOneAndUpdate(
-			{
-				_id: flowToUpdate._id,
-			},
-			{
-				$set: {
-					status: newStatus,
-					schedule: scheduleOptions,
+		return this.flowModel
+			.findOneAndUpdate(
+				{
+					_id: flowToUpdate._id,
 				},
-			},
-			{
-				new: true,
-			},
-		)
+				{
+					$set: {
+						status: newStatus,
+						schedule: scheduleOptions,
+					},
+				},
+				{
+					new: true,
+				},
+			)
+			.populate('version')
+	}
 
-		return this.findOne({
+	async updatedPublishedVersionId({ id, userId, projectId }: UpdatePublishedVersionIdParams): Promise<FlowPopulated> {
+		const flowToUpdate = await this.flowModel.findOne({ id, projectId })
+		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
+
+		const flowVersionToPublish = await this.flowVersionService.findOne({
 			filter: {
-				_id: id,
+				flowId: id,
+				versionId: undefined,
 			},
 		})
+		assertNotNullOrUndefined(flowVersionToPublish, 'flowVersionToPublish')
+
+		const { scheduleOptions } = await this.flowHooks.preUpdatePublishedVersionId({
+			flowToUpdate,
+			flowVersionToPublish,
+		})
+
+		const session = await this.mongoConnection.startSession()
+		session.startTransaction()
+		try {
+			const lockedFlowVersion = await this.flowVersionService.lockFlowVersionIfNotLocked({
+				flowVersion: flowVersionToPublish,
+				userId,
+				projectId,
+				session,
+			})
+			assertNotNullOrUndefined(lockedFlowVersion, 'lockedFlowVersion')
+
+			flowToUpdate.publishedVersionId = lockedFlowVersion._id
+			flowToUpdate.status = FlowStatus.ENABLED
+			flowToUpdate.schedule = scheduleOptions
+
+			const updatedFlow = await this.flowModel.findOneAndUpdate(
+				{
+					_id: id,
+					projectId,
+				},
+				{},
+				{
+					new: true,
+				},
+			)
+			assertNotNullOrUndefined(updatedFlow, 'updatedFlow')
+
+			await session.commitTransaction()
+			return {
+				...updatedFlow,
+				version: lockedFlowVersion,
+			}
+		} catch (error) {
+			await session.abortTransaction()
+			throw error
+		} finally {
+			session.endSession()
+		}
 	}
 }
 
 export interface LockFlowVersionIfNotLockedParams {
 	flowVersion: FlowVersion
+	userId: Id
+	projectId: Id
+}
+
+interface UpdatePublishedVersionIdParams {
+	id: Id
 	userId: Id
 	projectId: Id
 }

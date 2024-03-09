@@ -50,7 +50,7 @@ export const binanceAuth = ConnectorAuth.CustomAuth({
 
 		return {
 			valid: false,
-			error:'Can not verify your API keys. Inform out IT team'
+			error:'Can not verify your API keys. Inform out Team'
 		}
 	},
 })

@@ -1,9 +1,9 @@
-import { FlowPublishInput, Id, PopulatedFlow } from '@linkerry/shared'
+import { FlowPopulated, FlowPublishInput, Id, UpdateStatusInput } from '@linkerry/shared'
 import { apiClient } from '../../../libs/api-client'
 
 export class FlowApi {
   static async get(id: Id) {
-    return apiClient.get<PopulatedFlow | null>(`/flows/${id}`, {
+    return apiClient.get<FlowPopulated | null>(`/flows/${id}`, {
       paramsSerializer: {
         indexes: null, // no brackets at all
       },
@@ -18,14 +18,18 @@ export class FlowApi {
   }
 
   static async create() {
-    return apiClient.post<PopulatedFlow>('/flows')
+    return apiClient.post<FlowPopulated>('/flows')
   }
 
-  static async patch(id: Id, flow: Partial<Omit<PopulatedFlow, 'version'>>) {
-    return apiClient.patch<PopulatedFlow>(`/flows/${id}`)
+  static async patch(id: Id, flow: Partial<Omit<FlowPopulated, 'version'>>) {
+    return apiClient.patch<FlowPopulated>(`/flows/${id}`)
   }
 
   static async publish(id: Id, body: FlowPublishInput) {
-    return apiClient.patch<PopulatedFlow>(`/flows/${id}/publish`, body)
+    return apiClient.patch<FlowPopulated>(`/flows/${id}/publish`, body)
+  }
+
+  static async changeStatus(id: Id, body: UpdateStatusInput) {
+    return apiClient.patch<FlowPopulated>(`/flows/${id}/status`, body)
   }
 }

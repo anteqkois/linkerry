@@ -215,9 +215,12 @@
 		font-feature-settings: 'rlig' 1, 'calt' 1;
 	}
 
-	.center {
-		@apply flex justify-center items-center;
-	}
+	.flex-center {
+    @apply flex items-center justify-center;
+  }
+  .position-center {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  }
 }
 
 /* html {

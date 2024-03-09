@@ -135,7 +135,7 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 					</Select>
 				</>
 			) : (
-				<div className="flex h-20 px-1 center">
+				<div className="flex h-20 px-1 flex-center">
 					<GenerateTestDataButton
 						disabled={disabled}
 						disabledMessage={disabledMessage}

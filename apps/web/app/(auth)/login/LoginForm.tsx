@@ -5,8 +5,7 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { Input, Label } from '@linkerry/ui-components/client'
-import { Button, Icons } from '@linkerry/ui-components/server'
+import { ButtonClient, Input, Label } from '@linkerry/ui-components/client'
 import { cn } from '@linkerry/ui-components/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useUser } from '../../../modules/user/useUser'
@@ -94,10 +93,9 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
               {errors?.root && <p className="px-1 text-xs text-red-600">{errors.root.message}</p>}
             </div>
           </div>
-          <Button>
-            {isLoading && <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />}
+          <ButtonClient loading={isLoading}>
             Login with Email
-          </Button>
+          </ButtonClient>
         </div>
       </form>
       <div className="relative">

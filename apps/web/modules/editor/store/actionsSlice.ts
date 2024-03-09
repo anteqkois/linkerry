@@ -1,19 +1,19 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-	Action,
-	ActionConnector,
-	ActionType,
-	CustomError,
-	DeepPartial,
-	ErrorCode,
-	PopulatedFlow,
-	RunActionResponse,
-	assertNotNullOrUndefined,
-	deepMerge,
-	flowHelper,
-	isAction,
-	isConnectorAction,
-	isTrigger
+    Action,
+    ActionConnector,
+    ActionType,
+    CustomError,
+    DeepPartial,
+    ErrorCode,
+    FlowPopulated,
+    RunActionResponse,
+    assertNotNullOrUndefined,
+    deepMerge,
+    flowHelper,
+    isAction,
+    isConnectorAction,
+    isTrigger
 } from '@linkerry/shared'
 import { FlowVersionApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
@@ -110,7 +110,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
 
 		patchNode(newAction.name, { data: { action: newAction } })
-		const newFlow: PopulatedFlow = {
+		const newFlow: FlowPopulated = {
 			...flow,
 			version: data,
 		}
@@ -128,7 +128,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
 
 		patchNode(newAction.name, { data: { action: newAction } })
-		const newFlow: PopulatedFlow = {
+		const newFlow: FlowPopulated = {
 			...flow,
 			version: newFlowVersion,
 		}

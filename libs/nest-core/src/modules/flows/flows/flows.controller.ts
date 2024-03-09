@@ -33,8 +33,8 @@ export class FlowsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Patch(':id/publish')
-	publishFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: FlowPublishInput) {
-		return this.flowsService.publish(id, user.projectId, user.id, body)
+	publishAndLock(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: FlowPublishInput) {
+		return this.flowsService.publishAndLock(id, user.projectId, user.id, body)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)

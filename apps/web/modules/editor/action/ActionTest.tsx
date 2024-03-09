@@ -110,7 +110,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 				</>
 			) : (
 				<>
-					<div className="flex h-20 px-1 center">
+					<div className="flex h-20 px-1 flex-center">
 						<GenerateTestDataButton
 							disabled={disabled}
 							disabledMessage={disabledMessage}

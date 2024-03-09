@@ -21,7 +21,7 @@ import {
 } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import mongoose, { Model } from 'mongoose'
 import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { WebhookSimulationService } from '../../webhooks/webhook-simulation/webhook-simulation.service'
 import { FlowVersionModel } from './schemas/flow-version.schema'
@@ -69,6 +69,12 @@ export class FlowVersionsService {
 			// Ignore error and continue the operation peacefully
 			// exceptionHandler.handle(e)
 		}
+	}
+
+	private _decorateValidityAndUpdatedBy({ flowVersion, userId }: DecorateValidityUpdatedByParams) {
+		flowVersion.updatedBy = userId
+		flowVersion.valid = flowHelper.isValid(flowVersion)
+		return flowVersion
 	}
 
 	// TODO handle removeSecrets parameter
@@ -142,9 +148,10 @@ export class FlowVersionsService {
 				throw new UnprocessableEntityException(`Invalid trigger type`)
 		}
 
-		const newFlowVersion = flowHelper.updateTrigger(flowVersion.toObject(), updateTrigger)
-		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
-		newFlowVersion.updatedBy = userId
+		const newFlowVersion = this._decorateValidityAndUpdatedBy({
+			flowVersion: flowHelper.updateTrigger(flowVersion.toObject(), updateTrigger),
+			userId,
+		})
 
 		const response = await this.flowVersionModel.updateOne(
 			{
@@ -173,9 +180,7 @@ export class FlowVersionsService {
 	}) {
 		const flowVersion = await this.flowVersionModel.findById(flowVersionId)
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
-		const newFlowVersion = flowHelper.patchTrigger(flowVersion, triggerName, trigger)
-		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
-		newFlowVersion.updatedBy = userId
+		const newFlowVersion = this._decorateValidityAndUpdatedBy({ flowVersion: flowHelper.patchTrigger(flowVersion, triggerName, trigger), userId })
 
 		await this.flowVersionModel.updateOne(
 			{
@@ -206,9 +211,11 @@ export class FlowVersionsService {
 		})
 
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
-		const newFlowVersion = flowHelper.updateAction(flowVersion.toObject(), updateAction)
-		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
-		newFlowVersion.updatedBy = userId
+
+		const newFlowVersion = this._decorateValidityAndUpdatedBy({
+			flowVersion: flowHelper.updateAction(flowVersion.toObject(), updateAction),
+			userId,
+		})
 
 		const response = await this.flowVersionModel.updateOne(
 			{
@@ -241,9 +248,10 @@ export class FlowVersionsService {
 
 		if (!flowVersion) throw new UnprocessableEntityException(`Can not find flow version`)
 
-		const newFlowVersion = flowHelper.addAction(flowVersion.toObject(), parentStepName, action)
-		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
-		newFlowVersion.updatedBy = userId
+		const newFlowVersion = this._decorateValidityAndUpdatedBy({
+			flowVersion: flowHelper.addAction(flowVersion.toObject(), parentStepName, action),
+			userId,
+		})
 
 		await this.flowVersionModel.updateOne(
 			{
@@ -263,9 +271,10 @@ export class FlowVersionsService {
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
-		const newFlowVersion = flowHelper.deleteAction(flowVersion.toObject(), actionName)
-		newFlowVersion.valid = flowHelper.isValid(newFlowVersion)
-		newFlowVersion.updatedBy = userId
+		const newFlowVersion = this._decorateValidityAndUpdatedBy({
+			flowVersion: flowHelper.deleteAction(flowVersion.toObject(), actionName),
+			userId,
+		})
 
 		await this.flowVersionModel.updateOne(
 			{
@@ -277,4 +286,36 @@ export class FlowVersionsService {
 
 		return newFlowVersion
 	}
+
+	async lockFlowVersionIfNotLocked({ flowVersion, projectId, userId, session }: LockFlowVersionIfNotLockedParams) {
+		if (flowVersion.state === FlowVersionState.LOCKED) return flowVersion
+
+		return this.flowVersionModel
+			.findOneAndUpdate(
+				{
+					_id: flowVersion._id,
+					projectId,
+				},
+				{
+					state: FlowVersionState.LOCKED,
+					updatedBy: userId,
+				},
+				{
+					new: true,
+				},
+			)
+			.session(session)
+	}
+}
+
+interface DecorateValidityUpdatedByParams {
+	flowVersion: FlowVersion
+	userId: Id
+}
+
+interface LockFlowVersionIfNotLockedParams {
+	flowVersion: FlowVersion
+	userId: Id
+	projectId: Id
+	session: mongoose.mongo.ClientSession
 }

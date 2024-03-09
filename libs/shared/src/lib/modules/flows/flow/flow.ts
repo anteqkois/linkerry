@@ -27,6 +27,6 @@ export interface Flow extends TimestampDatabase {
 	schedule: Nullable<FlowScheduleOptions>
 }
 
-export interface PopulatedFlow extends Omit<Flow, 'version'> {
+export interface FlowPopulated extends Omit<Flow, 'version'> {
 	version: FlowVersion
 }

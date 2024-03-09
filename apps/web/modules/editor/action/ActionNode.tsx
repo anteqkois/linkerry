@@ -51,7 +51,7 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 				{action.nextActionName ? null : (
 					<div className="opacity-20 group-hover:opacity-90 absolute top-1/2 -translate-y-1/2 -left-16">
 						<Icons.Delete
-							className="opacity-50 hover:opacity-100 bg-muted rounded-full p-2 text-negative border border-dashed border-negative w-12 h-12 center"
+							className="opacity-50 hover:opacity-100 bg-muted rounded-full p-2 text-negative border border-dashed border-negative w-12 h-12 flex-center"
 							onClick={handleDeleteAction}
 						/>
 					</div>

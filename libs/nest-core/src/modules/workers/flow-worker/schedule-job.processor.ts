@@ -48,6 +48,7 @@ export class ScheduleJobProcessor extends WorkerHost {
 				projectId: data.projectId,
 			})
 
+			// remove repeating job
 			if (isNil(flow) || flow.status !== FlowStatus.ENABLED || flow.publishedVersionId !== data.flowVersionId) {
 				const flowVersion = await this.flowVersionModel.findOne({
 					filter: {

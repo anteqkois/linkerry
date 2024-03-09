@@ -19,7 +19,7 @@ export const ErrorInfo = ({ message, errorObject, children }: ErrorInfoProps) =>
 
 	return (
 		<div>
-			<Small className="text-negative center">{errorMessage}</Small>
+			<Small className="text-negative flex-center">{errorMessage}</Small>
 			<div>{children}</div>
 		</div>
 	)

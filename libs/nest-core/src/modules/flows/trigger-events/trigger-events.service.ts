@@ -1,13 +1,13 @@
 import {
-	CustomError,
-	ErrorCode,
-	Id,
-	PopulatedFlow,
-	Trigger,
-	TriggerHookType,
-	TriggerType,
-	assertNotNullOrUndefined,
-	flowHelper,
+    CustomError,
+    ErrorCode,
+    FlowPopulated,
+    Id,
+    Trigger,
+    TriggerHookType,
+    TriggerType,
+    assertNotNullOrUndefined,
+    flowHelper,
 } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { EngineService } from '../../engine/engine.service'
@@ -60,11 +60,11 @@ export class TriggerEventsService {
 		return this.triggerEventsModel.create(data)
 	}
 
-	async findMany({ flowLike, triggerName }: { flowLike: Id | PopulatedFlow; triggerName: string }) {
+	async findMany({ flowLike, triggerName }: { flowLike: Id | FlowPopulated; triggerName: string }) {
 		const flow =
 			typeof flowLike === 'string'
 				? await this.flowModel
-						.findOne<PopulatedFlow>({
+						.findOne<FlowPopulated>({
 							filter: {
 								_id: flowLike,
 							},
@@ -85,7 +85,7 @@ export class TriggerEventsService {
 
 	async deleteMany({ flowId, triggerName }: DeleteDto, projectId: Id) {
 		const flow = await this.flowModel
-			.findOne<PopulatedFlow>({
+			.findOne<FlowPopulated>({
 				filter: {
 					_id: flowId,
 					projectId,
@@ -106,7 +106,7 @@ export class TriggerEventsService {
 
 	async test(input: TestDto, projectId: Id, userId: Id) {
 		const flow = await this.flowModel
-			.findOne<PopulatedFlow>({
+			.findOne<FlowPopulated>({
 				filter: {
 					_id: input.flowId,
 					projectId,

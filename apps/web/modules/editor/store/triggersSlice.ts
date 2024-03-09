@@ -1,20 +1,20 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-	CustomError,
-	DeepPartial,
-	ErrorCode,
-	PopulatedFlow,
-	Trigger,
-	TriggerConnector,
-	TriggerEmpty,
-	TriggerTestPoolResponse,
-	TriggerType,
-	assertNotNullOrUndefined,
-	deepMerge,
-	flowHelper,
-	generateEmptyTrigger,
-	isConnectorTrigger,
-	retriveStepNumber
+    CustomError,
+    DeepPartial,
+    ErrorCode,
+    FlowPopulated,
+    Trigger,
+    TriggerConnector,
+    TriggerEmpty,
+    TriggerTestPoolResponse,
+    TriggerType,
+    assertNotNullOrUndefined,
+    deepMerge,
+    flowHelper,
+    generateEmptyTrigger,
+    isConnectorTrigger,
+    retriveStepNumber
 } from '@linkerry/shared'
 import { FlowVersionApi, TriggerApi } from '../../flows'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../common/nodeFactory'
@@ -73,7 +73,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 
 		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
-		const newFlow: PopulatedFlow = {
+		const newFlow: FlowPopulated = {
 			...flow,
 			version: data,
 		}
@@ -94,7 +94,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
 
 		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
-		const newFlow: PopulatedFlow = {
+		const newFlow: FlowPopulated = {
 			...flow,
 			version: data,
 		}

@@ -3,21 +3,21 @@ import {
 	Action,
 	CustomError,
 	ErrorCode,
+	FlowPopulated,
 	FlowStatus,
 	FlowVersionState,
 	Id,
-	PopulatedFlow,
 	Trigger,
 	assertNotNullOrUndefined,
 	isConnectorAction,
 	isConnectorTrigger,
-	isStepBaseSettings
+	isStepBaseSettings,
 } from '@linkerry/shared'
 import { FlowApi } from '../../flows'
 import { ConnectorsApi } from '../../flows/connectors/api/api'
 import { CreateSlice, FlowAndConnectorsSlice } from './types'
 
-const emptyFlow: PopulatedFlow = {
+const emptyFlow: FlowPopulated = {
 	_id: '1234567890',
 	status: FlowStatus.DISABLED,
 	projectId: '1919191919',
@@ -31,7 +31,7 @@ const emptyFlow: PopulatedFlow = {
 		stepsCount: 1,
 		triggers: [],
 		actions: [],
-		updatedBy: 'unknown'
+		updatedBy: 'unknown',
 	},
 	publishedVersionId: null,
 	schedule: null,
@@ -40,12 +40,12 @@ const emptyFlow: PopulatedFlow = {
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
 	// FLOW
 	loaded: false,
-	publishLoading: false,
+	saving: false,
 	flow: emptyFlow,
 	loadFlow: async (id: Id) => {
-		let flow: string | PopulatedFlow | null = localStorage.getItem('flow')
+		let flow: string | FlowPopulated | null = localStorage.getItem('flow')
 		if (flow) {
-			flow = JSON.parse(flow) as PopulatedFlow
+			flow = JSON.parse(flow) as FlowPopulated
 		} else {
 			const { data } = await FlowApi.get(id)
 			flow = data
@@ -57,33 +57,42 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 		set({ flow, loaded: true })
 		return flow
 	},
-	setFlow: (flow: PopulatedFlow) => {
+	setFlow: (flow: FlowPopulated) => {
 		set({ flow })
 		localStorage.setItem('flow', JSON.stringify(flow))
 	},
 	publishFlow: async () => {
-		const { flow } = get()
+		const { flow, setFlow } = get()
 		set({
-			publishLoading: true,
+			saving: true,
 		})
 
-		let newFlow: PopulatedFlow | undefined
 		try {
 			const { data } = await FlowApi.publish(flow._id, {
 				flowVersionId: flow.version._id,
 			})
-			newFlow = data
+			setFlow(data)
 		} finally {
-			if (newFlow) {
-				set({
-					flow: newFlow,
-					publishLoading: false,
-				})
-			} else {
-				set({
-					publishLoading: false,
-				})
-			}
+			set({
+				saving: false,
+			})
+		}
+	},
+	setFlowStatus: async (status: FlowStatus) => {
+		const { flow, setFlow } = get()
+		set({
+			saving: true,
+		})
+
+		try {
+			const { data } = await FlowApi.changeStatus(flow._id, {
+				newStatus: status,
+			})
+			setFlow(data)
+		} finally {
+			set({
+				saving: false,
+			})
 		}
 	},
 	// CONNECTORS

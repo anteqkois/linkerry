@@ -2,8 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Language } from '@linkerry/shared'
-import { Input, Label, toast } from '@linkerry/ui-components/client'
-import { Button, Icons } from '@linkerry/ui-components/server'
+import { ButtonClient, Input, Label, toast } from '@linkerry/ui-components/client'
 import { cn } from '@linkerry/ui-components/utils'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
@@ -107,10 +106,9 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
               {errors?.root && <p className="px-1 text-xs text-red-600">{errors.root.message}</p>}
             </div>
           </div>
-          <Button>
-            {isLoading && <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />}
+          <ButtonClient loading={isLoading}>
             Sign In with Email
-          </Button>
+          </ButtonClient>
         </div>
       </form>
       <div className="relative">

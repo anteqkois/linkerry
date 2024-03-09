@@ -176,7 +176,7 @@ export class AppConnectionsService {
 			...body.value,
 		})
 
-		await this.appConnectionsModel.findOneAndUpdate(
+		const updatedConnection = await this.appConnectionsModel.findOneAndUpdate(
 			{
 				projectId,
 				name: body.name,
@@ -189,15 +189,9 @@ export class AppConnectionsService {
 			},
 			{
 				upsert: true,
+				new: true
 			},
 		)
-
-		const updatedConnection = await this.findOne({
-			projectId,
-			name: body.name,
-		})
-
-		assertNotNullOrUndefined(updatedConnection, 'updatedConnection')
 
 		return this._decryptConnection(updatedConnection)
 	}

@@ -3,8 +3,9 @@ import {
 	Action,
 	ConnectorsGetOptionsResponse,
 	DeepPartial,
+	FlowPopulated,
+	FlowStatus,
 	Id,
-	PopulatedFlow,
 	RunActionResponse,
 	Trigger,
 	TriggerConnector,
@@ -51,11 +52,12 @@ export interface EditorSlice {
 export interface FlowAndConnectorsSlice {
 	// FLOW
 	loaded: boolean
-	publishLoading: boolean
-	flow: PopulatedFlow
-	loadFlow: (id: Id) => Promise<PopulatedFlow | null>
-	setFlow: (flow: PopulatedFlow) => void
+	saving: boolean
+	flow: FlowPopulated
+	loadFlow: (id: Id) => Promise<FlowPopulated | null>
+	setFlow: (flow: FlowPopulated) => void
 	publishFlow: () => Promise<void>
+	setFlowStatus: (status: FlowStatus) => Promise<void>
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
 	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void

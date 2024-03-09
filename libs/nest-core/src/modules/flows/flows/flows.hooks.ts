@@ -25,18 +25,15 @@ type PreDeleteParams = {
 
 @Injectable()
 export class FlowHooks {
-	constructor(
-		private readonly flowVersionService: FlowVersionsService,
-		private readonly triggerHooks: TriggerHooks,
-	) {}
+	constructor(private readonly flowVersionService: FlowVersionsService, private readonly triggerHooks: TriggerHooks) {}
 
 	async preUpdateStatus({ flowToUpdate, newStatus }: PreUpdateStatusParams): Promise<PreUpdateReturn> {
 		assertNotNullOrUndefined(flowToUpdate.publishedVersionId, 'publishedVersionId')
 
 		const publishedFlowVersion = await this.flowVersionService.findOne({
 			filter: {
-				flowId: flowToUpdate._id,
-				versionId: flowToUpdate.publishedVersionId,
+				_id: flowToUpdate.publishedVersionId,
+				flow: flowToUpdate._id,
 			},
 		})
 		assertNotNullOrUndefined(publishedFlowVersion, 'publishedFlowVersion')
