@@ -42,7 +42,7 @@ const ButtonClient = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		return (
 			<Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
 				{loading && <Icons.Spinner className="absolute h-4 w-4 animate-spin" />}
-				<div className={cn(loading ? 'opacity-0' : 'opacity-100')}>{children}</div>
+				<span className={cn('flex-center',loading ? 'opacity-0' : 'opacity-100')}>{children}</span>
 			</Comp>
 		)
 	},
