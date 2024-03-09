@@ -19,6 +19,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 		let errorMessage: string
 		let humanMessage: string
 		let fieldPath: string | undefined
+		let metadata: any
 
 		console.log(exception)
 		if (exception instanceof DtoException) {
@@ -57,6 +58,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 			status = HttpStatus.UNPROCESSABLE_ENTITY
 			errorMessage = exception.message
 			humanMessage = exception.metadata?.userMessage ?? exception.message
+			metadata = exception.metadata
 			errorCode = exception.code
 		} else {
 			console.log(exception)
@@ -75,7 +77,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 			fieldPath: fieldPath,
 		})
 		const errorLog = this.getErrorLog(errorResponse, humanMessage, request, exception)
-		this.logger.error(errorLog)
+		this.logger.error(errorLog, metadata)
 		// this.writeErrorLogToFile(errorLog);
 		response.status(status).send(errorResponse)
 	}

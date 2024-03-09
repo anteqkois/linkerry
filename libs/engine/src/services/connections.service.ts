@@ -20,7 +20,7 @@ export const createConnectionService = ({
 		async obtain(
 			connectionName: string,
 		): Promise<null | OAuth2ConnectionValueWithApp | CloudOAuth2ConnectionValue | BasicAuthConnectionValue | string | Record<string, unknown>> {
-			const url = EngineConstants.API_URL + `/worker/app-connections/${encodeURIComponent(connectionName)}`
+			const url = EngineConstants.API_URL + `/v1/worker/app-connections/${encodeURIComponent(connectionName)}`
 			try {
 				const response = await fetch(url, {
 					method: 'GET',

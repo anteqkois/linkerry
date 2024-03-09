@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  redis:
+  linkerry-redis:
     image: redis:alpine
-    container_name: redis
+    container_name: linkerry-redis
     env_file:
       - .env
     command: redis-server --appendonly yes --replica-read-only no --requirepass ${REDIS_PASSWORD}

@@ -4,7 +4,7 @@ import { JwtBearerTokenAuthGuard } from '../../lib/auth'
 import { ReqJwtWorker } from '../users/auth'
 import { StoreEntryService } from './store-entry.service'
 
-@Controller('store-entry')
+@Controller('store-entries')
 export class StoreEntryController {
 	constructor(private readonly storeEntryService: StoreEntryService) {}
 

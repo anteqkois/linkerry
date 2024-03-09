@@ -136,7 +136,7 @@ export class EngineConstants {
 			return this.project
 		}
 
-		const getWorkerProjectEndpoint = `${EngineConstants.API_URL}/worker/project`
+		const getWorkerProjectEndpoint = `${EngineConstants.API_URL}/v1/worker/project`
 
 		const response = await fetch(getWorkerProjectEndpoint, {
 			headers: {

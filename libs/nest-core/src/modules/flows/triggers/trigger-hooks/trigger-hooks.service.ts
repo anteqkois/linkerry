@@ -157,6 +157,7 @@ export class TriggerHooks {
 		})
 
 		if (engineHelperResponse.status !== EngineResponseStatus.OK) return engineHelperResponse
+		console.dir(engineHelperResponse, { depth: null })
 
 		switch (connectorTrigger.type) {
 			// case TriggerStrategy.APP_WEBHOOK: {

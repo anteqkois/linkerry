@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 
 export type StoreEntryDocument = mongoose.HydratedDocument<StoreEntryModel>
 
-@Schema({ timestamps: true, collection: 'user-settings' })
+@Schema({ timestamps: true, collection: 'store-entries' })
 export class StoreEntryModel implements StoreEntry {
 	_id: string
 

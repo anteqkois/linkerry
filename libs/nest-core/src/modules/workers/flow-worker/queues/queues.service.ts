@@ -48,14 +48,14 @@ export class QueuesService {
 				return
 			}
 
-			this.logger.debug(`#addToQueue#REPEATING:`, {
+			this.logger.debug(`#addToQueue REPEATING:`, {
 				repeatJobKey: job.repeatJobKey,
 			})
 
 			const client = await this.scheduleJobQueue.client
 			await client.set(repeatingJobKey(id), job.repeatJobKey)
 		} else if (params.type === JobType.DELAYED) {
-			this.logger.debug(`addToQueue#DELAYED`, {
+			this.logger.debug(`addToQueue DELAYED`, {
 				flowRunId: params.id,
 				delay: params.delay,
 			})

@@ -86,7 +86,7 @@ async function writeDbFile({ stepName, flowId, fileName, data, workerToken }: { 
     formData.append('flowId', flowId)
     formData.append('file', new Blob([data], { type: 'application/octet-stream' }))
 
-		// TODO implement steps files endpint/module
+		// TODO implement steps files endpoint/module
     const response = await fetch(EngineConstants.API_URL + '/v1/step-files', {
         method: 'POST',
         headers: {
@@ -96,7 +96,7 @@ async function writeDbFile({ stepName, flowId, fileName, data, workerToken }: { 
     })
 
     if (!response.ok) {
-        throw new Error('Failed to store entry ' + response.body)
+        throw new Error('Failed to store file ' + response.body)
     }
     const result = await response.json()
     return result.url

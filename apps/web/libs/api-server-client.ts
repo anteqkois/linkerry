@@ -9,7 +9,7 @@ export const API_URL = process.env.NEXT_PUBLIC_API_HOST
 
 const apiServerClient = axios.create({
   withCredentials: true,
-  baseURL: `${API_URL}/api`,
+  baseURL: `${API_URL}/api/v1`,
 })
 
 apiServerClient.interceptors.request.use(async (config) => {
@@ -35,7 +35,7 @@ apiServerClient.interceptors.response.use(
     if (error.response.status == 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const response = await axios.get<{ success: boolean }>(`${API_URL}/api/auth/refresh`, {
+        const response = await axios.get<{ success: boolean }>(`${API_URL}/api/v1/auth/refresh`, {
           withCredentials: true,
           headers: {
             // fingerprint: await fingerprint,

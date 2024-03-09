@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 
 export type WebhookSimulationDocument = mongoose.HydratedDocument<WebhookSimulationModel>
 
-@Schema({ timestamps: true, collection: 'user-settings' })
+@Schema({ timestamps: true, collection: 'webhook-simulations' })
 export class WebhookSimulationModel implements WebhookSimulation {
 	_id: string
 
