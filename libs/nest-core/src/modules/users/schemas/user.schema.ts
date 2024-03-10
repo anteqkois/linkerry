@@ -2,6 +2,7 @@ import { Language, User, UserMetadata, UserRole } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { UserSettingsModel } from '../../user-settings/schemas/user-settings.schema'
+import { TimestampDatabaseModel } from '../../../lib/mongodb'
 
 export type UserDocument = mongoose.HydratedDocument<User>
 
@@ -13,7 +14,7 @@ class UserMetadataModel implements UserMetadata {
 export const UserMetadataSchema = SchemaFactory.createForClass(UserMetadataModel)
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'users' })
-export class UserModel implements User {
+export class UserModel extends TimestampDatabaseModel implements User {
   _id: string
 
   @Prop({ required: true, type: String, unique: true, index: true })

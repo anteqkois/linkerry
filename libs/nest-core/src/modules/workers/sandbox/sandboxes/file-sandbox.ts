@@ -21,8 +21,8 @@ export class FileSandbox extends AbstractSandbox {
 
 		try {
 			await rm(sandboxFolderPath, { recursive: true })
-		} catch (e) {
-			this.logger.error(`#recreate rm failure; sandboxFolderPath`, { sandboxFolderPath })
+		} catch (error: any) {
+			this.logger.error(`#recreate rm failure`, { sandboxFolderPath, error: error.message })
 		}
 
 		await mkdir(sandboxFolderPath, { recursive: true })

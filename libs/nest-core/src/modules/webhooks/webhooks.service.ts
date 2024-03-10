@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { FlowRunsService } from '../flows/flow-runs/flow-runs.service'
 import { HookType } from '../flows/flow-runs/types'
-import { FlowVersionModel } from '../flows/flow-versions/schemas/flow-version.schema'
+import { FlowVersionDocument, FlowVersionModel } from '../flows/flow-versions/schemas/flow-version.schema'
 import { TriggerEventsService } from '../flows/trigger-events/trigger-events.service'
 import { TriggerHooks } from '../flows/triggers/trigger-hooks/trigger-hooks.service'
 import { CallbackParams, HandshakeParams, SyncParams } from './types'
@@ -16,7 +16,7 @@ export class WebhooksService {
 	private readonly logger = new Logger(WebhooksService.name)
 
 	constructor(
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		private readonly triggerHooks: TriggerHooks,
 		private readonly triggerEventsService: TriggerEventsService,
 		private readonly flowRunsService: FlowRunsService,
@@ -48,9 +48,7 @@ export class WebhooksService {
 		if (simulate) {
 			flowVersion = await this.flowVersionModel.findOne(
 				{
-					filter: {
-						flowId: flow._id,
-					},
+					flowId: flow._id,
 				},
 				{},
 				{
@@ -61,9 +59,7 @@ export class WebhooksService {
 			)
 		} else {
 			flowVersion = await this.flowVersionModel.findOne({
-				filter: {
-					_id: flow.publishedVersionId,
-				},
+				_id: flow.publishedVersionId,
 			})
 		}
 
@@ -102,10 +98,8 @@ export class WebhooksService {
 			})
 
 			const flowVersion = await this.flowVersionModel.findOne({
-				filter: {
 					_id: flow.version._id,
 					projectId,
-				},
 			})
 
 			if (isNil(flowVersion)) {
@@ -115,7 +109,7 @@ export class WebhooksService {
 
 			const payloads: unknown[] = await this.triggerHooks.executeTrigger({
 				projectId,
-				flowVersion,
+				flowVersion: flowVersion.toObject(),
 				payload,
 				simulate: false,
 			})
@@ -134,15 +128,13 @@ export class WebhooksService {
 		}
 
 		const flowVersion = await this.flowVersionModel.findOne({
-			filter: {
 				_id: flow.publishedVersionId,
-			},
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
 		const payloads: unknown[] = await this.triggerHooks.executeTrigger({
 			projectId,
-			flowVersion,
+			flowVersion: flowVersion.toObject(),
 			payload,
 			simulate: false,
 		})
@@ -154,7 +146,7 @@ export class WebhooksService {
 		const createFlowRuns = payloads.map((payload) =>
 			this.flowRunsService.start({
 				environment: RunEnvironment.PRODUCTION,
-				flowVersionId: flowVersion._id,
+				flowVersionId: flowVersion._id.toString(),
 				payload,
 				synchronousHandlerId,
 				hookType: HookType.BEFORE_LOG,

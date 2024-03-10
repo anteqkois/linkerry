@@ -43,7 +43,7 @@ export class FlowHooks {
 		switch (newStatus) {
 			case FlowStatus.ENABLED: {
 				const response = await this.triggerHooks.enable({
-					flowVersion: publishedFlowVersion,
+					flowVersion: publishedFlowVersion.toObject(),
 					projectId: flowToUpdate.projectId,
 					simulate: false,
 				})
@@ -52,7 +52,7 @@ export class FlowHooks {
 			}
 			case FlowStatus.DISABLED: {
 				await this.triggerHooks.disable({
-					flowVersion: publishedFlowVersion,
+					flowVersion: publishedFlowVersion.toObject(),
 					projectId: flowToUpdate.projectId,
 					simulate: false,
 				})
@@ -84,7 +84,7 @@ export class FlowHooks {
 			assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
 			await this.triggerHooks.disable({
-				flowVersion,
+				flowVersion: flowVersion.toObject(),
 				projectId: flowToUpdate.projectId,
 				simulate: false,
 			})
@@ -125,7 +125,7 @@ export class FlowHooks {
 		assertNotNullOrUndefined(publishedFlowVersion, 'publishedFlowVersion')
 
 		await this.triggerHooks.disable({
-			flowVersion: publishedFlowVersion,
+			flowVersion: publishedFlowVersion.toObject(),
 			projectId: flowToDelete.projectId,
 			simulate: false,
 		})

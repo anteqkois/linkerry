@@ -6,7 +6,7 @@ import { AddParams, JobType, QUEUES, RemoveParams, repeatingJobKey } from './typ
 
 @Injectable()
 export class QueuesService {
-	private readonly logger = new Logger()
+	private readonly logger = new Logger(QueuesService.name)
 	constructor(@InjectQueue(QUEUES.NAMES.ONE_TIME_JOB_QUEUE) readonly oneTimeJobQueue: Queue, @InjectQueue(QUEUES.NAMES.SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue) {}
 
 	async removeRepeatingJob({ id }: RemoveParams): Promise<void> {
@@ -32,7 +32,7 @@ export class QueuesService {
 	}
 
 	async addToQueue(params: AddParams<JobType>): Promise<void> {
-		this.logger.debug(params, '#addToQueue params')
+		this.logger.debug(`#addToQueue params`, params)
 
 		if (params.type === JobType.REPEATING) {
 			const { id, data, scheduleOptions } = params
@@ -69,6 +69,7 @@ export class QueuesService {
 		} else {
 			const { id, data } = params
 
+			console.log('ID', id);
 			await this.oneTimeJobQueue.add(id, data, {
 				jobId: id,
 				priority: params.priority === 'high' ? 1 : 2,

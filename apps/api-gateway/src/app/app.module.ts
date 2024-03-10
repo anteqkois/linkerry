@@ -5,6 +5,7 @@ import {
 	ConnectorsModule,
 	CoreModule,
 	FlowVersionsModule,
+	FlowWorkerModule,
 	FlowsModule,
 	ProjectsModule,
 	StoreEntryModule,
@@ -31,7 +32,8 @@ import { AppService } from './app.service'
 		ProjectsModule,
 		StoreEntryModule,
 		TestTriggerModule,
-		WebhookSimulationModule
+		WebhookSimulationModule,
+		FlowWorkerModule
 	],
 	controllers: [AppController],
 	providers: [AppService],

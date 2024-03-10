@@ -1,5 +1,5 @@
 import { Nullable } from '../../../common'
-import { Id, TimestampDatabase } from '../../../common/database'
+import { DatabaseTimestamp, Id } from '../../../common/database'
 import { FlowVersion } from '../flow-versions'
 
 export enum FlowStatus {
@@ -17,7 +17,7 @@ export interface FlowScheduleOptions {
 	timezone: string
 }
 
-export interface Flow extends TimestampDatabase {
+export interface Flow extends DatabaseTimestamp {
 	_id: Id
 	projectId: Id
 	// folderId: Id

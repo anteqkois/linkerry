@@ -1,6 +1,6 @@
-import { Id, TimestampDatabase } from '../../common'
+import { DatabaseTimestamp, Id } from '../../common'
 
-export interface StoreEntry extends TimestampDatabase {
+export interface StoreEntry extends DatabaseTimestamp {
 	key: string
 	projectId: Id
 	value: unknown

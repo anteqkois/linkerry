@@ -1,3 +1,4 @@
+import { DatabaseTimestamp } from "../../common"
 import { Language } from "../language"
 
 export enum UserRole {
@@ -12,7 +13,7 @@ export enum UserRole {
 //   TESTER = 'tester',
 // }
 
-export interface User {
+export interface User extends DatabaseTimestamp {
   _id: string
   name: string
   roles: UserRole[]

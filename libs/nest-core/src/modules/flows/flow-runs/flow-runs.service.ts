@@ -19,11 +19,10 @@ import dayjs from 'dayjs'
 import { Model } from 'mongoose'
 import { QueuesService } from '../../workers/flow-worker/queues/queues.service'
 import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../workers/flow-worker/queues/types'
-import { FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
-import { FlowModel } from '../flows/schemas/flow.schema'
+import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { FlowResponseService } from './flow-response.service'
 import { FlowRunsHooks } from './flow-runs.hooks'
-import { FlowRunModel } from './schemas/flow-runs.schema'
+import { FlowRunDocument, FlowRunModel } from './schemas/flow-runs.schema'
 import { GetOrCreateParams, HookType, PauseParams, RetryParams, SideEffectPauseParams, SideEffectStartParams, StartParams, TestParams } from './types'
 
 @Injectable()
@@ -31,9 +30,8 @@ export class FlowRunsService {
 	private readonly logger = new Logger(FlowRunsService.name)
 
 	constructor(
-		@InjectModel(FlowRunModel.name) private readonly flowRunModel: Model<FlowRunModel>,
-		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
+		@InjectModel(FlowRunModel.name) private readonly flowRunModel: Model<FlowRunDocument>,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		private readonly queuesService: QueuesService,
 		private readonly flowRunsHooks: FlowRunsHooks,
 		private readonly flowResponseService: FlowResponseService,
@@ -67,14 +65,14 @@ export class FlowRunsService {
 		})
 
 		this.queuesService.addToQueue({
-			id: flowRun._id,
+			id: flowRun._id.toString(),
 			type: JobType.ONE_TIME,
 			priority: isNil(synchronousHandlerId) ? 'medium' : 'high',
 			data: {
 				synchronousHandlerId,
-				projectId: flowRun.projectId,
+				projectId: flowRun.projectId.toString(),
 				environment: flowRun.environment,
-				runId: flowRun._id,
+				runId: flowRun._id.toString(),
 				flowVersionId: flowRun.flowVersionId,
 				payload,
 				executionType,
@@ -136,7 +134,7 @@ export class FlowRunsService {
 		await this.start({
 			payload,
 			flowRunId: flowRunToResume.id,
-			projectId: flowRunToResume.projectId,
+			projectId: flowRunToResume.projectId.toString(),
 			flowVersionId: flowRunToResume.flowVersionId,
 			executionType,
 			environment: RunEnvironment.PRODUCTION,
@@ -146,7 +144,6 @@ export class FlowRunsService {
 	async getFlowRunOrCreate(params: GetOrCreateParams): Promise<FlowRun> {
 		const { id, projectId, flowId, flowVersionId, flowDisplayName, environment } = params
 
-		// TODO implement flow run model
 		if (id) {
 			const flowRun = await this.flowRunModel.findOne({
 				_id: id,
@@ -156,15 +153,17 @@ export class FlowRunsService {
 			return flowRun.toObject()
 		}
 
-		return this.flowRunModel.create({
-			projectId,
-			flowId,
-			status: ExecutionOutputStatus.RUNNING,
-			flowVersionId,
-			environment,
-			flowDisplayName,
-			startTime: new Date().toISOString(),
-		})
+		return (
+			await this.flowRunModel.create({
+				projectId,
+				flowId,
+				flowVersionId,
+				status: ExecutionOutputStatus.RUNNING,
+				environment,
+				flowDisplayName,
+				startTime: new Date().toISOString(),
+			})
+		).toObject()
 	}
 
 	async retry({ flowRunId, strategy }: RetryParams): Promise<void> {
@@ -211,27 +210,17 @@ export class FlowRunsService {
 		})
 
 		const flowVersion = await this.flowVersionModel.findOne({
-			filter: {
-				_id: flowVersionId,
-			},
+			_id: flowVersionId,
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
-
-		const flow = await this.flowModel.findOne({
-			filter: {
-				_id: flowVersion.flow,
-				projectId,
-			},
-		})
-		assertNotNullOrUndefined(flow, 'flow')
 
 		await this.flowRunsHooks.onPreStart({ projectId })
 
 		const flowRun = await this.getFlowRunOrCreate({
 			id: flowRunId,
-			projectId: flow.projectId,
-			flowId: flowVersion.flow,
-			flowVersionId: flowVersion._id,
+			projectId: flowVersion.projectId.toString(),
+			flowId: flowVersion.flow.toString(),
+			flowVersionId: flowVersion._id.toString(),
 			environment,
 			flowDisplayName: flowVersion.displayName,
 		})
@@ -276,7 +265,7 @@ export class FlowRunsService {
 			},
 		)
 
-		const flowRun = await this.flowRunModel.findOne({ _id: flowRunId, projectId: undefined })
+		const flowRun: FlowRun | undefined = (await this.flowRunModel.findOne({ _id: flowRunId, projectId: undefined }))?.toObject()
 		assertNotNullOrUndefined(flowRun, 'flowRun')
 
 		await this._finishSideEffect({ flowRun })
@@ -316,7 +305,7 @@ export class FlowRunsService {
 			},
 		)
 
-		const flowRun = await this.flowRunModel.findOne({ _id: flowRunId })
+		const flowRun: FlowRun | undefined = (await this.flowRunModel.findOne({ _id: flowRunId }))?.toObject()
 		assertNotNullOrUndefined(flowRun, 'flowRun')
 
 		await this._pauseSideEffect({ flowRun })

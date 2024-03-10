@@ -1,4 +1,4 @@
-import { Id, assertNotNullOrUndefined, flowHelper } from '@linkerry/shared'
+import { FlowVersion, Id, assertNotNullOrUndefined, flowHelper } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
 import { EngineService } from '../../engine/engine.service'
@@ -10,13 +10,13 @@ export class ActionsService {
 	constructor(private readonly engineService: EngineService, private readonly flowVersionsService: FlowVersionsService) {}
 
 	async run(projectId: Id, userId: Id, body: RunActionDto) {
-		let flowVersion = await this.flowVersionsService.findOne({
+		let flowVersion = (await this.flowVersionsService.findOne({
 			filter: {
 				_id: body.flowVersionId,
 				projectId,
 			},
-		})
-		assertNotNullOrUndefined(flowVersion, 'flowVersion')
+		}))?.toObject<FlowVersion>()
+		assertNotNullOrUndefined(flowVersion, 'flowVersionObject')
 
 		const { result, standardError, standardOutput } = await this.engineService.executeAction({
 			flowVersion,

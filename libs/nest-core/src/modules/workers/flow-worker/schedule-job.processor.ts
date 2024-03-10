@@ -1,5 +1,4 @@
 import {
-	CustomError,
 	ErrorCode,
 	ExecutionType,
 	FlowStatus,
@@ -17,22 +16,22 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Job, Queue, UnrecoverableError } from 'bullmq'
 import { Model } from 'mongoose'
 import { FlowRunsService } from '../../flows/flow-runs/flow-runs.service'
-import { FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
-import { FlowModel } from '../../flows/flows/schemas/flow.schema'
+import { FlowVersionDocument, FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
+import { FlowDocument, FlowModel } from '../../flows/flows/schemas/flow.schema'
 import { TriggerHooks } from '../../flows/triggers/trigger-hooks/trigger-hooks.service'
 import { QueuesService } from './queues/queues.service'
-import { DelayedJobData, RenewWebhookJobData, RepeatableJobType, RepeatingJobData, SCHEDULED_JOB_QUEUE, ScheduledJobData } from './queues/types'
+import { DelayedJobData, QUEUES, RenewWebhookJobData, RepeatableJobType, RepeatingJobData, ScheduledJobData } from './queues/types'
 
-@Processor(SCHEDULED_JOB_QUEUE, {
+@Processor(QUEUES.NAMES.SCHEDULED_JOB_QUEUE, {
 	concurrency: 10,
 })
 export class ScheduleJobProcessor extends WorkerHost {
 	private readonly logger = new Logger(ScheduleJobProcessor.name)
 
 	constructor(
-		@InjectQueue(SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue,
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
-		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
+		@InjectQueue(QUEUES.NAMES.SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
+		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowDocument>,
 		private readonly triggerHooks: TriggerHooks,
 		private readonly queuesService: QueuesService,
 		private readonly flowRunsService: FlowRunsService,
@@ -44,16 +43,14 @@ export class ScheduleJobProcessor extends WorkerHost {
 		try {
 			// TODO REMOVE AND FIND PERMANENT SOLUTION -> ACTIVEPIECES NOTE
 			const flow = await this.flowModel.findOne({
-				id: data.flowId,
+				_id: data.flowId,
 				projectId: data.projectId,
 			})
 
 			// remove repeating job
-			if (isNil(flow) || flow.status !== FlowStatus.ENABLED || flow.publishedVersionId !== data.flowVersionId) {
+			if (isNil(flow) || flow.status !== FlowStatus.ENABLED || flow.publishedVersionId?.toString() !== data.flowVersionId) {
 				const flowVersion = await this.flowVersionModel.findOne({
-					filter: {
-						_id: data.flowVersionId,
-					},
+					_id: data.flowVersionId,
 				})
 
 				if (isNil(flowVersion)) {
@@ -63,14 +60,14 @@ export class ScheduleJobProcessor extends WorkerHost {
 				} else {
 					await this.triggerHooks.disable({
 						projectId: data.projectId,
-						flowVersion,
+						flowVersion:flowVersion.toObject(),
 						simulate: false,
 						ignoreError: true,
 					})
 				}
 
 				throw new UnrecoverableError(
-					`[repeatableJobConsumer] removing project.id=${data.projectId} instance.flowVersionId=${flow?.publishedVersionId} data.flowVersion.id=${data.flowVersionId}`,
+					`#_consumeRepeatingJob removing project.id=${data.projectId} instance.flowVersionId=${flow?.publishedVersionId} data.flowVersion.id=${data.flowVersionId}`,
 				)
 			}
 
@@ -88,26 +85,24 @@ export class ScheduleJobProcessor extends WorkerHost {
 						status: FlowStatus.DISABLED,
 					},
 				)
-			} else throw new CustomError(error.message, ErrorCode.JOB_FAILURE)
+			} else throw error
 		}
 	}
 
 	private async _consumeConnectorTrigger(data: RepeatingJobData): Promise<void> {
 		const flowVersion = await this.flowVersionModel.findOne({
-			filter: {
-				_id: data.flowVersionId,
-			},
+			_id: data.flowVersionId,
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
 		const payloads: unknown[] = await this.triggerHooks.executeTrigger({
 			projectId: data.projectId,
-			flowVersion,
+			flowVersion: flowVersion.toObject(),
 			payload: {} as TriggerPayload,
 			simulate: false,
 		})
 
-		this.logger.debug(`#consumeConnectorTrigger payloads.length=${payloads.length}`)
+		this.logger.debug(`#consumeConnectorTrigger payloads.length=${payloads.length}`, payloads)
 
 		const createFlowRuns = payloads.map((payload) =>
 			this.flowRunsService.start({
@@ -141,21 +136,20 @@ export class ScheduleJobProcessor extends WorkerHost {
 		})
 
 		const flowVersion = await this.flowVersionModel.findOne({
-			filter: {
-				_id: data.flowVersionId,
-			},
+			_id: data.flowVersionId,
 		})
 
 		assertNotNullOrUndefined(flowVersion, 'flowVersion ')
 
 		await this.triggerHooks.renewWebhook({
-			flowVersion,
+			flowVersion: flowVersion.toObject(),
 			projectId: data.projectId,
 			simulate: false,
 		})
 	}
 
 	async process(job: Job<ScheduledJobData, unknown, Id>): Promise<any> {
+		this.logger.debug(`#process new job`, job.data)
 		try {
 			switch (job.data.jobType) {
 				case RepeatableJobType.EXECUTE_TRIGGER:
@@ -168,8 +162,10 @@ export class ScheduleJobProcessor extends WorkerHost {
 					await this._consumeRenewWebhookJob(job.data)
 					break
 			}
-		} catch (e) {
-			throw new CustomError(`Can not process ${job.data.jobType}`, ErrorCode.JOB_FAILURE, job)
+		} catch (error: any) {
+			this.logger.error(`#process ${job.data.jobType} error:`)
+			this.logger.error(error.stack)
+			throw error
 			// captureException(e)
 		}
 	}

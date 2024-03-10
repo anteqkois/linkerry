@@ -3,11 +3,12 @@ import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose
 import mongoose from 'mongoose'
 import { ProjectsModel } from '../../../projects/schemas/projects.schema'
 import { FlowModel } from '../../flows/schemas/flow.schema'
+import { TimestampDatabaseModel } from '../../../../lib/mongodb'
 
 export type TriggerEventDocument = mongoose.HydratedDocument<TriggerEvent>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'trigger-events' })
-export class TriggerEventModel implements TriggerEvent {
+export class TriggerEventModel extends TimestampDatabaseModel implements TriggerEvent {
 	_id: string
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })

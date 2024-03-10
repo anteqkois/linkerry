@@ -1,11 +1,11 @@
-import { Id, TimestampDatabase } from "../../common"
+import { DatabaseTimestamp, Id } from "../../common"
 import { ExecutionOutput, ExecutionOutputStatus, PauseMetadata } from "./execution/execution-output"
 
 export enum RunTerminationReason {
     STOPPED_BY_HOOK = 'STOPPED_BY_HOOK',
 }
 
-export interface FlowRun extends TimestampDatabase  {
+export interface FlowRun extends DatabaseTimestamp  {
     _id: Id
     projectId: Id
     flowId: Id

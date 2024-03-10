@@ -1,21 +1,20 @@
-import { ExecutionOutput, ExecutionOutputStatus, FlowRun, PauseMetadata, RunEnvironment, RunTerminationReason } from '@linkerry/shared'
+import { ExecutionOutput, ExecutionOutputStatus, Flow, FlowRun, PauseMetadata, Project, RunEnvironment, RunTerminationReason } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../../lib/mongodb'
 import { ProjectsModel } from '../../../projects/schemas/projects.schema'
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema'
 import { FlowModel } from '../../flows/schemas/flow.schema'
 
-export type FlowRunDocument = mongoose.HydratedDocument<FlowRun>
+export type FlowRunDocument<T extends keyof FlowRun = never> = mongoose.HydratedDocument<FlowRunModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow-runs' })
-export class FlowRunModel implements FlowRun {
-	_id: string
-
+export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<FlowRun, '_id' | 'projectId' | 'flowId'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
-	projectId: string
+	projectId: IdObjectOrPopulated<T, 'projectId', Project>
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })
-	flowId: string
+	flowId: IdObjectOrPopulated<T, 'flowId', Flow>
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowVersionModel.name })
 	flowVersionId: string
@@ -35,10 +34,10 @@ export class FlowRunModel implements FlowRun {
 	@Prop({ required: true, type: String, enum: ExecutionOutputStatus })
 	status: ExecutionOutputStatus
 
-	@Prop({ required: true, type: String })
+	@Prop({ required: true, type: Date })
 	startTime: string
 
-	@Prop({ required: false, type: String })
+	@Prop({ required: false, type: Date })
 	finishTime: string
 
 	@Prop({ required: false, type: Object })

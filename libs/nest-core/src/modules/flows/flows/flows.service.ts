@@ -1,4 +1,4 @@
-import { FlowPopulated, FlowPublishInput, FlowStatus, FlowVersion, Id, UpdateStatusInput, assertNotNullOrUndefined } from '@linkerry/shared'
+import { Flow, FlowPopulated, FlowPublishInput, FlowStatus, FlowVersion, Id, UpdateStatusInput, assertNotNullOrUndefined } from '@linkerry/shared'
 import { ConflictException, Injectable, Logger } from '@nestjs/common'
 import { InjectConnection, InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
@@ -15,7 +15,7 @@ export class FlowsService {
 	private readonly logger = new Logger(FlowsService.name)
 
 	constructor(
-		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
+		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowDocument>,
 		@InjectConnection() private readonly mongoConnection: mongoose.Connection,
 		private readonly flowVersionService: FlowVersionsService,
 		private readonly redisLockService: RedisLockService,
@@ -42,7 +42,7 @@ export class FlowsService {
 		await this.flowVersionService.deleteRelatedToFlow(id)
 	}
 
-	async patch({ flowId, update }: { flowId: Id; update: Partial<FlowModel> }) {
+	async patch({ flowId, update }: { flowId: Id; update: Partial<Flow> }) {
 		return this.flowModel.updateOne(
 			{
 				_id: flowId,
@@ -73,13 +73,13 @@ export class FlowsService {
 		const flowVersionToPublish = await this.flowVersionService.findOne({
 			filter: {
 				_id: body.flowVersionId,
-				flow: flowToUpdate?.id,
+				flow: flowToUpdate?._id.toString(),
 			},
 		})
 		assertNotNullOrUndefined(flowVersionToPublish, 'flowVersionToPublish')
 
 		// prevent confict when two users updates the same flowVesion
-		if (dayjs(flowVersionToPublish.updatedAt).add(1, 'minutes').isAfter(dayjs()) && flowVersionToPublish.updatedBy !== userId) {
+		if (dayjs(flowVersionToPublish.updatedAt).add(1, 'minutes').isAfter(dayjs()) && flowVersionToPublish.updatedBy.toString() !== userId) {
 			this.logger.error(`#publish conflict when ${userId} wants to update flowVersion`)
 			throw new ConflictException()
 		}
@@ -90,8 +90,8 @@ export class FlowsService {
 		})
 
 		const { scheduleOptions } = await this.flowHooks.preUpdatePublishedVersionId({
-			flowToUpdate: flowToUpdate,
-			flowVersionToPublish: flowVersionToPublish,
+			flowToUpdate: flowToUpdate.toObject(),
+			flowVersionToPublish: flowVersionToPublish.toObject(),
 		})
 
 		const session = await this.mongoConnection.startSession()
@@ -125,7 +125,7 @@ export class FlowsService {
 			await session.commitTransaction()
 			return {
 				...updateFlowResult?.toObject(),
-				version: lockedFlowVersion,
+				version: lockedFlowVersion.toObject(),
 			}
 		} catch (error) {
 			await session.abortTransaction()
@@ -137,13 +137,13 @@ export class FlowsService {
 	}
 
 	async changeStatus(id: Id, projectId: Id, { newStatus }: UpdateStatusInput) {
-		const flowToUpdate = await this.flowModel.findOne({ _id: id, projectId }).populate('version')
+		const flowToUpdate = await this.flowModel.findOne<FlowDocument<'version'>>({ _id: id, projectId }).populate('version')
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
 
 		if (flowToUpdate.status === newStatus) return flowToUpdate
 
 		const { scheduleOptions } = await this.flowHooks.preUpdateStatus({
-			flowToUpdate,
+			flowToUpdate: flowToUpdate.toObject(),
 			newStatus,
 		})
 
@@ -178,8 +178,8 @@ export class FlowsService {
 		assertNotNullOrUndefined(flowVersionToPublish, 'flowVersionToPublish')
 
 		const { scheduleOptions } = await this.flowHooks.preUpdatePublishedVersionId({
-			flowToUpdate,
-			flowVersionToPublish,
+			flowToUpdate: flowToUpdate.toObject(),
+			flowVersionToPublish: flowVersionToPublish.toObject(),
 		})
 
 		const session = await this.mongoConnection.startSession()
@@ -211,8 +211,8 @@ export class FlowsService {
 
 			await session.commitTransaction()
 			return {
-				...updatedFlow,
-				version: lockedFlowVersion,
+				...updatedFlow.toObject(),
+				version: lockedFlowVersion.toObject(),
 			}
 		} catch (error) {
 			await session.abortTransaction()

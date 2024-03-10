@@ -2,13 +2,13 @@ import { BullModule, RegisterQueueOptions } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { FlowRunsModule } from '../../flows/flow-runs/flow-runs.module'
-import { FlowVersionsModule } from "../../flows/flow-versions/flow-versions.module"
+import { FlowVersionsModule } from '../../flows/flow-versions/flow-versions.module'
 import { flowVersionModelFactory } from '../../flows/flow-versions/schemas/flow-version.schema'
 import { FlowsModule } from '../../flows/flows/flows.module'
 import { FlowModelFactory } from '../../flows/flows/schemas/flow.schema'
-import { TriggersModule } from '../../flows/triggers/triggers.module'
+import { TriggerHookssModule } from '../../flows/triggers/trigger-hooks/trigger-hooks.module'
 import { QueuesService } from './queues/queues.service'
-import { ONE_TIME_JOB_QUEUE, SCHEDULED_JOB_QUEUE } from './queues/types'
+import { QUEUES } from './queues/types'
 import { ScheduleJobProcessor } from './schedule-job.processor'
 
 const EIGHT_MINUTES_IN_MILLISECONDS = 8 * 60 * 1000
@@ -26,14 +26,16 @@ const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
 		MongooseModule.forFeatureAsync([flowVersionModelFactory, FlowModelFactory]),
 		FlowRunsModule,
 		FlowsModule,
-		TriggersModule,
+		TriggerHookssModule,
 		FlowVersionsModule,
 		BullModule.registerQueue({
-			name: ONE_TIME_JOB_QUEUE,
+			configKey: QUEUES.CONFIG_KEYS.FLOW,
+			name: QUEUES.NAMES.ONE_TIME_JOB_QUEUE,
 			defaultJobOptions,
 		}),
 		BullModule.registerQueue({
-			name: SCHEDULED_JOB_QUEUE,
+			configKey: QUEUES.CONFIG_KEYS.FLOW,
+			name: QUEUES.NAMES.SCHEDULED_JOB_QUEUE,
 			defaultJobOptions,
 		}),
 	],

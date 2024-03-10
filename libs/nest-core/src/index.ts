@@ -19,4 +19,5 @@ export * from './modules/users/auth/auth.module'
 export * from './modules/users/users.module'
 export * from './modules/webhooks/webhook-simulation/webhook-simulation.module'
 export * from './modules/webhooks/webhooks.module'
+export * from './modules/workers/flow-worker/flow-worker.module'
 

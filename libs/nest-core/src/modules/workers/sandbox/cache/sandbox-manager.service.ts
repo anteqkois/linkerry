@@ -37,7 +37,7 @@ export class SandboxManagerService {
 	}
 
 	async release(sandboxId: number): Promise<void> {
-		this.logger.log(`#release`, { boxId: sandboxId })
+		this.logger.debug(`#release`, { boxId: sandboxId })
 
 		const sandbox = sandboxes[sandboxId]
 

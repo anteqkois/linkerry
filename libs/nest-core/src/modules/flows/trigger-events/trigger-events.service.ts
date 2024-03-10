@@ -1,13 +1,13 @@
 import {
-    CustomError,
-    ErrorCode,
-    FlowPopulated,
-    Id,
-    Trigger,
-    TriggerHookType,
-    TriggerType,
-    assertNotNullOrUndefined,
-    flowHelper,
+	CustomError,
+	ErrorCode,
+	FlowPopulated,
+	Id,
+	Trigger,
+	TriggerHookType,
+	TriggerType,
+	assertNotNullOrUndefined,
+	flowHelper,
 } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { EngineService } from '../../engine/engine.service'
@@ -16,8 +16,8 @@ import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import { Model } from 'mongoose'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
-import { FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
-import { FlowModel } from '../flows/schemas/flow.schema'
+import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
+import { FlowDocument, FlowModel } from '../flows/schemas/flow.schema'
 import { TestDto } from '../trigger-events/dto/pool-test.dto'
 import { DeleteDto } from './dto/delete.dto'
 import { GetManyDto } from './dto/get-many.dto'
@@ -27,8 +27,8 @@ import { SaveTriggerEventInput } from './types'
 @Injectable()
 export class TriggerEventsService {
 	constructor(
-		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowModel>,
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
+		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowDocument>,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		@InjectModel(TriggerEventModel.name) private readonly triggerEventsModel: Model<TriggerEventModel>,
 		private readonly flowVersionsService: FlowVersionsService,
 		private readonly engineService: EngineService,
@@ -45,10 +45,8 @@ export class TriggerEventsService {
 	async saveEvent(data: SaveTriggerEventInput) {
 		if (!data.sourceName) {
 			const flowVersion = await this.flowVersionModel.findOne({
-				filter: {
 					_id: data.flowId,
 					projectId: data.projectId,
-				},
 			})
 
 			assertNotNullOrUndefined(flowVersion, 'flowVersion')
@@ -65,9 +63,7 @@ export class TriggerEventsService {
 			typeof flowLike === 'string'
 				? await this.flowModel
 						.findOne<FlowPopulated>({
-							filter: {
 								_id: flowLike,
-							},
 						})
 						.populate('version')
 				: flowLike
@@ -86,10 +82,8 @@ export class TriggerEventsService {
 	async deleteMany({ flowId, triggerName }: DeleteDto, projectId: Id) {
 		const flow = await this.flowModel
 			.findOne<FlowPopulated>({
-				filter: {
 					_id: flowId,
 					projectId,
-				},
 			})
 			.populate('version')
 
@@ -107,10 +101,8 @@ export class TriggerEventsService {
 	async test(input: TestDto, projectId: Id, userId: Id) {
 		const flow = await this.flowModel
 			.findOne<FlowPopulated>({
-				filter: {
 					_id: input.flowId,
 					projectId,
-				},
 			})
 			.populate('version')
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
@@ -183,14 +175,12 @@ export class TriggerEventsService {
 
 	async getMany(query: GetManyDto, projectId: Id) {
 		const flowVersion = await this.flowVersionModel.findOne({
-			filter: {
 				flow: query.flowId,
 				projectId,
-			},
 		})
 		if (!flowVersion) throw new UnprocessableEntityException('Can not retrive flow version')
 
-		const trigger = flowHelper.getTrigger(flowVersion, query.triggerName)
+		const trigger = flowHelper.getTrigger(flowVersion.toObject(), query.triggerName)
 		if (!trigger) throw new UnprocessableEntityException('Can not retrive trigger')
 
 		const sourceName = this._getSourceName(trigger)

@@ -2,7 +2,7 @@
 // import { ApId } from '../common/id-generator'
 // import { Static, Type } from '@sinclair/typebox'
 
-import { Id, TimestampDatabase } from '../../common'
+import { DatabaseTimestamp, Id } from '../../common'
 
 export enum NotificationStatus {
 	NEVER = 'NEVER',
@@ -14,7 +14,7 @@ export enum NotificationStatus {
 //     STANDALONE = 'STANDALONE',
 // }
 
-export interface Project extends TimestampDatabase {
+export interface Project extends DatabaseTimestamp {
 	ownerId: Id
 	users: Id[]
 	displayName: string

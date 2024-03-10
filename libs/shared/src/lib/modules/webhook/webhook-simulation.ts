@@ -1,6 +1,6 @@
-import { Id, TimestampDatabase } from '../../common'
+import { DatabaseTimestamp, Id } from '../../common'
 
-export interface WebhookSimulation extends TimestampDatabase {
+export interface WebhookSimulation extends DatabaseTimestamp {
 	_id: Id
 	flowId: Id
 	projectId: Id

@@ -2,11 +2,12 @@ import { AppConnectionEncrypted, Id, NotificationStatus, Project } from '@linker
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { UserModel } from '../../users/schemas/user.schema'
+import { TimestampDatabaseModel } from '../../../lib/mongodb'
 
 export type ProjectsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'projects' })
-export class ProjectsModel implements Project {
+export class ProjectsModel extends TimestampDatabaseModel implements Project {
 	_id: string
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })

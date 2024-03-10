@@ -76,5 +76,3 @@ export type ValueOf<T> = Required<T>[keyof T]
 export type Prettify<T> = {
 	[K in keyof T]: T[K]
 } & {}
-
-export type WithoutId<T> = Omit<T, '_id' | 'id'>

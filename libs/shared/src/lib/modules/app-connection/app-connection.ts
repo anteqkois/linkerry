@@ -1,4 +1,4 @@
-import { EncryptedObject, Id, TimestampDatabase } from '../../common'
+import { DatabaseTimestamp, EncryptedObject, Id } from '../../common'
 import { OAuth2GrantType } from './api/upsert'
 import { OAuth2AuthorizationMethod } from './oauth2-authorization-method'
 
@@ -78,7 +78,7 @@ export type AppConnectionValue<T extends AppConnectionType = AppConnectionType> 
 	? CustomAuthConnectionValue
 	: never
 
-export type AppConnectionDecrypted<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
+export type AppConnectionDecrypted<Type extends AppConnectionType = AppConnectionType> = DatabaseTimestamp & {
 	_id: Id
 	name: string
 	type: Type
@@ -88,7 +88,7 @@ export type AppConnectionDecrypted<Type extends AppConnectionType = AppConnectio
 	value: AppConnectionValue<Type>
 }
 
-export type AppConnectionEncrypted<Type extends AppConnectionType = AppConnectionType> = TimestampDatabase & {
+export type AppConnectionEncrypted<Type extends AppConnectionType = AppConnectionType> = DatabaseTimestamp & {
 	_id: Id
 	name: string
 	type: Type

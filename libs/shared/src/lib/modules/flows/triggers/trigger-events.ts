@@ -1,7 +1,7 @@
-import { Id, TimestampDatabase } from '../../../common'
+import { DatabaseTimestamp, Id } from '../../../common'
 import { FlowVersion } from '../flow-versions'
 
-export interface TriggerEvent extends TimestampDatabase {
+export interface TriggerEvent extends DatabaseTimestamp {
 	_id: Id
 	flowId: Id
 	projectId: Id

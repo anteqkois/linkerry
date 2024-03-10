@@ -9,8 +9,7 @@ import {
 	RunActionResponse,
 	Trigger,
 	TriggerConnector,
-	TriggerEvent,
-	WithoutId,
+	TriggerEvent
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
@@ -71,7 +70,7 @@ export interface TriggersSlice {
 	onClickSelectTrigger: (trigger: Trigger) => void
 	handleSelectTriggerConnector: (connectorMetadata: ConnectorMetadataSummary) => Promise<void>
 	updateEditedTrigger: (newTrigger: Trigger) => Promise<void>
-	patchEditedTriggerConnector: (update: DeepPartial<WithoutId<TriggerConnector>>) => Promise<void>
+	patchEditedTriggerConnector: (update: DeepPartial<Omit<TriggerConnector, '_id'>>) => Promise<void>
 	resetTrigger: (triggerName: string) => Promise<void>
 	testPoolTrigger: () => Promise<TriggerEvent[]>
 }

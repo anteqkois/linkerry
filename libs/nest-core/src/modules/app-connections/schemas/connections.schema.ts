@@ -1,12 +1,13 @@
 import { AppConnectionEncrypted, AppConnectionStatus, AppConnectionType, EncryptedObject, Id } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import { TimestampDatabaseModel } from '../../../lib/mongodb'
 import { ProjectsModel } from '../../projects/schemas/projects.schema'
 
 export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'app-connections' })
-export class AppConnectionsModel implements AppConnectionEncrypted {
+export class AppConnectionsModel extends TimestampDatabaseModel implements AppConnectionEncrypted {
 	_id: string
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })

@@ -1,11 +1,11 @@
-import { CustomError, EngineResponseStatus, ErrorCode, Id, WebhookSimulation, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
+import { CustomError, DatabaseTimestampKeys, EngineResponseStatus, ErrorCode, Id, WebhookSimulation, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { generateId } from '../../../lib/mongodb'
 import { RedisLockService } from '../../../lib/redis-lock'
 import { ApLock } from '../../../lib/redis-lock/types'
-import { FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
+import { FlowVersionDocument, FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
 import { TriggerHooks } from '../../flows/triggers/trigger-hooks/trigger-hooks.service'
 import { WebhookSimulationModel } from './schemas/webhook-simulation.schema'
 
@@ -41,7 +41,7 @@ export class WebhookSimulationService {
 	private readonly logger = new Logger(WebhookSimulationService.name)
 	constructor(
 		@InjectModel(WebhookSimulationModel.name) private readonly webhookSimulationModel: Model<WebhookSimulationModel>,
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		private readonly redisLockService: RedisLockService,
 		private readonly triggerHooks: TriggerHooks,
 	) {}
@@ -65,7 +65,7 @@ export class WebhookSimulationService {
 
 		const response = await this.triggerHooks.enable({
 			projectId,
-			flowVersion,
+			flowVersion: flowVersion.toObject(),
 			simulate: true,
 		})
 
@@ -94,7 +94,7 @@ export class WebhookSimulationService {
 
 		const response = await this.triggerHooks.disable({
 			projectId,
-			flowVersion,
+			flowVersion: flowVersion.toObject(),
 			simulate: true,
 		})
 
@@ -135,7 +135,7 @@ export class WebhookSimulationService {
 				})
 			}
 
-			const webhookSimulation: Omit<WebhookSimulation, 'created' | 'updated'> = {
+			const webhookSimulation: Omit<WebhookSimulation, DatabaseTimestampKeys> = {
 				_id: generateId().toString(),
 				...params,
 			}

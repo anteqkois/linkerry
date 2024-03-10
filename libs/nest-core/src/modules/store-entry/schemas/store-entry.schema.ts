@@ -1,11 +1,12 @@
 import { StoreEntry } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import { TimestampDatabaseModel } from '../../../lib/mongodb'
 
 export type StoreEntryDocument = mongoose.HydratedDocument<StoreEntryModel>
 
 @Schema({ timestamps: true, collection: 'store-entries' })
-export class StoreEntryModel implements StoreEntry {
+export class StoreEntryModel extends TimestampDatabaseModel implements StoreEntry {
 	_id: string
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'projects' })

@@ -24,7 +24,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import mongoose, { Model } from 'mongoose'
 import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { WebhookSimulationService } from '../../webhooks/webhook-simulation/webhook-simulation.service'
-import { FlowVersionModel } from './schemas/flow-version.schema'
+import { FlowVersionDocument, FlowVersionModel } from './schemas/flow-version.schema'
 
 type OnApplyOperationParams = {
 	projectId: Id
@@ -39,7 +39,7 @@ type DeleteWebhookSimulationParams = {
 @Injectable()
 export class FlowVersionsService {
 	constructor(
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionModel>,
+		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		private readonly webhookSimulationService: WebhookSimulationService,
 	) {}
 
@@ -78,18 +78,16 @@ export class FlowVersionsService {
 	}
 
 	// TODO handle removeSecrets parameter
-	async findOne({ filter }: { filter: MongoFilter<FlowVersionModel> }): Promise<FlowVersion | undefined> {
-		return (
-			await this.flowVersionModel.findOne(
-				filter,
-				{},
-				{
-					sort: {
-						createdAt: -1,
-					},
+	async findOne({ filter }: { filter: MongoFilter<FlowVersionDocument> }) {
+		return await this.flowVersionModel.findOne(
+			filter,
+			{},
+			{
+				sort: {
+					createdAt: -1,
 				},
-			)
-		)?.toObject()
+			},
+		)
 	}
 
 	async createEmpty(flowId: Id, projectId: Id, userId: Id) {
@@ -180,7 +178,10 @@ export class FlowVersionsService {
 	}) {
 		const flowVersion = await this.flowVersionModel.findById(flowVersionId)
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
-		const newFlowVersion = this._decorateValidityAndUpdatedBy({ flowVersion: flowHelper.patchTrigger(flowVersion, triggerName, trigger), userId })
+		const newFlowVersion = this._decorateValidityAndUpdatedBy({
+			flowVersion: flowHelper.patchTrigger(flowVersion.toObject(), triggerName, trigger),
+			userId,
+		})
 
 		await this.flowVersionModel.updateOne(
 			{
@@ -290,7 +291,7 @@ export class FlowVersionsService {
 	async lockFlowVersionIfNotLocked({ flowVersion, projectId, userId, session }: LockFlowVersionIfNotLockedParams) {
 		if (flowVersion.state === FlowVersionState.LOCKED) return flowVersion
 
-		return this.flowVersionModel
+		return await this.flowVersionModel
 			.findOneAndUpdate(
 				{
 					_id: flowVersion._id,
@@ -314,7 +315,7 @@ interface DecorateValidityUpdatedByParams {
 }
 
 interface LockFlowVersionIfNotLockedParams {
-	flowVersion: FlowVersion
+	flowVersion: FlowVersionDocument
 	userId: Id
 	projectId: Id
 	session: mongoose.mongo.ClientSession
