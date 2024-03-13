@@ -1,20 +1,20 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-    CustomError,
-    DeepPartial,
-    ErrorCode,
-    FlowPopulated,
-    Trigger,
-    TriggerConnector,
-    TriggerEmpty,
-    TriggerTestPoolResponse,
-    TriggerType,
-    assertNotNullOrUndefined,
-    deepMerge,
-    flowHelper,
-    generateEmptyTrigger,
-    isConnectorTrigger,
-    retriveStepNumber
+	CustomError,
+	DeepPartial,
+	ErrorCode,
+	FlowPopulated,
+	Trigger,
+	TriggerConnector,
+	TriggerEmpty,
+	TriggerTestPoolResponse,
+	TriggerType,
+	assertNotNullOrUndefined,
+	deepMerge,
+	flowHelper,
+	generateEmptyTrigger,
+	isConnectorTrigger,
+	retriveStepNumber
 } from '@linkerry/shared'
 import { FlowVersionApi, TriggerApi } from '../../flows'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../common/nodeFactory'
@@ -50,9 +50,10 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		const newTrigger: TriggerConnector = {
 			name: editedTrigger.name,
 			displayName: connectorMetadata.displayName,
-			type: TriggerType.TRIGGER,
+			type: TriggerType.CONNECTOR,
 			valid: false,
 			settings: {
+				packageType:connectorMetadata.packageType,
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
 				connectorType: connectorMetadata.connectorType,

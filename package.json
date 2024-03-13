@@ -117,6 +117,7 @@
 		"@tanstack/react-table": "^8.9.3",
 		"@uiw/codemirror-theme-vscode": "^4.21.21",
 		"@uiw/react-codemirror": "^4.21.21",
+		"async-mutex": "^0.5.0",
 		"axios": "^1.4.0",
 		"bcrypt": "^5.1.0",
 		"bullmq": "^5.4.0",

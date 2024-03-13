@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
+import { FilesModule } from '../../files/files.module'
 import { QueuesModule } from '../../workers/flow-worker/queues/queues.module'
 import { flowVersionModelFactory } from '../flow-versions/schemas/flow-version.schema'
 import { FlowResponseService } from './flow-response.service'
@@ -11,7 +12,8 @@ import { FlowRunModelFactory } from './schemas/flow-runs.schema'
 @Module({
 	imports: [
 		MongooseModule.forFeatureAsync([FlowRunModelFactory, flowVersionModelFactory]),
-		QueuesModule
+		QueuesModule,
+		FilesModule
 	],
 	controllers: [FlowRunsController],
 	providers: [FlowRunsService, FlowResponseService, FlowRunsHooks],

@@ -1,4 +1,4 @@
-// import { ActionType, CodeAction, GenricStepOutput, StepOutputStatus } from '@activeconnectors/shared'
+// import { ActionType, CodeAction, GenericStepOutput, StepOutputStatus } from '@activeconnectors/shared'
 // import { BaseExecutor } from './base-executor'
 // import { EngineConstantData } from './context/engine-constants'
 // import { ExecutionVerdict, FlowExecutorContext } from './context/flow-execution-context'
@@ -24,7 +24,7 @@
 //             unresolvedInput: action.settings.input,
 //             executionState,
 //         })
-//         const stepOutput = GenricStepOutput.create({
+//         const stepOutput = GenericStepOutput.create({
 //             input: censoredInput,
 //             type: ActionType.Code,
 //             status: StepOutputStatus.SUCCEEDED,

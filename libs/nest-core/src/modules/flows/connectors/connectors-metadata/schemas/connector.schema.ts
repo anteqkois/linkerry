@@ -1,5 +1,5 @@
 import { ActionBase, ConnectorAuthProperty, ConnectorMetadata, ConnectorTag, TriggerBase, connectorTag } from '@linkerry/connectors-framework'
-import { ConnectorGroup, ConnectorType } from '@linkerry/shared'
+import { ConnectorGroup, ConnectorType, PackageType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 
@@ -47,6 +47,16 @@ export class ConnectorsMetadataModel implements ConnectorMetadata {
 
 	@Prop({ required: true, type: String, enum: ConnectorType })
 	connectorType: ConnectorType
+
+	@Prop({ required: true, type: String, enum: PackageType })
+	packageType: PackageType
+
+	// TODO add in future when provate packages will be added
+	// @Prop({ required: true, type: String, enum: PackageType })
+	// archiveId: Id | null
+
+	// @Prop({ required: true, type: String, enum: PackageType })
+	// projectId: Id | null
 }
 
 export const ConnectorsMetadataSchema = SchemaFactory.createForClass(ConnectorsMetadataModel)

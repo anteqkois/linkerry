@@ -17,7 +17,7 @@ export const triggerHelper = {
 	async executeTrigger({ params, constants }: ExecuteTriggerParams): Promise<ExecuteTriggerResponse<TriggerHookType>> {
 		const { connectorName, connectorVersion, triggerName, input } = (params.flowVersion.triggers[0] as TriggerConnector).settings
 
-		const connector = await connectorLoader.loadConnectorOrThrow({ connectorName, connectorVersion, connectorSource: constants.connectorSource })
+		const connector = await connectorLoader.loadConnectorOrThrow({ connectorName, connectorVersion, connectorsSource: constants.connectorsSource })
 		const trigger = connector.getTrigger(triggerName)
 
 		if (trigger === undefined) {

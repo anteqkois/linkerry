@@ -14,6 +14,7 @@ import {
 	ExecuteStepOperation,
 	ExecuteTriggerOperation,
 	ExecuteValidateAuthOperation,
+	Id,
 	JWTPrincipalType,
 	ResumeExecuteFlowOperation,
 	SandBoxCacheType,
@@ -63,31 +64,22 @@ export class EngineService {
 		})
 	}
 
-	private async _getSandboxForAction(
-		// projectId: string,
-		flowId: string,
-		action: Action,
-	): Promise<Sandbox> {
+	private async _getSandboxForAction(projectId: Id, flowId: Id, action: Action): Promise<Sandbox> {
 		switch (action.type) {
-			case ActionType.ACTION: {
-				const {
-					//  packageType,
-					connectorType,
-					connectorName,
-					connectorVersion,
-				} = action.settings
+			case ActionType.CONNECTOR: {
+				const { packageType, connectorType, connectorName, connectorVersion } = action.settings
 				const connector = {
-					// packageType,
+					packageType,
 					connectorType,
 					connectorName,
 					connectorVersion,
 				}
 
-				return this.sandboxProvisionerService.provisionSandbox({
+				return this.sandboxProvisionerService.provision({
 					type: SandBoxCacheType.CONNECTOR,
 					connectorName: connector.connectorName,
 					connectorVersion: connector.connectorVersion,
-					connectors: [connector],
+					connectors: [await this.connectorsMetadataService.getConnectorPackage(projectId, connector)],
 				})
 			}
 			// case ActionType.CODE: {
@@ -109,7 +101,7 @@ export class EngineService {
 				// todo uncomment after implementing MERGE_BRANCH and LOOP_ON_ITEMS
 				// case ActionType.MERGE_BRANCH:
 				// case ActionType.LOOP_ON_ITEMS:
-				return this.sandboxProvisionerService.provisionSandbox({
+				return this.sandboxProvisionerService.provision({
 					type: SandBoxCacheType.NONE,
 					// projectId,
 				})
@@ -190,12 +182,13 @@ export class EngineService {
 
 		const { connector } = operation
 
-		connector.connectorVersion = await this.connectorsMetadataService.getExactPieceVersion({
+		connector.connectorVersion = await this.connectorsMetadataService.getExactConnectorVersion({
 			name: connector.connectorName,
 			version: connector.connectorVersion,
+			projectId: operation.projectId
 		})
 
-		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
+		const sandbox = await this.sandboxProvisionerService.provision({
 			type: SandBoxCacheType.CONNECTOR,
 			connectorName: connector.connectorName,
 			connectorVersion: connector.connectorVersion,
@@ -223,7 +216,7 @@ export class EngineService {
 		const { connectorName, connectorVersion } = operation
 		const connector = operation
 
-		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
+		const sandbox = await this.sandboxProvisionerService.provision({
 			type: SandBoxCacheType.CONNECTOR,
 			connectorName,
 			connectorVersion,
@@ -244,11 +237,7 @@ export class EngineService {
 		const step = flowHelper.getAction(clonedFlowVersion, operation.stepName)
 		assertNotNullOrUndefined(step, 'Step not found')
 
-		const sandbox = await this._getSandboxForAction(
-			// operation.projectId,
-			operation.flowVersion.flow,
-			step,
-		)
+		const sandbox = await this._getSandboxForAction(operation.projectId, operation.flowVersion.flow, step)
 		const input: ExecuteStepOperation = {
 			// flowVersion: lockedFlowVersion,
 			flowVersion: clonedFlowVersion,
@@ -274,12 +263,13 @@ export class EngineService {
 
 		const { connector } = operation
 
-		connector.connectorVersion = await this.connectorsMetadataService.getExactPieceVersion({
+		connector.connectorVersion = await this.connectorsMetadataService.getExactConnectorVersion({
 			name: connector.connectorName,
 			version: connector.connectorVersion,
+			projectId: operation.projectId
 		})
 
-		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
+		const sandbox = await this.sandboxProvisionerService.provision({
 			type: SandBoxCacheType.CONNECTOR,
 			connectorName: connector.connectorName,
 			connectorVersion: connector.connectorVersion,
@@ -319,22 +309,26 @@ export class EngineService {
 		if (!trigger) throw new UnprocessableEntityException(`Can not retrive trigger`)
 		if (!isConnectorTrigger(trigger)) throw new UnprocessableEntityException(`Can not perform operation on non Connector trigger`)
 
-		const { connectorType, connectorName, connectorVersion } = trigger.settings
-		const connectorMetadataFixedVersion = await this.connectorsMetadataService.getExactPieceVersion({
+		const { packageType, connectorType, connectorName, connectorVersion } = trigger.settings
+
+		const exactConnectorVersion = await this.connectorsMetadataService.getExactConnectorVersion({
 			name: connectorName,
 			version: connectorVersion,
+			projectId: operation.projectId,
 		})
 
-		const sandbox = await this.sandboxProvisionerService.provisionSandbox({
+		const sandbox = await this.sandboxProvisionerService.provision({
 			type: SandBoxCacheType.CONNECTOR,
 			connectorName,
-			connectorVersion: connectorMetadataFixedVersion,
+			connectorVersion: exactConnectorVersion,
 			connectors: [
-				{
+				// TODO to execute private connectors implement logic in getPiecePackage
+				await this.connectorsMetadataService.getConnectorPackage(operation.projectId, {
+					packageType,
 					connectorType,
 					connectorName,
-					connectorVersion,
-				},
+					connectorVersion: exactConnectorVersion,
+				}),
 			],
 		})
 
@@ -346,7 +340,7 @@ export class EngineService {
 
 		const input = {
 			...operation,
-			connectorVersion: connectorMetadataFixedVersion,
+			connectorVersion: exactConnectorVersion,
 			flowVersion: clonedFlowVersion,
 			// edition: getEdition(),
 			appWebhookUrl: this.appEventRoutingService.getAppWebhookUrl({

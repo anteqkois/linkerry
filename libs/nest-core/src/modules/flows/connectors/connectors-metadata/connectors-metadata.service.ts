@@ -1,5 +1,5 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { EXACT_VERSION_PATTERN, assertNotNullOrUndefined } from '@linkerry/shared'
+import { ConnectorPackage, CustomError, EXACT_VERSION_PATTERN, ErrorCode, Id, PackageType, PrivateConnectorPackage, PublicConnectorPackage, assertNotNullOrUndefined } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
@@ -11,6 +11,9 @@ import { ConnectorsMetadataModel } from './schemas/connector.schema'
 @Injectable()
 export class ConnectorsMetadataService {
 	constructor(@InjectModel(ConnectorsMetadataModel.name) private readonly connectorMetadataModel: Model<ConnectorsMetadataModel>) {}
+
+	// TODO implement create for private connectors
+	// TODO implement filter based on proectId
 
 	connectorToSummaryMetadata(connectorMetadata: ConnectorMetadata): ConnectorMetadataSummary {
 		return {
@@ -76,20 +79,14 @@ export class ConnectorsMetadataService {
 		return trigger
 	}
 
-	async getExactPieceVersion({
-		name,
-		version,
-	}: // projectId
-	{
-		name: string
-		version: string
-		// projectId: Id
-	}): Promise<string> {
+	async getExactConnectorVersion({ name, version, projectId }: GetExactConnectorVersionParams): Promise<string> {
 		const isExactVersion = EXACT_VERSION_PATTERN.test(version)
 
 		if (isExactVersion) {
 			return version
 		}
+
+		// TODO implement filter based on projectId like in ac /Users/anteqkois/Code/Projects/me/activepieces/packages/server/api/src/app/pieces/piece-metadata-service/db-piece-metadata-service.ts constructPieceFilters
 
 		const pieceMetadata = await this.findOne(name, {
 			version,
@@ -97,4 +94,34 @@ export class ConnectorsMetadataService {
 
 		return pieceMetadata.version
 	}
+
+	async getConnectorPackage(projectId: string, pkg: PublicConnectorPackage | Omit<PrivateConnectorPackage, 'archiveId'>): Promise<ConnectorPackage> {
+		switch (pkg.packageType) {
+			case PackageType.ARCHIVE: {
+				// TODO implement private connectors
+				// const pieceMetadata = await pieceMetadataService.getOrThrow({
+				//     name: pkg.pieceName,
+				//     version: pkg.pieceVersion,
+				//     projectId,
+				// })
+				// return {
+				//     packageType: PackageType.ARCHIVE,
+				//     pieceName: pkg.pieceName,
+				//     pieceVersion: pkg.pieceVersion,
+				//     pieceType: pkg.pieceType,
+				//     archiveId: pieceMetadata.archiveId!,
+				// }
+				throw new CustomError('PackageType.ARCHIVE not implemented', ErrorCode.CONNECTOR_NOT_FOUND)
+			}
+			case PackageType.REGISTRY: {
+				return pkg
+			}
+		}
+	}
+}
+
+type GetExactConnectorVersionParams = {
+	name: string
+	version: string
+	projectId: Id
 }

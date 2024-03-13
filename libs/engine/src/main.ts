@@ -1,27 +1,25 @@
 import {
-    Action,
-    ActionType,
-    CustomError,
-    EngineOperationType,
-    EngineResponse,
-    EngineResponseStatus,
-    EngineTestOperation,
-    ErrorCode,
-    ExecuteActionResponse,
-    ExecuteExtractConnectorMetadata,
-    ExecuteFlowOperation,
-    ExecutePropsOptions,
-    ExecuteStepOperation,
-    ExecuteTriggerOperation,
-    ExecuteValidateAuthOperation,
-    ExecutionOutput,
-    ExecutionType,
-    GenricStepOutput,
-    StepOutputStatus,
-    TriggerHookType,
-    assertNotNullOrUndefined,
-    flowHelper,
-    isNil,
+	Action,
+	ActionType,
+	EngineOperationType,
+	EngineResponse,
+	EngineResponseStatus,
+	EngineTestOperation,
+	ExecuteActionResponse,
+	ExecuteExtractConnectorMetadata,
+	ExecuteFlowOperation,
+	ExecutePropsOptions,
+	ExecuteStepOperation,
+	ExecuteTriggerOperation,
+	ExecuteValidateAuthOperation,
+	ExecutionType,
+	FlowRunResponse,
+	GenericStepOutput,
+	StepOutputStatus,
+	TriggerHookType,
+	assertNotNullOrUndefined,
+	flowHelper,
+	isNil
 } from '@linkerry/shared'
 import { argv } from 'node:process'
 import { EngineConstants } from './handler/context/engine-constants'
@@ -32,7 +30,7 @@ import { connectorHelper } from './helper/connector-helper'
 import { triggerHelper } from './helper/trigger-helper'
 import { utils } from './utils'
 
-const executeFlow = async (input: ExecuteFlowOperation, context: FlowExecutorContext): Promise<EngineResponse<ExecutionOutput>> => {
+const executeFlow = async (input: ExecuteFlowOperation, context: FlowExecutorContext): Promise<EngineResponse<FlowRunResponse>> => {
 	const action = input.flowVersion.actions.find((action) => action.name === input.flowVersion.triggers[0].nextActionName)
 	assertNotNullOrUndefined(action, 'action', {
 		nextActionName: input.flowVersion.triggers[0].nextActionName,
@@ -45,17 +43,15 @@ const executeFlow = async (input: ExecuteFlowOperation, context: FlowExecutorCon
 	})
 	return {
 		status: EngineResponseStatus.OK,
-		response: await output.toExecutionOutput(),
+		response: await output.toResponse(),
 	}
 }
 
 async function executeStep(input: ExecuteStepOperation): Promise<ExecuteActionResponse> {
 	const step = flowHelper.getStep(input.flowVersion, input.stepName) as Action | undefined
-	if (isNil(step) || !Object.values(ActionType).includes(step.type))
-		throw new CustomError('Step not found or not supported', ErrorCode.INVALID_TYPE, {
-			step,
-		})
-
+	if (isNil(step) || !Object.values(ActionType).includes(step.type)) {
+		throw new Error('Step not found or not supported')
+	}
 	const output = await flowExecutor.getExecutorForAction(step.type).handle({
 		action: step,
 		executionState: await testExecutionContext.stateFromFlowVersion({
@@ -77,7 +73,7 @@ function getFlowExecutionState(input: ExecuteFlowOperation): FlowExecutorContext
 		case ExecutionType.BEGIN:
 			return FlowExecutorContext.empty().upsertStep(
 				input.flowVersion.triggers[0].name,
-				GenricStepOutput.create({
+				GenericStepOutput.create({
 					type: input.flowVersion.triggers[0].type,
 					status: StepOutputStatus.SUCCEEDED,
 					input: {},
@@ -85,8 +81,8 @@ function getFlowExecutionState(input: ExecuteFlowOperation): FlowExecutorContext
 			)
 		case ExecutionType.RESUME: {
 			let flowContext = FlowExecutorContext.empty().increaseTask(input.tasks)
-			for (const [step, output] of Object.entries(input.executionState.steps)) {
-				if (output.status === StepOutputStatus.SUCCEEDED) {
+			for (const [step, output] of Object.entries(input.steps)) {
+				if ([StepOutputStatus.SUCCEEDED, StepOutputStatus.PAUSED].includes(output.status)) {
 					flowContext = flowContext.upsertStep(step, output)
 				}
 			}
@@ -104,7 +100,7 @@ const execute = async (): Promise<void> => {
 				const input: ExecuteExtractConnectorMetadata = await utils.parseJsonFile(EngineConstants.INPUT_FILE)
 				const output = await connectorHelper.extractConnectorMetadata({
 					params: input,
-					connectorSource: EngineConstants.CONNECTOR_SOURCES,
+					connectorsSource: EngineConstants.CONNECTOR_SOURCES,
 				})
 				await writeOutput({
 					status: EngineResponseStatus.OK,
@@ -123,12 +119,13 @@ const execute = async (): Promise<void> => {
 				const input: ExecutePropsOptions = await utils.parseJsonFile(EngineConstants.INPUT_FILE)
 				const output = await connectorHelper.executeProps({
 					params: input,
-					connectorSource: EngineConstants.CONNECTOR_SOURCES,
+					connectorsSource: EngineConstants.CONNECTOR_SOURCES,
 					executionState: await testExecutionContext.stateFromFlowVersion({
 						flowVersion: input.flowVersion,
 						projectId: input.projectId,
 						workerToken: input.workerToken,
 					}),
+					searchValue: input.searchValue,
 					constants: EngineConstants.fromExecutePropertyInput(input),
 				})
 				await writeOutput({
@@ -163,7 +160,7 @@ const execute = async (): Promise<void> => {
 				const input: ExecuteValidateAuthOperation = await utils.parseJsonFile(EngineConstants.INPUT_FILE)
 				const output = await connectorHelper.executeValidateAuth({
 					params: input,
-					connectorSource: EngineConstants.CONNECTOR_SOURCES,
+					connectorsSource: EngineConstants.CONNECTOR_SOURCES,
 				})
 
 				await writeOutput({
@@ -187,8 +184,8 @@ const execute = async (): Promise<void> => {
 				console.error('unknown operation')
 				break
 		}
-	} catch (e: any) {
-		console.error(e, e.stack)
+	} catch (e) {
+		console.error(e)
 		await writeOutput({
 			status: EngineResponseStatus.ERROR,
 			response: utils.tryParseJson((e as Error).message),
@@ -196,7 +193,7 @@ const execute = async (): Promise<void> => {
 	}
 }
 
-execute().catch((e) => console.error(e, e.stack))
+execute().catch((e) => console.error(e))
 
 async function writeOutput(result: EngineResponse<unknown>): Promise<void> {
 	await utils.writeToJsonFile(EngineConstants.OUTPUT_FILE, result)

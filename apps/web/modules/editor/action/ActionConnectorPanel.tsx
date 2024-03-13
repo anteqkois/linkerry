@@ -34,7 +34,7 @@ import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
 	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata } = useEditor()
-	if (!editedAction || editedAction?.type !== ActionType.ACTION) throw new Error('Missing editedAction')
+	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
 	const {
@@ -64,7 +64,7 @@ export const ActionConnectorPanel = () => {
 		assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata', editedAction.settings)
 		setEditedConnectorMetadata(connectorMetadata)
 
-		if (editedAction.type !== ActionType.ACTION || editedAction.settings.actionName === '') {
+		if (editedAction.type !== ActionType.CONNECTOR || editedAction.settings.actionName === '') {
 			actionForm.reset({
 				__temp__action: null,
 				actionName: null,
@@ -147,8 +147,13 @@ export const ActionConnectorPanel = () => {
 			name: editedAction.name,
 			valid: false,
 			displayName: selectedAction.displayName,
-			type: ActionType.ACTION,
+			type: ActionType.CONNECTOR,
 			settings: {
+				// errorHandlingOptions:{
+				// 	continueOnFailure: true,
+				// 	retryOnFailure: true
+				// },
+				packageType: connectorMetadata.packageType,
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
 				connectorType: connectorMetadata.connectorType,
@@ -218,7 +223,7 @@ export const ActionConnectorPanel = () => {
 				<ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />
 			</ResizablePanel>
 			<ResizableHandle withHandle />
-			{connectorMetadata.group !== ConnectorGroup.Core && (
+			{connectorMetadata.group !== ConnectorGroup.CORE && (
 				<ResizablePanel defaultSize={30} maxSize={80} onResize={(size) => setTestDataPanelHeight(size)}>
 					<ActionTest
 						panelSize={testDataPanelHeight}

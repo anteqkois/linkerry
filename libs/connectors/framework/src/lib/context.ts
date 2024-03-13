@@ -1,4 +1,4 @@
-import { ExecutionType, Id, PauseMetadata, StopResponse, TriggerStrategy } from '@linkerry/shared'
+import { AppConnectionValue, ExecutionType, Id, PauseMetadata, StopResponse, TriggerStrategy } from '@linkerry/shared'
 import { ConnectorAuthProperty, ConnectorPropValueSchema, ConnectorPropertyMap, StaticPropsValue } from './property'
 
 type BaseContext<ConnectorAuth extends ConnectorAuthProperty, Props extends ConnectorPropertyMap> = {
@@ -6,9 +6,9 @@ type BaseContext<ConnectorAuth extends ConnectorAuthProperty, Props extends Conn
 	propsValue: StaticPropsValue<Props>
 	store: Store
 	project: {
-    id: Id;
-    // externalId: () => Promise<string | undefined>;
-  };
+		id: Id
+		// externalId: () => Promise<string | undefined>;
+	}
 }
 
 export type TriggerPayload =
@@ -80,7 +80,7 @@ export type BaseActionContext<
 > = BaseContext<ConnectorAuth, ActionProps> & {
 	executionType: ET
 	connections: ConnectionsManager
-	// tags: TagsManager
+	tags: TagsManager
 	server: ServerContext
 	files: FilesService
 	serverUrl: string
@@ -89,6 +89,7 @@ export type BaseActionContext<
 		stop: StopHook
 		pause: PauseHook
 	}
+	generateResumeUrl: (params: { queryParams: Record<string, string> }) => string
 }
 
 type BeginExecutionActionContext<ConnectorAuth extends ConnectorAuthProperty, ActionProps extends ConnectorPropertyMap> = BaseActionContext<
@@ -110,9 +111,12 @@ export type ActionContext<
 	ActionProps extends ConnectorPropertyMap = ConnectorPropertyMap,
 > = BeginExecutionActionContext<ConnectorAuth, ActionProps> | ResumeExecutionActionContext<ConnectorAuth, ActionProps>
 
-type AppConnectionValue = any
 export interface ConnectionsManager {
 	get(key: string): Promise<AppConnectionValue | Record<string, unknown> | string | null>
+}
+
+export interface TagsManager {
+  add(params: { name: string }): Promise<void>;
 }
 
 export interface FilesService {
@@ -133,9 +137,10 @@ export enum StoreScope {
 export type PropertyContext = {
 	server: ServerContext
 	project: {
-    id: Id;
-    // externalId: () => Promise<string | undefined>;
-  };
+		id: Id
+		// externalId: () => Promise<string | undefined>;
+	}
+	searchValue?: string;
 }
 
 export type ServerContext = {

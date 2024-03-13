@@ -1,29 +1,37 @@
 import {
-	CustomError,
-	ErrorCode,
-	ExecutionOutputStatus,
-	ExecutionType,
-	FlowRetryStrategy,
-	FlowRun,
-	Id,
-	PauseType,
-	RunEnvironment,
-	RunTerminationReason,
-	assertNotNullOrUndefined,
-	isNil,
-	spreadIfDefined,
+    CustomError,
+    ErrorCode,
+    ExecutioOutputFile,
+    ExecutionState,
+    ExecutionType,
+    FlowRetryStrategy,
+    FlowRun,
+    FlowRunStatus,
+    Id,
+    PauseType,
+    RunEnvironment,
+    RunTerminationReason,
+    assertNotNullOrUndefined,
+    isNil,
+    spreadIfDefined,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import { Model } from 'mongoose'
+import { FilesService } from '../../files/files.service'
 import { QueuesService } from '../../workers/flow-worker/queues/queues.service'
 import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../workers/flow-worker/queues/types'
 import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { FlowResponseService } from './flow-response.service'
 import { FlowRunsHooks } from './flow-runs.hooks'
-import { FlowRunDocument, FlowRunModel } from './schemas/flow-runs.schema'
+import { FlowRunDocument, FlowRunModel, FlowRunWithStepsDocument } from './schemas/flow-runs.schema'
 import { GetOrCreateParams, HookType, PauseParams, RetryParams, SideEffectPauseParams, SideEffectStartParams, StartParams, TestParams } from './types'
+
+type FindOneWithStepsParams = {
+	id: Id
+	projectId: Id | undefined
+}
 
 @Injectable()
 export class FlowRunsService {
@@ -33,6 +41,7 @@ export class FlowRunsService {
 		@InjectModel(FlowRunModel.name) private readonly flowRunModel: Model<FlowRunDocument>,
 		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		private readonly queuesService: QueuesService,
+		private readonly filesService: FilesService,
 		private readonly flowRunsHooks: FlowRunsHooks,
 		private readonly flowResponseService: FlowResponseService,
 	) {}
@@ -59,7 +68,7 @@ export class FlowRunsService {
 	}
 
 	private async _startSideEffect({ flowRun, executionType, payload, synchronousHandlerId, hookType }: SideEffectStartParams): Promise<void> {
-		this.logger.debug(`#startSideEffect`, {
+		this.logger.debug(`#_startSideEffect`, {
 			executionType,
 			id: flowRun._id,
 		})
@@ -141,6 +150,30 @@ export class FlowRunsService {
 		})
 	}
 
+	async findOneWithSteps(params: FindOneWithStepsParams) {
+		const flowRun = await this.flowRunModel.findOne<FlowRunWithStepsDocument>({
+			_id: params.id,
+			projectId: params.projectId,
+		})
+		assertNotNullOrUndefined(flowRun, 'flowRun')
+		let steps: ExecutionState['steps'] = {}
+
+		if (!isNil(flowRun.logsFileId)) {
+			const logFile = await this.filesService.findOne({
+				fileId: flowRun.logsFileId.toString(),
+				projectId: flowRun.projectId.toString(),
+			})
+
+			const serializedFlowRunResponse = logFile.data.toString('utf-8')
+			const FlowRunResponse: ExecutioOutputFile = JSON.parse(serializedFlowRunResponse)
+			steps = FlowRunResponse.executionState.steps
+		}
+		return {
+			...flowRun,
+			steps,
+		}
+	}
+
 	async getFlowRunOrCreate(params: GetOrCreateParams): Promise<FlowRun> {
 		const { id, projectId, flowId, flowVersionId, flowDisplayName, environment } = params
 
@@ -158,7 +191,7 @@ export class FlowRunsService {
 				projectId,
 				flowId,
 				flowVersionId,
-				status: ExecutionOutputStatus.RUNNING,
+				status: FlowRunStatus.RUNNING,
 				environment,
 				flowDisplayName,
 				startTime: new Date().toISOString(),
@@ -245,7 +278,7 @@ export class FlowRunsService {
 		terminationReason,
 	}: {
 		flowRunId: Id
-		status: ExecutionOutputStatus
+		status: FlowRunStatus
 		tasks: number
 		terminationReason?: RunTerminationReason
 		tags: string[]
@@ -299,7 +332,7 @@ export class FlowRunsService {
 				_id: flowRunId,
 			},
 			{
-				status: ExecutionOutputStatus.PAUSED,
+				status: FlowRunStatus.PAUSED,
 				logsFileId: logFileId,
 				pauseMetadata,
 			},

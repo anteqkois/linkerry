@@ -44,8 +44,6 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
         password: data.password,
       })
 
-      console.log(signUpResponse)
-
       if (signUpResponse.error) throw new Error('Something went wrong')
 
       toast({

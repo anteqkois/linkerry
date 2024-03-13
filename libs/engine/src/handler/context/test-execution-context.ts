@@ -1,4 +1,4 @@
-import { ActionType, BranchStepOutput, FlowVersion, GenricStepOutput, StepOutputStatus, TriggerType, flowHelper } from '@linkerry/shared'
+import { ActionType, BranchStepOutput, FlowVersion, GenericStepOutput, StepOutputStatus, TriggerType, flowHelper } from '@linkerry/shared'
 import { FlowExecutorContext } from './flow-execution-context'
 
 export const testExecutionContext = {
@@ -42,11 +42,10 @@ export const testExecutionContext = {
                 //     break
                 // }
 								// case ActionType.Code:
-                case ActionType.ACTION:
+                case ActionType.CONNECTOR:
                 case TriggerType.EMPTY:
-                case TriggerType.TRIGGER:
-                case TriggerType.WEBHOOK:
-                    flowExecutionContext = flowExecutionContext.upsertStep(step.name, GenricStepOutput.create({
+                case TriggerType.CONNECTOR:
+                    flowExecutionContext = flowExecutionContext.upsertStep(step.name, GenericStepOutput.create({
                         input: step.settings,
                         type: stepType,
                         status: StepOutputStatus.SUCCEEDED,

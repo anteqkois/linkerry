@@ -1,19 +1,19 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-    Action,
-    ActionConnector,
-    ActionType,
-    CustomError,
-    DeepPartial,
-    ErrorCode,
-    FlowPopulated,
-    RunActionResponse,
-    assertNotNullOrUndefined,
-    deepMerge,
-    flowHelper,
-    isAction,
-    isConnectorAction,
-    isTrigger
+	Action,
+	ActionConnector,
+	ActionType,
+	CustomError,
+	DeepPartial,
+	ErrorCode,
+	FlowPopulated,
+	RunActionResponse,
+	assertNotNullOrUndefined,
+	deepMerge,
+	flowHelper,
+	isAction,
+	isConnectorAction,
+	isTrigger,
 } from '@linkerry/shared'
 import { FlowVersionApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
@@ -50,9 +50,11 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const action: ActionConnector = {
 			name: editStepMetadata.actionName,
 			displayName: connectorMetadata.displayName,
-			type: ActionType.ACTION,
+			type: ActionType.CONNECTOR,
 			valid: false,
 			settings: {
+				// errorHandlingOptions:{},
+				packageType: connectorMetadata.packageType,
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
 				connectorType: connectorMetadata.connectorType,
@@ -210,12 +212,13 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 				})
 				set({ editedAction: action })
 				setFlow({ ...flow, version: testResult.flowVersion })
+
+				const { flowVersion, ...response } = testResult
+				return response
 			}
+			return testResult
 		} finally {
 			set({ testConnectorLoading: false })
 		}
-
-		const {flowVersion, ...response} =testResult
-		return response
 	},
 })

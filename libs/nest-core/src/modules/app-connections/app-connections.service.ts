@@ -10,8 +10,7 @@ import {
 	ErrorCode,
 	Id,
 	UpsertAppConnectionInput,
-	assertNotNullOrUndefined,
-	isNil,
+	isNil
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -142,17 +141,19 @@ export class AppConnectionsService {
 	}
 
 	async findOne({ name, projectId }: { projectId: Id; name: string }) {
-		return (await this.appConnectionsModel.findOne({
-			projectId,
-			name,
-		}))?.toObject()
+		return (
+			await this.appConnectionsModel.findOne({
+				projectId,
+				name,
+			})
+		)?.toObject()
 	}
 
 	async getOne({ name, projectId }: { projectId: Id; name: string }) {
-		const encryptedConnection =( await this.findOne({
+		const encryptedConnection = await this.findOne({
 			name,
 			projectId,
-		}))
+		})
 
 		if (isNil(encryptedConnection)) return null
 
@@ -189,7 +190,7 @@ export class AppConnectionsService {
 			},
 			{
 				upsert: true,
-				new: true
+				new: true,
 			},
 		)
 
@@ -277,11 +278,12 @@ export class AppConnectionsService {
 
 		const engineResponse = await this.engineService.executeValidateAuth({
 			auth,
-			connector: {
+			connector: await this.connectorsMetadataService.getConnectorPackage(projectId, {
 				connectorName,
 				connectorType: connectorMetadata.connectorType,
 				connectorVersion: connectorMetadata.version,
-			},
+				packageType: connectorMetadata.packageType,
+			}),
 			projectId,
 		})
 

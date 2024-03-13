@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ConnectorType } from '../../connectors'
+import { ConnectorType, PackageType } from '../../connectors'
 
 export const sampleDataSchema = z.object({
 	currentSelectedData: z.unknown(),
@@ -24,12 +24,12 @@ export const sampleDataSettingsObjectSchema = z.object({
 })
 
 export const baseStepSettingsSchema = z.object({
+	packageType: z.nativeEnum(PackageType),
 	connectorName: z.string(), // '@linkerry/binance'
 	connectorVersion: z.string(),
-	connectorType: z.nativeEnum(ConnectorType), // Officail, Custom
+	connectorType: z.nativeEnum(ConnectorType),
 	input: z.record(z.any()).and(z.object({ auth: z.string().optional() })),
 	inputUiInfo: sampleDataSettingsObjectSchema,
-	sampleData: sampleDataSchema.optional(),
 })
 
 export const isStepBaseSettings = (settings: unknown): settings is BaseStepSettings => {

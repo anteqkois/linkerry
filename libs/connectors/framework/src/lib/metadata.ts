@@ -1,8 +1,8 @@
-import { ConnectorGroup, ConnectorType, TriggerStrategy, TriggerTestStrategy } from '@linkerry/shared'
+import { ConnectorGroup, ConnectorType, PackageType, TriggerStrategy, TriggerTestStrategy } from '@linkerry/shared'
 import { ErrorHandlingOptionsParam } from './action/action'
 import { ConnectorAuthProperty, ConnectorPropertyMap } from './property'
 import { ConnectorTag } from './tags'
-import {  WebhookHandshakeConfiguration, WebhookRenewConfiguration } from './trigger/trigger'
+import { WebhookHandshakeConfiguration, WebhookRenewConfiguration } from './trigger/trigger'
 
 export type ConnectorBase = {
 	_id: string
@@ -11,6 +11,8 @@ export type ConnectorBase = {
 	logoUrl: string
 	description: string
 	auth?: ConnectorAuthProperty
+	// platformId?: string;
+	// directoryPath?: string;
 	version: string
 	minimumSupportedRelease: string
 	maximumSupportedRelease: string
@@ -32,16 +34,24 @@ export type TriggerBase = Omit<StepBase, 'requireAuth'> & {
 	type: TriggerStrategy
 	sampleData: unknown
 	handshakeConfiguration?: WebhookHandshakeConfiguration
-	renewConfiguration: WebhookRenewConfiguration,
-	testStrategy: TriggerTestStrategy;
+	renewConfiguration: WebhookRenewConfiguration
+	testStrategy: TriggerTestStrategy
 }
 
-export type ConnectorMetadata = ConnectorBase & {
-	actions: Record<string, ActionBase>
-	triggers: Record<string, TriggerBase>
-	group: ConnectorGroup
+// TODO ? move this type extensions on a backend?
+interface ConnectorPackageMetadata {
+	projectId?: string
 	connectorType: ConnectorType
+	packageType: PackageType
+	archiveId?: string
 }
+
+export type ConnectorMetadata = ConnectorBase &
+	ConnectorPackageMetadata & {
+		actions: Record<string, ActionBase>
+		triggers: Record<string, TriggerBase>
+		group: ConnectorGroup
+	}
 
 export type ConnectorMetadataSummary = Omit<ConnectorMetadata, 'actions' | 'triggers'> & {
 	actions: number

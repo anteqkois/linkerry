@@ -133,8 +133,6 @@ export const packagePrePublishChecks = async (path: string): Promise<boolean> =>
 		if (packageChanged) {
 			throw new Error(`[packagePrePublishValidation] package version not incremented, path=${path}, version=${currentVersion}`)
 		}
-
-		console.info(`[packagePrePublishValidation] package already published, path=${path}, version=${currentVersion}`)
 		return true
 	}
 

@@ -11,8 +11,8 @@ export const ActionConnectorSettingsSchema = SchemaFactory.createForClass(Action
 
 @Schema({ _id: false })
 export class ActionConnectorModel extends BaseStepModel implements ActionConnector {
-	@Prop({ required: true, type: String, enum: ActionType, default: ActionType.ACTION })
-	override type: ActionType.ACTION
+	@Prop({ required: true, type: String, enum: ActionType, default: ActionType.CONNECTOR })
+	override type: ActionType.CONNECTOR
 
 	@Prop({ required: false, type: ActionConnectorSettingsSchema })
 	settings: ActionConnectorSettings

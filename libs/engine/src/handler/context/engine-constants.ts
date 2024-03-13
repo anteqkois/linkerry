@@ -40,7 +40,7 @@ export class EngineConstants {
 	//     return EngineConstants.BASE_CODE_DIRECTORY
 	// }
 
-	public get connectorSource(): string {
+	public get connectorsSource(): string {
 		return EngineConstants.CONNECTOR_SOURCES
 	}
 

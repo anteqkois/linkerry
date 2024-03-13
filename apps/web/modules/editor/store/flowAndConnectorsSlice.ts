@@ -32,9 +32,13 @@ const emptyFlow: FlowPopulated = {
 		triggers: [],
 		actions: [],
 		updatedBy: 'unknown',
+		createdAt: '',
+		updatedAt:''
 	},
 	publishedVersionId: null,
 	schedule: null,
+	createdAt: '',
+	updatedAt:''
 }
 
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
@@ -131,6 +135,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 			})
 
 		const response = await ConnectorsApi.getOptions({
+			packageType: settings.packageType,
 			connectorName: settings.connectorName,
 			connectorType: settings.connectorType,
 			connectorVersion: settings.connectorVersion,
@@ -139,6 +144,8 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 			flowVersionId: flow.version._id,
 			input,
 			propertyName,
+			// TODO implement searchValue
+			// searchValue
 		})
 
 		return response.data

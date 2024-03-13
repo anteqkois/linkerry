@@ -86,7 +86,7 @@ describe('POST /api/flows-version', () => {
 	beforeAll(async () => {
 		await login()
 		const { data } = await axios.post<Flow>(`/flows`)
-		flowVersion = data.version
+		flowVersion = data.version as FlowVersion
 	})
 
 	afterAll(async () => {
@@ -104,7 +104,7 @@ describe('POST /api/flows-version', () => {
 			type: TriggerType.CONNECTOR,
 			valid: false,
 			settings: {
-				connectorType: ConnectorType.Official,
+				connectorType: ConnectorType.OFFICIAL,
 				triggerName: mockedTrigger.name,
 				connectorName: mockedConnector.name,
 				connectorVersion: mockedConnector.version,
@@ -163,7 +163,7 @@ describe('POST /api/flows-version', () => {
 			type: TriggerType.CONNECTOR,
 			valid: false,
 			settings: {
-				connectorType: ConnectorType.Official,
+				connectorType: ConnectorType.OFFICIAL,
 				// triggerName: mockedTrigger.name,
 				connectorName: mockedConnector.name,
 				connectorVersion: mockedConnector.version,

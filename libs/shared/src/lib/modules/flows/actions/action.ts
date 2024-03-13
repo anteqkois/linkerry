@@ -3,7 +3,7 @@ import { baseStepSchema, baseStepSettingsSchema } from '../steps/base'
 
 export enum ActionType {
 	// Code = 'Code',
-	ACTION = 'ACTION',
+	CONNECTOR = 'CONNECTOR',
 	BRANCH = 'BRANCH',
 	MERGE_BRANCH = 'MERGE_BRANCH',
 	LOOP_ON_ITEMS = 'LOOP_ON_ITEMS',
@@ -46,13 +46,13 @@ const actionConnectorSettingsSchema = baseActionSettingsSchema
 
 export const actionConnectorSchema = baseStepSchema.merge(
 	z.object({
-		type: z.enum([ActionType.ACTION]),
+		type: z.enum([ActionType.CONNECTOR]),
 		settings: actionConnectorSettingsSchema,
 	}),
 )
 
 export const isConnectorAction = (action: Action): action is ActionConnector => {
-	return action.type === ActionType.ACTION
+	return action.type === ActionType.CONNECTOR
 }
 
 export interface ActionConnector extends z.infer<typeof actionConnectorSchema> {}

@@ -71,7 +71,7 @@ export class ScheduleJobProcessor extends WorkerHost {
 				)
 			}
 
-			if (data.triggerType === TriggerType.TRIGGER) {
+			if (data.triggerType === TriggerType.CONNECTOR) {
 				await this._consumeConnectorTrigger(data)
 			}
 		} catch (error: any) {

@@ -10,8 +10,8 @@ export class SandboxProvisionerService {
 
 	constructor(private readonly sandboxManagerService: SandboxManagerService) {}
 
-	// async provisionSandbox({ connectors = [], codeSteps = [], ...cacheInfo }: GetParams) {
-	async provisionSandbox({ connectors = [], ...cacheInfo }: GetParams) {
+	// async provision({ connectors = [], codeSteps = [], ...cacheInfo }: GetParams) {
+	async provision({ connectors = [], ...cacheInfo }: GetParams) {
 		try {
 			const cachedSandbox = await sandboxCachePool.findOrCreate(cacheInfo)
 

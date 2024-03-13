@@ -1,4 +1,4 @@
-import { TriggerBase, WebhookHandshakeStrategy, WebhookResponse } from '@linkerry/connectors-framework'
+import { TriggerBase, WebhookHandshakeStrategy, WebhookRenewStrategy, WebhookResponse } from '@linkerry/connectors-framework'
 import {
 	EngineResponseStatus,
 	FlowVersion,
@@ -42,15 +42,15 @@ export class TriggerHooks {
 			// 		flowId: flowVersion.flowId,
 			// 	})
 			// 	break
-			// case TriggerStrategy.WEBHOOK: {
-			// 	const renewConfiguration = connectorTrigger.renewConfiguration
-			// 	if (renewConfiguration?.strategy === WebhookRenewStrategy.CRON) {
-			// 		await flowQueue.removeRepeatingJob({
-			// 			id: flowVersion.id,
-			// 		})
-			// 	}
-			// 	break
-			// }
+			case TriggerStrategy.WEBHOOK: {
+				const renewConfiguration = connectorTrigger.renewConfiguration
+				if (renewConfiguration?.strategy === WebhookRenewStrategy.CRON) {
+					await this.queuesService.removeRepeatingJob({
+						id: flowVersion._id,
+					})
+				}
+				break
+			}
 			case TriggerStrategy.POLLING:
 				await this.queuesService.removeRepeatingJob({
 					id: flowVersion._id,
@@ -86,7 +86,7 @@ export class TriggerHooks {
 	async tryHandshake(params: ExecuteHandshakeParams): Promise<WebhookResponse | null> {
 		const { payload, flowVersion, projectId } = params
 		const flowTrigger = flowVersion.triggers[0]
-		if (flowTrigger.type === TriggerType.TRIGGER) {
+		if (flowTrigger.type === TriggerType.CONNECTOR) {
 			const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.name, flowTrigger.settings.triggerName)
 			const handshakeConfig = connectorTrigger.handshakeConfiguration
 			if (isNil(handshakeConfig)) {
@@ -136,7 +136,7 @@ export class TriggerHooks {
 
 	async enable(params: EnableTriggerHookParams): Promise<EngineHelperResponse<EngineHelperTriggerResult<TriggerHookType.ON_ENABLE>> | null> {
 		const { flowVersion, projectId, simulate } = params
-		if (flowVersion.triggers[0].type !== TriggerType.TRIGGER) {
+		if (flowVersion.triggers[0].type !== TriggerType.CONNECTOR) {
 			return null
 		}
 
@@ -157,7 +157,6 @@ export class TriggerHooks {
 		})
 
 		if (engineHelperResponse.status !== EngineResponseStatus.OK) return engineHelperResponse
-		console.dir(engineHelperResponse, { depth: null })
 
 		switch (connectorTrigger.type) {
 			// case TriggerStrategy.APP_WEBHOOK: {
@@ -173,32 +172,32 @@ export class TriggerHooks {
 			// 		}
 			// 		break
 			// }
-			// case TriggerStrategy.WEBHOOK: {
-			// 		const renewConfiguration = pieceTrigger.renewConfiguration
-			// 		switch (renewConfiguration?.strategy) {
-			// 				case WebhookRenewStrategy.CRON: {
-			// 						await flowQueue.add({
-			// 								id: flowVersion.id,
-			// 								type: JobType.REPEATING,
-			// 								data: {
-			// 										schemaVersion: LATEST_JOB_DATA_SCHEMA_VERSION,
-			// 										projectId,
-			// 										flowVersionId: flowVersion.id,
-			// 										flowId: flowVersion.flowId,
-			// 										jobType: RepeatableJobType.RENEW_WEBHOOK,
-			// 								},
-			// 								scheduleOptions: {
-			// 										cronExpression: renewConfiguration.cronExpression,
-			// 										timezone: 'UTC',
-			// 								},
-			// 						})
-			// 						break
-			// 				}
-			// 				default:
-			// 						break
-			// 		}
-			// 		break
-			// }
+			case TriggerStrategy.WEBHOOK: {
+				const renewConfiguration = connectorTrigger.renewConfiguration
+				switch (renewConfiguration?.strategy) {
+					case WebhookRenewStrategy.CRON: {
+						await this.queuesService.addToQueue({
+							id: flowVersion._id,
+							type: JobType.REPEATING,
+							data: {
+								schemaVersion: LATEST_JOB_DATA_SCHEMA_VERSION,
+								projectId,
+								flowVersionId: flowVersion._id,
+								flowId: flowVersion.flow,
+								jobType: RepeatableJobType.RENEW_WEBHOOK,
+							},
+							scheduleOptions: {
+								cronExpression: renewConfiguration.cronExpression,
+								timezone: 'UTC',
+							},
+						})
+						break
+					}
+					default:
+						break
+				}
+				break
+			}
 			case TriggerStrategy.POLLING: {
 				if (isNil(engineHelperResponse.result.scheduleOptions)) {
 					engineHelperResponse.result.scheduleOptions = {
@@ -224,7 +223,7 @@ export class TriggerHooks {
 						environment: RunEnvironment.PRODUCTION,
 						flowVersionId: flowVersion._id,
 						flowId: flowVersion.flow,
-						triggerType: TriggerType.TRIGGER,
+						triggerType: TriggerType.CONNECTOR,
 						jobType: RepeatableJobType.EXECUTE_TRIGGER,
 					},
 					scheduleOptions: engineHelperResponse.result.scheduleOptions,
@@ -239,7 +238,7 @@ export class TriggerHooks {
 
 	async disable(params: DisableParams): Promise<EngineHelperResponse<EngineHelperTriggerResult<TriggerHookType.ON_DISABLE>> | null> {
 		const { flowVersion, projectId, simulate } = params
-		if (flowVersion.triggers[0].type !== TriggerType.TRIGGER) {
+		if (flowVersion.triggers[0].type !== TriggerType.CONNECTOR) {
 			return null
 		}
 		const flowTrigger = flowVersion.triggers[0] as TriggerConnector
@@ -273,7 +272,7 @@ export class TriggerHooks {
 		const flowTrigger = flowVersion.triggers[0]
 		let payloads: unknown[] = []
 		switch (flowTrigger.type) {
-			case TriggerType.TRIGGER: {
+			case TriggerType.CONNECTOR: {
 				const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
 				const webhookUrl = await this.webhookUrlsService.getWebhookUrl({
 					flowId: flowVersion.flow,

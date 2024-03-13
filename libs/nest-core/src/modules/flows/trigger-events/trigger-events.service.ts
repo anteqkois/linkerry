@@ -15,9 +15,11 @@ import { EngineService } from '../../engine/engine.service'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import { Model } from 'mongoose'
+import { WebhookUrlsService } from '../../webhooks/webhook-urls/webhook-urls.service'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { FlowDocument, FlowModel } from '../flows/schemas/flow.schema'
+import { StepFilesService } from '../step-files/step-files.service'
 import { TestDto } from '../trigger-events/dto/pool-test.dto'
 import { DeleteDto } from './dto/delete.dto'
 import { GetManyDto } from './dto/get-many.dto'
@@ -30,9 +32,19 @@ export class TriggerEventsService {
 		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowDocument>,
 		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		@InjectModel(TriggerEventModel.name) private readonly triggerEventsModel: Model<TriggerEventModel>,
+		private readonly stepFilesService: StepFilesService,
 		private readonly flowVersionsService: FlowVersionsService,
 		private readonly engineService: EngineService,
+		private readonly webhookUrlsService: WebhookUrlsService,
 	) {}
+
+	private async _deleteOldFilesForTestData({ projectId, flowId, stepName }: { projectId: string; flowId: string; stepName: string }): Promise<void> {
+		await this.stepFilesService.deleteAll({
+			projectId,
+			flowId,
+			stepName,
+		})
+	}
 
 	async deleteAllRelatedToTrigger({ flowId, trigger }: { flowId: Id; trigger: Trigger }) {
 		const sourceName = this._getSourceName(trigger)
@@ -45,8 +57,8 @@ export class TriggerEventsService {
 	async saveEvent(data: SaveTriggerEventInput) {
 		if (!data.sourceName) {
 			const flowVersion = await this.flowVersionModel.findOne({
-					_id: data.flowId,
-					projectId: data.projectId,
+				_id: data.flowId,
+				projectId: data.projectId,
 			})
 
 			assertNotNullOrUndefined(flowVersion, 'flowVersion')
@@ -63,7 +75,7 @@ export class TriggerEventsService {
 			typeof flowLike === 'string'
 				? await this.flowModel
 						.findOne<FlowPopulated>({
-								_id: flowLike,
+							_id: flowLike,
 						})
 						.populate('version')
 				: flowLike
@@ -82,8 +94,8 @@ export class TriggerEventsService {
 	async deleteMany({ flowId, triggerName }: DeleteDto, projectId: Id) {
 		const flow = await this.flowModel
 			.findOne<FlowPopulated>({
-					_id: flowId,
-					projectId,
+				_id: flowId,
+				projectId,
 			})
 			.populate('version')
 
@@ -101,8 +113,8 @@ export class TriggerEventsService {
 	async test(input: TestDto, projectId: Id, userId: Id) {
 		const flow = await this.flowModel
 			.findOne<FlowPopulated>({
-					_id: input.flowId,
-					projectId,
+				_id: input.flowId,
+				projectId,
 			})
 			.populate('version')
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
@@ -110,17 +122,22 @@ export class TriggerEventsService {
 		const flowTrigger = flowHelper.getTrigger(flow.version, input.triggerName)
 		assertNotNullOrUndefined(flowTrigger, 'flowTrigger')
 
-		if (flowTrigger.type === TriggerType.WEBHOOK) throw new UnprocessableEntityException(`Can not test webhook triggers`)
 		if (flowTrigger.type === TriggerType.EMPTY) throw new UnprocessableEntityException(`Can not test empty triggers`)
 
-		// delete old data
-		// this.stepFilesService.delete()
+		await this._deleteOldFilesForTestData({
+			flowId: flow._id,
+			projectId,
+			stepName: flowTrigger.name,
+		})
 
 		const { result } = await this.engineService.executeTrigger({
 			flowVersion: flow.version,
 			hookType: TriggerHookType.TEST,
 			triggerName: flowTrigger.name,
-			webhookUrl: '', // TODO implement webhook url
+			webhookUrl: await this.webhookUrlsService.getWebhookUrl({
+				flowId: flow._id,
+				simulate: true,
+			}),
 			projectId,
 		})
 
@@ -175,8 +192,8 @@ export class TriggerEventsService {
 
 	async getMany(query: GetManyDto, projectId: Id) {
 		const flowVersion = await this.flowVersionModel.findOne({
-				flow: query.flowId,
-				projectId,
+			flow: query.flowId,
+			projectId,
 		})
 		if (!flowVersion) throw new UnprocessableEntityException('Can not retrive flow version')
 
@@ -193,11 +210,9 @@ export class TriggerEventsService {
 
 	private _getSourceName(trigger: Trigger) {
 		switch (trigger.type) {
-			case TriggerType.TRIGGER:
+			case TriggerType.CONNECTOR:
 				return `${trigger.settings.connectorName}@${trigger.settings.connectorVersion}:${trigger.settings.triggerName}`
 			case TriggerType.EMPTY:
-			case TriggerType.WEBHOOK:
-				throw new UnprocessableEntityException(`Can not test EMPTY/WEBHOOK triggers`)
 		}
 	}
 }

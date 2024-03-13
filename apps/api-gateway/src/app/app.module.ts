@@ -4,6 +4,7 @@ import {
 	AuthModule,
 	ConnectorsModule,
 	CoreModule,
+	FilesModule,
 	FlowVersionsModule,
 	FlowWorkerModule,
 	FlowsModule,
@@ -33,7 +34,8 @@ import { AppService } from './app.service'
 		StoreEntryModule,
 		TestTriggerModule,
 		WebhookSimulationModule,
-		FlowWorkerModule
+		FlowWorkerModule,
+		FilesModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

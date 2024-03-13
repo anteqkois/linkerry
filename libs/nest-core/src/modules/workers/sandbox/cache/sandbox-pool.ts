@@ -1,24 +1,12 @@
 import { Environment, extractProvisionCacheKey, isNil, ProvisionCacheInfo, SandBoxCacheType } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
+import { Mutex } from 'async-mutex'
 import { CachedSandbox } from './sandbox-cache'
 
+const logger = new Logger('SandboxPool')
 const CACHED_SANDBOX_LIMIT = 1000
 const cachedSandboxes = new Map<string, CachedSandbox>()
-const logger = new Logger('SandboxPool')
-
-const getSandbox = (key: string) => {
-	const cachedSandbox = cachedSandboxes.get(key)
-
-	if (cachedSandbox) {
-		return cachedSandbox
-	}
-
-	if (cachedSandboxes.size >= CACHED_SANDBOX_LIMIT) {
-		deleteOldestNotInUseOrThrow()
-	}
-
-	return createCachedSandbox({ key })
-}
+const lock: Mutex = new Mutex()
 
 const sandboxKeyCachePool = {
 	async findOrCreate(cacheInfo: ProvisionCacheInfo): Promise<CachedSandbox> {
@@ -26,7 +14,19 @@ const sandboxKeyCachePool = {
 
 		const key = extractProvisionCacheKey(cacheInfo)
 
-		const cachedSandbox = getSandbox(key)
+		const cachedSandbox = await lock.runExclusive((): CachedSandbox => {
+			const cachedSandbox = cachedSandboxes.get(key)
+
+			if (cachedSandbox) {
+				return cachedSandbox
+			}
+
+			if (cachedSandboxes.size >= CACHED_SANDBOX_LIMIT) {
+				deleteOldestNotInUseOrThrow()
+			}
+
+			return createCachedSandbox({ key })
+		})
 
 		await cachedSandbox.init()
 		return cachedSandbox

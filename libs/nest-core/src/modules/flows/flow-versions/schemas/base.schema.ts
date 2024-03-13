@@ -1,4 +1,4 @@
-import { ActionType, BaseStepSettings, BaseStep, ConnectorType, SampleData, SampleDataSettingsObject, TriggerType } from '@linkerry/shared'
+import { ActionType, BaseStep, BaseStepSettings, ConnectorType, PackageType, SampleData, SampleDataSettingsObject, TriggerType } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Types } from 'mongoose'
 
@@ -47,8 +47,8 @@ export class StepSettingsModel implements BaseStepSettings {
 	@Prop({ required: true, type: SampleDataSettingsObjectSchema })
 	inputUiInfo: SampleDataSettingsObject
 
-	@Prop({ required: true, type: SampleDataSchema })
-	sampleData: SampleData
+	@Prop({ required: true, type: String, enum: PackageType })
+	packageType: PackageType
 }
 export const ConnectorSettingsSchema = SchemaFactory.createForClass(StepSettingsModel)
 

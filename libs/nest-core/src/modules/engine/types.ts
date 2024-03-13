@@ -5,11 +5,11 @@ import {
 	ExecuteActionResponse,
 	ExecuteTriggerResponse,
 	ExecuteValidateAuthResponse,
-	ExecutionOutput,
+	FlowRunResponse,
 	TriggerHookType
 } from '@linkerry/shared'
 
-export type EngineHelperFlowResult = ExecutionOutput
+export type EngineHelperFlowResult = FlowRunResponse
 
 export type EngineHelperTriggerResult<T extends TriggerHookType = TriggerHookType> = ExecuteTriggerResponse<T>
 

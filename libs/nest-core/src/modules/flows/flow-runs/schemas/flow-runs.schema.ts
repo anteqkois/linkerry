@@ -1,4 +1,4 @@
-import { ExecutionOutput, ExecutionOutputStatus, Flow, FlowRun, PauseMetadata, Project, RunEnvironment, RunTerminationReason } from '@linkerry/shared'
+import { Flow, FlowRun, FlowRunStatus, PauseMetadata, Project, RunEnvironment, RunTerminationReason } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../../lib/mongodb'
@@ -7,9 +7,10 @@ import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schem
 import { FlowModel } from '../../flows/schemas/flow.schema'
 
 export type FlowRunDocument<T extends keyof FlowRun = never> = mongoose.HydratedDocument<FlowRunModel<T>>
+export type FlowRunWithStepsDocument<T extends keyof FlowRun = never> = mongoose.HydratedDocument<FlowRunModel<T> & { steps: FlowRun }>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow-runs' })
-export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<FlowRun, '_id' | 'projectId' | 'flowId'> {
+export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<FlowRun, '_id' | 'projectId' | 'flowId' | 'logsFileId' | 'steps'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
 	projectId: IdObjectOrPopulated<T, 'projectId', Project>
 
@@ -26,13 +27,13 @@ export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<Flow
 	terminationReason?: RunTerminationReason | undefined
 
 	@Prop({ required: false, type: String })
-	logsFileId: string | null
+	logsFileId: NonNullable<IdObjectOrPopulated<T, 'flowId', Flow>>
 
 	@Prop({ required: false, type: Number })
 	tasks?: number | undefined
 
-	@Prop({ required: true, type: String, enum: ExecutionOutputStatus })
-	status: ExecutionOutputStatus
+	@Prop({ required: true, type: String, enum: FlowRunStatus })
+	status: FlowRunStatus
 
 	@Prop({ required: true, type: Date })
 	startTime: string
@@ -41,10 +42,11 @@ export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<Flow
 	finishTime: string
 
 	@Prop({ required: false, type: Object })
-	pauseMetadata?: PauseMetadata | null | undefined
+	pauseMetadata?: PauseMetadata | undefined
 
-	@Prop({ required: false, type: Object })
-	executionOutput?: ExecutionOutput | undefined
+	// this field is 'virtual', it is added retriving file from other collection if neccesery
+	// @Prop({ required: false, type: Object })
+	// steps: Record<string, StepOutput>
 
 	@Prop({ required: true, type: String, enum: RunEnvironment })
 	environment: RunEnvironment

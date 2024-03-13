@@ -1,5 +1,6 @@
-import { DatabaseTimestamp, Id } from "../../common"
-import { ExecutionOutput, ExecutionOutputStatus, PauseMetadata } from "./execution/execution-output"
+import { DatabaseTimestamp, Id, Nullable } from "../../common"
+import { FlowRunStatus, PauseMetadata } from "./execution/flow-execution"
+import { StepOutput } from "./execution/step-output"
 
 export enum RunTerminationReason {
     STOPPED_BY_HOOK = 'STOPPED_BY_HOOK',
@@ -9,19 +10,18 @@ export interface FlowRun extends DatabaseTimestamp  {
     _id: Id
     projectId: Id
     flowId: Id
-    // tags?: string[]
+    tags?: string[]
     flowVersionId: Id
     flowDisplayName: string
     terminationReason?: RunTerminationReason
-    logsFileId: Id | null
-    // logsFileId:  null
+    logsFileId: Nullable<Id>
     tasks?: number
-    status: ExecutionOutputStatus
+    status: FlowRunStatus
     startTime: string
     finishTime: string
     environment: RunEnvironment
-    pauseMetadata?: PauseMetadata | null
-    executionOutput?: ExecutionOutput
+    pauseMetadata?: PauseMetadata
+		steps: Record<string, StepOutput>
 }
 
 export enum RunEnvironment {

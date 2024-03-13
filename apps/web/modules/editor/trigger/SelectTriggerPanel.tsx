@@ -2,7 +2,7 @@ import { ConnectorMetadataSummary, connectorTag } from '@linkerry/connectors-fra
 import { Row } from '@tanstack/react-table'
 import { HTMLAttributes, useMemo } from 'react'
 import { useClientQuery } from '../../../libs/react-query'
-import { DataTable } from '../../../shared/components/table/Table'
+import { DataTable } from '../../../shared/components/Table/Table'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { columns } from '../../flows/connectors/table/defaultColumns'
 import { useEditor } from '../useEditor'

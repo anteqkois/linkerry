@@ -1,4 +1,4 @@
-import { ActionConnector, Flow, FlowVersion, FlowVersionState, TriggerConnector, TriggerEmpty, TriggerWebhook } from '@linkerry/shared'
+import { ActionConnector, Flow, FlowVersion, FlowVersionState, TriggerConnector, TriggerEmpty } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { IdObjectOrPopulated, ObjectId, TimestampDatabaseModel } from '../../../../lib/mongodb'
@@ -30,7 +30,7 @@ export class FlowVersionModel<T> extends TimestampDatabaseModel implements Omit<
 
 	// todo discriminatorKey don't work
 	@Prop({ required: true, type: [Object] })
-	triggers: (TriggerEmpty | TriggerConnector | TriggerWebhook)[]
+	triggers: (TriggerEmpty | TriggerConnector)[]
 
 	// todo discriminatorKey don't work
 	@Prop({ required: true, type: [Object] })

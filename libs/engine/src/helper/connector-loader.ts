@@ -11,16 +11,16 @@ import {
 const loadConnectorOrThrow = async ({
 	connectorName,
 	connectorVersion,
-	connectorSource,
+	connectorsSource,
 }: {
 	connectorName: string
 	connectorVersion: string
-	connectorSource: string
+	connectorsSource: string
 }): Promise<Connector> => {
 	const packageName = getPackageAlias({
 		connectorName,
 		connectorVersion,
-		connectorSource,
+		connectorsSource,
 	})
 
 	try {
@@ -43,7 +43,7 @@ const loadConnectorOrThrow = async ({
 			packageName,
 			connectorName,
 			connectorVersion,
-			connectorSource,
+			connectorsSource,
 		})
 	}
 }
@@ -52,11 +52,11 @@ const getConnectorAndActionOrThrow = async (params: {
 	connectorName: string
 	connectorVersion: string
 	actionName: string
-	connectorSource: string
+	connectorsSource: string
 }): Promise<{ connector: Connector; connectorAction: Action }> => {
-	const { connectorName, connectorVersion, actionName, connectorSource } = params
+	const { connectorName, connectorVersion, actionName, connectorsSource } = params
 
-	const connector = await loadConnectorOrThrow({ connectorName, connectorVersion, connectorSource })
+	const connector = await loadConnectorOrThrow({ connectorName, connectorVersion, connectorsSource })
 	const connectorAction = connector.getAction(actionName)
 
 	assertNotNullOrUndefined(connectorAction, 'connectorAction', {
@@ -71,13 +71,13 @@ const getConnectorAndActionOrThrow = async (params: {
 	}
 }
 
-const getPropOrThrow = async ({ params, connectorSource }: { params: ExecutePropsOptions; connectorSource: string }) => {
+const getPropOrThrow = async ({ params, connectorsSource }: { params: ExecutePropsOptions; connectorsSource: string }) => {
 	const { connector: connectorPackage, stepName, propertyName } = params
 
 	const connector = await loadConnectorOrThrow({
 		connectorName: connectorPackage.connectorName,
 		connectorVersion: connectorPackage.connectorVersion,
-		connectorSource,
+		connectorsSource,
 	})
 
 	const action = connector.getAction(stepName) ?? connector.getTrigger(stepName)
@@ -103,13 +103,13 @@ const getPropOrThrow = async ({ params, connectorSource }: { params: ExecuteProp
 const getPackageAlias = ({
 	connectorName,
 	connectorVersion,
-	connectorSource,
+	connectorsSource,
 }: {
 	connectorName: string
-	connectorSource: string
+	connectorsSource: string
 	connectorVersion: string
 }) => {
-	if (connectorSource === 'FILE') {
+	if (connectorsSource === 'FILE') {
 		return connectorName
 	}
 

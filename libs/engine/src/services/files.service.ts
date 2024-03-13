@@ -44,7 +44,7 @@ export async function handleLinkerryFile({ workerToken, path }: { workerToken: s
     if (path.startsWith(MEMORY_PREFIX_URL)) {
         return readMemoryFile(path)
     }
-    // TODO REMOVE DB AS IT NOW GENERATES A SIGNED URL
+    // TODO REMOVE DB AS IT NOW GENERATES A SIGNED URL -> note from activepieces
     else if (path.startsWith(DB_PREFIX_URL)) {
         return readDbFile({ workerToken, absolutePath: path })
     }
@@ -86,7 +86,6 @@ async function writeDbFile({ stepName, flowId, fileName, data, workerToken }: { 
     formData.append('flowId', flowId)
     formData.append('file', new Blob([data], { type: 'application/octet-stream' }))
 
-		// TODO implement steps files endpoint/module
     const response = await fetch(EngineConstants.API_URL + '/v1/step-files', {
         method: 'POST',
         headers: {

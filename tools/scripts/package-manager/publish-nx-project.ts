@@ -5,7 +5,6 @@ import { readPackageJson, readProjectJson } from '../utils/files'
 import { packagePrePublishChecks } from './package-pre-publish-checks'
 
 export const publishNxProject = async (path: string): Promise<void> => {
-	// console.info(`[publishNxProject] path=${path}`)
 	assert(path, '[publishNxProject] parameter "path" is required')
 
 	const packageAlreadyPublished = await packagePrePublishChecks(path)

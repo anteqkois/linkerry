@@ -1,5 +1,5 @@
 import { Connector, ConnectorMetadata } from 'libs/connectors/framework/src'
-import { ConnectorGroup, ConnectorType } from 'libs/shared/src'
+import { ConnectorGroup, ConnectorType, PackageType } from 'libs/shared/src'
 import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
 import { getAvailableConnectorNames } from '../utils/get-available-connector-names'
@@ -27,8 +27,9 @@ export const getRealMetadata = async () => {
 
 		const metadata: Omit<ConnectorMetadata, '_id'> = {
 			...fullMetadata,
-			connectorType: customConnectors.includes(connector.name) ? ConnectorType.Custom : ConnectorType.Official,
-			group: coreConnectors.includes(connector.name) ? ConnectorGroup.Core : ConnectorGroup.App,
+			connectorType: customConnectors.includes(connector.name) ? ConnectorType.CUSTOM : ConnectorType.OFFICIAL,
+			packageType: PackageType.REGISTRY,
+			group: coreConnectors.includes(connector.name) ? ConnectorGroup.CORE : ConnectorGroup.APP,
 			name: connectorName,
 			version: connectorVersion,
 			minimumSupportedRelease: connector.minimumSupportedRelease,

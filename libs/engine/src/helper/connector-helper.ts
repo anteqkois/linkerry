@@ -26,18 +26,20 @@ export const connectorHelper = {
 	// to retrive options
 	async executeProps({
 		params,
-		connectorSource,
+		connectorsSource,
 		constants,
 		executionState,
+		searchValue,
 	}: {
+		searchValue?: string,
 		executionState: FlowExecutorContext
 		params: ExecutePropsOptions
-		connectorSource: string
+		connectorsSource: string
 		constants: EngineConstants
 	}) {
 		const property = await connectorLoader.getPropOrThrow({
 			params,
-			connectorSource,
+			connectorsSource,
 		})
 
 		try {
@@ -50,6 +52,7 @@ export const connectorHelper = {
 				// executionState: FlowExecutorContext.empty(),
 			})
 			const ctx: PropertyContext = {
+				searchValue,
 				server: {
 					token: params.workerToken,
 					apiUrl: EngineConstants.API_URL,
@@ -87,17 +90,17 @@ export const connectorHelper = {
 
 	async executeValidateAuth({
 		params,
-		connectorSource,
+		connectorsSource,
 	}: {
 		params: ExecuteValidateAuthOperation
-		connectorSource: string
+		connectorsSource: string
 	}): Promise<ExecuteValidateAuthResponse> {
 		const { connector: connectorPackage } = params
 
 		const connector = await connectorLoader.loadConnectorOrThrow({
 			connectorName: connectorPackage.connectorName,
 			connectorVersion: connectorPackage.connectorVersion,
-			connectorSource,
+			connectorsSource,
 		})
 		if (connector.auth?.validate === undefined) {
 			return {
@@ -134,14 +137,15 @@ export const connectorHelper = {
 	},
 
 	async extractConnectorMetadata({
-		connectorSource,
+		connectorsSource,
 		params,
 	}: {
-		connectorSource: string
+		connectorsSource: string
 		params: ExecuteExtractConnectorMetadata
-	}): Promise<Omit<ConnectorMetadata, '_id' | 'group' | 'connectorType'>> {
+		// TODO devide ConnectorMetadata type to not include '_id' | 'group' | 'connectorType' | 'packageType' etc
+	}): Promise<Omit<ConnectorMetadata, '_id' | 'group' | 'connectorType' | 'packageType'>> {
 		const { connectorName, connectorVersion } = params
-		const connector = await connectorLoader.loadConnectorOrThrow({ connectorName, connectorVersion, connectorSource })
+		const connector = await connectorLoader.loadConnectorOrThrow({ connectorName, connectorVersion, connectorsSource })
 
 		return {
 			...connector.metadata(),

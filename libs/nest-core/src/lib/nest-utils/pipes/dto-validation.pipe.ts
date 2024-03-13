@@ -1,11 +1,11 @@
 import {
-  ArgumentMetadata,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Logger,
-  PipeTransform,
-  ValidationError,
+	ArgumentMetadata,
+	HttpException,
+	HttpStatus,
+	Injectable,
+	Logger,
+	PipeTransform,
+	ValidationError,
 } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { validate } from 'class-validator'
@@ -49,7 +49,9 @@ export class ValidationPipe implements PipeTransform<any> {
     return value
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private toValidate(metatype: Function): boolean {
+		// eslint-disable-next-line @typescript-eslint/ban-types
     const types: Function[] = [String, Boolean, Number, Array, Object]
     return !types.includes(metatype)
   }

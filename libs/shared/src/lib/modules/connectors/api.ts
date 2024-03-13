@@ -1,5 +1,5 @@
 import { Id } from '../../common'
-import { ConnectorType } from './connector'
+import { ConnectorType, PackageType } from './connector'
 
 export interface ConnectorsMetadataGetManyQuery {
 	displayName?: string
@@ -12,7 +12,7 @@ export interface ConnectorsMetadataGetOneQuery {
 }
 
 export interface ConnectorsGetOptionsInput {
-	// packageType: 'REGISTRY'
+	packageType: PackageType
 	connectorType: ConnectorType
 	connectorVersion: string
 	connectorName: string
@@ -21,6 +21,7 @@ export interface ConnectorsGetOptionsInput {
 	flowId: Id
 	flowVersionId: Id
 	input: any
+	searchValue?: string
 }
 
 export interface ConnectorsGetOptionsResponse {

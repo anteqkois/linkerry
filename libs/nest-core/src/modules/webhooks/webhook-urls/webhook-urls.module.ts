@@ -5,4 +5,4 @@ import { WebhookUrlsService } from './webhook-urls.service';
   providers: [WebhookUrlsService],
   exports: [WebhookUrlsService],
 })
-export class WebhooksUrlModule {}
+export class WebhooksUrlsModule {}

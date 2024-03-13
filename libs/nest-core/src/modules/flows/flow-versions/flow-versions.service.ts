@@ -17,13 +17,13 @@ import {
 	isTrigger,
 	triggerConnectorSchema,
 	triggerEmptySchema,
-	triggerWebhookSchema,
 } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import mongoose, { Model } from 'mongoose'
 import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { WebhookSimulationService } from '../../webhooks/webhook-simulation/webhook-simulation.service'
+import { StepFilesService } from '../step-files/step-files.service'
 import { FlowVersionDocument, FlowVersionModel } from './schemas/flow-version.schema'
 
 type OnApplyOperationParams = {
@@ -41,6 +41,7 @@ export class FlowVersionsService {
 	constructor(
 		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
 		private readonly webhookSimulationService: WebhookSimulationService,
+		private readonly stepFilesService: StepFilesService,
 	) {}
 
 	async _deleteWebhookSimulation(params: DeleteWebhookSimulationParams): Promise<void> {
@@ -133,14 +134,11 @@ export class FlowVersionsService {
 		if (!isTrigger(updateTrigger)) throw new UnprocessableEntityException(`Invalid input, expect trigger receive: ${JSON.stringify(updateTrigger)}`)
 
 		switch (updateTrigger.type) {
-			case TriggerType.TRIGGER:
+			case TriggerType.CONNECTOR:
 				triggerConnectorSchema.parse(updateTrigger)
 				break
 			case TriggerType.EMPTY:
 				triggerEmptySchema.parse(updateTrigger)
-				break
-			case TriggerType.WEBHOOK:
-				triggerWebhookSchema.parse(updateTrigger)
 				break
 			default:
 				throw new UnprocessableEntityException(`Invalid trigger type`)
@@ -196,7 +194,7 @@ export class FlowVersionsService {
 
 	async updateAction(id: Id, projectId: Id, userId: Id, updateAction: Action) {
 		switch (updateAction.type) {
-			case ActionType.ACTION:
+			case ActionType.CONNECTOR:
 				actionConnectorSchema.parse(updateAction)
 				break
 			case ActionType.BRANCH:
@@ -210,7 +208,6 @@ export class FlowVersionsService {
 			_id: id,
 			projectId,
 		})
-
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
 		const newFlowVersion = this._decorateValidityAndUpdatedBy({
@@ -218,7 +215,30 @@ export class FlowVersionsService {
 			userId,
 		})
 
-		const response = await this.flowVersionModel.updateOne(
+		switch (updateAction.type as ActionType) {
+			case ActionType.CONNECTOR:
+				// eslint-disable-next-line no-case-declarations
+				const step = flowHelper.getStep(flowVersion.toObject(), updateAction.name)
+
+				// delete files when changed connector
+				if (step !== undefined && step.type === ActionType.CONNECTOR && updateAction.settings.connectorName !== step.settings.connectorName) {
+					await this.stepFilesService.deleteAll({
+						projectId,
+						flowId: flowVersion.flow.toString(),
+						stepName: step.name,
+					})
+				}
+
+				break
+			case ActionType.BRANCH:
+			case ActionType.LOOP_ON_ITEMS:
+			case ActionType.MERGE_BRANCH:
+				throw new CustomError(`Not implemented`, ErrorCode.INVALID_TYPE, {
+					type: updateAction.type,
+				})
+		}
+
+		await this.flowVersionModel.updateOne(
 			{
 				_id: id,
 				projectId,
@@ -226,13 +246,12 @@ export class FlowVersionsService {
 			{ $set: newFlowVersion },
 		)
 
-		if (!response.modifiedCount) throw new UnprocessableEntityException(`Can not find flow version`)
 		return newFlowVersion
 	}
 
 	async addAction(id: Id, projectId: Id, userId: Id, { action, parentStepName }: FlowVersionAddActionInput) {
 		switch (action.type) {
-			case ActionType.ACTION:
+			case ActionType.CONNECTOR:
 				actionConnectorSchema.parse(action)
 				break
 			case ActionType.BRANCH:
@@ -276,6 +295,25 @@ export class FlowVersionsService {
 			flowVersion: flowHelper.deleteAction(flowVersion.toObject(), actionName),
 			userId,
 		})
+
+		const step = flowHelper.getStep(flowVersion.toObject(), actionName)
+		assertNotNullOrUndefined(step, 'step')
+		switch (step.type as ActionType) {
+			case ActionType.CONNECTOR:
+				// delete files when changed connector
+				if (step !== undefined && step.type === ActionType.CONNECTOR) {
+					await this.stepFilesService.deleteAll({
+						projectId,
+						flowId: flowVersion.flow.toString(),
+						stepName: step.name,
+					})
+				}
+
+				break
+			case ActionType.BRANCH:
+			case ActionType.LOOP_ON_ITEMS:
+			case ActionType.MERGE_BRANCH:
+		}
 
 		await this.flowVersionModel.updateOne(
 			{

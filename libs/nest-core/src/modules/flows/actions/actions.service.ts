@@ -10,12 +10,14 @@ export class ActionsService {
 	constructor(private readonly engineService: EngineService, private readonly flowVersionsService: FlowVersionsService) {}
 
 	async run(projectId: Id, userId: Id, body: RunActionDto) {
-		let flowVersion = (await this.flowVersionsService.findOne({
-			filter: {
-				_id: body.flowVersionId,
-				projectId,
-			},
-		}))?.toObject<FlowVersion>()
+		let flowVersion = (
+			await this.flowVersionsService.findOne({
+				filter: {
+					_id: body.flowVersionId,
+					projectId,
+				},
+			})
+		)?.toObject<FlowVersion>()
 		assertNotNullOrUndefined(flowVersion, 'flowVersionObject')
 
 		const { result, standardError, standardOutput } = await this.engineService.executeAction({
@@ -37,14 +39,21 @@ export class ActionsService {
 			flowVersion = flowHelper.updateAction(flowVersion, action)
 			flowVersion.valid = flowHelper.isValid(flowVersion)
 			await this.flowVersionsService.update(flowVersion._id, userId, flowVersion)
+
+			return {
+				success: result.success,
+				output: result.output,
+				standardError,
+				standardOutput,
+				flowVersion,
+			}
 		}
 
 		return {
-			success: result.success ?? false,
+			success: result.success,
 			output: result.output,
 			standardError,
 			standardOutput,
-			flowVersion,
 		}
 	}
 }

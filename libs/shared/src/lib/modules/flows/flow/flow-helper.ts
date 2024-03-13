@@ -34,7 +34,7 @@ function getAction(flowVersion: FlowVersion, actionName: string): Action | undef
 const updateTrigger = (flowVersion: FlowVersion, triggerData: Trigger) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (triggerData.type) {
-		case TriggerType.TRIGGER:
+		case TriggerType.CONNECTOR:
 		case TriggerType.EMPTY:
 			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
 				if (trigger.name !== triggerData.name) return trigger
@@ -51,7 +51,7 @@ const patchTrigger = (flowVersion: FlowVersion, triggerName: string, updateTrigg
 	assertNotNullOrUndefined(sourceTrigger, 'sourceTrigger')
 
 	switch (sourceTrigger.type) {
-		case TriggerType.TRIGGER:
+		case TriggerType.CONNECTOR:
 		case TriggerType.EMPTY:
 			flowVersionClone.triggers = flowVersionClone.triggers.map((trigger) => {
 				if (trigger.name !== triggerName) return trigger
@@ -65,7 +65,7 @@ const patchTrigger = (flowVersion: FlowVersion, triggerName: string, updateTrigg
 const updateAction = (flowVersion: FlowVersion, actionData: Action) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (actionData.type) {
-		case ActionType.ACTION:
+		case ActionType.CONNECTOR:
 			flowVersionClone.actions = flowVersionClone.actions.map((action) => {
 				if (action.name !== actionData.name) return action
 				return actionData
@@ -122,7 +122,7 @@ const removeNextActionName = (flowVersion: FlowVersion, nextActionName: string) 
 	})
 	flowVersion.actions = flowVersion.actions.map((action) => {
 		switch (action.type) {
-			case ActionType.ACTION:
+			case ActionType.CONNECTOR:
 				if (action.nextActionName === nextActionName) {
 					return { ...action, nextActionName: '' }
 				}

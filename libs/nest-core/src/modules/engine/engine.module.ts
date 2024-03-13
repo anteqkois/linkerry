@@ -12,7 +12,7 @@ import { EngineService } from './engine.service'
 		AuthModule,
 		AppEventRoutingModule,
 		WebhookSecretsModule,
-		ConnectorsMetadataModule
+		ConnectorsMetadataModule,
 	],
 	providers: [EngineService],
 	exports: [EngineService],
