@@ -37,12 +37,17 @@ interface EditorProps {
 }
 
 export const Editor = ({ mode }: EditorProps) => {
-	const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showDrawer, setShowDrawer, drawer, loaded } = useEditor()
+	const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showDrawer, setShowDrawer, drawer, loaded, initWebSocketConnection, socket } =
+		useEditor()
 	const reactFlowWrapper = useRef(null)
 
 	useEffect(() => {
 		console.log(`Editor mode: ${mode}`)
+		initWebSocketConnection()
 	}, [])
+	// const onWebSocketTest = () => {
+	// 	socket?.emit(WEBSOCKET_EVENT.TEST_FLOW, { test: 1 })
+	// }
 
 	const EditorDrawer = editorDrawers[drawer.name]
 

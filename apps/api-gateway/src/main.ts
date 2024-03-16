@@ -12,10 +12,10 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
 
   const configService = app.get(ConfigService)
-  const frontednUrl = configService.get('FRONTEND_HOST')
+  const frontendUrl = configService.get('FRONTEND_HOST')
 
   app.enableCors({
-    origin: [frontednUrl],
+    origin: [frontendUrl],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })

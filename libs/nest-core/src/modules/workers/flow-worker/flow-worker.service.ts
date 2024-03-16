@@ -31,6 +31,7 @@ import { Model } from 'mongoose'
 import { EngineService } from '../../engine/engine.service'
 import { FilesService } from '../../files/files.service'
 import { ConnectorsMetadataService } from '../../flows/connectors/connectors-metadata/connectors-metadata.service'
+import { FlowRunWatcherService } from '../../flows/flow-runs/flow-runs-watcher.service'
 import { FlowRunsService } from '../../flows/flow-runs/flow-runs.service'
 import { HookType } from '../../flows/flow-runs/types'
 import { FlowVersionDocument, FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
@@ -68,6 +69,7 @@ export class FlowWorkerService {
 		private readonly sandboxProvisionerService: SandboxProvisionerService,
 		private readonly engineService: EngineService,
 		private readonly filesService: FilesService,
+		private readonly flowRunWatcherService: FlowRunWatcherService,
 	) {}
 
 	private async _loadInputAndLogFileId({ flowVersion, jobData }: LoadInputAndLogFileIdParams): Promise<LoadInputAndLogFileIdResponse> {
@@ -270,8 +272,7 @@ export class FlowWorkerService {
 			const { result } = await this.engineService.executeFlow(sandbox, input)
 
 			if (jobData.synchronousHandlerId && jobData.hookType === HookType.BEFORE_LOG) {
-				// TODO implement pubSub events in Redis
-				// await flowResponseWatcher.publish(jobData.runId, jobData.synchronousHandlerId, result)
+				await this.flowRunWatcherService.publish(jobData.runId, jobData.synchronousHandlerId, result)
 			}
 
 			const logsFile = await this._saveToLogFile({
@@ -290,9 +291,9 @@ export class FlowWorkerService {
 				result,
 			})
 
-			// if (jobData.synchronousHandlerId && jobData.hookType === HookType.AFTER_LOG) {
-			// 	await flowResponseWatcher.publish(jobData.runId, jobData.synchronousHandlerId, result)
-			// }
+			if (jobData.synchronousHandlerId && jobData.hookType === HookType.AFTER_LOG) {
+				await this.flowRunWatcherService.publish(jobData.runId, jobData.synchronousHandlerId, result)
+			}
 
 			this.logger.log(
 				`#executeFlow flowRunId=${jobData.runId} FlowRunResponseStatus=${result.status} sandboxId=${sandbox.boxId} duration=${

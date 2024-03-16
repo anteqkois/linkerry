@@ -2,9 +2,9 @@ import { ModuleMetadata } from '@nestjs/common/interfaces'
 import { Redis, RedisOptions } from 'ioredis'
 
 export interface RedisLockModuleOptions extends RedisOptions {
-	HOST: string,
-	PORT?: number
-	PASSWORD?: string
+	host: string,
+	port?: number
+	password?: string
 	onClientReady?(client: Redis): void
 }
 

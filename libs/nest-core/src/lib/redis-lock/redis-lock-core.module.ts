@@ -39,13 +39,13 @@ export class RedisLockCoreModule implements OnModuleDestroy {
 	}
 
 	onModuleDestroy() {
-		const closeConnection =
+		const closeWebSocketConnection =
 			({ redLockClient, redisClient }: RedisLockClient) =>
 			(options: RedisLockModuleOptions) => {
 				redisClient.disconnect()
 			}
 
-		const closeClientConnection = closeConnection(this.redisLockClient)
+		const closeClientConnection = closeWebSocketConnection(this.redisLockClient)
 
 		closeClientConnection(this.options)
 	}

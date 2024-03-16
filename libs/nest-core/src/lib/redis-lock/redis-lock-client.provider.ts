@@ -12,7 +12,7 @@ export interface RedisLockClient {
 }
 
 async function getClient(options: RedisLockModuleOptions): Promise<Redis> {
-	const { onClientReady, HOST, PASSWORD, PORT, ...opt } = options
+	const { onClientReady, host: HOST, password: PASSWORD, port: PORT, ...opt } = options
 
 	const client = new Redis({
 		host: HOST,

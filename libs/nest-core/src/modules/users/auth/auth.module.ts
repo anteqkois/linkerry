@@ -1,19 +1,20 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { JwtModule, JwtService } from '@nestjs/jwt'
+import { JwtModule } from '@nestjs/jwt'
 import { MongooseModule } from '@nestjs/mongoose'
 import { PassportModule } from '@nestjs/passport'
 import { HashService } from '../../../lib/auth/hash.service'
-import { JWTService } from '../../../lib/auth/jwt.service'
+import { JWTCustomService } from '../../../lib/auth/jwt-custom.service'
 import { JwtBearerTokenStrategy } from '../../../lib/auth/strategies/jwt-bearer-token.strategy'
 import { JwtCookiesStrategy } from '../../../lib/auth/strategies/jwt-cookies.strategy'
+import { JwtWebsocketStrategy } from '../../../lib/auth/strategies/jwt-websocket.strategy'
 import { LocalStrategy } from '../../../lib/auth/strategies/local.strategy'
+import { ProjectsModule } from '../../projects/projects.module'
+import { UserModel, UserSchema } from '../schemas/user.schema'
+import { UsersModule } from '../users.module'
+import { UsersService } from '../users.service'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { ProjectsModule } from '../../projects/projects.module'
-import { UsersModule } from '../users.module'
-import { UserModel, UserSchema } from '../schemas/user.schema'
-import { UsersService } from '../users.service'
 
 @Module({
 	imports: [
@@ -26,7 +27,7 @@ import { UsersService } from '../users.service'
 			useFactory: (configService: ConfigService) => {
 				return {
 					secret: configService.get<string>('JWT_SECRET'),
-					signOptions: { expiresIn: '60s' },
+					// signOptions: { expiresIn: '60s' },
 				}
 			},
 			inject: [ConfigService],
@@ -47,12 +48,12 @@ import { UsersService } from '../users.service'
 		AuthService,
 		LocalStrategy,
 		JwtCookiesStrategy,
+		JwtWebsocketStrategy,
 		JwtBearerTokenStrategy,
 		UsersService,
-		JwtService,
 		HashService,
 		ConfigService,
-		JWTService,
+		JWTCustomService,
 	],
 	exports: [AuthService],
 })

@@ -9,10 +9,11 @@ import {
 	RunActionResponse,
 	Trigger,
 	TriggerConnector,
-	TriggerEvent
+	TriggerEvent,
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
+import { Socket } from 'socket.io-client'
 import { StoreApi } from 'zustand'
 import { CustomEdge, CustomEdgeId } from '../edges/types'
 import { CustomNode, CustomNodeId, EditorDrawer } from '../types'
@@ -95,5 +96,12 @@ export interface StepsSlice {
 	setEditStepMetadata: (data: StepsSlice['editStepMetadata']) => void
 }
 
-export type EditorStore = ReactFlowSlice & EditorSlice & FlowAndConnectorsSlice & TriggersSlice & ActionsSlice & StepsSlice
+export interface WebSocketSlice {
+	// socket: Socket<DefaultEventsMap, DefaultEventsMap>	| null
+	socket: Socket | null
+	initWebSocketConnection: () => void
+	closeWebSocketConnection: () => Promise<void>
+}
+
+export type EditorStore = ReactFlowSlice & EditorSlice & FlowAndConnectorsSlice & TriggersSlice & ActionsSlice & StepsSlice & WebSocketSlice
 export type CreateSlice<T> = (set: StoreApi<EditorStore>['setState'], get: StoreApi<EditorStore>['getState']) => T

@@ -8,6 +8,7 @@ import {
 	createReactFlowSlice,
 	createStepsSlice,
 	createTriggersSlice,
+	createWebSocketSlice,
 } from './store'
 import { EditorStore } from './store/types'
 
@@ -18,4 +19,5 @@ export const useEditor = create<EditorStore>((set, get) => ({
 	...createReactFlowSlice(set, get),
 	...createStepsSlice(set, get),
 	...createTriggersSlice(set, get),
+	...createWebSocketSlice(set, get),
 }))

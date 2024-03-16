@@ -1,19 +1,19 @@
 import {
-    CustomError,
-    ErrorCode,
-    ExecutioOutputFile,
-    ExecutionState,
-    ExecutionType,
-    FlowRetryStrategy,
-    FlowRun,
-    FlowRunStatus,
-    Id,
-    PauseType,
-    RunEnvironment,
-    RunTerminationReason,
-    assertNotNullOrUndefined,
-    isNil,
-    spreadIfDefined,
+	CustomError,
+	ErrorCode,
+	ExecutioOutputFile,
+	ExecutionState,
+	ExecutionType,
+	FlowRetryStrategy,
+	FlowRun,
+	FlowRunStatus,
+	Id,
+	PauseType,
+	RunEnvironment,
+	RunTerminationReason,
+	assertNotNullOrUndefined,
+	isNil,
+	spreadIfDefined,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -23,7 +23,7 @@ import { FilesService } from '../../files/files.service'
 import { QueuesService } from '../../workers/flow-worker/queues/queues.service'
 import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../workers/flow-worker/queues/types'
 import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
-import { FlowResponseService } from './flow-response.service'
+import { FlowRunWatcherService } from './flow-runs-watcher.service'
 import { FlowRunsHooks } from './flow-runs.hooks'
 import { FlowRunDocument, FlowRunModel, FlowRunWithStepsDocument } from './schemas/flow-runs.schema'
 import { GetOrCreateParams, HookType, PauseParams, RetryParams, SideEffectPauseParams, SideEffectStartParams, StartParams, TestParams } from './types'
@@ -43,7 +43,7 @@ export class FlowRunsService {
 		private readonly queuesService: QueuesService,
 		private readonly filesService: FilesService,
 		private readonly flowRunsHooks: FlowRunsHooks,
-		private readonly flowResponseService: FlowResponseService,
+		private readonly flowResponseService: FlowRunWatcherService,
 	) {}
 
 	private _calculateDelayForResumeJob(resumeDateTimeIsoString: string): number {
