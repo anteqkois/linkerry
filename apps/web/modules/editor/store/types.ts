@@ -58,6 +58,8 @@ export interface FlowAndConnectorsSlice {
 	setFlow: (flow: FlowPopulated) => void
 	publishFlow: () => Promise<void>
 	setFlowStatus: (status: FlowStatus) => Promise<void>
+	testingFlowVersion: boolean
+	testFlowVersion: () => Promise<void>
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
 	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void
@@ -99,7 +101,7 @@ export interface StepsSlice {
 export interface WebSocketSlice {
 	// socket: Socket<DefaultEventsMap, DefaultEventsMap>	| null
 	socket: Socket | null
-	initWebSocketConnection: () => void
+	initWebSocketConnection: () => Socket
 	closeWebSocketConnection: () => Promise<void>
 }
 

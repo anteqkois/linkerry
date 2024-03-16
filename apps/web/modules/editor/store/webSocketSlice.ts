@@ -6,7 +6,6 @@ import { CreateSlice, WebSocketSlice } from './types'
 export const createWebSocketSlice: CreateSlice<WebSocketSlice> = (set, get) => ({
 	socket: null,
 	initWebSocketConnection: () => {
-		console.log('INIT CONNECTIONŪ')
 		assertNotNullOrUndefined(API_URL, 'API_URL')
 
 		const socket = io(API_URL, {
@@ -20,15 +19,17 @@ export const createWebSocketSlice: CreateSlice<WebSocketSlice> = (set, get) => (
 			console.log('Connected to server')
 		})
 
+		// TODO handle errors
 		socket.on('message', (data) => {
 			console.log('NEW SOCKET MESSAGE')
 			// set((state) => ({ messages: [...state.messages, data] }));
 		})
 
-		// Save socket in state
 		set({ socket })
+		return socket
 	},
 	closeWebSocketConnection: async () => {
-		//
+		const { socket } = get()
+		socket?.disconnect()
 	},
 })

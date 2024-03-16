@@ -16,14 +16,14 @@ const testFlowVariants = cva('flex-center border-2 rounded-3xl', {
 
 interface TestFlowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'color'>, VariantProps<typeof testFlowVariants> {}
 
-export const TestFlowNodeElement = ({  onClick, className }: TestFlowProps) => {
-	const { flow, saving } = useEditor()
+export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
+	const { flow, testingFlowVersion, testFlowVersion } = useEditor()
 	const flowValidity = useMemo(() => {
 		if (!flow.version.valid) return { invalid: true, message: 'Complete Flow' }
-		if (saving) return { invalid: true, message: 'Saving' }
+		if (testingFlowVersion) return { invalid: true, message: 'Testing...' }
 
 		return { invalid: false }
-	}, [flow.version.valid, flow.version.stepsCount, saving])
+	}, [flow.version.valid, testingFlowVersion])
 
 	return (
 		<Card
@@ -34,7 +34,7 @@ export const TestFlowNodeElement = ({  onClick, className }: TestFlowProps) => {
 			}}
 			onClick={onClick}
 		>
-			<H5>{flowValidity.invalid ? flowValidity.message : 'Test Flow'}</H5>
+			<H5 onClick={testFlowVersion}>{flowValidity.invalid ? flowValidity.message : 'Test Flow'}</H5>
 		</Card>
 	)
 }

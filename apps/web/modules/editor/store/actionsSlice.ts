@@ -147,7 +147,6 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const { data: newFlowVersion } = await FlowVersionApi.deleteAction(flow.version._id, actionName)
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
 
-		// trigger.nextActionName
 		const parentSteps = flowHelper.getParentSteps(flow.version, actionName)
 
 		for (const step of parentSteps) {

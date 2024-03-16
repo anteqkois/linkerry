@@ -4,10 +4,13 @@ import {
 	CustomError,
 	ErrorCode,
 	FlowPopulated,
+	FlowRun,
+	FlowRunWSInput,
 	FlowStatus,
 	FlowVersionState,
 	Id,
 	Trigger,
+	WEBSOCKET_EVENT,
 	assertNotNullOrUndefined,
 	isConnectorAction,
 	isConnectorTrigger,
@@ -33,12 +36,12 @@ const emptyFlow: FlowPopulated = {
 		actions: [],
 		updatedBy: 'unknown',
 		createdAt: '',
-		updatedAt:''
+		updatedAt: '',
 	},
 	publishedVersionId: null,
 	schedule: null,
 	createdAt: '',
-	updatedAt:''
+	updatedAt: '',
 }
 
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
@@ -98,6 +101,31 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 				saving: false,
 			})
 		}
+	},
+	testingFlowVersion: false,
+	async testFlowVersion() {
+		const {  flow, initWebSocketConnection , closeWebSocketConnection} = get()
+		const socket = initWebSocketConnection()
+		assertNotNullOrUndefined(socket, 'socket')
+
+		socket.emit(WEBSOCKET_EVENT.TEST_FLOW, { flowVersionId: flow.version._id, projectId: flow.projectId } as FlowRunWSInput)
+		set({
+			testingFlowVersion: true,
+		})
+
+		socket.on(WEBSOCKET_EVENT.TEST_FLOW_STARTED, (flowRun: FlowRun) => {
+			console.log('START', flowRun)
+		})
+
+		socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, (flowRun: FlowRun) => {
+			console.log('FINISH', flowRun)
+
+			// disconnecte from websocket
+			socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
+			socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
+
+			closeWebSocketConnection()
+		})
 	},
 	// CONNECTORS
 	editedConnectorMetadata: null,
