@@ -94,7 +94,6 @@ module.exports = {
 			space: newSizes,
 			width: {
 				...newSizes,
-				'editor-element': '20rem',
 			},
 			height: newSizes,
 			translate: newSizes,

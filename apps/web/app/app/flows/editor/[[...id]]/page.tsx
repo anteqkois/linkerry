@@ -7,13 +7,26 @@ import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
 import { useClientQuery } from '../../../../../libs/react-query'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
-import { actionNodeFactory, nodeConfigs, selectTriggerNodeFactory, triggerNodeFactory } from '../../../../../modules/editor/common/nodeFactory'
+import {
+	actionNodeFactory,
+	nodeConfigs,
+	selectTriggerNodeFactory,
+	testFlowNodeFactory,
+	triggerNodeFactory,
+} from '../../../../../modules/editor/common/nodeFactory'
 import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/flows/connectors/api/query-configs'
 import { FlowApi } from '../../../../../modules/flows/flows/api'
 
 const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetadataSummary[]) => {
-	const nodes: CustomNode[] = []
+	const nodes: CustomNode[] = [
+		testFlowNodeFactory({
+			position: {
+				x: nodeConfigs.BaseNode.width / 2 - nodeConfigs.TestFlowNode.width / 2,
+				y: -60,
+			},
+		}),
+	]
 	const edges: Edge[] = []
 
 	let parentNode: Pick<CustomNode, 'position' | 'id'> & {
@@ -25,8 +38,8 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 			x: 0,
 			y: 0,
 		},
-		height: nodeConfigs.SelectTriggerNode.height,
-		width: nodeConfigs.SelectTriggerNode.width,
+		height: nodeConfigs.BaseNode.height,
+		width: nodeConfigs.BaseNode.width,
 	}
 
 	for (const trigger of flowVersion.triggers) {

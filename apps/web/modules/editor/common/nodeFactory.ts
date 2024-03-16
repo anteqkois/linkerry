@@ -1,31 +1,22 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { Action, Trigger } from '@linkerry/shared'
 import { Node } from 'reactflow'
-import { ActionNodeProps, CustomNodeType, SelectTriggerNodeProps, TriggerNodeProps } from '../types'
+import { ActionNodeProps, SelectTriggerNodeProps, TestFlowNodeProps, TriggerNodeProps } from '../types'
 
-type NodeConfig = {
-	width: number
-	height: number
-}
-
-export const nodeConfigs: Record<CustomNodeType, NodeConfig> & { gap: { x: number; y: number } } = {
+export const nodeConfigs = {
 	gap: {
 		x: 50,
 		y: 50,
 	},
-	SelectTriggerNode: {
-		width: 384,
+	BaseNode: {
+		width: 300,
 		height: 100,
 	},
-	TriggerNode: {
-		width: 384,
-		height: 100,
+	TestFlowNode: {
+		width: 150,
+		height: 40,
 	},
-	ActionNode: {
-		width: 384,
-		height: 100,
-	},
-}
+} as const
 
 export const selectTriggerNodeFactory = ({ trigger }: { trigger: Trigger }): SelectTriggerNodeProps => {
 	return {
@@ -36,8 +27,8 @@ export const selectTriggerNodeFactory = ({ trigger }: { trigger: Trigger }): Sel
 			trigger,
 		},
 		draggable: false,
-		height: nodeConfigs.SelectTriggerNode.height,
-		width: nodeConfigs.SelectTriggerNode.width,
+		height: nodeConfigs.BaseNode.height,
+		width: nodeConfigs.BaseNode.width,
 	}
 }
 
@@ -57,8 +48,8 @@ export const triggerNodeFactory = ({
 			connectorMetadata,
 		},
 		draggable: false,
-		height: nodeConfigs.TriggerNode.height,
-		width: nodeConfigs.TriggerNode.width,
+		height: nodeConfigs.BaseNode.height,
+		width: nodeConfigs.BaseNode.width,
 	}
 }
 
@@ -81,7 +72,21 @@ export const actionNodeFactory = ({
 			position,
 		},
 		draggable: false,
-		height: nodeConfigs.ActionNode.height,
-		width: nodeConfigs.ActionNode.width,
+		height: nodeConfigs.BaseNode.height,
+		width: nodeConfigs.BaseNode.width,
+	}
+}
+
+export const testFlowNodeFactory = ({ position }: { position: Node['position'] }): TestFlowNodeProps => {
+	return {
+		id: 'test_flow',
+		type: 'TestFlowNode',
+		position: position,
+		data: {
+			position,
+		},
+		draggable: false,
+		height: nodeConfigs.TestFlowNode.height,
+		width: nodeConfigs.TestFlowNode.width,
 	}
 }

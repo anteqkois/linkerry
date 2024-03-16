@@ -18,8 +18,9 @@ export interface SelectTriggerNodeProps extends ICustomNode<'SelectTrigger', { t
 export interface TriggerNodeProps extends ICustomNode<'Trigger', { trigger: Trigger; connectorMetadata: ConnectorMetadataSummary }> {}
 export interface ActionNodeProps
 	extends ICustomNode<'Action', { action: Action; connectorMetadata: ConnectorMetadataSummary; position: ReactFlowNode['position'] }> {}
+export interface TestFlowNodeProps extends ICustomNode<'TestFlow', { position: ReactFlowNode['position'] }> {}
 
-export type CustomNode = TriggerNodeProps | SelectTriggerNodeProps | ActionNodeProps
+export type CustomNode = TriggerNodeProps | SelectTriggerNodeProps | ActionNodeProps | TestFlowNodeProps
 // export type CustomNodeType = NonNullable<CustomNode['type']>
 
 // todo change to uppercase
@@ -33,6 +34,7 @@ export enum CustomNodeType {
 	SelectTriggerNode = 'SelectTriggerNode',
 	TriggerNode = 'TriggerNode',
 	ActionNode = 'ActionNode',
+	TestFlowNode = 'TestFlowNode',
 }
 
 export type CustomNodeProps<N extends CustomNode> = NodeProps<N['data']> & { id: N['id'] }

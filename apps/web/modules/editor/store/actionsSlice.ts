@@ -76,7 +76,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		// add action name to parent step
 		if ('action' in parentNode.data)
 			patchNode(parentNode.id, { data: { ...parentNode.data, action: { ...parentNode.data.action, nextActionName: editStepMetadata.actionName } } })
-		else
+		else if ('trigger' in parentNode.data)
 			patchNode(parentNode.id, {
 				data: { ...parentNode.data, trigger: { ...parentNode.data.trigger, nextActionName: editStepMetadata.actionName } },
 			})
@@ -86,7 +86,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			connectorMetadata,
 			position: {
 				x: parentNode.position.x,
-				y: parentNode.position.y + nodeConfigs.TriggerNode.height + nodeConfigs.gap.y,
+				y: parentNode.position.y + nodeConfigs.BaseNode.height + nodeConfigs.gap.y,
 			},
 		})
 

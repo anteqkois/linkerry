@@ -59,7 +59,7 @@ export type Trigger = TriggerEmpty | TriggerConnector
 export type TriggerNotEmpty = TriggerConnector
 
 export function isTrigger(data: unknown): data is Trigger {
-	if (data && typeof data === 'object' && 'type' in data && Object.keys(TriggerType).includes((data.type as string) ?? '')) return true
+	if (data && typeof data === 'object' && 'name' in data && typeof data.name === 'string' && data.name.startsWith('trigger')) return true
 	return false
 }
 

@@ -3,8 +3,9 @@ import { Card, CardContent, Icons } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HTMLAttributes } from 'react'
+import { nodeConfigs } from './nodeFactory'
 
-const baseNodeVariants = cva('w-editor-element h-[100px] border-2 border-primary/50 cursor-pointer', {
+const baseNodeVariants = cva('border-2 border-primary/50 cursor-pointer', {
 	variants: {
 		valid: {
 			true: '',
@@ -29,12 +30,14 @@ interface BaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'color'>, Varia
 
 export const BaseNodeElement = ({ children, title, onClick, valid, invalidMessage, color, className }: BaseProps) => {
 	return (
-		<Card className={cn(baseNodeVariants({ valid, color }), 'hover:outline outline-2 hover:border-solid', className)} onClick={onClick}>
-			{/* {title && (
-        <CardHeader>
-          <CardTitle className="flex gap-2 items-center text-primary">{title}</CardTitle>
-        </CardHeader>
-      )} */}
+		<Card
+			className={cn(baseNodeVariants({ valid, color }), 'hover:outline outline-2 hover:border-solid', className)}
+			onClick={onClick}
+			style={{
+				width: `${nodeConfigs.BaseNode.width}px`,
+				height: `${nodeConfigs.BaseNode.height}px`,
+			}}
+		>
 			<CardContent className="p-4">{children}</CardContent>
 			{!valid && (
 				<TooltipProvider delayDuration={100}>

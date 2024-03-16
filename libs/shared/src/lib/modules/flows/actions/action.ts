@@ -85,6 +85,6 @@ export interface ActionBranchSettings extends z.infer<typeof actionBranchSetting
 export type Action = ActionConnector | ActionBranch
 
 export function isAction(data: unknown): data is Action {
-	if (data && typeof data === 'object' && 'type' in data && Object.keys(ActionType).includes((data.type as string) ?? '')) return true
+	if (data && typeof data === 'object' && 'name' in data && typeof data.name === 'string' && data.name.startsWith('action')) return true
 	return false
 }

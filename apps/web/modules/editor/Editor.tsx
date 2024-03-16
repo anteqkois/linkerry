@@ -9,6 +9,7 @@ import { ActionNodeElement } from './action/ActionNode'
 import { SelectActionPanel } from './action/SelectActionPanel'
 import { TriggerNodeElement } from './common'
 import { EditorFlowMenu } from './components'
+import { TestFlowNodeElement } from './components/TestFlowNode'
 import { SelectTriggerNodeElement } from './trigger/SelectTriggerNode'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
@@ -25,6 +26,7 @@ const nodeTypes = {
 	SelectTriggerNode: SelectTriggerNodeElement,
 	TriggerNode: TriggerNodeElement,
 	ActionNode: ActionNodeElement,
+	TestFlowNode: TestFlowNodeElement,
 }
 
 interface EditorProps {
