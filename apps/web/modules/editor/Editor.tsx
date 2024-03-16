@@ -69,7 +69,7 @@ export const Editor = ({ mode }: EditorProps) => {
 					<Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
 				</ReactFlow>
 			</div>
-			<Drawer show={showDrawer} setShow={setShowDrawer}>
+			<Drawer show={showDrawer} setShow={setShowDrawer} position='left'>
 				<EditorDrawer />
 			</Drawer>
 		</ReactFlowProvider>
