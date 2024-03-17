@@ -1,9 +1,10 @@
 import { WebhookResponse } from '@linkerry/connectors-framework'
-import { ExecutionType, FlowRun, FlowStatus, FlowVersion, Id, RunEnvironment, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
+import { ExecutionType, FlowStatus, FlowVersion, Id, RunEnvironment, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { FlowRunsService } from '../flows/flow-runs/flow-runs.service'
+import { FlowRunDocument } from '../flows/flow-runs/schemas/flow-runs.schema'
 import { HookType } from '../flows/flow-runs/types'
 import { FlowVersionDocument, FlowVersionModel } from '../flows/flow-versions/schemas/flow-version.schema'
 import { TriggerEventsService } from '../flows/trigger-events/trigger-events.service'
@@ -84,7 +85,7 @@ export class WebhooksService {
 		return response
 	}
 
-	async callback({ flow, payload, synchronousHandlerId }: SyncParams): Promise<FlowRun[]> {
+	async callback({ flow, payload, synchronousHandlerId }: SyncParams): Promise<FlowRunDocument[]> {
 		// logger.info(`[WebhookService#callback] flowId=${flow.id}`)
 		this.logger.debug(`#callback`, {
 			flowId: flow._id,

@@ -1,4 +1,4 @@
-import { Flow, FlowRun, FlowRunStatus, PauseMetadata, Project, RunEnvironment, RunTerminationReason } from '@linkerry/shared'
+import { Flow, FlowRun, FlowRunStatus, PauseMetadata, Project, RunEnvironment, RunTerminationReason, StepOutput } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../../lib/mongodb'
@@ -46,7 +46,7 @@ export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<Flow
 
 	// this field is 'virtual', it is added retriving file from other collection if neccesery
 	// @Prop({ required: false, type: Object })
-	// steps: Record<string, StepOutput>
+	steps: 'steps' extends T ? Record<string, StepOutput> : never
 
 	@Prop({ required: true, type: String, enum: RunEnvironment })
 	environment: RunEnvironment

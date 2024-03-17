@@ -69,7 +69,6 @@ export class QueuesService {
 		} else {
 			const { id, data } = params
 
-			console.log('ID', id);
 			await this.oneTimeJobQueue.add(id, data, {
 				jobId: id,
 				priority: params.priority === 'high' ? 1 : 2,

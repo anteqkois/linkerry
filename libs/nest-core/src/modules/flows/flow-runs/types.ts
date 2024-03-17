@@ -1,4 +1,5 @@
 import { ExecutionType, FlowRetryStrategy, FlowRun, Id, PauseMetadata, RunEnvironment } from '@linkerry/shared'
+import { FlowRunDocument } from './schemas/flow-runs.schema'
 
 export interface GetOrCreateParams {
 	id?: Id
@@ -31,7 +32,7 @@ export interface StartParams {
 }
 
 export interface SideEffectStartParams {
-	flowRun: FlowRun
+	flowRun: FlowRunDocument
 	executionType: ExecutionType
 	payload: unknown
 	synchronousHandlerId?: string

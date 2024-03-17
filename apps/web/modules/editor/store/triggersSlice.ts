@@ -26,25 +26,25 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	// TRIGGERS
 	editedTrigger: null,
 	setEditedTrigger: (trigger: Trigger) => {
-		const { setDrawer } = get()
+		const { setRightDrawer } = get()
 
-		setDrawer('trigger_connector')
+		setRightDrawer('trigger_connector')
 		set({
 			editedTrigger: trigger,
-			showDrawer: true,
+			showRightDrawer: true,
 		})
 	},
 	onClickSelectTrigger(trigger: Trigger) {
-		const { setDrawer, showDrawer } = get()
+		const { setRightDrawer, showRightDrawer } = get()
 
-		setDrawer('select_trigger')
+		setRightDrawer('select_trigger')
 		set({
 			editedTrigger: trigger,
-			showDrawer: !showDrawer,
+			showRightDrawer: !showRightDrawer,
 		})
 	},
 	handleSelectTriggerConnector: async (connectorMetadata: ConnectorMetadataSummary) => {
-		const { editedTrigger, updateEditedTrigger, patchNode, setDrawer } = get()
+		const { editedTrigger, updateEditedTrigger, patchNode, setRightDrawer } = get()
 		assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
 
 		const newTrigger: TriggerConnector = {
@@ -66,7 +66,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 		await updateEditedTrigger(newTrigger)
 		patchNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
-		setDrawer('trigger_connector')
+		setRightDrawer('trigger_connector')
 	},
 	updateEditedTrigger: async (newTrigger: Trigger) => {
 		const { flow, setFlow, patchNode } = get()
@@ -140,8 +140,8 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		setFlow(flow)
 		set({
 			nodes,
-			showDrawer: true,
-			drawer: editorDrawers.find((entry) => entry.name === 'select_trigger'),
+			showRightDrawer: true,
+			rightDrawer: editorDrawers.find((entry) => entry.name === 'select_trigger'),
 			editedTrigger: emptyTrigger,
 		})
 	},

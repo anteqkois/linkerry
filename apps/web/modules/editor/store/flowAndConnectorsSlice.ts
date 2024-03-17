@@ -2,6 +2,7 @@ import { ConnectorMetadata } from '@linkerry/connectors-framework'
 import {
 	Action,
 	CustomError,
+	CustomWebSocketExceptionResponse,
 	ErrorCode,
 	FlowPopulated,
 	FlowRun,
@@ -103,28 +104,51 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 		}
 	},
 	testingFlowVersion: false,
+	flowRun: null,
 	async testFlowVersion() {
-		const {  flow, initWebSocketConnection , closeWebSocketConnection} = get()
+		const { flow, initWebSocketConnection, closeWebSocketConnection } = get()
 		const socket = initWebSocketConnection()
 		assertNotNullOrUndefined(socket, 'socket')
 
-		socket.emit(WEBSOCKET_EVENT.TEST_FLOW, { flowVersionId: flow.version._id, projectId: flow.projectId } as FlowRunWSInput)
-		set({
-			testingFlowVersion: true,
-		})
+		return new Promise((resolve, reject) => {
+			socket.emit(WEBSOCKET_EVENT.TEST_FLOW, { flowVersionId: flow.version._id, projectId: flow.projectId } as FlowRunWSInput)
+			set({
+				testingFlowVersion: true,
+			})
 
-		socket.on(WEBSOCKET_EVENT.TEST_FLOW_STARTED, (flowRun: FlowRun) => {
-			console.log('START', flowRun)
-		})
+			socket.on(WEBSOCKET_EVENT.EXCEPTION, (error: CustomWebSocketExceptionResponse) => {
+				set({
+					testingFlowVersion: false,
+				})
 
-		socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, (flowRun: FlowRun) => {
-			console.log('FINISH', flowRun)
+				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
+				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
 
-			// disconnecte from websocket
-			socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
-			socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
+				closeWebSocketConnection()
+				console.log(error.message);
+				return reject(error.message)
+			})
 
-			closeWebSocketConnection()
+			socket.on(WEBSOCKET_EVENT.TEST_FLOW_STARTED, (flowRun: FlowRun) => {
+				console.log('WEBSOCKET_EVENT.TEST_FLOW_STARTED', flowRun);
+				set({
+					flowRun,
+				})
+			})
+
+			socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, (flowRun: FlowRun) => {
+				console.log('WEBSOCKET_EVENT.TEST_FLOW_FINISHED', flowRun);
+				set({
+					testingFlowVersion: false,
+					flowRun,
+				})
+
+				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
+				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
+
+				closeWebSocketConnection()
+				return resolve()
+			})
 		})
 	},
 	// CONNECTORS

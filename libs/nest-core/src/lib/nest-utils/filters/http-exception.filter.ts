@@ -1,12 +1,11 @@
 // import * as fs from 'fs';
-import { CustomHttpExceptionResponse, ErrorCode, HttpExceptionResponse, isCustomError } from '@linkerry/shared'
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common'
+import { CustomHttpExceptionResponse } from '@linkerry/shared'
+import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { ZodError, ZodIssue } from 'zod'
-import { DtoException } from '../pipes'
+import { CustomBaseExceptionsFilter } from './base-exception.filter'
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
+export class AllExceptionsFilter extends CustomBaseExceptionsFilter implements ExceptionFilter {
 	private readonly logger = new Logger(AllExceptionsFilter.name)
 
 	catch(exception: unknown, host: ArgumentsHost) {
@@ -14,59 +13,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 		const response = ctx.getResponse<FastifyReply>()
 		const request = ctx.getRequest<FastifyRequest>()
 
-		let status: HttpStatus
-		let errorCode: ErrorCode = ErrorCode.INTERNAL_SERVER
-		let errorMessage: string
-		let humanMessage: string
-		let fieldPath: string | undefined
-		let metadata: any
-
-		console.log(exception)
-		if (exception instanceof DtoException) {
-			status = HttpStatus.UNPROCESSABLE_ENTITY
-			const errorResponse = exception.getResponse()
-			errorMessage = (errorResponse as HttpExceptionResponse).error || exception.message
-			humanMessage = errorMessage
-			fieldPath = exception.field
-			errorCode = ErrorCode.VALIDATION
-		} else if (exception instanceof ZodError) {
-			// TODO handle all errors, not only one
-			status = HttpStatus.UNPROCESSABLE_ENTITY
-			console.dir(exception.format(), { depth: null })
-			const formatedError = this.formatZodIssue(exception.errors[0])
-			errorMessage = formatedError.message
-			humanMessage = formatedError.message
-			fieldPath = formatedError.path
-			errorCode = ErrorCode.VALIDATION
-		} else if (exception instanceof HttpException) {
-			status = exception.getStatus()
-			const errorResponse = exception.getResponse()
-			errorMessage = (errorResponse as HttpExceptionResponse).error || exception.message
-			humanMessage = exception.message
-			errorCode = ErrorCode.HTTP
-		} else if (exception instanceof Error && exception.name === 'ValidationError') {
-			status = HttpStatus.UNPROCESSABLE_ENTITY
-			errorMessage = exception.message
-			humanMessage = exception.message
-			errorCode = ErrorCode.VALIDATION
-		} else if (exception instanceof Error && exception.name === 'MongoServerError') {
-			status = HttpStatus.UNPROCESSABLE_ENTITY
-			errorMessage = exception.message
-			humanMessage = exception.message
-			errorCode = ErrorCode.DATABASE_INTERNAL
-		} else if (isCustomError(exception)) {
-			status = HttpStatus.UNPROCESSABLE_ENTITY
-			errorMessage = exception.message
-			humanMessage = exception.metadata?.userMessage ?? exception.message
-			metadata = exception.metadata
-			errorCode = exception.code
-		} else {
-			console.log(exception)
-			status = HttpStatus.INTERNAL_SERVER_ERROR
-			errorMessage = 'Critical internal server error occurred!'
-			humanMessage = 'Internal server error occurred'
-			errorCode = ErrorCode.INTERNAL_SERVER
-		}
+		const { errorCode, errorMessage, fieldPath, humanMessage, metadata, status } = this.produceFields(exception)
 
 		const errorResponse = this.getErrorResponse({
 			status,
@@ -117,13 +64,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
 		errorResponse: CustomHttpExceptionResponse,
 		humanMessage: string,
 		request: FastifyRequest & { user?: any },
-		exception: unknown,
+		exception: any,
 	): string => {
 		const { statusCode } = errorResponse
 		const { method, url } = request
 		const errorLog = `[${method}] ${url} - ${statusCode}
     ${humanMessage}
-    User: ${JSON.stringify(request.user ?? 'unknown')}`
+    User: ${JSON.stringify(request.user ?? 'unknown')}
+		${exception?.stack}`
 		return errorLog
 	}
 
@@ -132,20 +80,4 @@ export class AllExceptionsFilter implements ExceptionFilter {
 	//     if (err) throw err;
 	//   });
 	// };
-
-	private formatZodIssue = (issue: ZodIssue) => {
-		let message: string
-		switch (issue.code) {
-			case 'invalid_type':
-				message = `${issue.message}. Expect ${issue.expected}, received ${issue.received}`
-				break
-			default:
-				message = issue.message
-				break
-		}
-		return {
-			message,
-			path: issue.path.join('.'),
-		}
-	}
 }

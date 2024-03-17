@@ -19,11 +19,19 @@ export const createWebSocketSlice: CreateSlice<WebSocketSlice> = (set, get) => (
 			console.log('Connected to server')
 		})
 
-		// TODO handle errors
-		socket.on('message', (data) => {
-			console.log('NEW SOCKET MESSAGE')
-			// set((state) => ({ messages: [...state.messages, data] }));
+		socket.on('connect_error', (err: any) => {
+			console.log('connect_error', err)
 		})
+		socket.on('connect_failed', (err) => (err: any) => {
+			console.log('connect_failed', err)
+		})
+		socket.on('disconnect', (err) => (err: any) => {
+			console.log('disconnect', err)
+		})
+
+		// socket.onAny((eventName, ...args) => {
+		// 	console.log('UNKNOWN EVENT', eventName, ...args)
+		// })
 
 		set({ socket })
 		return socket

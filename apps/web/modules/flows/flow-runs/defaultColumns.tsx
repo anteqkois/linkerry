@@ -1,6 +1,6 @@
 'use client'
 
-import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
+import { FlowRun } from '@linkerry/shared'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,10 +11,9 @@ import {
 } from '@linkerry/ui-components/client'
 import { Badge, Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
-import Image from 'next/image'
-import { TableColumnHeader } from '../../../../shared/components/Table/TableColumnHeader'
+import { TableColumnHeader } from '../../../shared/components/Table/TableColumnHeader'
 
-export const columns: ColumnDef<ConnectorMetadataSummary>[] = [
+export const columns: ColumnDef<FlowRun>[] = [
   // todo add like/saved field
   // {
   //   id: 'select',
@@ -29,18 +28,6 @@ export const columns: ColumnDef<ConnectorMetadataSummary>[] = [
   //   enableSorting: false,
   //   enableHiding: false,
   // },
-  {
-    id: 'logoUrl',
-    accessorKey: 'logoUrl',
-    header: 'Logo',
-    cell: ({ row }) => {
-      return (
-        <div className="font-medium pl-4">
-          <Image width={26} height={26} src={row.getValue('logoUrl')} alt={row.getValue('displayName')} />
-        </div>
-      )
-    },
-  },
   {
     id: 'displayName',
     accessorKey: 'displayName',

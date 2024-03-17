@@ -20,31 +20,35 @@ import { FlowRunModelFactory } from './schemas/flow-runs.schema'
 		QueuesModule,
 		FilesModule,
 		AuthModule,
-		RedisModule.forRootAsync({
-			imports: [ConfigModule],
-			inject: [ConfigService],
-			useFactory: async (configService: ConfigService): Promise<RedisModuleOptions> => {
-				return {
-					readyLog: true,
-					errorLog: true,
-					closeClient: true,
-					config: [
-						{
-							namespace: REDIS_CLIENT_NAMESPACE.PUBLISHER,
-							host: configService.getOrThrow('REDIS_HOST'),
-							port: +configService.get('REDIS_PORT'),
-							password: configService.get('REDIS_PASSWORD'),
-						},
-						{
-							namespace: REDIS_CLIENT_NAMESPACE.SUBSCRIBER,
-							host: configService.getOrThrow('REDIS_HOST'),
-							port: +configService.get('REDIS_PORT'),
-							password: configService.get('REDIS_PASSWORD'),
-						},
-					],
-				}
-			},
-		}),
+		// this don't work dou to other namesapce, find way to create two redis instamces with other TOKENS
+		// RedisModule.forRootAsync(
+		// 	{
+		// 		imports: [ConfigModule],
+		// 		inject: [ConfigService],
+		// 		useFactory: async (configService: ConfigService): Promise<RedisModuleOptions> => {
+		// 			return {
+		// 				readyLog: true,
+		// 				errorLog: true,
+		// 				closeClient: true,
+		// 				config: [
+		// 					{
+		// 						namespace: REDIS_CLIENT_NAMESPACE.PUBLISHER,
+		// 						host: configService.getOrThrow('REDIS_HOST'),
+		// 						port: +configService.get('REDIS_PORT'),
+		// 						password: configService.get('REDIS_PASSWORD'),
+		// 					},
+		// 					{
+		// 						namespace: REDIS_CLIENT_NAMESPACE.SUBSCRIBER,
+		// 						host: configService.getOrThrow('REDIS_HOST'),
+		// 						port: +configService.get('REDIS_PORT'),
+		// 						password: configService.get('REDIS_PASSWORD'),
+		// 					},
+		// 				],
+		// 			}
+		// 		},
+		// 	},
+		// 	false,
+		// ),
 	],
 	controllers: [FlowRunsController],
 	providers: [FlowRunsService, FlowRunWatcherService, FlowRunsHooks, FlowRunsWebSocketService],

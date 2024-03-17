@@ -1,8 +1,9 @@
 import { Cookies, FlowRunWSInput, WEBSOCKET_EVENT, parseCookieString } from '@linkerry/shared'
-import { Logger, UseGuards } from '@nestjs/common'
+import { Logger, UseFilters, UseGuards } from '@nestjs/common'
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
 import { JwtCookiesWebsocketAuthGuard } from '../../../lib/auth/guards/jwt-cookies-websocket-auth.guard'
+import { AllExceptionsWebsocketFilter } from '../../../lib/nest-utils'
 import { AuthService } from '../../users/auth/auth.service'
 import { FlowRunWatcherService } from './flow-runs-watcher.service'
 import { FlowRunsService } from './flow-runs.service'
@@ -41,6 +42,7 @@ export class FlowRunsWebSocketService implements OnGatewayConnection, OnGatewayD
 	}
 
 	@UseGuards(JwtCookiesWebsocketAuthGuard)
+	@UseFilters(new AllExceptionsWebsocketFilter())
 	@SubscribeMessage(WEBSOCKET_EVENT.TEST_FLOW)
 	async handleTestFlowEvent(@ConnectedSocket() client: Socket, @MessageBody() data: FlowRunWSInput) {
 		const flowRun = await this.flowRunsService.test({
@@ -49,7 +51,7 @@ export class FlowRunsWebSocketService implements OnGatewayConnection, OnGatewayD
 		})
 		client.emit(WEBSOCKET_EVENT.TEST_FLOW_STARTED, flowRun)
 
-		await this.flowResponseService.listen(flowRun._id, false)
+		await this.flowResponseService.listen(flowRun._id.toString(), false)
 		client.emit(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, flowRun)
 	}
 }

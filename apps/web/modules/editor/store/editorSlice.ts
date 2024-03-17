@@ -24,15 +24,27 @@ export const editorDrawers: EditorDrawer[] = [
 export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({
 	isLoading: false,
 	setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
-	showDrawer: false,
-	setShowDrawer: (value: SetStateAction<boolean>) => {
-		if (typeof value === 'function') set((state) => ({ showDrawer: value(state.showDrawer) }))
-		else set((state) => ({ showDrawer: value }))
+	// TODO refactor to use useContext and store drwer state in defined for this Components with Provider
+	showRightDrawer: false,
+	setShowRightDrawer: (value: SetStateAction<boolean>) => {
+		if (typeof value === 'function') set((state) => ({ showRightDrawer: value(state.showRightDrawer) }))
+		else set((state) => ({ showRightDrawer: value }))
 	},
-	drawer: editorDrawers[0],
-	setDrawer: (name: EditorDrawer['name']) => {
-		const newDrawer = editorDrawers.find((drawer) => drawer.name === name)
-		if (newDrawer?.name === get().drawer.name) return
-		set(() => ({ drawer: newDrawer }))
+	rightDrawer: editorDrawers[0],
+	setRightDrawer: (name: EditorDrawer['name']) => {
+		const newDrawer = editorDrawers.find((rightDrawer) => rightDrawer.name === name)
+		if (newDrawer?.name === get().rightDrawer.name) return
+		set(() => ({ rightDrawer: newDrawer }))
+	},
+	showLeftDrawer: false,
+	setShowLeftDrawer: (value: SetStateAction<boolean>) => {
+		if (typeof value === 'function') set((state) => ({ showLeftDrawer: value(state.showLeftDrawer) }))
+		else set((state) => ({ showLeftDrawer: value }))
+	},
+	leftDrawer: editorDrawers[0],
+	setLeftDrawer: (name: EditorDrawer['name']) => {
+		const newDrawer = editorDrawers.find((rightDrawer) => rightDrawer.name === name)
+		if (newDrawer?.name === get().rightDrawer.name) return
+		set(() => ({ rightDrawer: newDrawer }))
 	},
 })

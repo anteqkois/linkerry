@@ -1,7 +1,8 @@
+import { useToast } from '@linkerry/ui-components/client'
 import { Card, H5 } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
-import { HTMLAttributes, useMemo } from 'react'
+import { HTMLAttributes, useCallback, useMemo } from 'react'
 import { nodeConfigs } from '../common/nodeFactory'
 import { useEditor } from '../useEditor'
 
@@ -18,12 +19,34 @@ interface TestFlowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'color'>, V
 
 export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
 	const { flow, testingFlowVersion, testFlowVersion } = useEditor()
+	const { toast } = useToast()
 	const flowValidity = useMemo(() => {
 		if (!flow.version.valid) return { invalid: true, message: 'Complete Flow' }
 		if (testingFlowVersion) return { invalid: true, message: 'Testing...' }
 
 		return { invalid: false }
 	}, [flow.version.valid, testingFlowVersion])
+
+	const handleTestFlowVersion = useCallback(async () => {
+		try {
+			await testFlowVersion()
+		} catch (error: any) {
+			if (typeof error === 'string')
+				toast({
+					title: 'Test Flow Error',
+					description: error,
+					variant: 'destructive',
+				})
+				else{
+					console.log(error);
+					toast({
+						title: 'Test Flow Error',
+						description: 'Unknwon error occurred',
+						variant: 'destructive',
+					})
+				}
+		}
+	}, [])
 
 	return (
 		<Card
@@ -34,7 +57,7 @@ export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
 			}}
 			onClick={onClick}
 		>
-			<H5 onClick={testFlowVersion}>{flowValidity.invalid ? flowValidity.message : 'Test Flow'}</H5>
+			<H5 onClick={handleTestFlowVersion}>{flowValidity.invalid ? flowValidity.message : 'Test Flow'}</H5>
 		</Card>
 	)
 }

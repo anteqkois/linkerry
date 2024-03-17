@@ -24,19 +24,19 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	// ACTIONS
 	editedAction: null,
 	setEditedAction: (action: Action) => {
-		const { setDrawer } = get()
+		const { setRightDrawer } = get()
 
-		setDrawer('action_connector')
+		setRightDrawer('action_connector')
 		set({
 			editedAction: action,
-			showDrawer: true,
+			showRightDrawer: true,
 		})
 	},
 	onClickSelectAction(nodeIdName: string) {
-		get().setDrawer('select_action')
+		get().setRightDrawer('select_action')
 		const actionName = `action_${get().flow.version.stepsCount + 1}`
 		set({
-			showDrawer: true,
+			showRightDrawer: true,
 			editStepMetadata: {
 				parentNodeName: nodeIdName,
 				actionName,
@@ -44,7 +44,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
-		const { getNodeById, editStepMetadata, setDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge } = get()
+		const { getNodeById, editStepMetadata, setRightDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge } = get()
 
 		assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
 		const action: ActionConnector = {
@@ -90,7 +90,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			},
 		})
 
-		setDrawer('action_connector')
+		setRightDrawer('action_connector')
 		addNode(newActionNode)
 		addEdge(
 			defaultEdgeFactory({
@@ -142,7 +142,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	deleteAction: async (actionName: string) => {
-		const { flow, setFlow, deleteNode, setShowDrawer, patchNode, deleteEdge } = get()
+		const { flow, setFlow, deleteNode, setShowRightDrawer, patchNode, deleteEdge } = get()
 
 		const { data: newFlowVersion } = await FlowVersionApi.deleteAction(flow.version._id, actionName)
 		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
@@ -170,7 +170,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			deleteEdge(generateEdgeId(step.name, actionName))
 		}
 
-		setShowDrawer(false)
+		setShowRightDrawer(false)
 		deleteNode(actionName)
 		setFlow({
 			...flow,

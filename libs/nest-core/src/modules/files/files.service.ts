@@ -14,7 +14,7 @@ export class FilesService {
 		// TODO update to use https://www.mongodb.com/docs/manual/core/gridfs/#when-to-use-gridfs
 		const file = await this.fileModel.findOneAndUpdate(
 			{
-				_id: fileId ?? '',
+				_id: fileId,
 			},
 			{
 				projectId,

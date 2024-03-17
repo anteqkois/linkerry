@@ -1,11 +1,8 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
-import { FlowRunResponse, FlowRunStatus, PauseType } from '@linkerry/shared'
+import { FlowRunResponse, FlowRunStatus, PauseType, isNil } from '@linkerry/shared'
 import { HttpStatus, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { EventPattern } from '@nestjs/microservices'
 import { Redis } from 'ioredis'
 import { generateId } from '../../../lib/mongodb'
-import { REDIS_CLIENT_NAMESPACE } from '../../configs/redis'
 
 const listeners = new Map<string, (flowResponse: FlowResponse) => void>()
 
@@ -26,41 +23,63 @@ const HANDLER_ID = generateId().toString()
 export class FlowRunWatcherService implements OnApplicationBootstrap {
 	private readonly logger = new Logger(FlowRunWatcherService.name)
 	private readonly WEBHOOK_TIMEOUT_MS
+	private publisher: Redis
 	private subscriber: Redis
 
 	constructor(
-		@InjectRedis(REDIS_CLIENT_NAMESPACE.PUBLISHER) private readonly redisPublisher: Redis,
-		@InjectRedis(REDIS_CLIENT_NAMESPACE.SUBSCRIBER) private readonly redisSubscriber: Redis,
+		// @InjectRedis(REDIS_CLIENT_NAMESPACE.PUBLISHER) private readonly redisPublisher: Redis,
+		// @InjectRedis(REDIS_CLIENT_NAMESPACE.SUBSCRIBER) private readonly redisSubscriber: Redis,
 		private readonly configService: ConfigService,
 	) {
 		this.WEBHOOK_TIMEOUT_MS = (+configService.get('WEBHOOK_TIMEOUT_SECONDS') ?? 30) * 1000
+		this.publisher = new Redis({
+			host: configService.getOrThrow('REDIS_HOST'),
+			port: +configService.get('REDIS_PORT'),
+			password: configService.get('REDIS_PASSWORD'),
+		})
+		this.subscriber = new Redis({
+			host: configService.getOrThrow('REDIS_HOST'),
+			port: +configService.get('REDIS_PORT'),
+			password: configService.get('REDIS_PASSWORD'),
+		})
 	}
 
 	async onApplicationBootstrap() {
-		await this.redisSubscriber.subscribe(`flow-run:sync:${HANDLER_ID}`, (_channel, message: any) => {
+		// await this.redisSubscriber.subscribe(`flow-run:sync:${HANDLER_ID}`, (_channel, message: any) => {
+		// 	const parsedMessasge: FlowResponseWithId = JSON.parse(message)
+		// 	const listener = listeners.get(parsedMessasge.flowRunId)
+		// 	if (listener) {
+		// 		listener(parsedMessasge.flowResponse)
+		// 		listeners.delete(parsedMessasge.flowRunId)
+		// 	}
+		// 	this.logger.debug(`#init message=${parsedMessasge.flowRunId}`)
+		// })
+		// await this.redisSubscriber.subscribe(`test`)
+		// this.redisSubscriber.subscribe(`message`, (message: any) => {
+		// 	const parsedMessasge: FlowResponseWithId = JSON.parse(message)
+		// 	const listener = listeners.get(parsedMessasge.flowRunId)
+		// 	if (listener) {
+		// 		listener(parsedMessasge.flowResponse)
+		// 		listeners.delete(parsedMessasge.flowRunId)
+		// 	}
+		// 	this.logger.debug(`#init message=${parsedMessasge.flowRunId}`)
+		// })
+
+		await this.subscriber.subscribe(`flow-run:sync:${HANDLER_ID}`)
+		this.subscriber.on(`message`, (_channel: string, message: any) => {
+			if (isNil(message)) return
 			const parsedMessasge: FlowResponseWithId = JSON.parse(message)
 			const listener = listeners.get(parsedMessasge.flowRunId)
 			if (listener) {
 				listener(parsedMessasge.flowResponse)
 				listeners.delete(parsedMessasge.flowRunId)
 			}
-			this.logger.debug(`#init message=${parsedMessasge.flowRunId}`)
+			this.logger.debug(`#flow-run:sync message=${parsedMessasge.flowRunId}`)
 		})
 	}
 
 	getHandlerId(): string {
 		return HANDLER_ID
-	}
-
-	@EventPattern(`flow-run:sync:${HANDLER_ID}`)
-	handleEvent(message: string) {
-		const parsedMessasge: FlowResponseWithId = JSON.parse(message)
-		const listener = listeners.get(parsedMessasge.flowRunId)
-		if (listener) {
-			listener(parsedMessasge.flowResponse)
-			listeners.delete(parsedMessasge.flowRunId)
-		}
-		this.logger.debug(`#handleEvent message=${parsedMessasge.flowRunId}`)
 	}
 
 	async listen(flowRunId: string, timeoutRequest: boolean): Promise<FlowResponse> {
@@ -91,7 +110,8 @@ export class FlowRunWatcherService implements OnApplicationBootstrap {
 		this.logger.debug(`#publish flowRunId=${flowRunId}`)
 		const flowResponse = await this.getFlowResponse(result)
 		const message: FlowResponseWithId = { flowRunId, flowResponse }
-		await this.redisPublisher.publish(`flow-run:sync:${handlerId}`, JSON.stringify(message))
+		await this.publisher.publish(`flow-run:sync:${handlerId}`, JSON.stringify(message))
+		// await this.redisPublisher.publish(`flow-run:sync:${handlerId}`, JSON.stringify(message))
 	}
 
 	async getFlowResponse(result: FlowRunResponse): Promise<FlowResponse> {

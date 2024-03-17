@@ -12,6 +12,14 @@ export interface CustomHttpExceptionResponse extends HttpExceptionResponse {
 	timestamp: Date
 }
 
+export interface CustomWebSocketExceptionResponse  {
+	error: string
+	event: string
+	code: string
+	message: string
+	timestamp: Date
+}
+
 const neccesaryKeys: Array<keyof CustomHttpExceptionResponse> = ['path', 'method', 'code', 'message', 'timestamp', 'error', 'statusCode']
 
 export const isCustomHttpException = (object: unknown): object is CustomHttpExceptionResponse => {

@@ -4,6 +4,7 @@ import {
 	ConnectorsGetOptionsResponse,
 	DeepPartial,
 	FlowPopulated,
+	FlowRun,
 	FlowStatus,
 	Id,
 	RunActionResponse,
@@ -41,12 +42,16 @@ export interface ReactFlowSlice {
 }
 
 export interface EditorSlice {
-	drawer: EditorDrawer
-	setDrawer: (name: EditorDrawer['name']) => void
-	showDrawer: boolean
-	setShowDrawer: Dispatch<SetStateAction<boolean>>
 	isLoading: boolean
 	setIsLoading: (value: boolean) => void
+	rightDrawer: EditorDrawer
+	setRightDrawer: (name: EditorDrawer['name']) => void
+	showRightDrawer: boolean
+	setShowRightDrawer: Dispatch<SetStateAction<boolean>>
+	leftDrawer: EditorDrawer
+	setLeftDrawer: (name: EditorDrawer['name']) => void
+	showLeftDrawer: boolean
+	setShowLeftDrawer: Dispatch<SetStateAction<boolean>>
 }
 
 export interface FlowAndConnectorsSlice {
@@ -59,7 +64,8 @@ export interface FlowAndConnectorsSlice {
 	publishFlow: () => Promise<void>
 	setFlowStatus: (status: FlowStatus) => Promise<void>
 	testingFlowVersion: boolean
-	testFlowVersion: () => Promise<void>
+	flowRun: FlowRun | null;
+	testFlowVersion: () => Promise<string | void>
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
 	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void

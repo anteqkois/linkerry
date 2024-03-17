@@ -7,6 +7,7 @@ import {
 	FlowRetryStrategy,
 	FlowRun,
 	FlowRunStatus,
+	FlowRunsGetManyQuery,
 	Id,
 	PauseType,
 	RunEnvironment,
@@ -174,7 +175,13 @@ export class FlowRunsService {
 		}
 	}
 
-	async getFlowRunOrCreate(params: GetOrCreateParams): Promise<FlowRun> {
+	async findMany(filter: FlowRunsGetManyQuery) {
+		return this.flowRunModel.find({
+			flowId: filter.flowId,
+		})
+	}
+
+	async getFlowRunOrCreate(params: GetOrCreateParams): Promise<FlowRunDocument> {
 		const { id, projectId, flowId, flowVersionId, flowDisplayName, environment } = params
 
 		if (id) {
@@ -183,20 +190,20 @@ export class FlowRunsService {
 				projectId,
 			})
 			assertNotNullOrUndefined(flowRun, 'flowRun')
-			return flowRun.toObject()
+			return flowRun.toJSON()
 		}
 
-		return (
-			await this.flowRunModel.create({
-				projectId,
-				flowId,
-				flowVersionId,
-				status: FlowRunStatus.RUNNING,
-				environment,
-				flowDisplayName,
-				startTime: new Date().toISOString(),
-			})
-		).toObject()
+		const flowRun = await this.flowRunModel.create({
+			projectId,
+			flowId,
+			flowVersionId,
+			status: FlowRunStatus.RUNNING,
+			environment,
+			flowDisplayName,
+			startTime: new Date().toISOString(),
+		})
+
+		return flowRun.toObject()
 	}
 
 	async retry({ flowRunId, strategy }: RetryParams): Promise<void> {
@@ -236,7 +243,7 @@ export class FlowRunsService {
 		executionType,
 		synchronousHandlerId,
 		hookType,
-	}: StartParams): Promise<FlowRun> {
+	}: StartParams): Promise<FlowRunDocument> {
 		this.logger.debug(`#start`, {
 			flowRunId,
 			executionType,
@@ -284,7 +291,7 @@ export class FlowRunsService {
 		tags: string[]
 		logsFileId: Id | null
 	}): Promise<FlowRun> {
-		this.flowRunModel.updateOne(
+		await this.flowRunModel.updateOne(
 			{
 				_id: flowRunId,
 			},
@@ -298,15 +305,15 @@ export class FlowRunsService {
 			},
 		)
 
-		const flowRun: FlowRun | undefined = (await this.flowRunModel.findOne({ _id: flowRunId, projectId: undefined }))?.toObject()
+		const flowRun: FlowRun | undefined = (await this.flowRunModel.findOne({ _id: flowRunId }))?.toObject()
 		assertNotNullOrUndefined(flowRun, 'flowRun')
 
 		await this._finishSideEffect({ flowRun })
 		return flowRun
 	}
 
-	async test({ projectId, flowVersionId }: TestParams): Promise<FlowRun> {
-		const flowVersion = await this.flowVersionModel.findOne({ filter: { _id: flowVersionId } })
+	async test({ projectId, flowVersionId }: TestParams): Promise<FlowRunDocument> {
+		const flowVersion = await this.flowVersionModel.findOne({ _id: flowVersionId })
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
 		const payload = flowVersion.triggers[0].settings.inputUiInfo.currentSelectedData
@@ -323,7 +330,7 @@ export class FlowRunsService {
 	}
 
 	async pause(params: PauseParams): Promise<void> {
-		this.logger.debug(`#paus`, { id: params.flowRunId, pauseType: params.pauseMetadata.type })
+		this.logger.debug(`#pause`, { id: params.flowRunId, pauseType: params.pauseMetadata.type })
 
 		const { flowRunId, logFileId, pauseMetadata } = params
 

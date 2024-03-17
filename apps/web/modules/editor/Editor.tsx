@@ -10,16 +10,20 @@ import { SelectActionPanel } from './action/SelectActionPanel'
 import { TriggerNodeElement } from './common'
 import { EditorFlowMenu } from './components'
 import { TestFlowNodeElement } from './components/TestFlowNode'
+import { FlowRunPanel } from './flow-runs/FlowRunPanel'
 import { SelectTriggerNodeElement } from './trigger/SelectTriggerNode'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
 import { useEditor } from './useEditor'
+import { FlowRunsListPanel } from './flow-runs/FlowRunsListPanel'
 
 export const editorDrawers = {
 	select_trigger: SelectTriggerPanel,
 	trigger_connector: TriggerConnectorPanel,
 	select_action: SelectActionPanel,
 	action_connector: ActionConnectorPanel,
+	flow_run: FlowRunPanel,
+	flow_runs_list: FlowRunsListPanel,
 }
 
 const nodeTypes = {
@@ -39,14 +43,15 @@ interface EditorProps {
 }
 
 export const Editor = ({ mode }: EditorProps) => {
-	const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showDrawer, setShowDrawer, drawer, loaded } = useEditor()
+	const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showRightDrawer, setShowRightDrawer, rightDrawer, leftDrawer, loaded } = useEditor()
 	const reactFlowWrapper = useRef(null)
 
 	useEffect(() => {
 		console.log(`Editor mode: ${mode}`)
 	}, [])
 
-	const EditorDrawer = editorDrawers[drawer.name]
+	const EditorRightDrawer = editorDrawers[rightDrawer.name]
+	const EditorLeftrawer = editorDrawers[leftDrawer.name]
 
 	return (
 		<ReactFlowProvider>
@@ -69,8 +74,11 @@ export const Editor = ({ mode }: EditorProps) => {
 					<Background variant={BackgroundVariant.Dots} gap={15} size={0.6} className="bg-background-page" />
 				</ReactFlow>
 			</div>
-			<Drawer show={showDrawer} setShow={setShowDrawer} position='left'>
-				<EditorDrawer />
+			<Drawer show={showRightDrawer} setShow={setShowRightDrawer} position="right">
+				<EditorRightDrawer />
+			</Drawer>
+			<Drawer show={showRightDrawer} setShow={setShowRightDrawer} position="left">
+				<EditorLeftrawer />
 			</Drawer>
 		</ReactFlowProvider>
 	)

@@ -209,7 +209,14 @@ export class FlowWorkerService {
 	}
 
 	private async _finishExecution(params: FinishExecutionParams): Promise<void> {
-		this.logger.log(`#finishExecution params:`, params)
+		this.logger.log(`#finishExecution params:`, {
+			logFileId: params.logFileId,
+			flowRunId: params.flowRunId,
+			duration: params.result.duration,
+			tasks: params.result.tasks,
+			tags: params.result.tags,
+			status: params.result.status,
+		})
 
 		const { flowRunId, logFileId, result } = params
 
