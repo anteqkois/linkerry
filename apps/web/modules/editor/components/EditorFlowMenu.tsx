@@ -10,13 +10,14 @@ import {
 	TooltipTrigger,
 	useToast,
 } from '@linkerry/ui-components/client'
+import { Button } from '@linkerry/ui-components/server'
 import { HTMLAttributes, useCallback, useMemo } from 'react'
 import { useEditor } from '../useEditor'
 
 export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
 
 export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
-	const { flow, publishFlow, saving, setFlowStatus } = useEditor()
+	const { flow, publishFlow, saving, setFlowStatus, onClickFlowRuns} = useEditor()
 	const { toast } = useToast()
 	const flowValidity = useMemo(() => {
 		if (flow.version.stepsCount < 2) return { invalid: true, message: 'Add one more step. Two steps are required for flow.' }
@@ -83,6 +84,11 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 	return (
 		<nav className="hidden sm:block fixed top-1 left-1/2 -translate-x-1/2 z-40">
 			<Menubar>
+				<MenubarMenu>
+					<Button className="h-7 rounded-sm" onClick={onClickFlowRuns} variant={'ghost'}>
+						Runs
+					</Button>
+				</MenubarMenu>
 				<MenubarMenu>
 					<TooltipProvider delayDuration={100}>
 						<Tooltip>

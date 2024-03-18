@@ -70,7 +70,7 @@ export class AllExceptionsFilter extends CustomBaseExceptionsFilter implements E
 		const { method, url } = request
 		const errorLog = `[${method}] ${url} - ${statusCode}
     ${humanMessage}
-    User: ${JSON.stringify(request.user ?? 'unknown')}
+    User: ${JSON.stringify(request.user.id ?? 'unknown')}
 		${exception?.stack}`
 		return errorLog
 	}

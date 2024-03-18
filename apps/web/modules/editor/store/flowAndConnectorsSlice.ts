@@ -125,30 +125,49 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
 
 				closeWebSocketConnection()
-				console.log(error.message);
+				console.log(error.message)
 				return reject(error.message)
 			})
 
 			socket.on(WEBSOCKET_EVENT.TEST_FLOW_STARTED, (flowRun: FlowRun) => {
-				console.log('WEBSOCKET_EVENT.TEST_FLOW_STARTED', flowRun);
 				set({
 					flowRun,
 				})
 			})
 
 			socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, (flowRun: FlowRun) => {
-				console.log('WEBSOCKET_EVENT.TEST_FLOW_FINISHED', flowRun);
 				set({
 					testingFlowVersion: false,
 					flowRun,
+					selectedFlowRunId: flowRun._id,
 				})
 
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
 
 				closeWebSocketConnection()
-				return resolve()
+				return resolve(flowRun)
 			})
+		})
+	},
+	onClickFlowRuns: () => {
+		const { setLeftDrawer } = get()
+
+		setLeftDrawer('flow_runs_list')
+
+		set({
+			showLeftDrawer: true,
+		})
+	},
+	selectedFlowRunId: null,
+	onSelectFlowRun: (flowRunId: string) => {
+		const { setLeftDrawer } = get()
+
+		setLeftDrawer('flow_run')
+
+		set({
+			showLeftDrawer: true,
+			selectedFlowRunId: flowRunId,
 		})
 	},
 	// CONNECTORS

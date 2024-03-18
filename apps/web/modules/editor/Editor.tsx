@@ -10,14 +10,15 @@ import { SelectActionPanel } from './action/SelectActionPanel'
 import { TriggerNodeElement } from './common'
 import { EditorFlowMenu } from './components'
 import { TestFlowNodeElement } from './components/TestFlowNode'
-import { FlowRunPanel } from './flow-runs/FlowRunPanel'
+import { FlowRunsListPanel } from './flow-runs/FlowRunsListPanel'
 import { SelectTriggerNodeElement } from './trigger/SelectTriggerNode'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
+import { EditorDrawer } from './types'
 import { useEditor } from './useEditor'
-import { FlowRunsListPanel } from './flow-runs/FlowRunsListPanel'
+import { FlowRunPanel } from './flow-runs/FlowRunPanel'
 
-export const editorDrawers = {
+export const editorDrawers: Record<EditorDrawer['name'], () => JSX.Element> = {
 	select_trigger: SelectTriggerPanel,
 	trigger_connector: TriggerConnectorPanel,
 	select_action: SelectActionPanel,
@@ -43,7 +44,20 @@ interface EditorProps {
 }
 
 export const Editor = ({ mode }: EditorProps) => {
-	const { nodes, onNodesChange, edges, onEdgesChange, onConnect, showRightDrawer, setShowRightDrawer, rightDrawer, leftDrawer, loaded } = useEditor()
+	const {
+		nodes,
+		onNodesChange,
+		edges,
+		onEdgesChange,
+		onConnect,
+		showRightDrawer,
+		setShowRightDrawer,
+		rightDrawer,
+		leftDrawer,
+		loaded,
+		showLeftDrawer,
+		setShowLeftDrawer,
+	} = useEditor()
 	const reactFlowWrapper = useRef(null)
 
 	useEffect(() => {
@@ -77,7 +91,7 @@ export const Editor = ({ mode }: EditorProps) => {
 			<Drawer show={showRightDrawer} setShow={setShowRightDrawer} position="right">
 				<EditorRightDrawer />
 			</Drawer>
-			<Drawer show={showRightDrawer} setShow={setShowRightDrawer} position="left">
+			<Drawer show={showLeftDrawer} setShow={setShowLeftDrawer} position="left" title={leftDrawer.title}>
 				<EditorLeftrawer />
 			</Drawer>
 		</ReactFlowProvider>

@@ -12,26 +12,40 @@ export class FilesService {
 
 	async save({ fileId, projectId, data, type, compression }: SaveParams): Promise<File> {
 		// TODO update to use https://www.mongodb.com/docs/manual/core/gridfs/#when-to-use-gridfs
-		const file = await this.fileModel.findOneAndUpdate(
-			{
-				_id: fileId,
-			},
-			{
+		if (fileId) {
+			const file = await this.fileModel.findByIdAndUpdate(
+				fileId,
+				{
+					projectId,
+					// platformId,
+					data,
+					type,
+					compression,
+				},
+				{
+					upsert: true,
+					new: true,
+				},
+			)
+
+			this.logger.verbose(`#save fileId=${file._id} data.length=${data.length}`)
+
+			return file.toObject()
+		} else {
+			const newFileId = await this.fileModel.create({
 				projectId,
 				// platformId,
 				data,
 				type,
 				compression,
-			},
-			{
-				upsert: true,
-				new: true,
-			},
-		)
+			})
 
-		this.logger.verbose(`#save fileId=${file._id} data.length=${data.length}`)
+			const file = await this.fileModel.findById(newFileId)
+			assertNotNullOrUndefined(file, 'file')
 
-		return file.toObject()
+			this.logger.verbose(`#save fileId=${file._id} data.length=${data.length}`)
+			return file.toObject()
+		}
 	}
 
 	async findOne({ fileId, projectId }: GetOneParams) {

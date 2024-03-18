@@ -29,7 +29,13 @@ export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
 
 	const handleTestFlowVersion = useCallback(async () => {
 		try {
-			await testFlowVersion()
+			const flowRun = await testFlowVersion()
+			toast({
+				title: 'Test Flow Success',
+				description: `Your test flow for ${flowRun.flowDisplayName} ran successfully`,
+				variant: 'success',
+			})
+
 		} catch (error: any) {
 			if (typeof error === 'string')
 				toast({

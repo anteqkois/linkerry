@@ -64,8 +64,11 @@ export interface FlowAndConnectorsSlice {
 	publishFlow: () => Promise<void>
 	setFlowStatus: (status: FlowStatus) => Promise<void>
 	testingFlowVersion: boolean
-	flowRun: FlowRun | null;
-	testFlowVersion: () => Promise<string | void>
+	flowRun: FlowRun | null
+	testFlowVersion: () => Promise<FlowRun>
+	onClickFlowRuns: () => void
+	selectedFlowRunId: Id | null
+	onSelectFlowRun: (flowRunId: string) => void
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
 	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void

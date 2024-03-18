@@ -1,5 +1,3 @@
-import { FlowRun } from '@linkerry/shared'
-import { Row } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
 import { useClientQuery } from '../../../libs/react-query'
 import { DataTable } from '../../../shared/components/Table/Table'
@@ -10,20 +8,22 @@ import { useEditor } from '../useEditor'
 export interface FlowRunsListProps extends HTMLAttributes<HTMLElement> {}
 
 export const FlowRunsListPanel = () => {
-	const { flow } = useEditor()
+	const { flow, onSelectFlowRun } = useEditor()
 	const { data } = useClientQuery(flowRunQueryConfig.getMany({ flowId: flow._id }))
 
-	const handleSelectFlowRun = async (row: Row<FlowRun>) => {
-		// await handleSelectTriggerConnector(row.original)
-	}
+	// const handleSelectFlowRun = async (row: Row<FlowRun>) => {
+	// 	// onSelectFlowRun()
+	// 	// await handleSelectTriggerConnector(row.original)
+	// }
 
 	return (
 		<div>
 			<DataTable
 				getRowId={(row) => row._id}
-				onClickRow={handleSelectFlowRun}
+				// onClickRow={handleSelectFlowRun}
 				data={data}
 				columns={columns}
+				meta={{ onSelectFlowRun }}
 				// filterAccessor=""
 				// chooseFilters={[
 				// 	{

@@ -19,8 +19,10 @@ import {
 	GearIcon,
 	HamburgerMenuIcon,
 	HomeIcon,
+	LapTimerIcon,
 	LightningBoltIcon,
 	MagicWandIcon,
+	PauseIcon,
 	Pencil2Icon,
 	PlayIcon,
 	PlusIcon,
@@ -30,7 +32,8 @@ import {
 	Share2Icon,
 	StarFilledIcon,
 	TrashIcon,
-	UpdateIcon
+	UpdateIcon,
+	ZoomInIcon
 } from '@radix-ui/react-icons'
 import { VariantProps, cva } from 'class-variance-authority'
 import { cn } from '../../utils'
@@ -63,6 +66,9 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	ZoomIn: (props: RadixIconProps) => <ZoomInIcon {...defaultRadixProps(props)} />,
+	Pause: (props: RadixIconProps) => <PauseIcon {...defaultRadixProps(props)} />,
+	Timeout: (props: RadixIconProps) => <LapTimerIcon {...defaultRadixProps(props)} />,
 	Power: (props: RadixIconProps) => <LightningBoltIcon {...defaultRadixProps(props)} />,
 	Version: (props: RadixIconProps) => <CounterClockwiseClockIcon {...defaultRadixProps(props)} />,
 	Publish: (props: RadixIconProps) => <Share2Icon {...defaultRadixProps(props)} />,

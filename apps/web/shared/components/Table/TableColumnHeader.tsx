@@ -19,6 +19,6 @@ export const TableColumnHeader = <TColumn,>({
       <Icons.Sort className="ml-2 h-4 w-4" />
     </Button>
   ) : (
-    <div className="text-right">{title}</div>
+    <div className="text-left">{title}</div>
   )
 }

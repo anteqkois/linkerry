@@ -16,7 +16,7 @@ export class FileModel<T> extends TimestampDatabaseModel implements Omit<File, '
 	@Prop({ required: true, type: String, enum: FileType })
 	type: FileType
 
-	@Prop({ required: true, type: Object })
+	@Prop({ required: true, type: Buffer })
 	data: Buffer
 
 	@Prop({ required: true, type: String, enum: FileCompression })

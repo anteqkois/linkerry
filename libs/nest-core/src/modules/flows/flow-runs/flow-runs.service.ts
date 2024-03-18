@@ -170,7 +170,7 @@ export class FlowRunsService {
 			steps = FlowRunResponse.executionState.steps
 		}
 		return {
-			...flowRun,
+			...flowRun.toObject(),
 			steps,
 		}
 	}

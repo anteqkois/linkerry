@@ -89,7 +89,7 @@ export class FlowWorkerService {
 			case ExecutionType.RESUME: {
 				if (isNil(flowRun.logsFileId)) {
 					throw new CustomError(`Can not find logfile`, ErrorCode.VALIDATION, {
-						flowRunId: flowRun.id,
+						flowRunId: flowRun._id,
 					})
 				}
 
@@ -125,13 +125,13 @@ export class FlowWorkerService {
 	private async _saveToLogFile({
 		fileId,
 		projectId,
-		FlowRunResponse,
+		executionOutput,
 	}: {
 		fileId: Id | undefined
 		projectId: Id
-		FlowRunResponse: ExecutioOutputFile
+		executionOutput: ExecutioOutputFile
 	}): Promise<File> {
-		const serializedLogs = await logSerializer.serialize(FlowRunResponse)
+		const serializedLogs = await logSerializer.serialize(executionOutput)
 
 		if (serializedLogs.byteLength > MAX_LOG_SIZE) {
 			throw new CustomError(`Execution Output is too large, maximum size is ${MAX_LOG_SIZE}`, ErrorCode.INVALID_TYPE)
@@ -285,7 +285,7 @@ export class FlowWorkerService {
 			const logsFile = await this._saveToLogFile({
 				fileId: logFileId,
 				projectId: jobData.projectId,
-				FlowRunResponse: {
+				executionOutput: {
 					executionState: {
 						steps: result.steps,
 					},

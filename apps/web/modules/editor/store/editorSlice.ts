@@ -1,3 +1,4 @@
+import { assertNotNullOrUndefined } from '@linkerry/shared'
 import { SetStateAction } from 'react'
 import { EditorDrawer } from '../types'
 import { CreateSlice, EditorSlice } from './types'
@@ -19,6 +20,14 @@ export const editorDrawers: EditorDrawer[] = [
 		name: 'action_connector',
 		title: 'Action',
 	},
+	{
+		name: 'flow_runs_list',
+		title: 'Flow Runs',
+	},
+	{
+		name: 'flow_run',
+		title: 'Flow Run',
+	},
 ]
 
 export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({
@@ -33,6 +42,7 @@ export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({
 	rightDrawer: editorDrawers[0],
 	setRightDrawer: (name: EditorDrawer['name']) => {
 		const newDrawer = editorDrawers.find((rightDrawer) => rightDrawer.name === name)
+		assertNotNullOrUndefined(newDrawer, 'newDrawer')
 		if (newDrawer?.name === get().rightDrawer.name) return
 		set(() => ({ rightDrawer: newDrawer }))
 	},
@@ -43,8 +53,9 @@ export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({
 	},
 	leftDrawer: editorDrawers[0],
 	setLeftDrawer: (name: EditorDrawer['name']) => {
-		const newDrawer = editorDrawers.find((rightDrawer) => rightDrawer.name === name)
-		if (newDrawer?.name === get().rightDrawer.name) return
-		set(() => ({ rightDrawer: newDrawer }))
+		const newDrawer = editorDrawers.find((leftDrawer) => leftDrawer.name === name)
+		assertNotNullOrUndefined(newDrawer, 'newDrawer')
+		if (newDrawer?.name === get().leftDrawer.name) return
+		set(() => ({ leftDrawer: newDrawer }))
 	},
 })

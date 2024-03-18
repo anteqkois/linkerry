@@ -1,30 +1,38 @@
-import { Form, ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@linkerry/ui-components/client'
+import { assertNotNullOrUndefined } from '@linkerry/shared'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@linkerry/ui-components/client'
+import { P } from '@linkerry/ui-components/server'
 import { useState } from 'react'
+import { useClientQuery } from '../../../libs/react-query'
+import { ErrorInfo } from '../../../shared/components/ErrorInfo'
+import { Spinner } from '../../../shared/components/Spinner'
+import { flowRunQueryConfig } from '../../flows/flow-runs/query-config'
+import { useEditor } from '../useEditor'
 
 export const FlowRunPanel = () => {
-	// const {  } = useEditor()
+	const { selectedFlowRunId } = useEditor()
+	assertNotNullOrUndefined(selectedFlowRunId, 'selectedFlowRunId')
 	const [stepDataPanelHeight, setStepDataPanelHeight] = useState(30)
 
-	// const {
-	// 	data: connectorMetadata,
-	// 	isFetched,
-	// 	isLoading,
-	// 	error,
-	// } = useClientQuery(
-	// 	connectorsMetadataQueryConfig.getOne({
-	// 		connectorName: editedAction.settings.connectorName,
-	// 		connectorVersion: editedAction.settings.connectorVersion,
-	// 	}),
-	// )
+	const {
+		data: flowRun,
+		isFetched,
+		isLoading,
+		error,
+	} = useClientQuery(
+		flowRunQueryConfig.getOne({
+			flowRunId: selectedFlowRunId,
+		}),
+	)
 
-	// if (isLoading) return <Spinner />
-	// if (error) return <ErrorInfo errorObject={error} />
-	// if (!connectorMetadata) return <ErrorInfo message="Can not find connector details" />
+	if (isLoading) return <Spinner />
+	if (error) return <ErrorInfo errorObject={error} />
+	if (!flowRun) return <P>Can not find flow run details</P>
 
 	return (
 		<ResizablePanelGroup direction="vertical" className="max-h-screen">
 			<ResizablePanel defaultSize={60} className="px-1">
 				<div>panel</div>
+				{JSON.stringify(flowRun)}
 				{/* <div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
 					<div>

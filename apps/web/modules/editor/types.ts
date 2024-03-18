@@ -3,7 +3,7 @@ import { Action, Trigger } from '@linkerry/shared'
 import { NodeProps, Node as ReactFlowNode } from 'reactflow'
 
 export interface EditorDrawer {
-	name: 'select_trigger' | 'trigger_connector' | 'action_connector' | 'select_action'
+	name: 'select_trigger' | 'trigger_connector' | 'action_connector' | 'select_action' | 'flow_runs_list' | 'flow_run'
 	title: string
 }
 
