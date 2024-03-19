@@ -26,7 +26,7 @@ export const editorDrawers: EditorDrawer[] = [
 	},
 	{
 		name: 'flow_run',
-		title: 'Flow Run',
+		title: 'Flow Run Details',
 	},
 ]
 

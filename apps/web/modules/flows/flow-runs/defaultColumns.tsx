@@ -1,11 +1,9 @@
 'use client'
 
-import { FlowRun, FlowRunStatus } from '@linkerry/shared'
+import { FlowRun } from '@linkerry/shared'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
-import dayjs from 'dayjs'
-import { TableColumnHeader } from '../../../shared/components/Table/TableColumnHeader'
 
 export const columns: ColumnDef<FlowRun>[] = [
 	// TODO add delete flow run ?
@@ -22,6 +20,7 @@ export const columns: ColumnDef<FlowRun>[] = [
 	//   enableSorting: false,
 	//   enableHiding: false,
 	// },
+	// TODO fix errors in console
 	{
 		id: 'status',
 		accessorKey: 'status',
@@ -34,7 +33,7 @@ export const columns: ColumnDef<FlowRun>[] = [
 						<Icons.Check className="text-positive" />
 					</div>
 				)
-			if (status === FlowRunStatus.INTERNAL_ERROR || status === FlowRunStatus.FAILED)
+			else if (status === FlowRunStatus.INTERNAL_ERROR || status === FlowRunStatus.FAILED)
 				return (
 					<div className="font-medium flex-center">
 						<TooltipProvider delayDuration={100}>
@@ -49,7 +48,7 @@ export const columns: ColumnDef<FlowRun>[] = [
 						</TooltipProvider>
 					</div>
 				)
-			if (status === FlowRunStatus.QUOTA_EXCEEDED)
+			else if (status === FlowRunStatus.QUOTA_EXCEEDED)
 				return (
 					<div className="font-medium flex-center">
 						<TooltipProvider delayDuration={100}>
@@ -64,7 +63,7 @@ export const columns: ColumnDef<FlowRun>[] = [
 						</TooltipProvider>
 					</div>
 				)
-			if (status === FlowRunStatus.PAUSED)
+			else if (status === FlowRunStatus.PAUSED)
 				return (
 					<div className="font-medium flex-center">
 						<TooltipProvider delayDuration={100}>
@@ -79,7 +78,7 @@ export const columns: ColumnDef<FlowRun>[] = [
 						</TooltipProvider>
 					</div>
 				)
-			if (status === FlowRunStatus.TIMEOUT)
+			else if (status === FlowRunStatus.TIMEOUT)
 				return (
 					<div className="font-medium flex-center">
 						<TooltipProvider delayDuration={100}>
@@ -117,7 +116,7 @@ export const columns: ColumnDef<FlowRun>[] = [
 		cell: ({ row, table }) => {
 			return (
 				// TODO fix metdata type
-				<Button variant="ghost" className="h-8 w-8 p-0" onClick={() => (table.options?.meta as any).onSelectFlowRun(row.original._id)}>
+				<Button   variant="ghost" className="h-8 w-8 p-0" onClick={() => (table.options?.meta as any).onSelectFlowRun(row.original._id)}>
 					<TooltipProvider delayDuration={100}>
 						<Tooltip>
 							<TooltipTrigger>

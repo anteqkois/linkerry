@@ -2,6 +2,7 @@
 // only React client components or other non-server utilities
 
 export * from './components/ui/alert-dialog'
+export * from './components/ui/avatar'
 export * from './components/ui/button-client'
 export * from './components/ui/checkbox'
 export * from './components/ui/command'

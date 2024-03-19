@@ -1,6 +1,6 @@
-import { FetchQueryOptions, QueryClient, useQuery } from '@tanstack/react-query'
+import { QueryClient, UseQueryOptions, useQuery } from '@tanstack/react-query'
 
-export const useClientQuery = <T>(config: FetchQueryOptions<T>) => useQuery({ ...config, retry: 2 })
+export const useClientQuery = <T>(config: UseQueryOptions<T>) => useQuery({ ...config, retry: 2 })
 
 let clientQueryClient: QueryClient
 export const getBrowserQueryCllient = () => {
@@ -18,7 +18,7 @@ export const getBrowserQueryCllient = () => {
 	return clientQueryClient
 }
 
-export const useServerQuery = async (config: FetchQueryOptions<any>) => {
+export const useServerQuery = async (config: UseQueryOptions<any>) => {
 	const queryClient = new QueryClient()
 	await queryClient.prefetchQuery(config)
 

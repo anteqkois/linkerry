@@ -16,7 +16,7 @@ export class ConnectorsApi {
 		return apiClient.get<ConnectorMetadataSummary>(`/connectors/${id}`, { params: { summary: true } })
 	}
 
-	static async get(query?: ConnectorsMetadataGetManyQuery) {
+	static async getMany(query?: ConnectorsMetadataGetManyQuery) {
 		return apiClient.get<ConnectorMetadata[]>(`/connectors`, {
 			params: { ...query, summary: false },
 			paramsSerializer: {

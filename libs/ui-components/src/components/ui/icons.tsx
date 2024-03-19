@@ -31,6 +31,7 @@ import {
 	ReaderIcon,
 	Share2Icon,
 	StarFilledIcon,
+	StopIcon,
 	TrashIcon,
 	UpdateIcon,
 	ZoomInIcon
@@ -66,6 +67,7 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	Stop: (props: RadixIconProps) => <StopIcon {...defaultRadixProps(props)} />,
 	ZoomIn: (props: RadixIconProps) => <ZoomInIcon {...defaultRadixProps(props)} />,
 	Pause: (props: RadixIconProps) => <PauseIcon {...defaultRadixProps(props)} />,
 	Timeout: (props: RadixIconProps) => <LapTimerIcon {...defaultRadixProps(props)} />,
