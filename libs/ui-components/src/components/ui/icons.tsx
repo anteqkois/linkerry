@@ -14,6 +14,7 @@ import {
 	Cross2Icon,
 	CubeIcon,
 	DotsHorizontalIcon,
+	EnterFullScreenIcon,
 	ExclamationTriangleIcon,
 	ExitIcon,
 	GearIcon,
@@ -44,7 +45,7 @@ const iconVariants = cva('', {
 		size: {
 			xs: 'h-3 w-3',
 			sm: 'h-4 w-4',
-			md: 'h-8 w-8',
+			md: 'h-7 w-7',
 			lg: 'h-14 w-14',
 		},
 	},
@@ -67,6 +68,7 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	FullScreen: (props: RadixIconProps) => <EnterFullScreenIcon {...defaultRadixProps(props)} />,
 	Stop: (props: RadixIconProps) => <StopIcon {...defaultRadixProps(props)} />,
 	ZoomIn: (props: RadixIconProps) => <ZoomInIcon {...defaultRadixProps(props)} />,
 	Pause: (props: RadixIconProps) => <PauseIcon {...defaultRadixProps(props)} />,

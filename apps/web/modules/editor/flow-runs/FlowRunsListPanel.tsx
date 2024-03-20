@@ -17,7 +17,7 @@ export const FlowRunsListPanel = () => {
 	// }
 
 	return (
-		<div>
+		<div className='p-1'>
 			<DataTable
 				getRowId={(row) => row._id}
 				// onClickRow={handleSelectFlowRun}

@@ -1,9 +1,11 @@
 'use client'
 
-import { FlowRun } from '@linkerry/shared'
+import { FlowRun, FlowRunStatus } from '@linkerry/shared'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
+import dayjs from 'dayjs'
+import { TableColumnHeader } from '../../../shared/components/Table/TableColumnHeader'
 
 export const columns: ColumnDef<FlowRun>[] = [
 	// TODO add delete flow run ?
@@ -116,18 +118,18 @@ export const columns: ColumnDef<FlowRun>[] = [
 		cell: ({ row, table }) => {
 			return (
 				// TODO fix metdata type
-				<Button   variant="ghost" className="h-8 w-8 p-0" onClick={() => (table.options?.meta as any).onSelectFlowRun(row.original._id)}>
-					<TooltipProvider delayDuration={100}>
-						<Tooltip>
-							<TooltipTrigger>
+				<TooltipProvider delayDuration={100}>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button variant="ghost" className="h-8 w-8 p-0" onClick={() => (table.options?.meta as any).onSelectFlowRun(row.original._id)}>
 								<Icons.ZoomIn />
-							</TooltipTrigger>
-							<TooltipContent side="bottom" align="start" asChild>
-								<p>Expand Flow run details</p>
-							</TooltipContent>
-						</Tooltip>
-					</TooltipProvider>
-				</Button>
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent side="bottom" align="start">
+							<p>Expand Flow run details</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			)
 			// return (
 			// 	<DropdownMenu>

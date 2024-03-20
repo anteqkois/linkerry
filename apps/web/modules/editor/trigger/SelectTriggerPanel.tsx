@@ -22,7 +22,7 @@ export const SelectTriggerPanel = () => {
 	}
 
 	return (
-		<div>
+		<div className='p-1'>
 			<DataTable
 				getRowId={(row) => row._id}
 				onClickRow={handleSelectTrigger}

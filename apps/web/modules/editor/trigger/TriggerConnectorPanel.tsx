@@ -149,7 +149,7 @@ export const TriggerConnectorPanel = () => {
 	}
 
 	return (
-		<ResizablePanelGroup direction="vertical" className="max-h-screen">
+		<ResizablePanelGroup direction="vertical" className="max-h-screen p-1">
 			<ResizablePanel defaultSize={60} className="px-1">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
