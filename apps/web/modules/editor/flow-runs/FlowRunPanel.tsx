@@ -239,7 +239,8 @@ export const FlowRunPanel = () => {
 	const { selectedFlowRunId } = useEditor()
 	const [selectedResult, setSelectedResult] = useState<StepOutput>()
 	assertNotNullOrUndefined(selectedFlowRunId, 'selectedFlowRunId')
-	const [stepDataPanelHeight, setStepDataPanelHeight] = useState(30)
+	const [resultInputPanelHeight, setResultInputPanelHeight] = useState(35)
+	const [resultOutputPanelHeight, setResultOutputPanelHeight] = useState(35)
 
 	const {
 		data: flowRun,
@@ -334,19 +335,24 @@ export const FlowRunPanel = () => {
 
 	return (
 		<ResizablePanelGroup direction="vertical" className="max-h-screen pt-2">
-			<ResizablePanel defaultSize={60}>
+			<ResizablePanel defaultSize={30}>
 				<div>
 					{steps.map((stepData, index) => (
 						<StepItem {...stepData} stepIndex={index} key={stepData.step.name} onSelectStep={onSelectStep} />
 					))}
 				</div>
 			</ResizablePanel>
-			<ResizableHandle withHandle />
 			{selectedResult && (
-				<ResizablePanel defaultSize={60} maxSize={80} onResize={(size) => setStepDataPanelHeight(size)} className="p-1">
-					<CodeEditor value={prepareCodeMirrorValue(selectedResult.input)} title="Input" />
-					<CodeEditor value={prepareCodeMirrorValue(selectedResult.output)} title="Output" />
-				</ResizablePanel>
+				<>
+					<ResizableHandle withHandle />
+					<ResizablePanel defaultSize={35} minSize={5} maxSize={80} onResize={(size) => setResultInputPanelHeight(size)} className="p-1">
+						<CodeEditor value={prepareCodeMirrorValue(selectedResult.input)} heightVh={resultInputPanelHeight} substractPx={40} title="Input" />
+					</ResizablePanel>
+					<ResizableHandle withHandle />
+					<ResizablePanel defaultSize={35} minSize={5} maxSize={80} onResize={(size) => setResultOutputPanelHeight(size)} className="p-1">
+						<CodeEditor value={prepareCodeMirrorValue(selectedResult.output)} heightVh={resultOutputPanelHeight} substractPx={100} title="Output" />
+					</ResizablePanel>
+				</>
 			)}
 		</ResizablePanelGroup>
 	)

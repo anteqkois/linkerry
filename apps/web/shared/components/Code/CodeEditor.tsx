@@ -20,14 +20,16 @@ import { useClipboard } from '../../hooks/useClicboard'
 export interface CodeEditorProps extends HTMLAttributes<HTMLElement> {
 	value: string
 	title: string
+	heightVh: number
+	substractPx?: number
 }
 
-export const CodeEditor = ({ value, title, style, className }: CodeEditorProps) => {
+export const CodeEditor = ({ value, title, heightVh, substractPx = 0, style, className }: CodeEditorProps) => {
 	const { copy } = useClipboard()
 
 	return (
 		<div className={cn('mt-2', className)}>
-			<div style={{ backgroundColor: '#1e1e1e' }} className="px-2 py-1 border-b border-accent flex justify-between items-center">
+			<div style={{ backgroundColor: '#1e1e1e' }} className="px-2 py-1 border-b-[1.5px] border-accent flex justify-between items-center">
 				<p>{title}</p>
 				<div className="flex-center gap-2">
 					<Dialog>
@@ -50,13 +52,29 @@ export const CodeEditor = ({ value, title, style, className }: CodeEditorProps) 
             Make changes to your profile here. Click save when you're done.
           </DialogDescription> */}
 							</DialogHeader>
-							<ReactCodeMirror readOnly={true} value={value} style={{ height: '85vh' }} theme={vscodeDark} extensions={[json()]} />
+							<ReactCodeMirror
+								readOnly={true}
+								value={value}
+								style={{ overflow: 'scroll', height: '100%' }}
+								theme={vscodeDark}
+								extensions={[json()]}
+							/>
 						</DialogContent>
 					</Dialog>
 					<Icons.Copy className="cursor-pointer" onClick={() => copy(value)} />
 				</div>
 			</div>
-			<ReactCodeMirror readOnly={true} value={value} style={style} theme={vscodeDark} extensions={[json()]} />
+			<ReactCodeMirror
+				readOnly={true}
+				value={value}
+				style={{
+					overflow: 'scroll',
+					height: `calc(${heightVh}vh - ${substractPx}px)`,
+					...style,
+				}}
+				theme={vscodeDark}
+				extensions={[json()]}
+			/>
 		</div>
 	)
 }
