@@ -120,14 +120,6 @@ export const TriggerConnectorPanel = () => {
 				input[key] = value.defaultValue
 			})
 
-		triggerForm.reset({
-			// TODO
-			// @ts-ignore
-			__temp__trigger: selectedTrigger,
-			triggerName,
-			...input,
-		})
-
 		await updateEditedTrigger({
 			name: editedTrigger.name,
 			valid: false,
@@ -143,6 +135,15 @@ export const TriggerConnectorPanel = () => {
 				inputUiInfo: {},
 			},
 			nextActionName: '',
+		})
+
+		// must be after updateEditedTrigger becouse form fields uses data form editor store and generate form based on it
+		triggerForm.reset({
+			// TODO
+			// @ts-ignore
+			__temp__trigger: selectedTrigger,
+			triggerName,
+			...input,
 		})
 
 		triggerForm.trigger()

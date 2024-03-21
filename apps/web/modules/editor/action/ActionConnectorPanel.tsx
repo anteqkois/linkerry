@@ -137,12 +137,6 @@ export const ActionConnectorPanel = () => {
 				input[key] = value.defaultValue
 			})
 
-		actionForm.reset({
-			__temp__action: selectedAction,
-			actionName,
-			...input,
-		})
-
 		await updateEditedAction({
 			name: editedAction.name,
 			valid: false,
@@ -162,6 +156,13 @@ export const ActionConnectorPanel = () => {
 				inputUiInfo: {},
 			},
 			nextActionName: '',
+		})
+
+		// must be after updateEditedAction becouse form fields uses data form editor store and generate form based on it
+		actionForm.reset({
+			__temp__action: selectedAction,
+			actionName,
+			...input,
 		})
 	}
 

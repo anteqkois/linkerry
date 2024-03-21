@@ -28,6 +28,10 @@ export const editorDrawers: EditorDrawer[] = [
 		name: 'flow_run',
 		title: 'Flow Run Details',
 	},
+	{
+		name: 'flow_testing',
+		title: 'Flow is Testing',
+	},
 ]
 
 export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({

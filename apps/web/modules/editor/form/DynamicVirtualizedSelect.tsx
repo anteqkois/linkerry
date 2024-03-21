@@ -27,7 +27,7 @@ export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLE
 export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
 	const { getConnectorOptions, editedConnectorMetadata, editedAction } = useEditor()
-	const { getValues, watch, setError, getFieldState, trigger } = useFormContext()
+	const { getValues, watch, setError, getFieldState } = useFormContext()
 	const [options, setOptions] = useState<DynamicDropdownState<any>>(initOptions)
 	const [initValue, setInitValue] = useState<DropdownOption<any>>({
 		label: '',
@@ -125,7 +125,6 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 			const selectedActionProps = Object.values(editedConnectorMetadata.actions).find(
 				(action) => action.name === editedAction.settings.actionName,
 			)?.props
-			console.log('selectedActionProps', { selectedActionProps, 'editedConnectorMetadata.actions': editedConnectorMetadata.actions })
 			if (!selectedActionProps) return
 
 			const missingRefreshers = property.refreshers.filter((refresherName) => selectedActionProps[refresherName].displayName)

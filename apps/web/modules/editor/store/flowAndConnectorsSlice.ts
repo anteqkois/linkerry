@@ -106,13 +106,16 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 	testingFlowVersion: false,
 	flowRun: null,
 	async testFlowVersion() {
-		const { flow, initWebSocketConnection, closeWebSocketConnection } = get()
+		const { onSelectFlowRun, setLeftDrawer, flow, initWebSocketConnection, closeWebSocketConnection } = get()
 		const socket = initWebSocketConnection()
 		assertNotNullOrUndefined(socket, 'socket')
 
 		return new Promise((resolve, reject) => {
 			socket.emit(WEBSOCKET_EVENT.TEST_FLOW, { flowVersionId: flow.version._id, projectId: flow.projectId } as FlowRunWSInput)
+
+			setLeftDrawer('flow_testing')
 			set({
+				showLeftDrawer: true,
 				testingFlowVersion: true,
 			})
 
@@ -135,7 +138,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 				})
 			})
 
-			socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, (flowRun: FlowRun) => {
+			socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, async (flowRun: FlowRun) => {
 				set({
 					testingFlowVersion: false,
 					flowRun,
@@ -146,6 +149,8 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
 
 				closeWebSocketConnection()
+
+				await onSelectFlowRun(flowRun._id)
 				return resolve(flowRun)
 			})
 		})

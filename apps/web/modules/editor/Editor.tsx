@@ -4,19 +4,20 @@ import 'reactflow/dist/style.css'
 import { useEffect, useRef } from 'react'
 import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'reactflow'
 import { Drawer } from '../../shared/components/Drawer/Index'
+import { Spinner } from '../../shared/components/Spinner'
 import { ActionConnectorPanel } from './action/ActionConnectorPanel'
 import { ActionNodeElement } from './action/ActionNode'
 import { SelectActionPanel } from './action/SelectActionPanel'
 import { TriggerNodeElement } from './common'
 import { EditorFlowMenu } from './components'
 import { TestFlowNodeElement } from './components/TestFlowNode'
+import { FlowRunPanel } from './flow-runs/FlowRunPanel'
 import { FlowRunsListPanel } from './flow-runs/FlowRunsListPanel'
 import { SelectTriggerNodeElement } from './trigger/SelectTriggerNode'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
 import { EditorDrawer } from './types'
 import { useEditor } from './useEditor'
-import { FlowRunPanel } from './flow-runs/FlowRunPanel'
 
 export const editorDrawers: Record<EditorDrawer['name'], () => JSX.Element> = {
 	select_trigger: SelectTriggerPanel,
@@ -25,6 +26,7 @@ export const editorDrawers: Record<EditorDrawer['name'], () => JSX.Element> = {
 	action_connector: ActionConnectorPanel,
 	flow_run: FlowRunPanel,
 	flow_runs_list: FlowRunsListPanel,
+	flow_testing: Spinner
 }
 
 const nodeTypes = {
