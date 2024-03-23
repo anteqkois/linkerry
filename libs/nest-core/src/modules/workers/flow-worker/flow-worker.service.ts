@@ -242,24 +242,24 @@ export class FlowWorkerService {
 
 		const startTime = Date.now()
 
-		const flowVersionWithLockedPieces = await this.flowVersionModel.findOne({
+		const flowVersionWithLockedConnectors = await this.flowVersionModel.findOne({
 			_id: jobData.flowVersionId,
 		})
 
-		if (isNil(flowVersionWithLockedPieces)) {
+		if (isNil(flowVersionWithLockedConnectors)) {
 			this.logger.debug(`Flow version not found, skipping execution flowVersion=${jobData.flowVersionId}`)
 			return
 		}
 
 		// TODO implement locking flowVersions
-		// 	const flowVersion = await flowVersionService.lockPieceVersions({
+		// 	const flowVersion = await flowVersionService.lockConnectorVersions({
 		// 		projectId: jobData.projectId,
-		// 		flowVersion: flowVersionWithLockedPieces,
+		// 		flowVersion: flowVersionWithLockedConnectors,
 		// })
 
 		try {
 			const { input, logFileId } = await this._loadInputAndLogFileId({
-				flowVersion: flowVersionWithLockedPieces.toObject(),
+				flowVersion: flowVersionWithLockedConnectors.toObject(),
 				jobData,
 			})
 
@@ -270,7 +270,7 @@ export class FlowWorkerService {
 
 			const sandbox = await this._getSandbox({
 				projectId: jobData.projectId,
-				flowVersion: flowVersionWithLockedPieces.toObject(),
+				flowVersion: flowVersionWithLockedConnectors.toObject(),
 				runEnvironment: jobData.environment,
 			})
 
@@ -282,6 +282,7 @@ export class FlowWorkerService {
 				await this.flowRunWatcherService.publish(jobData.runId, jobData.synchronousHandlerId, result)
 			}
 
+			console.dir(result.steps, { depth: null })
 			const logsFile = await this._saveToLogFile({
 				fileId: logFileId,
 				projectId: jobData.projectId,

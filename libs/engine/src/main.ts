@@ -40,6 +40,7 @@ const executeFlow = async (input: ExecuteFlowOperation, context: FlowExecutorCon
 		action,
 		executionState: context,
 		constants: EngineConstants.fromExecuteFlowInput(input),
+		flowVersion: input.flowVersion
 	})
 	return {
 		status: EngineResponseStatus.OK,

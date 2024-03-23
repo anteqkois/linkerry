@@ -1,5 +1,5 @@
-import { CustomError, ErrorCode, Id, assertNotNullOrUndefined, isConnectorTrigger } from '@linkerry/shared'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@linkerry/ui-components/client'
+import { CustomError, ErrorCode, Id, assertNotNullOrUndefined, isConnectorTrigger, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from '@linkerry/ui-components/client'
 import { Icons, Muted, Small } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
@@ -20,6 +20,7 @@ export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: TriggerEventsProps) => {
+	const { toast } = useToast()
 	const { flow, editedTrigger, testPoolTrigger, flowOperationRunning, patchEditedTriggerConnector } = useEditor()
 	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
 	if (!isConnectorTrigger(editedTrigger))
@@ -79,12 +80,22 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 	if (status === 'pending') return <Spinner />
 
 	const onClickTest = async () => {
-		const triggerEvents = await testPoolTrigger()
-		const queryClient = getBrowserQueryCllient()
-		queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEvents)
-		setRecord(prepareCodeMirrorValue(triggerEvents[triggerEvents.length - 1].payload))
-		setSelectedTriggerEventId(triggerEvents[triggerEvents.length - 1]._id)
-		setInitialTime(dayjs().format())
+		try {
+			const triggerEvents = await testPoolTrigger()
+			const queryClient = getBrowserQueryCllient()
+			queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEvents)
+			setRecord(prepareCodeMirrorValue(triggerEvents[triggerEvents.length - 1].payload))
+			setSelectedTriggerEventId(triggerEvents[triggerEvents.length - 1]._id)
+			setInitialTime(dayjs().format())
+		} catch (error) {
+			console.error('ERROR', error)
+			if (isCustomHttpExceptionAxios(error))
+				toast({
+					title: 'Loading trigger sample data failed',
+					description: error.response.data.message,
+					variant: 'destructive',
+				})
+		}
 	}
 
 	// TODO improve rerenndeing (change pane size debounce)

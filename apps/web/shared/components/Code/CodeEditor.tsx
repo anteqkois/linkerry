@@ -35,8 +35,8 @@ export const CodeEditor = ({ value, title, heightVh, substractPx = 0, style, cla
 					<Dialog>
 						<TooltipProvider delayDuration={100}>
 							<Tooltip>
-								<TooltipTrigger>
-									<DialogTrigger asChild>
+								<TooltipTrigger asChild>
+									<DialogTrigger>
 										<Icons.FullScreen className="cursor-pointer" />
 									</DialogTrigger>
 								</TooltipTrigger>

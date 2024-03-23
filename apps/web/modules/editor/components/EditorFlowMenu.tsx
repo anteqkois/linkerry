@@ -17,13 +17,14 @@ import { useEditor } from '../useEditor'
 export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
 
 export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
-	const { flow, publishFlow, flowOperationRunning, setFlowStatus, onClickFlowRuns} = useEditor()
+	const { flow, publishFlow, flowOperationRunning, setFlowStatus, onClickFlowRuns } = useEditor()
 	const { toast } = useToast()
 	const flowValidity = useMemo(() => {
 		if (flow.version.stepsCount < 2) return { invalid: true, message: 'Add one more step. Two steps are required for flow.' }
 		if (!flow.version.valid) return { invalid: true, message: 'All steps must be tested and valid.' }
 		if (flowOperationRunning) return { invalid: true, message: 'Flow saving logic is running... .' }
-		if (flow.version.state === FlowVersionState.LOCKED) return { invalid: true, message: 'Flow Version is locked.' }
+		if (flow.version.state === FlowVersionState.LOCKED && flow.version._id === flow.publishedVersionId)
+			return { invalid: true, message: 'Flow Version is locked.' }
 
 		return { invalid: false }
 	}, [flow.version.valid, flow.version.stepsCount, flowOperationRunning])
@@ -107,10 +108,26 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 						</Tooltip>
 					</TooltipProvider>
 				</MenubarMenu>
-				{flow.version.valid ? (
+				{flow.publishedVersionId ? (
 					<MenubarMenu>
 						<div className="px-2 flex-center">
-							<Switch id="flow-enabled" checked={flow.status === FlowStatus.ENABLED} onCheckedChange={onChangeFlowStatus} disabled={flowOperationRunning} />
+							<TooltipProvider delayDuration={100}>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<div className="flex-center">
+											<Switch
+												id="flow-enabled"
+												checked={flow.status === FlowStatus.ENABLED}
+												onCheckedChange={onChangeFlowStatus}
+												disabled={flowOperationRunning}
+											/>
+										</div>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>Published Version is run</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</div>
 					</MenubarMenu>
 				) : null}

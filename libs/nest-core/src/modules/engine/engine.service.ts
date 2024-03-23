@@ -118,6 +118,7 @@ export class EngineService {
 
 			const sandboxPath = sandbox.getSandboxFolderPath()
 
+			console.dir(input, { depth: null })
 			await fs.writeFile(`${sandboxPath}/input.json`, JSON.stringify(input))
 			const sandboxResponse = await sandbox.runOperation(operation)
 
@@ -185,7 +186,7 @@ export class EngineService {
 		connector.connectorVersion = await this.connectorsMetadataService.getExactConnectorVersion({
 			name: connector.connectorName,
 			version: connector.connectorVersion,
-			projectId: operation.projectId
+			projectId: operation.projectId,
 		})
 
 		const sandbox = await this.sandboxProvisionerService.provision({
@@ -266,7 +267,7 @@ export class EngineService {
 		connector.connectorVersion = await this.connectorsMetadataService.getExactConnectorVersion({
 			name: connector.connectorName,
 			version: connector.connectorVersion,
-			projectId: operation.projectId
+			projectId: operation.projectId,
 		})
 
 		const sandbox = await this.sandboxProvisionerService.provision({

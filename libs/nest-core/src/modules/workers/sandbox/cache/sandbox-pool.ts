@@ -1,4 +1,4 @@
-import { Environment, extractProvisionCacheKey, isNil, ProvisionCacheInfo, SandBoxCacheType } from '@linkerry/shared'
+import { extractProvisionCacheKey, isNil, ProvisionCacheInfo, SandBoxCacheType } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { Mutex } from 'async-mutex'
 import { CachedSandbox } from './sandbox-cache'
@@ -49,7 +49,9 @@ const sandboxNoCachePool = {
 	},
 }
 
-export const sandboxCachePool = process.env['NODE_ENV'] === Environment.Dev ? sandboxNoCachePool : sandboxKeyCachePool
+// TODO check if it needed
+// export const sandboxCachePool = process.env['NODE_ENV'] === Environment.Dev ? sandboxNoCachePool : sandboxKeyCachePool
+export const sandboxCachePool = sandboxKeyCachePool
 
 const getOrThrow = ({ key }: GetOrThrowParams): CachedSandbox => {
 	const cachedSandbox = cachedSandboxes.get(key)
