@@ -117,8 +117,8 @@ export class FlowHooks {
 
 		const publishedFlowVersion = await this.flowVersionService.findOne({
 			filter: {
-				flowId: flowToDelete._id,
-				versionId: flowToDelete.publishedVersionId,
+				_id: flowToDelete.publishedVersionId,
+				flow: flowToDelete._id,
 			},
 		})
 

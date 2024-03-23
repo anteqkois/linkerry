@@ -6,9 +6,10 @@ import { FlowHooks } from './flows.hooks'
 import { FlowsService } from './flows.service'
 import { FlowModelFactory } from './schemas/flow.schema'
 import { TriggerHookssModule } from '../triggers/trigger-hooks/trigger-hooks.module'
+import { RedisLockModule } from '../../../lib/redis-lock'
 
 @Module({
-  imports: [MongooseModule.forFeatureAsync([FlowModelFactory]), FlowVersionsModule, TriggerHookssModule],
+  imports: [MongooseModule.forFeatureAsync([FlowModelFactory]), FlowVersionsModule, TriggerHookssModule, RedisLockModule],
   controllers: [FlowsController],
   providers: [FlowsService, FlowHooks],
 	exports:[FlowsService]

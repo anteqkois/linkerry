@@ -12,11 +12,13 @@ export interface FlowPublishInput {
 	flowVersionId: Id
 }
 
-export interface UpdateStatusInput  {
+export interface UpdateStatusInput {
+	id: Id
+	projectId: Id
 	newStatus: FlowStatus
 }
 
-export interface DeleteInput  {
+export interface DeleteInput {
 	id: Id
 	projectId: Id
 }

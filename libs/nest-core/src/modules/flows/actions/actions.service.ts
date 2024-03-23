@@ -1,4 +1,4 @@
-import { FlowVersion, Id, assertNotNullOrUndefined, flowHelper } from '@linkerry/shared'
+import { FlowOperationType, FlowVersion, Id, assertNotNullOrUndefined, flowHelper } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
 import { EngineService } from '../../engine/engine.service'
@@ -36,9 +36,16 @@ export class ActionsService {
 			}
 			action.valid = true
 
-			flowVersion = flowHelper.updateAction(flowVersion, action)
-			flowVersion.valid = flowHelper.isValid(flowVersion)
-			await this.flowVersionsService.update(flowVersion._id, userId, flowVersion)
+			flowVersion = await this.flowVersionsService.applyOperation({
+				flowVersion,
+				projectId,
+				userId,
+				userOperation: {
+					type: FlowOperationType.UPDATE_ACTION,
+					flowVersionId: flowVersion._id,
+					request: action,
+				},
+			})
 
 			return {
 				success: result.success,

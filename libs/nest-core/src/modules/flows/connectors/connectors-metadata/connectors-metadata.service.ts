@@ -50,6 +50,7 @@ export class ConnectorsMetadataService {
 		return query.summary ? distinctConnectors.map((connector) => this.connectorToSummaryMetadata(connector)) : distinctConnectors
 	}
 
+	// TODO handle projectId when custom connectors will be aded
 	async findOne(name: string, query: ConnectorMetadataGetOneQueryDto) {
 		const filter: FilterQuery<ConnectorsMetadataModel> = {
 			name,

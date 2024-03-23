@@ -1,6 +1,7 @@
 import {
 	CustomError,
 	ErrorCode,
+	FlowOperationType,
 	FlowPopulated,
 	Id,
 	Trigger,
@@ -163,19 +164,23 @@ export class TriggerEventsService {
 			})
 		}
 
-		const flowVersion = await this.flowVersionsService.patchTrigger({
+		flowTrigger.valid = true
+		flowTrigger.settings = {
+			...flowTrigger.settings,
+			inputUiInfo: {
+				currentSelectedData: result.output.pop(),
+				lastTestDate: dayjs().format(),
+			},
+		}
+		
+		const flowVersion = await this.flowVersionsService.applyOperation({
+			flowVersion: flow.version,
 			projectId,
-			flowVersionId: flow.version._id,
-			triggerName: flowTrigger.name,
 			userId,
-			trigger: {
-				valid: true,
-				settings: {
-					inputUiInfo: {
-						currentSelectedData: result.output.pop(),
-						lastTestDate: dayjs().format(),
-					},
-				},
+			userOperation: {
+				type: FlowOperationType.UPDATE_TRIGGER,
+				flowVersionId: flow.version._id,
+				request: flowTrigger,
 			},
 		})
 

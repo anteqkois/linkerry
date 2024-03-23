@@ -16,7 +16,7 @@ export class FlowModel<T> extends TimestampDatabaseModel implements Omit<Flow, '
 	status: FlowStatus
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowVersionModel.name })
-	version: IdObjectOrPopulated<T, 'projectId', FlowVersion>
+	version: IdObjectOrPopulated<T, 'version', FlowVersion>
 
 	@Prop({ required: false, type: mongoose.Schema.Types.ObjectId, default: null })
 	publishedVersionId: Nullable<ObjectId>

@@ -2,6 +2,7 @@ import { CustomError, ErrorCode, assertNotNullOrUndefined, clone, deepMerge } fr
 import { Action, ActionType } from '../actions/action'
 import { FlowVersion } from '../flow-versions'
 import { Trigger, TriggerType } from '../triggers/trigger'
+import { AddActionRequest, DeleteActionRequest, FlowOperationRequest, FlowOperationType, UpdateActionRequest, UpdateTriggerRequest } from './flow-operation'
 
 type Step = Action | Trigger
 
@@ -31,7 +32,7 @@ function getAction(flowVersion: FlowVersion, actionName: string): Action | undef
 	return flowVersion.actions.find((trigger) => trigger.name === actionName)
 }
 
-const updateTrigger = (flowVersion: FlowVersion, triggerData: Trigger) => {
+const updateTrigger = (flowVersion: FlowVersion, triggerData: UpdateTriggerRequest) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (triggerData.type) {
 		case TriggerType.CONNECTOR:
@@ -62,7 +63,7 @@ const patchTrigger = (flowVersion: FlowVersion, triggerName: string, updateTrigg
 	return flowVersionClone
 }
 
-const updateAction = (flowVersion: FlowVersion, actionData: Action) => {
+const updateAction = (flowVersion: FlowVersion, actionData: UpdateActionRequest) => {
 	const flowVersionClone = clone(flowVersion)
 	switch (actionData.type) {
 		case ActionType.CONNECTOR:
@@ -139,134 +140,65 @@ const removeNextActionName = (flowVersion: FlowVersion, nextActionName: string) 
 	return flowVersion
 }
 
-const addAction = (flowVersion: FlowVersion, parentStepName: string, action: Action) => {
+const addAction = (flowVersion: FlowVersion, { action, parentStepName }: AddActionRequest) => {
 	flowVersion = addNextActionName(flowVersion, parentStepName, action.name)
 	flowVersion.actions.push(action)
 	flowVersion.stepsCount += 1
 	return flowVersion
 }
 
-const deleteAction = (flowVersion: FlowVersion, actionName: string) => {
-	flowVersion = removeNextActionName(flowVersion, actionName)
-	flowVersion.actions = flowVersion.actions.filter((action) => action.name !== actionName)
+const deleteAction = (flowVersion: FlowVersion, { name }: DeleteActionRequest) => {
+	flowVersion = removeNextActionName(flowVersion, name)
+	flowVersion.actions = flowVersion.actions.filter((action) => action.name !== name)
 	flowVersion.stepsCount -= 1
 	return flowVersion
 }
-// function deleteAction(
-//     flowVersion: FlowVersion,
-//     request: DeleteActionRequest,
-// ): FlowVersion {
-//     return transferFlow(flowVersion, (parentStep) => {
-//         if (parentStep.nextAction && parentStep.nextAction.name === request.name) {
-//             const stepToUpdate: Action = parentStep.nextAction
-//             parentStep.nextAction = stepToUpdate.nextAction
-//         }
-//         switch (parentStep.type) {
-//             case ActionType.BRANCH: {
-//                 if (
-//                     parentStep.onFailureAction &&
-//           parentStep.onFailureAction.name === request.name
-//                 ) {
-//                     const stepToUpdate: Action = parentStep.onFailureAction
-//                     parentStep.onFailureAction = stepToUpdate.nextAction
-//                 }
-//                 if (
-//                     parentStep.onSuccessAction &&
-//           parentStep.onSuccessAction.name === request.name
-//                 ) {
-//                     const stepToUpdate: Action = parentStep.onSuccessAction
-//                     parentStep.onSuccessAction = stepToUpdate.nextAction
-//                 }
-//                 break
-//             }
-//             case ActionType.LOOP_ON_ITEMS: {
-//                 if (
-//                     parentStep.firstLoopAction &&
-//           parentStep.firstLoopAction.name === request.name
-//                 ) {
-//                     const stepToUpdate: Action = parentStep.firstLoopAction
-//                     parentStep.firstLoopAction = stepToUpdate.nextAction
-//                 }
-//                 break
-//             }
-//             default:
-//                 break
-//         }
-//         return parentStep
-//     })
-// }
-
-// function getUsedConnectors(trigger: Trigger): string[] {
-//     return traverseInternal(trigger)
-//         .filter(
-//             (step) =>
-//                 step.type === ActionType.Connector || step.type === TriggerType.Connector,
-//         )
-//         .map((step) => step.settings.connectorName)
-//         .filter((value, index, self) => self.indexOf(value) === index)
-// }
 
 export const flowHelper = {
 	isValid,
-	// apply(
-	//     flowVersion: FlowVersion,
-	//     operation: FlowOperationRequest,
-	// ): FlowVersion {
-	//     let clonedVersion: FlowVersion = JSON.parse(JSON.stringify(flowVersion))
-	//     switch (operation.type) {
-	//         case FlowOperationType.MOVE_ACTION:
-	//             clonedVersion = moveAction(clonedVersion, operation.request)
-	//             break
-	//         case FlowOperationType.LOCK_FLOW:
-	//             clonedVersion.state = FlowVersionState.LOCKED
-	//             break
-	//         case FlowOperationType.CHANGE_NAME:
-	//             clonedVersion.displayName = operation.request.displayName
-	//             break
-	//         case FlowOperationType.DELETE_ACTION:
-	//             clonedVersion = deleteAction(clonedVersion, operation.request)
-	//             break
-	//         case FlowOperationType.ADD_ACTION: {
-	//             clonedVersion = transferFlow(
-	//                 addAction(clonedVersion, operation.request),
-	//                 (step) => upgradeConnector(step, operation.request.action.name),
-	//             )
-	//             break
-	//         }
-	//         case FlowOperationType.UPDATE_ACTION:
-	//             clonedVersion = transferFlow(
-	//                 updateAction(clonedVersion, operation.request),
-	//                 (step) => upgradeConnector(step, operation.request.name),
-	//             )
-	//             break
-	//         case FlowOperationType.UPDATE_TRIGGER:
-	//             clonedVersion.trigger = createTrigger(
-	//                 clonedVersion.trigger.name,
-	//                 operation.request,
-	//                 clonedVersion.trigger.nextAction,
-	//             )
-	//             clonedVersion = transferFlow(clonedVersion, (step) =>
-	//                 upgradeConnector(step, operation.request.name),
-	//             )
-	//             break
-	//         case FlowOperationType.DUPLICATE_ACTION: {
-	//             clonedVersion = duplicateStep(operation.request.stepName, clonedVersion)
-	//             break
-	//         }
-	//         default:
-	//             break
-	//     }
-	//     clonedVersion.valid = isValid(clonedVersion)
-	//     return clonedVersion
-	// },
+	apply(flowVersion: FlowVersion, operation: FlowOperationRequest): FlowVersion {
+		let clonedVersion: FlowVersion = JSON.parse(JSON.stringify(flowVersion))
+		switch (operation.type) {
+			// case FlowOperationType.MOVE_ACTION:
+			// 	clonedVersion = moveAction(clonedVersion, operation.request)
+			// 	break
+			// case FlowOperationType.LOCK_FLOW:
+			// 	clonedVersion.state = FlowVersionState.LOCKED
+			// 	break
+			case FlowOperationType.CHANGE_NAME:
+				clonedVersion.displayName = operation.request.displayName
+				break
+			case FlowOperationType.DELETE_ACTION:
+				clonedVersion = deleteAction(clonedVersion, operation.request)
+				break
+			case FlowOperationType.ADD_ACTION: {
+				clonedVersion = addAction(clonedVersion, operation.request)
+				break
+			}
+			case FlowOperationType.UPDATE_ACTION:
+				clonedVersion = updateAction(clonedVersion, operation.request)
+				break
+				case FlowOperationType.UPDATE_TRIGGER:
+				clonedVersion = updateTrigger(clonedVersion, operation.request)
+				break
+			// case FlowOperationType.DUPLICATE_ACTION: {
+			// 	clonedVersion = duplicateStep(operation.request.stepName, clonedVersion)
+			// 	break
+			// }
+			default:
+				break
+		}
+		clonedVersion.valid = isValid(clonedVersion)
+		return clonedVersion
+	},
+
 	getStep,
 	getAllSteps,
-	updateTrigger,
-	patchTrigger,
+	// updateTrigger,
+	// patchTrigger,
 	getTrigger,
-	addAction,
+	// addAction,
 	getAction,
-	updateAction,
-	deleteAction,
+	// updateAction,
 	getParentSteps,
 }

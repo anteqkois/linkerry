@@ -1,4 +1,4 @@
-import { FlowPublishInput, Id, RequestUser, UpdateStatusInput } from '@linkerry/shared'
+import { FlowOperationRequest, Id, RequestUser } from '@linkerry/shared'
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
@@ -20,6 +20,17 @@ export class FlowsController {
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
+	@Patch(':id')
+	patch(@ReqJwtUser() user: RequestUser, @Param('id') id: Id, @Body() body: FlowOperationRequest) {
+		return this.flowsService.update({
+			id,
+			projectId: user.projectId,
+			userId: user.id,
+			operation: body,
+		})
+	}
+
+	@UseGuards(JwtCookiesAuthGuard)
 	@Delete(':id')
 	delteFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
 		return this.flowsService.deleteOne(id, user.projectId)
@@ -30,28 +41,4 @@ export class FlowsController {
 	createEmptyFlow(@ReqJwtUser() user: RequestUser) {
 		return this.flowsService.createEmpty(user.projectId, user.id)
 	}
-
-	@UseGuards(JwtCookiesAuthGuard)
-	@Patch(':id/publish')
-	publishAndLock(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: FlowPublishInput) {
-		return this.flowsService.publishAndLock(id, user.projectId, user.id, body)
-	}
-
-	@UseGuards(JwtCookiesAuthGuard)
-	@Patch(':id/status')
-	changeStatusFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: UpdateStatusInput) {
-		return this.flowsService.changeStatus(id, user.projectId, body)
-	}
-
-	// @UseGuards(JwtCookiesAuthGuard)
-	// @Patch(':id/use-as-draft')
-	// changeStatusFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: UpdateStatusInput) {
-	// 	return this.flowsService.changeStatus(id, user.projectId, body)
-	// }
-
-	// @UseGuards(JwtCookiesAuthGuard)
-	// @Patch(':id/lock')
-	// changeStatusFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: string, @Body() body: UpdateStatusInput) {
-	// 	return this.flowsService.changeStatus(id, user.projectId, body)
-	// }
 }

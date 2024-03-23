@@ -3,7 +3,7 @@ import {
 	CustomError,
 	DeepPartial,
 	ErrorCode,
-	FlowPopulated,
+	FlowOperationType,
 	Trigger,
 	TriggerConnector,
 	TriggerEmpty,
@@ -14,9 +14,9 @@ import {
 	flowHelper,
 	generateEmptyTrigger,
 	isConnectorTrigger,
-	retriveStepNumber
+	retriveStepNumber,
 } from '@linkerry/shared'
-import { FlowVersionApi, TriggerApi } from '../../flows'
+import { FlowApi, TriggerApi } from '../../flows'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../common/nodeFactory'
 import { CustomNode } from '../types'
 import { editorDrawers } from './editorSlice'
@@ -53,7 +53,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			type: TriggerType.CONNECTOR,
 			valid: false,
 			settings: {
-				packageType:connectorMetadata.packageType,
+				packageType: connectorMetadata.packageType,
 				connectorName: connectorMetadata.name,
 				connectorVersion: connectorMetadata.version,
 				connectorType: connectorMetadata.connectorType,
@@ -71,18 +71,17 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	updateEditedTrigger: async (newTrigger: Trigger) => {
 		const { flow, setFlow, patchNode } = get()
 
-		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
+		const { data } = await FlowApi.operation(flow._id, {
+			type: FlowOperationType.UPDATE_TRIGGER,
+			flowVersionId: flow.version._id,
+			request: newTrigger,
+		})
 
 		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
-		const newFlow: FlowPopulated = {
-			...flow,
-			version: data,
-		}
 
-		setFlow(newFlow)
+		setFlow(data)
 		set({
 			editedTrigger: newTrigger,
-			flow: newFlow,
 		})
 	},
 	patchEditedTriggerConnector: async (update: DeepPartial<TriggerConnector>) => {
@@ -92,18 +91,17 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		const newTrigger = deepMerge(editedTrigger, update)
 		if (JSON.stringify(newTrigger) === JSON.stringify(editedTrigger)) return console.log('Skip trigger update, data after merge is the same')
 
-		const { data } = await FlowVersionApi.updateTrigger(flow.version._id, newTrigger)
+		const { data } = await FlowApi.operation(flow._id, {
+			type: FlowOperationType.UPDATE_TRIGGER,
+			flowVersionId: flow.version._id,
+			request: newTrigger,
+		})
 
 		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
-		const newFlow: FlowPopulated = {
-			...flow,
-			version: data,
-		}
 
-		setFlow(newFlow)
+		setFlow(data)
 		set({
 			editedTrigger: newTrigger,
-			flow: newFlow,
 		})
 	},
 	resetTrigger: async (triggerName: string) => {
@@ -125,19 +123,18 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				triggerName,
 			})
 
-		flow.version.triggers = flow.version.triggers.map((trigger) => {
-			if (trigger.name !== triggerName) return trigger
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			return emptyTrigger!
-		})
 		await TriggerApi.deleteAllTriggerEvents({
 			flowId: flow._id,
 			triggerName,
 		})
-		await FlowVersionApi.updateTrigger(flow.version._id, emptyTrigger)
+		const { data } = await FlowApi.operation(flow._id, {
+			type: FlowOperationType.UPDATE_TRIGGER,
+			flowVersionId: flow.version._id,
+			request: emptyTrigger,
+		})
 
 		patchNode(triggerName, { data: { trigger: emptyTrigger } })
-		setFlow(flow)
+		setFlow(data)
 		set({
 			nodes,
 			showRightDrawer: true,

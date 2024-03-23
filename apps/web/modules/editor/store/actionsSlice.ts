@@ -6,16 +6,16 @@ import {
 	CustomError,
 	DeepPartial,
 	ErrorCode,
-	FlowPopulated,
+	FlowOperationType,
 	RunActionResponse,
 	assertNotNullOrUndefined,
 	deepMerge,
 	flowHelper,
 	isAction,
 	isConnectorAction,
-	isTrigger,
+	isTrigger
 } from '@linkerry/shared'
-import { FlowVersionApi, StepApi } from '../../flows'
+import { FlowApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
 import { defaultEdgeFactory, generateEdgeId } from '../edges/edgesFactory'
 import { ActionsSlice, CreateSlice } from './types'
@@ -45,8 +45,8 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	},
 	async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
 		const { getNodeById, editStepMetadata, setRightDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge } = get()
-
 		assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
+
 		const action: ActionConnector = {
 			name: editStepMetadata.actionName,
 			displayName: connectorMetadata.displayName,
@@ -65,9 +65,13 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			nextActionName: '',
 		}
 
-		const { data } = await FlowVersionApi.addAction(flow.version._id, {
-			action,
-			parentStepName: editStepMetadata?.parentNodeName,
+		const { data } = await FlowApi.operation(flow._id, {
+			type: FlowOperationType.ADD_ACTION,
+			flowVersionId: flow.version._id,
+			request: {
+				action,
+				parentStepName: editStepMetadata?.parentNodeName,
+			},
 		})
 
 		const parentNode = getNodeById(editStepMetadata.parentNodeName)
@@ -98,7 +102,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 				targetNodeId: newActionNode.id,
 			}),
 		)
-		setFlow({ ...flow, version: data })
+		setFlow(data)
 		setEditedAction(action)
 	},
 	async patchEditedAction(update: DeepPartial<Action>) {
@@ -109,43 +113,47 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const newAction = deepMerge<Action>(editedAction, update)
 		if (JSON.stringify(newAction) === JSON.stringify(editedAction)) return console.log('Skip action update, data after merge is the same')
 
-		const { data } = await FlowVersionApi.updateAction(flow.version._id, newAction)
+		const { data } = await FlowApi.operation(flow._id, {
+			type: FlowOperationType.UPDATE_ACTION,
+			flowVersionId: flow.version._id,
+			request: newAction,
+		})
 
 		patchNode(newAction.name, { data: { action: newAction } })
-		const newFlow: FlowPopulated = {
-			...flow,
-			version: data,
-		}
 
-		setFlow(newFlow)
+		setFlow(data)
 		set({
 			editedAction: newAction,
-			flow: newFlow,
 		})
 	},
 	async updateEditedAction(newAction: Action) {
 		const { flow, setFlow, patchNode } = get()
 
-		const { data: newFlowVersion } = await FlowVersionApi.updateAction(flow.version._id, newAction)
-		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
+		const { data } = await FlowApi.operation(flow._id, {
+			type: FlowOperationType.UPDATE_ACTION,
+			flowVersionId: flow.version._id,
+			request: newAction,
+		})
+		assertNotNullOrUndefined(data, 'newFlow')
 
 		patchNode(newAction.name, { data: { action: newAction } })
-		const newFlow: FlowPopulated = {
-			...flow,
-			version: newFlowVersion,
-		}
 
-		setFlow(newFlow)
+		setFlow(data)
 		set({
 			editedAction: newAction,
-			flow: newFlow,
 		})
 	},
 	deleteAction: async (actionName: string) => {
 		const { flow, setFlow, deleteNode, setShowRightDrawer, patchNode, deleteEdge } = get()
 
-		const { data: newFlowVersion } = await FlowVersionApi.deleteAction(flow.version._id, actionName)
-		assertNotNullOrUndefined(newFlowVersion, 'newFlowVersion')
+		const { data } = await FlowApi.operation(flow._id, {
+			type: FlowOperationType.DELETE_ACTION,
+			flowVersionId: flow.version._id,
+			request: {
+				name: actionName
+			},
+		})
+		assertNotNullOrUndefined(data, 'newFlow')
 
 		const parentSteps = flowHelper.getParentSteps(flow.version, actionName)
 
@@ -172,14 +180,12 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 
 		setShowRightDrawer(false)
 		deleteNode(actionName)
-		setFlow({
-			...flow,
-			version: newFlowVersion,
-		})
+		setFlow(data)
 	},
 	testAction: async () => {
 		set({ testConnectorLoading: true })
 		const { flow, setFlow, patchNode, editedAction } = get()
+
 		if (!editedAction || !isConnectorAction(editedAction))
 			throw new CustomError('Invalid action data', ErrorCode.INVALID_TYPE, {
 				editedAction,

@@ -4,6 +4,7 @@ import {
 	CustomError,
 	CustomWebSocketExceptionResponse,
 	ErrorCode,
+	FlowOperationType,
 	FlowPopulated,
 	FlowRun,
 	FlowRunWSInput,
@@ -76,9 +77,12 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 		})
 
 		try {
-			const { data } = await FlowApi.publish(flow._id, {
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.LOCK_AND_PUBLISH,
 				flowVersionId: flow.version._id,
+				request: {},
 			})
+
 			setFlow(data)
 		} finally {
 			set({
@@ -93,8 +97,12 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 		})
 
 		try {
-			const { data } = await FlowApi.changeStatus(flow._id, {
-				newStatus: status,
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.CHANGE_STATUS,
+				flowVersionId: flow.version._id,
+				request: {
+					status
+				},
 			})
 			setFlow(data)
 		} finally {

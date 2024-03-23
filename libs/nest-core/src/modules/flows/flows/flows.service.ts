@@ -1,4 +1,15 @@
-import { Flow, FlowPopulated, FlowPublishInput, FlowStatus, FlowVersion, Id, UpdateStatusInput, assertNotNullOrUndefined } from '@linkerry/shared'
+import {
+	Flow,
+	FlowOperationRequest,
+	FlowOperationType,
+	FlowPopulated,
+	FlowStatus,
+	FlowVersion,
+	FlowVersionState,
+	Id,
+	UpdateStatusInput,
+	assertNotNullOrUndefined,
+} from '@linkerry/shared'
 import { ConflictException, Injectable, Logger } from '@nestjs/common'
 import { InjectConnection, InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
@@ -51,6 +62,84 @@ export class FlowsService {
 		)
 	}
 
+	async update({ id, userId, projectId, operation }: UpdateParams) {
+		const flowLock = await this.redisLockService.acquireLock({
+			key: id,
+			timeout: 30000,
+		})
+
+		try {
+			if (operation.type === FlowOperationType.LOCK_AND_PUBLISH) {
+				return await this._updatePublishedVersion({
+					id,
+					userId,
+					projectId,
+				})
+			} else if (operation.type === FlowOperationType.CHANGE_STATUS) {
+				return await this._changeStatus({
+					id,
+					projectId,
+					newStatus: operation.request.status,
+				})
+				// } else if (operation.type === FlowOperationType.CHANGE_FOLDER) {
+				// 	await flowRepo().update(id, {
+				// 		folderId: operation.request.folderId,
+				// 	})
+			} else {
+				let flowVersion = await this.flowVersionService.findOne({
+					filter: {
+						_id: operation.flowVersionId,
+						flow: id,
+					},
+				})
+				assertNotNullOrUndefined(flowVersion, 'flowVersion')
+
+				if (flowVersion.state === FlowVersionState.LOCKED) {
+					this.logger.debug(`#update replace locked version`)
+					/* copy flow version and return as a new flow verions */
+
+					const copiedFlowVersion = await this.flowVersionService.copyVersion(flowVersion?._id.toString())
+					flowVersion = copiedFlowVersion
+
+					// Duplicate the artifacts from the previous version, otherwise they will be deleted during update operation
+					// flowVersion = await flowVersionService.applyOperation({
+					// 	userId,
+					// 	projectId,
+					// 	flowVersion: flowVersion,
+					// 	userOperation: {
+					// 		type: FlowOperationType.IMPORT_FLOW,
+					// 		request: lastVersionWithArtifacts,
+					// 	},
+					// })
+				}
+
+				const updatedFlowVersion = await this.flowVersionService.applyOperation({
+					userId,
+					projectId,
+					flowVersion: flowVersion.toObject(),
+					userOperation: operation,
+				})
+
+				return this.flowModel
+					.findOneAndUpdate(
+						{
+							_id: id,
+							projectId,
+						},
+						{
+							version: updatedFlowVersion._id,
+						},
+						{
+							new: true,
+						},
+					)
+					.populate('version')
+			}
+		} finally {
+			await flowLock?.release()
+		}
+	}
+
 	async createEmpty(projectId: Id, userId: Id) {
 		const flowId = generateId()
 		const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString(), projectId, userId)
@@ -64,79 +153,7 @@ export class FlowsService {
 		).populate(['version'])
 	}
 
-	async publishAndLock(id: Id, projectId: Id, userId: Id, body: FlowPublishInput): Promise<FlowPopulated> {
-		const flowToUpdate = await this.flowModel.findOne({
-			_id: id,
-			projectId,
-		})
-		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
-		const flowVersionToPublish = await this.flowVersionService.findOne({
-			filter: {
-				_id: body.flowVersionId,
-				flow: flowToUpdate?._id.toString(),
-			},
-		})
-		assertNotNullOrUndefined(flowVersionToPublish, 'flowVersionToPublish')
-
-		// prevent confict when two users updates the same flowVesion
-		if (dayjs(flowVersionToPublish.updatedAt).add(1, 'minutes').isAfter(dayjs()) && flowVersionToPublish.updatedBy.toString() !== userId) {
-			this.logger.error(`#publish conflict when ${userId} wants to update flowVersion`)
-			throw new ConflictException()
-		}
-
-		const flowLock = await this.redisLockService.acquireLock({
-			key: id,
-			timeout: 10000,
-		})
-
-		const { scheduleOptions } = await this.flowHooks.preUpdatePublishedVersionId({
-			flowToUpdate: flowToUpdate.toObject(),
-			flowVersionToPublish: flowVersionToPublish.toObject(),
-		})
-
-		const session = await this.mongoConnection.startSession()
-		session.startTransaction()
-		try {
-			const lockedFlowVersion = await this.flowVersionService.lockFlowVersionIfNotLocked({
-				flowVersion: flowVersionToPublish,
-				userId,
-				projectId,
-				session,
-			})
-			assertNotNullOrUndefined(lockedFlowVersion, 'lockedFlowVersion')
-
-			const updateFlowResult = await this.flowModel.findOneAndUpdate(
-				{
-					_id: flowToUpdate._id,
-				},
-				{
-					$set: {
-						publishedVersionId: lockedFlowVersion._id,
-						status: FlowStatus.ENABLED,
-						schedule: scheduleOptions,
-					},
-				},
-				{
-					new: true,
-				},
-			)
-			assertNotNullOrUndefined(updateFlowResult, 'updateResult')
-
-			await session.commitTransaction()
-			return {
-				...updateFlowResult?.toObject(),
-				version: lockedFlowVersion.toObject(),
-			}
-		} catch (error) {
-			await session.abortTransaction()
-			throw error
-		} finally {
-			session.endSession()
-			await flowLock.release()
-		}
-	}
-
-	async changeStatus(id: Id, projectId: Id, { newStatus }: UpdateStatusInput) {
+	private async _changeStatus({ newStatus, id, projectId }: UpdateStatusInput) {
 		const flowToUpdate = await this.flowModel.findOne<FlowDocument<'version'>>({ _id: id, projectId }).populate('version')
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
 
@@ -165,17 +182,22 @@ export class FlowsService {
 			.populate('version')
 	}
 
-	async updatedPublishedVersionId({ id, userId, projectId }: UpdatePublishedVersionIdParams): Promise<FlowPopulated> {
+	private async _updatePublishedVersion({ id, userId, projectId }: UpdatePublishedVersionIdParams): Promise<FlowPopulated> {
 		const flowToUpdate = await this.flowModel.findOne({ id, projectId })
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
 
 		const flowVersionToPublish = await this.flowVersionService.findOne({
 			filter: {
-				flowId: id,
-				versionId: undefined,
+				flow: id,
 			},
 		})
 		assertNotNullOrUndefined(flowVersionToPublish, 'flowVersionToPublish')
+
+		// prevent confict when two users updates the same flowVesion
+		if (dayjs(flowVersionToPublish.updatedAt).add(1, 'minutes').isAfter(dayjs()) && flowVersionToPublish.updatedBy.toString() !== userId) {
+			this.logger.error(`#publish conflict when ${userId} wants to update flowVersion`)
+			throw new ConflictException()
+		}
 
 		const { scheduleOptions } = await this.flowHooks.preUpdatePublishedVersionId({
 			flowToUpdate: flowToUpdate.toObject(),
@@ -233,4 +255,11 @@ interface UpdatePublishedVersionIdParams {
 	id: Id
 	userId: Id
 	projectId: Id
+}
+
+type UpdateParams = {
+	id: Id
+	userId: Id
+	projectId: Id
+	operation: FlowOperationRequest
 }
