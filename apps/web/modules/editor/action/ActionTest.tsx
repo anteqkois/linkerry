@@ -1,11 +1,9 @@
-import { json } from '@codemirror/lang-json'
 import { RunActionResponse, assertNotNullOrUndefined, isCustomError, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import { Icons, Muted, Small } from '@linkerry/ui-components/server'
-import { vscodeDark } from '@uiw/codemirror-theme-vscode'
-import CodeMirror from '@uiw/react-codemirror'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
 import { useRelativeTime } from '../../../libs/dayjs'
+import { CodeEditor } from '../../../shared/components/Code/CodeEditor'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
 import { useEditor } from '../useEditor'
@@ -17,7 +15,7 @@ export interface ActionTestProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestProps) => {
-	const { editedAction, testConnectorLoading, testAction } = useEditor()
+	const { editedAction, flowOperationRunning, testAction } = useEditor()
 	const [testData, setTestData] = useState<Omit<RunActionResponse, 'flowVersion'> | undefined>()
 	assertNotNullOrUndefined(editedAction?.name, 'editedAction.name')
 	const { relativeTime, setInitialTime, dayjs } = useRelativeTime()
@@ -88,25 +86,14 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 							disabledMessage={disabledMessage}
 							text="Regenerate Data"
 							onClick={onClickTest}
-							loading={testConnectorLoading}
+							loading={flowOperationRunning}
 						/>
 					</div>
-					<div className="mt-2">
-						{errorMessage.length ? (
-							<ErrorInfo message={errorMessage} />
-						) : (
-							<CodeMirror
-								readOnly={true}
-								value={prepareCodeMirrorValue(testData.output)}
-								style={{
-									overflow: 'scroll',
-									height: `calc(${panelSize}vh - 130px)`,
-								}}
-								theme={vscodeDark}
-								extensions={[json()]}
-							/>
-						)}
-					</div>
+					{errorMessage.length ? (
+						<ErrorInfo message={errorMessage} className="mt-2" />
+					) : (
+						<CodeEditor value={prepareCodeMirrorValue(testData.output)} heightVh={panelSize} substractPx={120} title="Output" className="mt-2" />
+					)}
 				</>
 			) : (
 				<>
@@ -116,7 +103,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 							disabledMessage={disabledMessage}
 							text="Generate Data"
 							onClick={onClickTest}
-							loading={testConnectorLoading}
+							loading={flowOperationRunning}
 						/>
 					</div>
 				</>

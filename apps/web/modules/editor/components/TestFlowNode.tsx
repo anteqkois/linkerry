@@ -18,14 +18,15 @@ const testFlowVariants = cva('flex-center border-2 rounded-3xl', {
 interface TestFlowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'color'>, VariantProps<typeof testFlowVariants> {}
 
 export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
-	const { flow, testingFlowVersion, testFlowVersion } = useEditor()
+	const { flow, testingFlowVersion, flowOperationRunning, testFlowVersion } = useEditor()
 	const { toast } = useToast()
 	const flowValidity = useMemo(() => {
-		if (!flow.version.valid) return { invalid: true, message: 'Complete Flow' }
-		if (testingFlowVersion) return { invalid: true, message: 'Testing...' }
+		if (flowOperationRunning) return { invalid: true, message: 'Operation runs...' }
+		else if (!flow.version.valid) return { invalid: true, message: 'Complete Flow' }
+		else if (testingFlowVersion) return { invalid: true, message: 'Testing...' }
 
 		return { invalid: false }
-	}, [flow.version.valid, testingFlowVersion])
+	}, [flow.version.valid, testingFlowVersion, flowOperationRunning])
 
 	const handleTestFlowVersion = useCallback(async () => {
 		try {
@@ -35,7 +36,6 @@ export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
 				description: `Your test flow for ${flowRun.flowDisplayName} ran successfully`,
 				variant: 'success',
 			})
-
 		} catch (error: any) {
 			if (typeof error === 'string')
 				toast({
@@ -43,14 +43,14 @@ export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
 					description: error,
 					variant: 'destructive',
 				})
-				else{
-					console.log(error);
-					toast({
-						title: 'Test Flow Error',
-						description: 'Unknwon error occurred',
-						variant: 'destructive',
-					})
-				}
+			else {
+				console.log(error)
+				toast({
+					title: 'Test Flow Error',
+					description: 'Unknwon error occurred',
+					variant: 'destructive',
+				})
+			}
 		}
 	}, [])
 

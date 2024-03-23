@@ -17,16 +17,16 @@ import { useEditor } from '../useEditor'
 export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
 
 export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
-	const { flow, publishFlow, saving, setFlowStatus, onClickFlowRuns} = useEditor()
+	const { flow, publishFlow, flowOperationRunning, setFlowStatus, onClickFlowRuns} = useEditor()
 	const { toast } = useToast()
 	const flowValidity = useMemo(() => {
 		if (flow.version.stepsCount < 2) return { invalid: true, message: 'Add one more step. Two steps are required for flow.' }
 		if (!flow.version.valid) return { invalid: true, message: 'All steps must be tested and valid.' }
-		if (saving) return { invalid: true, message: 'Flow saving logic is running... .' }
+		if (flowOperationRunning) return { invalid: true, message: 'Flow saving logic is running... .' }
 		if (flow.version.state === FlowVersionState.LOCKED) return { invalid: true, message: 'Flow Version is locked.' }
 
 		return { invalid: false }
-	}, [flow.version.valid, flow.version.stepsCount, saving])
+	}, [flow.version.valid, flow.version.stepsCount, flowOperationRunning])
 
 	const onPublishFlow = useCallback(async () => {
 		try {
@@ -94,7 +94,7 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<div>
-									<ButtonClient className="h-7 rounded-sm" disabled={flowValidity.invalid} onClick={onPublishFlow} loading={saving}>
+									<ButtonClient className="h-7 rounded-sm" disabled={flowValidity.invalid} onClick={onPublishFlow} loading={flowOperationRunning}>
 										Publish
 									</ButtonClient>
 								</div>
@@ -110,7 +110,7 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 				{flow.version.valid ? (
 					<MenubarMenu>
 						<div className="px-2 flex-center">
-							<Switch id="flow-enabled" checked={flow.status === FlowStatus.ENABLED} onCheckedChange={onChangeFlowStatus} disabled={saving} />
+							<Switch id="flow-enabled" checked={flow.status === FlowStatus.ENABLED} onCheckedChange={onChangeFlowStatus} disabled={flowOperationRunning} />
 						</div>
 					</MenubarMenu>
 				) : null}

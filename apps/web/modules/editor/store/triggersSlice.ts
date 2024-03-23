@@ -64,9 +64,18 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			nextActionName: '',
 		}
 
-		await updateEditedTrigger(newTrigger)
-		patchNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
-		setRightDrawer('trigger_connector')
+		set({
+			flowOperationRunning: true,
+		})
+		try {
+			await updateEditedTrigger(newTrigger)
+			patchNode(editedTrigger.name, triggerNodeFactory({ trigger: newTrigger, connectorMetadata }))
+			setRightDrawer('trigger_connector')
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
 	},
 	updateEditedTrigger: async (newTrigger: Trigger) => {
 		const { flow, setFlow, patchNode } = get()
@@ -86,66 +95,88 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	},
 	patchEditedTriggerConnector: async (update: DeepPartial<TriggerConnector>) => {
 		const { editedTrigger, flow, setFlow, patchNode } = get()
-		if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update', ErrorCode.ENTITY_NOT_FOUND)
-
-		const newTrigger = deepMerge(editedTrigger, update)
-		if (JSON.stringify(newTrigger) === JSON.stringify(editedTrigger)) return console.log('Skip trigger update, data after merge is the same')
-
-		const { data } = await FlowApi.operation(flow._id, {
-			type: FlowOperationType.UPDATE_TRIGGER,
-			flowVersionId: flow.version._id,
-			request: newTrigger,
-		})
-
-		patchNode(newTrigger.name, { data: { trigger: newTrigger } })
-
-		setFlow(data)
 		set({
-			editedTrigger: newTrigger,
+			flowOperationRunning: true,
 		})
+
+		try {
+			if (!editedTrigger) throw new CustomError('editedTrigger can not be empty during update', ErrorCode.ENTITY_NOT_FOUND)
+
+			const newTrigger = deepMerge(editedTrigger, update)
+			if (JSON.stringify(newTrigger) === JSON.stringify(editedTrigger)) return console.log('Skip trigger update, data after merge is the same')
+
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.UPDATE_TRIGGER,
+				flowVersionId: flow.version._id,
+				request: newTrigger,
+			})
+
+			patchNode(newTrigger.name, { data: { trigger: newTrigger } })
+
+			setFlow(data)
+			set({
+				editedTrigger: newTrigger,
+			})
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
 	},
 	resetTrigger: async (triggerName: string) => {
 		let emptyTrigger: TriggerEmpty | undefined = undefined
 		// eslint-disable-next-line prefer-const
 		let { nodes, flow, setFlow, patchNode } = get()
-
-		const stepNumber = retriveStepNumber(triggerName)
-		nodes = nodes.map((node: CustomNode) => {
-			if (node.id !== triggerName) return node as CustomNode
-
-			emptyTrigger = generateEmptyTrigger(`trigger_${stepNumber}`)
-			const emptyNode = selectTriggerNodeFactory({ trigger: emptyTrigger })
-
-			return emptyNode
+		set({
+			flowOperationRunning: true,
 		})
-		if (!emptyTrigger)
-			throw new CustomError(`Can not find trigger to reset`, ErrorCode.ENTITY_NOT_FOUND, {
+
+		try {
+			const stepNumber = retriveStepNumber(triggerName)
+			nodes = nodes.map((node: CustomNode) => {
+				if (node.id !== triggerName) return node as CustomNode
+
+				emptyTrigger = generateEmptyTrigger(`trigger_${stepNumber}`)
+				const emptyNode = selectTriggerNodeFactory({ trigger: emptyTrigger })
+
+				return emptyNode
+			})
+			if (!emptyTrigger)
+				throw new CustomError(`Can not find trigger to reset`, ErrorCode.ENTITY_NOT_FOUND, {
+					triggerName,
+				})
+
+			await TriggerApi.deleteAllTriggerEvents({
+				flowId: flow._id,
 				triggerName,
 			})
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.UPDATE_TRIGGER,
+				flowVersionId: flow.version._id,
+				request: emptyTrigger,
+			})
 
-		await TriggerApi.deleteAllTriggerEvents({
-			flowId: flow._id,
-			triggerName,
-		})
-		const { data } = await FlowApi.operation(flow._id, {
-			type: FlowOperationType.UPDATE_TRIGGER,
-			flowVersionId: flow.version._id,
-			request: emptyTrigger,
-		})
-
-		patchNode(triggerName, { data: { trigger: emptyTrigger } })
-		setFlow(data)
-		set({
-			nodes,
-			showRightDrawer: true,
-			rightDrawer: editorDrawers.find((entry) => entry.name === 'select_trigger'),
-			editedTrigger: emptyTrigger,
-		})
+			patchNode(triggerName, { data: { trigger: emptyTrigger } })
+			setFlow(data)
+			set({
+				nodes,
+				showRightDrawer: true,
+				rightDrawer: editorDrawers.find((entry) => entry.name === 'select_trigger'),
+				editedTrigger: emptyTrigger,
+			})
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
 	},
 	testPoolTrigger: async () => {
-		set({ testConnectorLoading: true })
 		const { flow, setFlow, patchNode, editedTrigger } = get()
 		let testResult: TriggerTestPoolResponse
+
+		set({
+			flowOperationRunning: true,
+		})
 
 		try {
 			assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
@@ -170,7 +201,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			set({ editedTrigger: trigger })
 			setFlow({ ...flow, version: testResult.flowVersion })
 		} finally {
-			set({ testConnectorLoading: false })
+			set({ flowOperationRunning: false })
 		}
 
 		return testResult.triggerEvents

@@ -225,7 +225,11 @@ export const ActionConnectorPanel = () => {
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.CORE && (
-				<ResizablePanel defaultSize={30} maxSize={80} onResize={(size) => setTestDataPanelHeight(size)}>
+				<ResizablePanel
+					defaultSize={editedAction.settings.inputUiInfo.currentSelectedData ? 60 : 30}
+					maxSize={80}
+					onResize={(size) => setTestDataPanelHeight(size)}
+				>
 					<ActionTest
 						panelSize={testDataPanelHeight}
 						disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0}

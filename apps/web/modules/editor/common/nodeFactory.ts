@@ -13,7 +13,7 @@ export const nodeConfigs = {
 		height: 100,
 	},
 	TestFlowNode: {
-		width: 150,
+		width: 160,
 		height: 40,
 	},
 } as const

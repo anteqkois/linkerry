@@ -10,7 +10,16 @@ const StepStatus = ({ status, className }: { status: StepOutputStatus } & HTMLAt
 	if (status === StepOutputStatus.SUCCEEDED)
 		return (
 			<div className={cn(className)}>
-				<Icons.Check className="text-positive" size={'md'} />
+				<TooltipProvider delayDuration={100}>
+					<Tooltip>
+						<TooltipTrigger>
+							<Icons.Check className="text-positive" size={'md'} />
+						</TooltipTrigger>
+						<TooltipContent side="bottom" align="start" asChild>
+							<p>Status - {status}</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			</div>
 		)
 	else if (status === StepOutputStatus.FAILED)

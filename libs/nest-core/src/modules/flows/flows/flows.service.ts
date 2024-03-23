@@ -183,7 +183,7 @@ export class FlowsService {
 	}
 
 	private async _updatePublishedVersion({ id, userId, projectId }: UpdatePublishedVersionIdParams): Promise<FlowPopulated> {
-		const flowToUpdate = await this.flowModel.findOne({ id, projectId })
+		const flowToUpdate = await this.flowModel.findOne({ _id: id, projectId })
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
 
 		const flowVersionToPublish = await this.flowVersionService.findOne({
@@ -215,16 +215,16 @@ export class FlowsService {
 			})
 			assertNotNullOrUndefined(lockedFlowVersion, 'lockedFlowVersion')
 
-			flowToUpdate.publishedVersionId = lockedFlowVersion._id
-			flowToUpdate.status = FlowStatus.ENABLED
-			flowToUpdate.schedule = scheduleOptions
-
 			const updatedFlow = await this.flowModel.findOneAndUpdate(
 				{
 					_id: id,
 					projectId,
 				},
-				{},
+				{
+					publishedVersionId: lockedFlowVersion._id,
+					status: FlowStatus.ENABLED,
+					schedule: scheduleOptions,
+				},
 				{
 					new: true,
 				},

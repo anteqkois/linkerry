@@ -1,4 +1,4 @@
-import { CustomError, ErrorCode, StepOutput, assertNotNullOrUndefined, isStepBaseSettings } from '@linkerry/shared'
+import { CustomError, ErrorCode, StepOutput, StepOutputStatus, assertNotNullOrUndefined, isStepBaseSettings } from '@linkerry/shared'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@linkerry/ui-components/client'
 import { P } from '@linkerry/ui-components/server'
 import { useQueries } from '@tanstack/react-query'
@@ -128,7 +128,14 @@ export const FlowRunPanel = () => {
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize={35} minSize={5} maxSize={80} onResize={(size) => setResultOutputPanelHeight(size)} className="p-1">
-						<CodeEditor value={prepareCodeMirrorValue(selectedResult.output)} heightVh={resultOutputPanelHeight} substractPx={100} title="Output" />
+						<CodeEditor
+							value={prepareCodeMirrorValue(
+								selectedResult.status === StepOutputStatus.SUCCEEDED ? selectedResult.output : selectedResult.errorMessage,
+							)}
+							heightVh={resultOutputPanelHeight}
+							substractPx={100}
+							title="Output"
+						/>
 					</ResizablePanel>
 				</>
 			)}

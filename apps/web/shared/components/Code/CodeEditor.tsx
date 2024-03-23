@@ -45,8 +45,8 @@ export const CodeEditor = ({ value, title, heightVh, substractPx = 0, style, cla
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
-						<DialogContent className="md:max-w-none md:w-11/12 lg:w-8/12 lg:h-5/6">
-							<DialogHeader>
+						<DialogContent className="flex flex-col h-[95vh] min-w-[95vw]">
+							<DialogHeader className="max-h-min">
 								<DialogTitle>{title}</DialogTitle>
 								{/* <DialogDescription>
             Make changes to your profile here. Click save when you're done.

@@ -13,7 +13,7 @@ import {
 	flowHelper,
 	isAction,
 	isConnectorAction,
-	isTrigger
+	isTrigger,
 } from '@linkerry/shared'
 import { FlowApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
@@ -65,136 +65,176 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			nextActionName: '',
 		}
 
-		const { data } = await FlowApi.operation(flow._id, {
-			type: FlowOperationType.ADD_ACTION,
-			flowVersionId: flow.version._id,
-			request: {
-				action,
-				parentStepName: editStepMetadata?.parentNodeName,
-			},
-		})
-
-		const parentNode = getNodeById(editStepMetadata.parentNodeName)
-		assertNotNullOrUndefined(parentNode, 'parentNode')
-
-		// add action name to parent step
-		if ('action' in parentNode.data)
-			patchNode(parentNode.id, { data: { ...parentNode.data, action: { ...parentNode.data.action, nextActionName: editStepMetadata.actionName } } })
-		else if ('trigger' in parentNode.data)
-			patchNode(parentNode.id, {
-				data: { ...parentNode.data, trigger: { ...parentNode.data.trigger, nextActionName: editStepMetadata.actionName } },
+		try {
+			set({
+				flowOperationRunning: true,
 			})
 
-		const newActionNode = actionNodeFactory({
-			action,
-			connectorMetadata,
-			position: {
-				x: parentNode.position.x,
-				y: parentNode.position.y + nodeConfigs.BaseNode.height + nodeConfigs.gap.y,
-			},
-		})
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.ADD_ACTION,
+				flowVersionId: flow.version._id,
+				request: {
+					action,
+					parentStepName: editStepMetadata?.parentNodeName,
+				},
+			})
 
-		setRightDrawer('action_connector')
-		addNode(newActionNode)
-		addEdge(
-			defaultEdgeFactory({
-				sourceNodeId: editStepMetadata?.parentNodeName,
-				targetNodeId: newActionNode.id,
-			}),
-		)
-		setFlow(data)
-		setEditedAction(action)
+			const parentNode = getNodeById(editStepMetadata.parentNodeName)
+			assertNotNullOrUndefined(parentNode, 'parentNode')
+
+			// add action name to parent step
+			if ('action' in parentNode.data)
+				patchNode(parentNode.id, { data: { ...parentNode.data, action: { ...parentNode.data.action, nextActionName: editStepMetadata.actionName } } })
+			else if ('trigger' in parentNode.data)
+				patchNode(parentNode.id, {
+					data: { ...parentNode.data, trigger: { ...parentNode.data.trigger, nextActionName: editStepMetadata.actionName } },
+				})
+
+			const newActionNode = actionNodeFactory({
+				action,
+				connectorMetadata,
+				position: {
+					x: parentNode.position.x,
+					y: parentNode.position.y + nodeConfigs.BaseNode.height + nodeConfigs.gap.y,
+				},
+			})
+
+			setRightDrawer('action_connector')
+			addNode(newActionNode)
+			addEdge(
+				defaultEdgeFactory({
+					sourceNodeId: editStepMetadata?.parentNodeName,
+					targetNodeId: newActionNode.id,
+				}),
+			)
+			setFlow(data)
+			setEditedAction(action)
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
 	},
 	async patchEditedAction(update: DeepPartial<Action>) {
-		// TODO handle errors -> back to previous form version ?
 		const { editedAction, flow, setFlow, patchNode } = get()
 		assertNotNullOrUndefined(editedAction, 'editedAction')
 
 		const newAction = deepMerge<Action>(editedAction, update)
 		if (JSON.stringify(newAction) === JSON.stringify(editedAction)) return console.log('Skip action update, data after merge is the same')
-
-		const { data } = await FlowApi.operation(flow._id, {
-			type: FlowOperationType.UPDATE_ACTION,
-			flowVersionId: flow.version._id,
-			request: newAction,
-		})
-
-		patchNode(newAction.name, { data: { action: newAction } })
-
-		setFlow(data)
 		set({
-			editedAction: newAction,
+			flowOperationRunning: true,
 		})
+
+		try {
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.UPDATE_ACTION,
+				flowVersionId: flow.version._id,
+				request: newAction,
+			})
+
+			patchNode(newAction.name, { data: { action: newAction } })
+
+			setFlow(data)
+			set({
+				editedAction: newAction,
+			})
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
 	},
 	async updateEditedAction(newAction: Action) {
 		const { flow, setFlow, patchNode } = get()
 
-		const { data } = await FlowApi.operation(flow._id, {
-			type: FlowOperationType.UPDATE_ACTION,
-			flowVersionId: flow.version._id,
-			request: newAction,
-		})
-		assertNotNullOrUndefined(data, 'newFlow')
-
-		patchNode(newAction.name, { data: { action: newAction } })
-
-		setFlow(data)
 		set({
-			editedAction: newAction,
+			flowOperationRunning: true,
 		})
+
+		try {
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.UPDATE_ACTION,
+				flowVersionId: flow.version._id,
+				request: newAction,
+			})
+			assertNotNullOrUndefined(data, 'newFlow')
+
+			patchNode(newAction.name, { data: { action: newAction } })
+
+			setFlow(data)
+			set({
+				editedAction: newAction,
+			})
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
 	},
 	deleteAction: async (actionName: string) => {
 		const { flow, setFlow, deleteNode, setShowRightDrawer, patchNode, deleteEdge } = get()
 
-		const { data } = await FlowApi.operation(flow._id, {
-			type: FlowOperationType.DELETE_ACTION,
-			flowVersionId: flow.version._id,
-			request: {
-				name: actionName
-			},
+		set({
+			flowOperationRunning: true,
 		})
-		assertNotNullOrUndefined(data, 'newFlow')
-
-		const parentSteps = flowHelper.getParentSteps(flow.version, actionName)
-
-		for (const step of parentSteps) {
-			if (isTrigger(step))
-				patchNode(step.name, {
-					data: {
-						trigger: {
-							nextActionName: '',
-						},
-					},
-				})
-			else if (isAction(step))
-				patchNode(step.name, {
-					data: {
-						action: {
-							nextActionName: '',
-						},
-					},
-				})
-
-			deleteEdge(generateEdgeId(step.name, actionName))
-		}
-
-		setShowRightDrawer(false)
-		deleteNode(actionName)
-		setFlow(data)
-	},
-	testAction: async () => {
-		set({ testConnectorLoading: true })
-		const { flow, setFlow, patchNode, editedAction } = get()
-
-		if (!editedAction || !isConnectorAction(editedAction))
-			throw new CustomError('Invalid action data', ErrorCode.INVALID_TYPE, {
-				editedAction,
-			})
-
-		assertNotNullOrUndefined(editedAction, 'editedAction')
-		let testResult: RunActionResponse | undefined = undefined
 
 		try {
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.DELETE_ACTION,
+				flowVersionId: flow.version._id,
+				request: {
+					name: actionName,
+				},
+			})
+			assertNotNullOrUndefined(data, 'newFlow')
+
+			const parentSteps = flowHelper.getParentSteps(flow.version, actionName)
+
+			for (const step of parentSteps) {
+				if (isTrigger(step))
+					patchNode(step.name, {
+						data: {
+							trigger: {
+								nextActionName: '',
+							},
+						},
+					})
+				else if (isAction(step))
+					patchNode(step.name, {
+						data: {
+							action: {
+								nextActionName: '',
+							},
+						},
+					})
+
+				deleteEdge(generateEdgeId(step.name, actionName))
+			}
+
+			setShowRightDrawer(false)
+			deleteNode(actionName)
+			setFlow(data)
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
+	},
+	testAction: async () => {
+		const { flow, setFlow, patchNode, editedAction } = get()
+		set({
+			flowOperationRunning: true,
+		})
+
+		try {
+			if (!editedAction || !isConnectorAction(editedAction))
+				throw new CustomError('Invalid action data', ErrorCode.INVALID_TYPE, {
+					editedAction,
+				})
+
+			assertNotNullOrUndefined(editedAction, 'editedAction')
+			let testResult: RunActionResponse | undefined = undefined
+
 			testResult = (
 				await StepApi.run({
 					actionName: editedAction.name,
@@ -223,7 +263,9 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			}
 			return testResult
 		} finally {
-			set({ testConnectorLoading: false })
+			set({
+				flowOperationRunning: false,
+			})
 		}
 	},
 })

@@ -57,7 +57,7 @@ export interface EditorSlice {
 export interface FlowAndConnectorsSlice {
 	// FLOW
 	loaded: boolean
-	saving: boolean
+	flowOperationRunning: boolean
 	flow: FlowPopulated
 	loadFlow: (id: Id) => Promise<FlowPopulated | null>
 	setFlow: (flow: FlowPopulated) => void
@@ -72,7 +72,6 @@ export interface FlowAndConnectorsSlice {
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
 	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void
-	testConnectorLoading: boolean
 	getConnectorOptions: ({ input, propertyName }: { input: any; propertyName: string }) => Promise<ConnectorsGetOptionsResponse>
 }
 

@@ -206,7 +206,7 @@ export const TriggerConnectorPanel = () => {
 			<ResizableHandle withHandle />
 			{connectorMetadata.group !== ConnectorGroup.CORE && triggerWatcher?.type === TriggerStrategy.POLLING && (
 				<ResizablePanel
-					defaultSize={editedTrigger.settings.inputUiInfo.currentSelectedData ? 50 : 30}
+					defaultSize={editedTrigger.settings.inputUiInfo.currentSelectedData ? 60 : 30}
 					maxSize={80}
 					onResize={(size) => setTestDataPanelHeight(size)}
 				>

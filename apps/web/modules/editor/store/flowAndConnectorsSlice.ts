@@ -49,7 +49,7 @@ const emptyFlow: FlowPopulated = {
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
 	// FLOW
 	loaded: false,
-	saving: false,
+	flowOperationRunning: false,
 	flow: emptyFlow,
 	loadFlow: async (id: Id) => {
 		let flow: string | FlowPopulated | null = localStorage.getItem('flow')
@@ -73,7 +73,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 	publishFlow: async () => {
 		const { flow, setFlow } = get()
 		set({
-			saving: true,
+			flowOperationRunning: true,
 		})
 
 		try {
@@ -86,14 +86,14 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 			setFlow(data)
 		} finally {
 			set({
-				saving: false,
+				flowOperationRunning: false,
 			})
 		}
 	},
 	setFlowStatus: async (status: FlowStatus) => {
 		const { flow, setFlow } = get()
 		set({
-			saving: true,
+			flowOperationRunning: true,
 		})
 
 		try {
@@ -107,7 +107,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 			setFlow(data)
 		} finally {
 			set({
-				saving: false,
+				flowOperationRunning: false,
 			})
 		}
 	},
@@ -190,7 +190,6 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 			editedConnectorMetadata: connectorMetadata,
 		})
 	},
-	testConnectorLoading: false,
 	getConnectorOptions: async ({ input, propertyName }: { input: any; propertyName: string }) => {
 		const { editedAction, editedTrigger, flow } = get()
 

@@ -1,14 +1,12 @@
-import { json } from '@codemirror/lang-json'
 import { CustomError, ErrorCode, Id, assertNotNullOrUndefined, isConnectorTrigger } from '@linkerry/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@linkerry/ui-components/client'
 import { Icons, Muted, Small } from '@linkerry/ui-components/server'
-import { vscodeDark } from '@uiw/codemirror-theme-vscode'
-import CodeMirror from '@uiw/react-codemirror'
 import dayjs from 'dayjs'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
 import { useRelativeTime } from '../../../libs/dayjs'
 import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
+import { CodeEditor } from '../../../shared/components/Code/CodeEditor'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { TriggerApi } from '../../flows/triggers/api'
@@ -22,7 +20,7 @@ export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: TriggerEventsProps) => {
-	const { flow, editedTrigger, testPoolTrigger, testConnectorLoading, patchEditedTriggerConnector } = useEditor()
+	const { flow, editedTrigger, testPoolTrigger, flowOperationRunning, patchEditedTriggerConnector } = useEditor()
 	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
 	if (!isConnectorTrigger(editedTrigger))
 		throw new CustomError('Invalid trigger type, can not use other than ConnectorTrigger', ErrorCode.INVALID_TYPE, {
@@ -114,7 +112,7 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 							disabledMessage={disabledMessage}
 							text="Regenerate Data"
 							onClick={onClickTest}
-							loading={testConnectorLoading}
+							loading={flowOperationRunning}
 						/>
 					</div>
 					<Select onValueChange={onChangeTriggerEvent} value={selectedTriggerEventId}>
@@ -141,25 +139,12 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 						disabledMessage={disabledMessage}
 						text="Generate Data"
 						onClick={onClickTest}
-						loading={testConnectorLoading}
+						loading={flowOperationRunning}
 					/>
 				</div>
 			)}
 
-			{record && (
-				<div className="mt-2">
-					<CodeMirror
-						readOnly={true}
-						value={record}
-						style={{
-							overflow: 'scroll',
-							height: `calc(${panelSize}vh - 180px)`,
-						}}
-						theme={vscodeDark}
-						extensions={[json()]}
-					/>
-				</div>
-			)}
+			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={180} title="Output" className="mt-2" />}
 		</div>
 	)
 }
