@@ -115,8 +115,16 @@ export interface WebSocketSlice {
 
 export interface DynamicValueSlice {
 	showDynamicValueModal: boolean
-	setShowDynamicValueModal: (newState: boolean) => void
+	onSelectDynamicValueCallback: ((tokenString: string, data: any) => void) | null
+	setShowDynamicValueModal: (newState: boolean, onSelectDynamicValueCallback?: (tokenString: string, data: any) => void) => void
 }
 
-export type EditorStore = ReactFlowSlice & EditorSlice & FlowAndConnectorsSlice & TriggersSlice & ActionsSlice & StepsSlice & WebSocketSlice & DynamicValueSlice
+export type EditorStore = ReactFlowSlice &
+	EditorSlice &
+	FlowAndConnectorsSlice &
+	TriggersSlice &
+	ActionsSlice &
+	StepsSlice &
+	WebSocketSlice &
+	DynamicValueSlice
 export type CreateSlice<T> = (set: StoreApi<EditorStore>['setState'], get: StoreApi<EditorStore>['getState']) => T

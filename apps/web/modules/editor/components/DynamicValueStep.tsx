@@ -4,6 +4,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@linkerry/ui-comp
 import { Button, Icons } from '@linkerry/ui-components/server'
 import Image from 'next/image'
 import { HTMLAttributes, useState } from 'react'
+import { useEditor } from '../useEditor'
 import { DynamicValueEntry } from './DynamicValueEntry'
 
 export interface DynamicValueStepProps extends HTMLAttributes<HTMLElement> {
@@ -13,6 +14,7 @@ export interface DynamicValueStepProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const DynamicValueStep = ({ connectorMetadata, step, stepIndex }: DynamicValueStepProps) => {
+	const { onSelectDynamicValueCallback } = useEditor()
 	const [expand, setExpand] = useState(false)
 
 	return (
@@ -37,7 +39,11 @@ export const DynamicValueStep = ({ connectorMetadata, step, stepIndex }: Dynamic
 					</HoverCardContent>
 				</HoverCard>
 				<div className="flex items-center p-0.5 px-2">
-					<Button variant={'ghost'} size={'sm'}>
+					<Button
+						variant={'ghost'}
+						size={'sm'}
+						onClick={() => onSelectDynamicValueCallback?.(step.name, step.settings.inputUiInfo.currentSelectedData)}
+					>
 						Insert
 					</Button>
 					{typeof step.settings.inputUiInfo.currentSelectedData === 'object' && !isNil(step.settings.inputUiInfo.currentSelectedData) ? (
@@ -49,7 +55,7 @@ export const DynamicValueStep = ({ connectorMetadata, step, stepIndex }: Dynamic
 			</div>
 			{expand
 				? Object.entries(step.settings.inputUiInfo.currentSelectedData).map(([keyName, value], index) => (
-						<DynamicValueEntry key={keyName + index} keyName={keyName} value={value} deepLevel={0} />
+						<DynamicValueEntry key={keyName + index} keyName={keyName} value={value} deepLevel={0} tokenString={step.name} />
 				  ))
 				: null}
 		</>

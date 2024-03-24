@@ -2,9 +2,11 @@ import { CreateSlice, DynamicValueSlice } from './types'
 
 export const createDynamicValueSlice: CreateSlice<DynamicValueSlice> = (set, get) => ({
 	showDynamicValueModal: false,
-	setShowDynamicValueModal: (newState: boolean) => {
+	onSelectDynamicValueCallback: null,
+	setShowDynamicValueModal: (newState: boolean, onSelectDynamicValueCallback?: (tokenString: string, data: any) => void) => {
 		set({
 			showDynamicValueModal: newState,
+			onSelectDynamicValueCallback: onSelectDynamicValueCallback ?? null,
 		})
 	},
 })

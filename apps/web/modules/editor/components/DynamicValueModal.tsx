@@ -74,10 +74,10 @@ export const DynamicValueModal = () => {
 			</CardHeader>
 			<CardContent className="px-0 py-1">
 				{steps?.map((step, index) => (
-					<>
-						<DynamicValueStep connectorMetadata={step.connectorMetadata} step={step} key={step.name} stepIndex={index} />
+					<div key={step.name}>
+						<DynamicValueStep connectorMetadata={step.connectorMetadata} step={step} stepIndex={index} />
 						<Separator />
-					</>
+					</div>
 				))}
 			</CardContent>
 		</Card>

@@ -3,7 +3,7 @@ import { CheckboxField } from './CheckboxField'
 import { DynamicVirtualizedSelect } from './DynamicVirtualizedSelect'
 import { NumberField } from './NumberField'
 import { SecretTextField } from './SecretTextField'
-import { TextField } from './TextField'
+import { TextField } from './TextFieldDynamicValue'
 import { VirtualizedSelect } from './VirtualizedSelect'
 
 interface DynamicFieldProps {

@@ -2,11 +2,13 @@ import { isNil } from '@linkerry/shared'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
 import { HTMLAttributes, useState } from 'react'
+import { useEditor } from '../useEditor'
 
 export interface DynamicValueEntryProps extends HTMLAttributes<HTMLElement> {
 	deepLevel: number
 	keyName: string
 	value: any
+	tokenString: string
 }
 
 const deepLevelToPaddingLeft: Record<number, string> = {
@@ -23,7 +25,8 @@ const deepLevelToPaddingLeft: Record<number, string> = {
 	11: 'pl-[165px]',
 }
 
-export const DynamicValueEntry = ({ keyName, value, deepLevel }: DynamicValueEntryProps) => {
+export const DynamicValueEntry = ({ keyName, value, deepLevel, tokenString }: DynamicValueEntryProps) => {
+	const { onSelectDynamicValueCallback } = useEditor()
 	const [expand, setExpand] = useState(false)
 
 	return (
@@ -54,7 +57,7 @@ export const DynamicValueEntry = ({ keyName, value, deepLevel }: DynamicValueEnt
 					</HoverCardContent>
 				</HoverCard>
 				<div className="flex items-center p-0.5 px-2">
-					<Button variant={'ghost'} size={'sm'}>
+					<Button variant={'ghost'} size={'sm'} onClick={() => onSelectDynamicValueCallback?.(`${tokenString}["${keyName}"]`, value)}>
 						Insert
 					</Button>
 					{typeof value === 'object' && !isNil(value) ? (
@@ -65,8 +68,14 @@ export const DynamicValueEntry = ({ keyName, value, deepLevel }: DynamicValueEnt
 				</div>
 			</div>
 			{expand && !isNil(value)
-				? Object.entries(value).map(([keyName, value], index) => (
-						<DynamicValueEntry key={keyName + index} keyName={keyName} value={value} deepLevel={deepLevel + 1} />
+				? Object.entries(value).map(([_keyName, value], index) => (
+						<DynamicValueEntry
+							key={_keyName + index}
+							keyName={_keyName}
+							value={value}
+							deepLevel={deepLevel + 1}
+							tokenString={`${tokenString}["${keyName}"]`}
+						/>
 				  ))
 				: null}
 		</>
