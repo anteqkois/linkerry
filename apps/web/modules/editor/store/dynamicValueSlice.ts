@@ -1,7 +1,7 @@
 import { CreateSlice, DynamicValueSlice } from './types'
 
 export const createDynamicValueSlice: CreateSlice<DynamicValueSlice> = (set, get) => ({
-	showDynamicValueModal: true,
+	showDynamicValueModal: false,
 	setShowDynamicValueModal: (newState: boolean) => {
 		set({
 			showDynamicValueModal: newState,

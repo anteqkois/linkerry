@@ -1,8 +1,9 @@
 import { BaseStepSettings, CustomError, ErrorCode, Step, assertNotNullOrUndefined, flowHelper, isNil, isStepBaseSettings } from '@linkerry/shared'
 import { Separator } from '@linkerry/ui-components/client'
-import { Card, CardContent, CardHeader, CardTitle } from '@linkerry/ui-components/server'
+import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@linkerry/ui-components/server'
+import { useClickOutside } from '@react-hookz/web'
 import { useQueries } from '@tanstack/react-query'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { useEditor } from '../useEditor'
 import { DynamicValueStep } from './DynamicValueStep'
@@ -10,7 +11,7 @@ import { DynamicValueStep } from './DynamicValueStep'
 // export interface DynamicValueModalProps extends HTMLAttributes<HTMLElement> {}
 
 export const DynamicValueModal = () => {
-	const { showDynamicValueModal, flow, editedAction, editedTrigger } = useEditor()
+	const { showDynamicValueModal, setShowDynamicValueModal, flow, editedAction, editedTrigger } = useEditor()
 
 	const editedStep = useMemo(() => {
 		if (!isNil(editedAction)) return editedAction
@@ -43,6 +44,7 @@ export const DynamicValueModal = () => {
 	})
 
 	const steps = useMemo(() => {
+		if (connectorsMetadata.some((entry) => entry.isFetching || entry.isLoading)) return []
 		return avaibleSteps.map((step) => {
 			const connectorMetadata = connectorsMetadata.find(
 				(connectorMetadata) => connectorMetadata.data?.name === (step.settings as BaseStepSettings).connectorName,
@@ -50,18 +52,32 @@ export const DynamicValueModal = () => {
 			assertNotNullOrUndefined(connectorMetadata, 'connectorMetadata')
 			return { ...step, connectorMetadata }
 		})
-	}, connectorsMetadata)
+	}, [connectorsMetadata])
+
+	const ref = useRef(null)
+
+	useClickOutside(ref, () => {
+		setShowDynamicValueModal(false)
+	})
 
 	return showDynamicValueModal ? (
-		<Card className="fixed -left-[457px] bottom-2 w-112 min-h-[400px] max-h-[400px] overflow-y-scroll overflow-x-hidden">
-			<CardHeader className="p-4">
+		<Card
+			ref={ref}
+			className="fixed -left-[457px] bottom-2 w-112 min-h-[400px] max-h-[400px] overflow-y-scroll overflow-x-hidden duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]"
+			data-state={showDynamicValueModal ? 'open' : 'close'}
+		>
+			<CardHeader className="p-2 flex flex-row justify-between items-center bg-card sticky top-0 border-b">
 				<CardTitle>Select dynamic value to insert</CardTitle>
-				{/* <CardDescription>Deploy your new project in one-click.</CardDescription> */}
+				<Button size={'icon'} variant={'ghost'} onClick={() => setShowDynamicValueModal(false)}>
+					<Icons.Close size={'xs'} />
+				</Button>
 			</CardHeader>
-			<Separator />
-			<CardContent className="px-0 py-0">
+			<CardContent className="px-0 py-1">
 				{steps?.map((step, index) => (
-					<DynamicValueStep connectorMetadata={step.connectorMetadata} step={step} key={step.name} stepIndex={index} />
+					<>
+						<DynamicValueStep connectorMetadata={step.connectorMetadata} step={step} key={step.name} stepIndex={index} />
+						<Separator />
+					</>
 				))}
 			</CardContent>
 		</Card>

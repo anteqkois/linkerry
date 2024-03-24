@@ -1,5 +1,5 @@
 import { isNil } from '@linkerry/shared'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
 import { HTMLAttributes, useState } from 'react'
 
@@ -31,31 +31,34 @@ export const DynamicValueEntry = ({ keyName, value, deepLevel }: DynamicValueEnt
 			<div
 				className={`flex items-center justify-between cursor-pointer hover:bg-accent/50 hover:text-accent-foreground focus:bg-accent/50 focus:text-accent-foreground ${deepLevelToPaddingLeft[deepLevel]}`}
 			>
-				<TooltipProvider delayDuration={50}>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<div className="flex items-center p-2 overflow-hidden max-h-8 w-full">
-								<p className="text-sm font-medium leading-none pl-2">
-									{keyName}
-									{typeof value !== 'object' ? (
-										<>
-											:<span className="text-primary pl-1">{value}</span>
-										</>
-									) : null}
-								</p>
-							</div>
-						</TooltipTrigger>
-						<TooltipContent side="top" align="start" asChild>
-							<p> {JSON.stringify(value)}</p>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+				<HoverCard openDelay={200} closeDelay={100}>
+					<HoverCardTrigger asChild>
+						<div className="flex items-center p-2 overflow-hidden max-h-8">
+							<p className="text-sm text-card-foreground/40 font-medium leading-none pl-2">
+								{keyName}
+								{typeof value !== 'object' ? (
+									<>
+										:<span className="text-card-foreground pl-1">{value}</span>
+									</>
+								) : null}
+								{value === null ? (
+									<>
+										:<span className="text-card-foreground pl-1">null</span>
+									</>
+								) : null}
+							</p>
+						</div>
+					</HoverCardTrigger>
+					<HoverCardContent side="top" align="start" sideOffset={10} className="overflow-scroll w-full max-w-xl max-h-96 p-2">
+						<p>{JSON.stringify(value)}</p>
+					</HoverCardContent>
+				</HoverCard>
 				<div className="flex items-center p-0.5 px-2">
-					<Button variant={'outline'} size={'sm'}>
+					<Button variant={'ghost'} size={'sm'}>
 						Insert
 					</Button>
 					{typeof value === 'object' && !isNil(value) ? (
-						<Button size={'icon'} variant={'outline'} className="ml-1" onClick={() => setExpand((prev) => !prev)}>
+						<Button size={'icon'} variant={'ghost'} className="ml-1" onClick={() => setExpand((prev) => !prev)}>
 							{expand ? <Icons.ArrowDown /> : <Icons.ArrowRight />}
 						</Button>
 					) : null}

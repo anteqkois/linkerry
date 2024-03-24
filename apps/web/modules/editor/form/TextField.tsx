@@ -1,19 +1,8 @@
 import { ConnectorProperty } from '@linkerry/connectors-framework'
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	Input,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from '@linkerry/ui-components/client'
-import { Icons } from '@linkerry/ui-components/server'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { useEditor } from '../useEditor'
 import { useDynamicField } from './useFieldCustomValidation'
 
 interface TextFieldProps {
@@ -22,6 +11,7 @@ interface TextFieldProps {
 }
 
 export const TextField = ({ property, name }: TextFieldProps) => {
+	const { setShowDynamicValueModal } = useEditor()
 	const { control, trigger } = useFormContext()
 	const { rules } = useDynamicField({
 		property,
@@ -41,7 +31,7 @@ export const TextField = ({ property, name }: TextFieldProps) => {
 				<FormItem>
 					<div className="flex justify-between">
 						<FormLabel>{property.displayName}</FormLabel>
-						<TooltipProvider delayDuration={100}>
+						{/* <TooltipProvider delayDuration={100}>
 							<Tooltip>
 								<TooltipTrigger>
 									<Icons.Power size={'sm'} className="mb-1 mr-2" />
@@ -50,10 +40,10 @@ export const TextField = ({ property, name }: TextFieldProps) => {
 									<p>Dynamic value</p>
 								</TooltipContent>
 							</Tooltip>
-						</TooltipProvider>
+						</TooltipProvider> */}
 					</div>
 					<FormControl>
-						<Input {...field} />
+						<Input {...field} onFocus={() => setShowDynamicValueModal(true)} />
 					</FormControl>
 					<FormMessage />
 				</FormItem>
