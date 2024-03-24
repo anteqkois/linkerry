@@ -80,7 +80,7 @@ export interface StepItemProps extends HTMLAttributes<HTMLElement> {
 export const StepItem = ({ connectorMetadata, step, result, stepIndex, onSelectStep }: StepItemProps) => {
 	return (
 		<div
-			className="flex items-center cursor-pointer p-3 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+			className="flex items-center cursor-pointer p-3 hover:bg-accent/50 hover:text-accent-foreground focus:bg-accent/50 focus:text-accent-foreground"
 			onClick={() => onSelectStep(stepIndex)}
 		>
 			<Image width={32} height={32} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} className="mb-1" />

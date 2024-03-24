@@ -113,5 +113,10 @@ export interface WebSocketSlice {
 	closeWebSocketConnection: () => Promise<void>
 }
 
-export type EditorStore = ReactFlowSlice & EditorSlice & FlowAndConnectorsSlice & TriggersSlice & ActionsSlice & StepsSlice & WebSocketSlice
+export interface DynamicValueSlice {
+	showDynamicValueModal: boolean
+	setShowDynamicValueModal: (newState: boolean) => void
+}
+
+export type EditorStore = ReactFlowSlice & EditorSlice & FlowAndConnectorsSlice & TriggersSlice & ActionsSlice & StepsSlice & WebSocketSlice & DynamicValueSlice
 export type CreateSlice<T> = (set: StoreApi<EditorStore>['setState'], get: StoreApi<EditorStore>['getState']) => T

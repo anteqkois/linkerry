@@ -25,6 +25,7 @@ import { useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
+import { DynamicValueModal } from '../components/DynamicValueModal'
 import { ConnectionsSelect } from '../form/ConnectionsSelect'
 import { DynamicField } from '../form/DynamicField'
 import { ConnectorVersion } from '../steps/ConnectorVersion'
@@ -237,6 +238,7 @@ export const ActionConnectorPanel = () => {
 					/>
 				</ResizablePanel>
 			)}
+			<DynamicValueModal />
 		</ResizablePanelGroup>
 	)
 }

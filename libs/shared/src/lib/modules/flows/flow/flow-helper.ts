@@ -2,7 +2,14 @@ import { CustomError, ErrorCode, assertNotNullOrUndefined, clone, deepMerge } fr
 import { Action, ActionType } from '../actions/action'
 import { FlowVersion } from '../flow-versions'
 import { Trigger, TriggerType } from '../triggers/trigger'
-import { AddActionRequest, DeleteActionRequest, FlowOperationRequest, FlowOperationType, UpdateActionRequest, UpdateTriggerRequest } from './flow-operation'
+import {
+	AddActionRequest,
+	DeleteActionRequest,
+	FlowOperationRequest,
+	FlowOperationType,
+	UpdateActionRequest,
+	UpdateTriggerRequest,
+} from './flow-operation'
 
 type Step = Action | Trigger
 
@@ -18,6 +25,23 @@ function isAction(type: ActionType | TriggerType | undefined): boolean {
 const getAllSteps = (flowVersion: FlowVersion): Step[] => {
 	const steps: Step[] = [...flowVersion.triggers, ...flowVersion.actions]
 	return steps
+}
+
+const getAllPrependSteps = (flowVersion: FlowVersion, stepName: string): Step[] => {
+	for (const trigger of flowVersion.triggers) {
+		const steps: Step[] = []
+		steps.push(trigger)
+		if (trigger.name === stepName) return steps
+		if (!trigger.nextActionName) continue
+
+		let action = flowHelper.getAction(flowVersion, trigger.nextActionName)
+		while (action) {
+			steps.push(action)
+			if (action.name === stepName) return steps
+			action = flowHelper.getAction(flowVersion, action.nextActionName)
+		}
+	}
+	return []
 }
 
 function getStep(flowVersion: FlowVersion, stepName: string): Action | Trigger | undefined {
@@ -178,7 +202,7 @@ export const flowHelper = {
 			case FlowOperationType.UPDATE_ACTION:
 				clonedVersion = updateAction(clonedVersion, operation.request)
 				break
-				case FlowOperationType.UPDATE_TRIGGER:
+			case FlowOperationType.UPDATE_TRIGGER:
 				clonedVersion = updateTrigger(clonedVersion, operation.request)
 				break
 			// case FlowOperationType.DUPLICATE_ACTION: {
@@ -193,6 +217,7 @@ export const flowHelper = {
 	},
 
 	getStep,
+	getAllPrependSteps,
 	getAllSteps,
 	// updateTrigger,
 	// patchTrigger,

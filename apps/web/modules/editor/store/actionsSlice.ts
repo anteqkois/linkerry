@@ -28,6 +28,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 
 		setRightDrawer('action_connector')
 		set({
+			editedTrigger: null,
 			editedAction: action,
 			showRightDrawer: true,
 		})

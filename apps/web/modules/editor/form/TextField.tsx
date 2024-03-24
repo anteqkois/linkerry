@@ -1,5 +1,17 @@
 import { ConnectorProperty } from '@linkerry/connectors-framework'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@linkerry/ui-components/client'
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+	Input,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '@linkerry/ui-components/client'
+import { Icons } from '@linkerry/ui-components/server'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useDynamicField } from './useFieldCustomValidation'
@@ -27,7 +39,19 @@ export const TextField = ({ property, name }: TextFieldProps) => {
 			rules={rules}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{property.displayName}</FormLabel>
+					<div className="flex justify-between">
+						<FormLabel>{property.displayName}</FormLabel>
+						<TooltipProvider delayDuration={100}>
+							<Tooltip>
+								<TooltipTrigger>
+									<Icons.Power size={'sm'} className="mb-1 mr-2" />
+								</TooltipTrigger>
+								<TooltipContent side="bottom" align="start" asChild>
+									<p>Dynamic value</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					</div>
 					<FormControl>
 						<Input {...field} />
 					</FormControl>

@@ -3,12 +3,13 @@
 import { create } from 'zustand'
 import {
 	createActionSlice,
+	createDynamicValueSlice,
 	createEditorSlice,
 	createFlowAndConnectorsSlice,
 	createReactFlowSlice,
 	createStepsSlice,
 	createTriggersSlice,
-	createWebSocketSlice,
+	createWebSocketSlice
 } from './store'
 import { EditorStore } from './store/types'
 
@@ -20,4 +21,5 @@ export const useEditor = create<EditorStore>((set, get) => ({
 	...createStepsSlice(set, get),
 	...createTriggersSlice(set, get),
 	...createWebSocketSlice(set, get),
+	...createDynamicValueSlice(set, get),
 }))

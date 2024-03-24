@@ -30,6 +30,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 		setRightDrawer('trigger_connector')
 		set({
+			editedAction: null,
 			editedTrigger: trigger,
 			showRightDrawer: true,
 		})
