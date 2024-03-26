@@ -1,4 +1,4 @@
-import { TriggerBase } from '@linkerry/connectors-framework'
+import { TriggerBase, getRefreshersToRefreshedProperties } from '@linkerry/connectors-framework'
 import { ConnectorGroup, TriggerStrategy, TriggerType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
 	Form,
@@ -19,7 +19,7 @@ import {
 import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
@@ -53,6 +53,11 @@ export const TriggerConnectorPanel = () => {
 		mode: 'all',
 	})
 	const triggerWatcher = triggerForm.watch('__temp__trigger')
+
+	const refreshersToRefreshedProperties = useMemo(() => {
+		if (!triggerWatcher?.props) return {}
+		return getRefreshersToRefreshedProperties(triggerWatcher?.props)
+	}, [triggerWatcher?.props])
 
 	useEffect(() => {
 		if (!isFetched) return
@@ -199,7 +204,9 @@ export const TriggerConnectorPanel = () => {
 							)}
 						/>
 						{triggerWatcher?.props &&
-							Object.entries(triggerWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
+							Object.entries(triggerWatcher.props).map(([name, property]) => (
+								<DynamicField property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />
+							))}
 					</form>
 				</Form>
 				<ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />

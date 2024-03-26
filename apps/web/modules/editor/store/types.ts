@@ -115,8 +115,8 @@ export interface WebSocketSlice {
 
 export interface DynamicValueSlice {
 	showDynamicValueModal: boolean
-	onSelectDynamicValueCallback: ((tokenString: string, data: any) => void) | null
-	setShowDynamicValueModal: (newState: boolean, onSelectDynamicValueCallback?: (tokenString: string, data: any) => void) => void
+	onSelectDynamicValueCallback: ((tokenString: string, data: any) => Promise<void>) | null
+	setShowDynamicValueModal: (newState: boolean, onSelectDynamicValueCallback?: (tokenString: string, data: any) => Promise<void>) => void
 }
 
 export type EditorStore = ReactFlowSlice &

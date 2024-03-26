@@ -15,9 +15,9 @@ export const fetchCoin = createAction({
 			// defaultProcessors:[]
 		}),
 		coin_id: Property.DynamicDropdown({
-			displayName: 'Coin',
+			displayName: 'Coingecko Coin Id',
 			required: true,
-			description: 'Coin which data will be fetched',
+			description: 'Coin which data will be fetched using coingecko id',
 			refreshers: ['query'],
 			options: async ({ query }) => {
 				if (isEmpty(query))

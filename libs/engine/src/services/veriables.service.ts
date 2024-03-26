@@ -1,12 +1,12 @@
 import { ConnectorAuthProperty, ErrorMessages, InputPropertyMap, PropertyType, formatErrorMessage } from '@linkerry/connectors-framework'
-import { Id, isNil, isString } from '@linkerry/shared'
+import { Id, VARIABLE_TOKEN_REGEX, isNil, isString } from '@linkerry/shared'
 import { FlowExecutorContext } from '../handler/context/flow-execution-context'
 import { createConnectionService } from './connections.service'
 
 export const AUTHENTICATION_PROPERTY_NAME = 'auth'
 
 export class VariableService {
-	private VARIABLE_TOKEN = RegExp('\\{\\{(.*?)\\}\\}', 'g')
+	private VARIABLE_TOKEN = VARIABLE_TOKEN_REGEX
 	private workerToken: string
 	private projectId: string
 	private static CONNECTIONS = 'connections'

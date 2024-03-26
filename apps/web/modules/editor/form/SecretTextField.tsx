@@ -1,15 +1,17 @@
-import { ConnectorProperty } from '@linkerry/connectors-framework'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@linkerry/ui-components/client'
+import { ConnectorProperty, SecretTextProperty } from '@linkerry/connectors-framework'
+import { FormControl, FormField, FormItem, FormMessage, Input } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { PropertyLabel } from './PropertyLabel'
 import { useDynamicField } from './useFieldCustomValidation'
 
 interface SecretTextFieldProps {
-	property: ConnectorProperty
+	property: SecretTextProperty
 	name: string
+	refreshedProperties: ConnectorProperty[]
 }
 
-export const SecretTextField = ({ property, name }: SecretTextFieldProps) => {
+export const SecretTextField = ({ property, name, refreshedProperties }: SecretTextFieldProps) => {
 	const { control, trigger } = useFormContext()
 	const { rules } = useDynamicField({
 		property,
@@ -27,7 +29,7 @@ export const SecretTextField = ({ property, name }: SecretTextFieldProps) => {
 			rules={rules}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{property.displayName}</FormLabel>
+					<PropertyLabel property={property} refreshedProperties={refreshedProperties} />
 					<FormControl>
 						<Input {...field} type='password' />
 					</FormControl>

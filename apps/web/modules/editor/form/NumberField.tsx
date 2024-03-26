@@ -1,15 +1,17 @@
-import { ConnectorProperty } from '@linkerry/connectors-framework'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@linkerry/ui-components/client'
+import { ConnectorProperty, NumberProperty } from '@linkerry/connectors-framework'
+import { FormControl, FormField, FormItem, FormMessage, Input } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { PropertyLabel } from './PropertyLabel'
 import { useDynamicField } from './useFieldCustomValidation'
 
 interface NumberFieldProps {
-	property: ConnectorProperty
+	property: NumberProperty
 	name: string
+	refreshedProperties: ConnectorProperty[]
 }
 
-export const NumberField = ({ property, name }: NumberFieldProps) => {
+export const NumberField = ({ property, name, refreshedProperties }: NumberFieldProps) => {
 	const { control, trigger } = useFormContext()
 	const { rules } = useDynamicField({
 		property,
@@ -27,7 +29,7 @@ export const NumberField = ({ property, name }: NumberFieldProps) => {
 			rules={rules}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{property.displayName}</FormLabel>
+					<PropertyLabel property={property} refreshedProperties={refreshedProperties} />
 					<FormControl>
 						<Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
 					</FormControl>

@@ -1,5 +1,5 @@
-import { DropdownOption, DynamicDropdownProperty, DynamicDropdownState, PropertyType } from '@linkerry/connectors-framework'
-import { assertNotNullOrUndefined, isCustomHttpExceptionAxios, isEmpty } from '@linkerry/shared'
+import { ConnectorProperty, DropdownOption, DynamicDropdownProperty, DynamicDropdownState, PropertyType } from '@linkerry/connectors-framework'
+import { assertNotNullOrUndefined, hasVariableToken, isCustomHttpExceptionAxios, isEmpty } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { HTMLAttributes, useEffect, useState } from 'react'
@@ -22,12 +22,13 @@ const initOptions = {
 export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	property: DynamicDropdownProperty
 	name: string
+	refreshedProperties: ConnectorProperty[]
 }
 
-export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedSelectProps) => {
+export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
 	const { getConnectorOptions, editedConnectorMetadata, editedAction } = useEditor()
-	const { getValues, watch, setError, getFieldState } = useFormContext()
+	const { getValues, watch, setError, getFieldState,  } = useFormContext()
 	const [options, setOptions] = useState<DynamicDropdownState<any>>(initOptions)
 	const [initValue, setInitValue] = useState<DropdownOption<any>>({
 		label: '',
@@ -106,6 +107,17 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 		/* to prevent triggering options endpoint when selected edited action changed, not all veriables changed at once */
 		if (editedConnectorMetadata?.name !== editedAction?.settings.connectorName) return
 
+		/* Check id user used dynamic value */
+		const currentValue = editedAction?.settings.input[name]
+		if (currentValue && hasVariableToken(currentValue)) {
+			// // TODO (better in dynamic text compoienent amd set as required when back to base field)
+			// /* set all refreshers as not required */
+			// property.refreshers.forEach(refresher =>{
+			// 	// refresher
+			// })
+			return
+		}
+
 		/* check if refreshers are filled, if filled, fetch options */
 		const values = getValues()
 		const missingRefresherNames: string[] = []
@@ -169,6 +181,8 @@ export const DynamicVirtualizedSelect = ({ property, name }: DynamicVirtualizedS
 				type: PropertyType.STATIC_DROPDOWN,
 				options,
 			}}
+			refreshedProperties={refreshedProperties}
+			type={PropertyType.DYNAMIC_DROPDOWN}
 			name={name}
 			initData={initValue}
 		/>

@@ -1,6 +1,20 @@
-import { ConnectorProperty } from '@linkerry/connectors-framework'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input, useToast } from '@linkerry/ui-components/client'
-import { useEffect } from 'react'
+import { ConnectorProperty, isDynamicDropdownProperty } from '@linkerry/connectors-framework'
+import { waitMs } from '@linkerry/shared'
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+	Input,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+	useToast,
+} from '@linkerry/ui-components/client'
+import { Icons } from '@linkerry/ui-components/server'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useEditor } from '../useEditor'
 import { useDynamicField } from './useFieldCustomValidation'
@@ -8,37 +22,40 @@ import { useDynamicField } from './useFieldCustomValidation'
 interface TextFieldProps {
 	property: ConnectorProperty
 	name: string
+	showDynamicValueButton?: boolean
+	setUseDynamicValue?: Dispatch<SetStateAction<boolean>>
 }
 
-const TOKEN_REGEX = /{{[^{}]+}}/g
-
-type Tokens =
-	| {
-			type: 'text'
-			value: string
-	  }
-	| {
-			type: 'token'
-			value: string
-	  }
-
-export const TextField = ({ property, name }: TextFieldProps) => {
+export const TextField = ({ property, name, showDynamicValueButton = false, setUseDynamicValue }: TextFieldProps) => {
 	const { toast } = useToast()
 	const { setShowDynamicValueModal } = useEditor()
-	const { control, trigger, setValue, getValues } = useFormContext()
+	const { control, trigger, setValue, getValues, clearErrors } = useFormContext()
 	const { rules } = useDynamicField({
 		property,
 	})
 
 	useEffect(() => {
-		trigger(name)
+		setTimeout(() => {
+			if (isDynamicDropdownProperty(property)) {
+				/* set all refreshers as not required */
+				// TODO handle disablind validations
+				property.refreshers.forEach((refresher) => {
+					clearErrors(refresher)
+					// unregister(refresher)
+				})
+			}
+			console.log(property)
+			trigger(name)
+		}, 500)
 	}, [])
 
-	const onSelectData = (tokenString: string, data: any) => {
+	const onSelectData = async (tokenString: string, data: any) => {
 		// TODO add data validation and better UI
 		try {
 			const currentData = getValues()[name]
 			setValue(name, currentData + `{{${tokenString}}}`)
+			await waitMs(500)
+			trigger()
 		} catch (error) {
 			console.error(error)
 			toast({
@@ -59,16 +76,18 @@ export const TextField = ({ property, name }: TextFieldProps) => {
 				<FormItem>
 					<div className="flex justify-between">
 						<FormLabel>{property.displayName}</FormLabel>
-						{/* <TooltipProvider delayDuration={100}>
-							<Tooltip>
-								<TooltipTrigger>
-									<Icons.Power size={'sm'} className="mb-1 mr-2" />
-								</TooltipTrigger>
-								<TooltipContent side="bottom" align="start" asChild>
-									<p>Dynamic value</p>
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider> */}
+						{showDynamicValueButton ? (
+							<TooltipProvider delayDuration={100}>
+								<Tooltip>
+									<TooltipTrigger onClick={() => setUseDynamicValue?.(false)} className='text-primary-foreground/80 hover:text-primary-foreground'>
+										<Icons.Power size={'sm'} className="mb-1 mr-2" />
+									</TooltipTrigger>
+									<TooltipContent side="bottom" align="start">
+										<p>Switch to not use dynamic value</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						) : null}
 					</div>
 					<FormControl>
 						<Input {...field} onFocus={() => setShowDynamicValueModal(true, onSelectData)} />

@@ -1,4 +1,4 @@
-import { ActionBase } from '@linkerry/connectors-framework'
+import { ActionBase, getRefreshersToRefreshedProperties } from '@linkerry/connectors-framework'
 import { ActionType, ConnectorGroup, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
 	Form,
@@ -19,7 +19,7 @@ import {
 import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
@@ -58,6 +58,11 @@ export const ActionConnectorPanel = () => {
 		},
 	})
 	const actionWatcher = actionForm.watch('__temp__action')
+
+	const refreshersToRefreshedProperties = useMemo(() => {
+		if (!actionWatcher?.props) return {}
+		return getRefreshersToRefreshedProperties(actionWatcher?.props)
+	}, [actionWatcher?.props])
 
 	// setup form fields on start based on editedAction input values (db), also set temp values (which shouldn't be saved in db )
 	useEffect(() => {
@@ -219,7 +224,7 @@ export const ActionConnectorPanel = () => {
 							/>
 						) : null}
 						{actionWatcher?.props &&
-							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} name={name} key={name} />)}
+							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />)}
 					</form>
 				</Form>
 				<ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />

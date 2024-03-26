@@ -1,15 +1,17 @@
-import { ConnectorProperty } from '@linkerry/connectors-framework'
-import { Checkbox, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@linkerry/ui-components/client'
+import { CheckboxProperty, ConnectorProperty } from '@linkerry/connectors-framework'
+import { Checkbox, FormControl, FormDescription, FormField, FormItem } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { PropertyLabel } from './PropertyLabel'
 import { useDynamicField } from './useFieldCustomValidation'
 
 interface CheckboxFieldProps {
-	property: ConnectorProperty
+	property: CheckboxProperty
 	name: string
+	refreshedProperties: ConnectorProperty[]
 }
 
-export const CheckboxField = ({ property, name }: CheckboxFieldProps) => {
+export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxFieldProps) => {
 	const { control, trigger } = useFormContext()
 	const { rules } = useDynamicField({
 		property,
@@ -30,7 +32,7 @@ export const CheckboxField = ({ property, name }: CheckboxFieldProps) => {
 						<Checkbox checked={field.value} onCheckedChange={field.onChange} />
 					</FormControl>
 					<div className="space-y-1 leading-none">
-						<FormLabel className="cursor-pointer">{property.displayName}</FormLabel>
+						<PropertyLabel property={property} refreshedProperties={refreshedProperties} />
 						<FormDescription>{property.description}</FormDescription>
 					</div>
 				</FormItem>

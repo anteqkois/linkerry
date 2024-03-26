@@ -1,4 +1,5 @@
-import { DropdownOption, StaticDropdownProperty } from '@linkerry/connectors-framework'
+import { ConnectorProperty, DropdownOption, PropertyType, StaticDropdownProperty } from '@linkerry/connectors-framework'
+import { hasVariableToken } from '@linkerry/shared'
 import {
 	FormControl,
 	FormField,
@@ -10,21 +11,29 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from '@linkerry/ui-components/client'
-import { HTMLAttributes, useEffect } from 'react'
+import { Icons } from '@linkerry/ui-components/server'
+import { HTMLAttributes, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { VList } from 'virtua'
+import { TextField } from './TextFieldDynamicValue'
 import { useDynamicField } from './useFieldCustomValidation'
 
 export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	property: StaticDropdownProperty
-	initData?: DropdownOption<any>
 	name: string
+	refreshedProperties: ConnectorProperty[]
+	type?: PropertyType.STATIC_DROPDOWN | PropertyType.DYNAMIC_DROPDOWN
+	initData?: DropdownOption<any>
 }
 
-export const VirtualizedSelect = ({ property, initData, name }: VirtualizedSelectProps) => {
+export const VirtualizedSelect = ({ property, initData, name, type = PropertyType.STATIC_DROPDOWN }: VirtualizedSelectProps) => {
 	const { setValue, control, getValues, trigger } = useFormContext()
-
+	const [useDynamicValue, setUseDynamicValue] = useState(false)
 	const { rules } = useDynamicField({
 		property,
 	})
@@ -35,6 +44,9 @@ export const VirtualizedSelect = ({ property, initData, name }: VirtualizedSelec
 		if (!startedValueString) return
 		const selectedOption = property.options.options.find((option) => JSON.stringify(option.value) === startedValueString)
 		if (selectedOption) setValue(`__temp__${name}`, selectedOption.label)
+		else if (hasVariableToken(startedValueString)) {
+			setUseDynamicValue(true)
+		}
 	}, [])
 
 	useEffect(() => {
@@ -50,14 +62,33 @@ export const VirtualizedSelect = ({ property, initData, name }: VirtualizedSelec
 		setValue(name, value?.value)
 	}
 
-	return (
+	return useDynamicValue ? (
+		<TextField
+			name={name}
+			property={{ ...property, type } as ConnectorProperty}
+			setUseDynamicValue={setUseDynamicValue}
+			showDynamicValueButton={true}
+		/>
+	) : (
 		<FormField
 			control={control}
 			name={`__temp__${name}`}
 			rules={rules}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{property.displayName}</FormLabel>
+					<div className="flex justify-between">
+						<FormLabel>{property.displayName}</FormLabel>
+						<TooltipProvider delayDuration={100}>
+							<Tooltip>
+								<TooltipTrigger onClick={() => setUseDynamicValue(true)} className='text-primary-foreground/40 hover:text-primary-foreground'>
+									<Icons.Power size={'sm'} className="mb-1 mr-2" />
+								</TooltipTrigger>
+								<TooltipContent side="bottom" align="start">
+									<p>Switch to use dynamic value</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					</div>
 					<FormControl>
 						<Select
 							disabled={property.options.disabled}

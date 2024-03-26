@@ -1,5 +1,6 @@
 import { ConnectorAuthProperty } from './authentication'
 import { InputProperty } from './input'
+import { isDynamicDropdownProperty } from './input/dynamic-dropdown'
 
 export * from './authentication'
 export * from './authentication/base'
@@ -37,3 +38,19 @@ export type ConnectorPropValueSchema<T extends ConnectorProperty> =
 export type StaticPropsValue<T extends ConnectorPropertyMap> = {
 	[P in keyof T]: ConnectorPropValueSchema<T[P]>
 }
+
+export const getRefreshersToRefreshedProperties = (props: ConnectorPropertyMap) => {
+	const refresherToRefreshedProperty: Record<string, ConnectorProperty[]> = {}
+	for (const [propertyName, property] of Object.entries(props)) {
+		if (!isDynamicDropdownProperty(property)) continue
+		if (!refresherToRefreshedProperty[propertyName]) refresherToRefreshedProperty[propertyName] = []
+
+		for (const refresher of property.refreshers) {
+			if (!refresherToRefreshedProperty[refresher]) refresherToRefreshedProperty[refresher] = []
+			refresherToRefreshedProperty[refresher].push(property)
+		}
+	}
+
+	return refresherToRefreshedProperty
+}
+
