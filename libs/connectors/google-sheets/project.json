@@ -1,0 +1,27 @@
+{
+	"name": "connectors-google-sheets",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/connectors/google-sheets/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nx/esbuild:esbuild",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/libs/connectors/google-sheets",
+				"main": "libs/connectors/google-sheets/src/index.ts",
+				"tsConfig": "libs/connectors/google-sheets/tsconfig.lib.json",
+				"assets": ["libs/connectors/google-sheets/*.md"],
+				"generatePackageJson": true
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["libs/connectors/google-sheets/**/*.ts"]
+			}
+		}
+	},
+	"tags": []
+}

@@ -174,7 +174,7 @@ export const ActionConnectorPanel = () => {
 
 	return (
 		<ResizablePanelGroup direction="vertical" className="max-h-screen p-1">
-			<ResizablePanel defaultSize={60} className="px-1">
+			<ResizablePanel defaultSize={60} className="px-1 overflow-scroll">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
 					<div>
@@ -217,6 +217,7 @@ export const ActionConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
+						{actionWatcher?.requireAuth && connectorMetadata.auth ? 'true' : 'false'}
 						{actionWatcher?.requireAuth && connectorMetadata.auth ? (
 							<ConnectionsSelect
 								auth={connectorMetadata.auth}
@@ -224,7 +225,9 @@ export const ActionConnectorPanel = () => {
 							/>
 						) : null}
 						{actionWatcher?.props &&
-							Object.entries(actionWatcher.props).map(([name, property]) => <DynamicField property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />)}
+							Object.entries(actionWatcher.props).map(([name, property]) => (
+								<DynamicField property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />
+							))}
 					</form>
 				</Form>
 				<ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />

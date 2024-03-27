@@ -12,20 +12,20 @@ interface DynamicFieldProps {
 	refreshedProperties: ConnectorProperty[]
 }
 
-export const DynamicField = (props: DynamicFieldProps) => {
-	switch (props.property.type) {
+export const DynamicField = ({ name, property, refreshedProperties }: DynamicFieldProps) => {
+	switch (property.type) {
 		case PropertyType.TEXT:
-			return <TextField name={props.name} property={props.property} refreshedProperties={props.refreshedProperties} />
+			return <TextField name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.SECRET_TEXT:
-			return <SecretTextField name={props.name} property={props.property} refreshedProperties={props.refreshedProperties} />
+			return <SecretTextField name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.NUMBER:
-			return <NumberField name={props.name} property={props.property} refreshedProperties={props.refreshedProperties} />
+			return <NumberField name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.CHECKBOX:
-			return <CheckboxField name={props.name} property={props.property} refreshedProperties={props.refreshedProperties} />
+			return <CheckboxField name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.STATIC_DROPDOWN:
-			return <VirtualizedSelect name={props.name} property={props.property} refreshedProperties={props.refreshedProperties} />
+			return <VirtualizedSelect name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.DYNAMIC_DROPDOWN:
-			return <DynamicVirtualizedSelect name={props.name} property={props.property} refreshedProperties={props.refreshedProperties} />
+			return <DynamicVirtualizedSelect name={name} property={property} refreshedProperties={refreshedProperties} />
 
 		default:
 			break

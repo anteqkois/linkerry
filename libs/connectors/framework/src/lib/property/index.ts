@@ -6,6 +6,7 @@ export * from './authentication'
 export * from './authentication/base'
 export * from './authentication/basic-auth'
 export * from './authentication/custom-auth'
+export * from './authentication/oauth2-prop'
 export * from './authentication/secret-text'
 export * from './base'
 export * from './input'
@@ -27,13 +28,11 @@ export interface ConnectorPropertyMap {
 	[name: string]: ConnectorProperty
 }
 
-export type ConnectorPropValueSchema<T extends ConnectorProperty> =
-  T extends undefined
-  ? undefined
-  : T extends { required: true }
-  ? T['valueSchema']
-  : T['valueSchema'] | undefined;
-
+export type ConnectorPropValueSchema<T extends ConnectorProperty> = T extends undefined
+	? undefined
+	: T extends { required: true }
+	? T['valueSchema']
+	: T['valueSchema'] | undefined
 
 export type StaticPropsValue<T extends ConnectorPropertyMap> = {
 	[P in keyof T]: ConnectorPropValueSchema<T[P]>
@@ -42,7 +41,10 @@ export type StaticPropsValue<T extends ConnectorPropertyMap> = {
 export const getRefreshersToRefreshedProperties = (props: ConnectorPropertyMap) => {
 	const refresherToRefreshedProperty: Record<string, ConnectorProperty[]> = {}
 	for (const [propertyName, property] of Object.entries(props)) {
-		if (!isDynamicDropdownProperty(property)) continue
+		if (!isDynamicDropdownProperty(property)) {
+			refresherToRefreshedProperty[propertyName] = []
+			continue
+		}
 		if (!refresherToRefreshedProperty[propertyName]) refresherToRefreshedProperty[propertyName] = []
 
 		for (const refresher of property.refreshers) {
@@ -51,6 +53,7 @@ export const getRefreshersToRefreshedProperties = (props: ConnectorPropertyMap) 
 		}
 	}
 
+	console.log({ refresherToRefreshedProperty, props })
+
 	return refresherToRefreshedProperty
 }
-

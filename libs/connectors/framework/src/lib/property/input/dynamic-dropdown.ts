@@ -25,6 +25,7 @@ export type DynamicDropdownOptions<T> = (propsValue: Record<string, unknown>, ct
 // export type DynamicDropdownProperty<T, R extends boolean> = BaseProperty & {
 export type DynamicDropdownProperty<R extends boolean = boolean, T = any> = BaseProperty & {
 	refreshers: string[]
+	refreshOnSearch?: boolean
 	options: DynamicDropdownOptions<T>
 } & PropertyValue<T, PropertyType.DYNAMIC_DROPDOWN, ValidationInputType.ANY, R>
 // todo add validator type generic
