@@ -1,5 +1,5 @@
 import { OAuth2AppInput } from '@linkerry/shared'
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { AdminGuard } from '../../../lib/auth/guards/admin.guard'
 import { Oauth2Service } from './oauth2.service'
@@ -14,8 +14,9 @@ export class Oauth2Controller {
 		return this.oAuth2Service.getMany()
 	}
 
-	@Post('redirect')
-	redirect() {
+	@Get('redirect')
+	redirect(@Body() body: any, @Query() query: any) {
+		return this.oAuth2Service.redirect(body, query)
 		//
 	}
 

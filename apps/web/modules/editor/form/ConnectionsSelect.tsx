@@ -1,4 +1,4 @@
-import { ConnectorAuthProperty, ConnectorMetadata } from '@linkerry/connectors-framework'
+import { ConnectorAuthProperty, ConnectorMetadata, PropertyType } from '@linkerry/connectors-framework'
 import { AppConnectionWithoutSensitiveData } from '@linkerry/shared'
 import {
 	Dialog,
@@ -12,13 +12,14 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue
+	SelectValue,
 } from '@linkerry/ui-components/client'
 import { HTMLAttributes, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
 import { appConnectionsQueryConfig } from '../../app-connections/query-configs-app-connections'
-import { CreateAppConnection } from '../app-connections/CreateAppConnection'
+import { CustomAuth } from '../app-connections/CustomAuth'
+import { OAuth2Auth } from '../app-connections/OAuth2Auth'
 
 export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	auth: ConnectorAuthProperty
@@ -90,7 +91,12 @@ export const ConnectionsSelect = ({ auth, connector }: ConnectionsSelectProps) =
 			/>
 			<Dialog open={showDialog} onOpenChange={setShowDialog}>
 				<DialogContent className="sm:max-w-[425px]">
-					<CreateAppConnection onCreateAppConnection={handleAddedConnection} auth={auth} connector={connector} setShowDialog={setShowDialog} />
+					{auth.type === PropertyType.CUSTOM_AUTH && (
+						<CustomAuth onCreateAppConnection={handleAddedConnection} auth={auth} connector={connector} setShowDialog={setShowDialog} />
+					)}
+					{auth.type === PropertyType.OAUTH2 && (
+						<OAuth2Auth onCreateAppConnection={handleAddedConnection} auth={auth} connector={connector} setShowDialog={setShowDialog} />
+					)}
 				</DialogContent>
 			</Dialog>
 		</>

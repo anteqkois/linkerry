@@ -39,4 +39,11 @@ export class Oauth2Service {
 			connectorName: input.connectorName,
 		})
 	}
+
+	async redirect(body: any, query: any) {
+		console.log('BODY')
+		console.dir(body, { depth: null })
+		console.log('QUERY')
+		console.dir(query, { depth: null })
+	}
 }
