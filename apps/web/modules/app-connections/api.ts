@@ -9,3 +9,9 @@ export class AppConnectionsApi {
 		return apiClient.get<AppConnectionWithoutSensitiveData[]>(`/app-connections`)
 	}
 }
+
+export class OAuth2Api {
+	static async getManyApps() {
+		return apiClient.get<>(`/oauth2/apps`)
+	}
+}

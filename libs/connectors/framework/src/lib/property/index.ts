@@ -53,7 +53,5 @@ export const getRefreshersToRefreshedProperties = (props: ConnectorPropertyMap) 
 		}
 	}
 
-	console.log({ refresherToRefreshedProperty, props })
-
 	return refresherToRefreshedProperty
 }

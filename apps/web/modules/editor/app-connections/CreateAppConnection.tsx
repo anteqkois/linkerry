@@ -1,5 +1,10 @@
 import { ConnectorAuthProperty, ConnectorMetadata, PropertyType } from '@linkerry/connectors-framework'
-import { AppConnectionType, AppConnectionWithoutSensitiveData, UpsertAppConnectionInput, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import {
+	AppConnectionType,
+	AppConnectionWithoutSensitiveData,
+	UpsertAppConnectionInput,
+	isCustomHttpExceptionAxios
+} from '@linkerry/shared'
 import {
 	ButtonClient,
 	DialogDescription,
@@ -22,6 +27,7 @@ import { useForm } from 'react-hook-form'
 import Markdown from 'react-markdown'
 import { AppConnectionsApi } from '../../app-connections'
 import { CustomAuth } from './CustomAuth'
+import { OAuth2 } from './OAuth2'
 
 export interface CreateAppConnectionProps extends HTMLAttributes<HTMLElement> {
 	onCreateAppConnection: (newConnection: AppConnectionWithoutSensitiveData) => void
@@ -62,6 +68,7 @@ export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, se
 					},
 				}
 				break
+			case PropertyType.OAUTH2:
 			case PropertyType.BASIC_AUTH:
 			case PropertyType.SECRET_TEXT:
 				setLoading(false)
@@ -94,7 +101,6 @@ export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, se
 		}
 	}
 
-	// TODO przetestować poprawne klucze
 	return (
 		<>
 			<DialogHeader>
@@ -121,6 +127,7 @@ export const CreateAppConnection = ({ onCreateAppConnection, auth, connector, se
 					/>
 					<Markdown>{auth.description}</Markdown>
 					{auth.type === PropertyType.CUSTOM_AUTH && <CustomAuth props={auth.props} />}
+					{auth.type === PropertyType.OAUTH2 && <OAuth2 auth={auth} connectorName={connector.name}/>}
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
 					</div>

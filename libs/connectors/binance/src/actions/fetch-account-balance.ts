@@ -39,7 +39,6 @@ export const fetchAccountBalance = createAction({
 	description: 'Fetch account asset balance ',
 	displayName: 'Fetch account balance',
 	name: 'fetch_account_balance',
-	requireAuth: true,
 	props: {
 		non_zero_assets: Property.Checkbox({
 			description: 'Shoould return only non-zero balance assets',

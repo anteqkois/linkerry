@@ -8,6 +8,7 @@ import {
 	FlowVersionsModule,
 	FlowWorkerModule,
 	FlowsModule,
+	Oauth2Module,
 	ProjectsModule,
 	StoreEntryModule,
 	TestTriggerModule,
@@ -36,6 +37,7 @@ import { AppService } from './app.service'
 		WebhookSimulationModule,
 		FlowWorkerModule,
 		FilesModule,
+		Oauth2Module
 	],
 	controllers: [AppController],
 	providers: [AppService],

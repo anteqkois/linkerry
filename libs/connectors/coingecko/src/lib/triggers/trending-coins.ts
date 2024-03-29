@@ -19,6 +19,7 @@ export const trendingCoins = createTrigger({
 	displayName: 'Top trending coins',
 	name: 'trending_coins',
 	type: TriggerStrategy.POLLING,
+	requireAuth: false,
 	props: {},
 	onEnable: async (context) => {
 		await pollingHelper.onEnable(polling, {

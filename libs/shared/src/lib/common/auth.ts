@@ -63,3 +63,5 @@ export enum JWTPrincipalType {
 	CUSTOMER = 'CUSTOMER',
 	WORKER = 'WORKER',
 }
+
+export const LINKERRY_API_KEY_HEADER = 'linkerry-api-key'

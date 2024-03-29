@@ -37,7 +37,7 @@ async function bootstrap() {
   )
 
   await app.listen(port)
-  Logger.log(`🚀 Api service is running on: http://localhost:${port}/${globalPrefix}`)
+  Logger.log(`🚀 Api service is running on: http://localhost:${port}${globalPrefix}`)
 }
 
 bootstrap()

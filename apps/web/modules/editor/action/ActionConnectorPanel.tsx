@@ -217,7 +217,6 @@ export const ActionConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
-						{actionWatcher?.requireAuth && connectorMetadata.auth ? 'true' : 'false'}
 						{actionWatcher?.requireAuth && connectorMetadata.auth ? (
 							<ConnectionsSelect
 								auth={connectorMetadata.auth}

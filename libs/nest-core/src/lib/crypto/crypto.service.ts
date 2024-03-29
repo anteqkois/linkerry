@@ -14,9 +14,9 @@ export class CryptoService {
 		this.secret = this.configService.getOrThrow<string>('ENCRYPTION_KEY')
 	}
 
-	encryptString(inputString: string): EncryptedObject {
+	encryptString(inputString: string, customSecret?: string): EncryptedObject {
 		const iv = randomBytes(this.ivLength) // Generate a random initialization vector
-		const key = Buffer.from(this.secret, 'binary')
+		const key = Buffer.from(customSecret ?? this.secret, 'binary')
 		const cipher = createCipheriv(this.algorithm, key, iv) // Create a cipher with the key and initialization vector
 		let encrypted = cipher.update(inputString, 'utf8', 'hex')
 		encrypted += cipher.final('hex')
@@ -26,23 +26,23 @@ export class CryptoService {
 		}
 	}
 
-	encryptObject(object: unknown): EncryptedObject {
+	encryptObject(object: unknown, customSecret?: string): EncryptedObject {
 		const objectString = JSON.stringify(object) // Convert the object to a JSON string
 		return this.encryptString(objectString)
 	}
 
-	decryptObject<T>(encryptedObject: EncryptedObject): T {
+	decryptObject<T>(encryptedObject: EncryptedObject, customSecret?: string): T {
 		const iv = Buffer.from(encryptedObject.iv, 'hex')
-		const key = Buffer.from(this.secret, 'binary')
+		const key = Buffer.from(customSecret ?? this.secret, 'binary')
 		const decipher = createDecipheriv(this.algorithm, key, iv)
 		let decrypted = decipher.update(encryptedObject.data, 'hex', 'utf8')
 		decrypted += decipher.final('utf8')
 		return JSON.parse(decrypted)
 	}
 
-	decryptString(encryptedObject: EncryptedObject): string {
+	decryptString(encryptedObject: EncryptedObject, customSecret?: string): string {
 		const iv = Buffer.from(encryptedObject.iv, 'hex')
-		const key = Buffer.from(this.secret, 'binary')
+		const key = Buffer.from(customSecret ?? this.secret, 'binary')
 		const decipher = createDecipheriv(this.algorithm, key, iv)
 		let decrypted = decipher.update(encryptedObject.data, 'hex', 'utf8')
 		decrypted += decipher.final('utf8')

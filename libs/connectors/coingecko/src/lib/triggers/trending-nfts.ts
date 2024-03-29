@@ -20,6 +20,7 @@ export const trendingNfts = createTrigger({
 	displayName: 'Top trending NFT collections',
 	name: 'trending_nfts',
 	type: TriggerStrategy.POLLING,
+	requireAuth: false,
 	props: {	},
 	onEnable: async (context) => {
 		await pollingHelper.onEnable(polling, {

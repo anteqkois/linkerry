@@ -26,6 +26,7 @@ export const cronExpressionTrigger = createTrigger({
 		}),
 	},
 	type: TriggerStrategy.POLLING,
+	requireAuth: false,
 	sampleData: {},
 	onEnable: async (ctx) => {
 		ctx.setSchedule({

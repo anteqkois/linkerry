@@ -17,7 +17,7 @@ import {
 import { HTMLAttributes, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
-import { appConnectionsQueryConfig } from '../../app-connections/query-configs'
+import { appConnectionsQueryConfig } from '../../app-connections/query-configs-app-connections'
 import { CreateAppConnection } from '../app-connections/CreateAppConnection'
 
 export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {

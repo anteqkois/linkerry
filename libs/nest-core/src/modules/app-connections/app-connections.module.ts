@@ -8,6 +8,7 @@ import { AppConnectionsController } from './app-connections.controller'
 import { AppConnectionsService } from './app-connections.service'
 import { AppConnectionsModelFactory } from './schemas/connections.schema'
 import { WorkerAppConnectionsController } from './worker-app-connections.controller'
+import { Oauth2Module } from './oauth2/oauth2.module';
 
 @Module({
 	imports: [
@@ -16,6 +17,7 @@ import { WorkerAppConnectionsController } from './worker-app-connections.control
 		ConnectorsMetadataModule,
 		CryptoModule,
 		RedisLockModule,
+		Oauth2Module,
 	],
 	controllers: [AppConnectionsController, WorkerAppConnectionsController],
 	providers: [AppConnectionsService],

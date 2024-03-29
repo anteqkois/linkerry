@@ -1,6 +1,7 @@
-import dayjs from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
+import * as dayjs from 'dayjs'
+// must use .js extension to prevent import bug
+import timezone from 'dayjs/plugin/timezone.js'
+import utc from 'dayjs/plugin/utc.js'
 // import isBase64 from 'is-base64';
 import { isNil } from '@linkerry/shared'
 import { ProcessorFn } from './types'

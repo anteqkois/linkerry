@@ -22,6 +22,7 @@ export const fetchById = createTrigger({
 	displayName: 'Fetch by coingecko id',
 	name: 'fetch_by_id',
 	type: TriggerStrategy.POLLING,
+	requireAuth: false,
 	props: {
 		// todo refactor to use dynamic dropdown
 		coin_id: Property.Text({

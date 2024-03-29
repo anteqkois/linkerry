@@ -5,6 +5,7 @@ import { CoingeckoApi } from '../common'
 export const fetchCoin = createAction({
 	description: 'Fetch coin information based on coingecko list',
 	displayName: 'Fetch coin information',
+	requireAuth: false,
 	name: 'fetch_coin',
 	props: {
 		query: Property.Text({
