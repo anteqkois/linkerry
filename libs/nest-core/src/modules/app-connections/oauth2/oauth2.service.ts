@@ -1,5 +1,5 @@
-import { OAuth2AppDecrypted, OAuth2AppEncrypted, OAuth2AppInput } from '@linkerry/shared'
-import { Injectable } from '@nestjs/common'
+import { ClaimOAuth2Request, OAuth2AppDecrypted, OAuth2AppEncrypted, OAuth2AppInput, OAuth2RedirectQuery } from '@linkerry/shared'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
@@ -40,10 +40,21 @@ export class Oauth2Service {
 		})
 	}
 
-	async redirect(body: any, query: any) {
-		console.log('BODY')
-		console.dir(body, { depth: null })
-		console.log('QUERY')
-		console.dir(query, { depth: null })
-	}
+		// console.dir(query, { depth: null })
+		// const { code, scope, state } = query
+
+		// const OAuth2App  = this.appConnectionsModel.find()
+
+		// this._claim({
+		// 	connectorName: '',
+		// 	projectId: '',
+		// 	request: {
+		// 		clientId
+		// 	}
+		// })
+
+	// private async _claim({connectorName, projectId, request}: ClaimOAuth2Request){
+
+	// }
+	// private async _getOAuthTokens(){}
 }

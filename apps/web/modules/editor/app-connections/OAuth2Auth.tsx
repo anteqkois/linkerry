@@ -32,16 +32,18 @@ export interface OAuth2AuthProps extends HTMLAttributes<HTMLElement> {
 	connector: Pick<ConnectorMetadata, 'displayName' | 'name'>
 	setShowDialog: Dispatch<SetStateAction<boolean>>
 }
+
 export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDialog }: OAuth2AuthProps) => {
 	const { data, status } = useClientQuery(OAuth2AppsQueryConfig.getManyApps())
-	const [oAoth2Settings, setOAoth2Settings] = useState<OAuth2Settings | null>(null)
+	const [OAuth2Settings, setOAuth2Settings] = useState<OAuth2Settings | null>(null)
+	const [OAuth2Response, setOAuth2Response] = useState<OAuth2Response | null>(null)
 
 	useEffect(() => {
 		if (status !== 'success') return
 		const app = data.find((app) => app.connectorName === connector.name)
 		assertNotNullOrUndefined(app, 'app')
 
-		setOAoth2Settings({
+		setOAuth2Settings({
 			auth_url: auth.authUrl,
 			redirect_url: `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/oauth2/redirect`,
 			scope: auth.scope.join(' '),
@@ -51,6 +53,8 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 		})
 	}, [status])
 
+
+	/* form */
 	const { toast } = useToast()
 	const [loading, setLoading] = useState(false)
 	const appConnectionForm = useForm<{ name: string } & Record<string, any>>({
@@ -60,29 +64,30 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 		},
 	})
 
+	/* OAuth2 modal window */
 	const [currentOpenedWindow, setCurrentOpenedWindow] = useState<Window | null>()
 	const constructRedirectUrl = useCallback(
 		(pckeChallenge: string) => {
-			assertNotNullOrUndefined(oAoth2Settings, 'oAoth2Settings')
+			assertNotNullOrUndefined(OAuth2Settings, 'oAoth2Settings')
 
 			const queryParams: Record<string, string> = {
 				response_type: 'code',
-				client_id: oAoth2Settings.client_id,
-				redirect_uri: oAoth2Settings.redirect_url,
+				client_id: OAuth2Settings.client_id,
+				redirect_uri: OAuth2Settings.redirect_url,
 				access_type: 'offline',
 				state: nanoid(),
 				prompt: 'consent',
-				scope: oAoth2Settings.scope,
-				...oAoth2Settings.extraParams,
+				scope: OAuth2Settings.scope,
+				...OAuth2Settings.extraParams,
 			}
 
-			if (oAoth2Settings.pkce) {
+			if (OAuth2Settings.pkce) {
 				const code_challenge = pckeChallenge
 				queryParams['code_challenge_method'] = 'plain'
 				queryParams['code_challenge'] = code_challenge
 			}
 
-			const url = new URL(oAoth2Settings.auth_url)
+			const url = new URL(OAuth2Settings.auth_url)
 
 			Object.entries(queryParams).forEach(([key, value]) => {
 				url.searchParams.append(key, value)
@@ -90,7 +95,7 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 
 			return url.toString()
 		},
-		[oAoth2Settings],
+		[OAuth2Settings],
 	)
 
 	const openWindow = (url: string): Window | null => {
@@ -99,24 +104,25 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 		return window.open(url, '_blank', windowFeatures)
 	}
 
-	const observeForResponse = (redirectUrl: string, pkce: boolean | undefined, pckeChallenge: string | undefined, popup: Window | null) => {
+	const observeWindowForResponse = (redirectUrl: string, pkce: boolean | undefined, pckeChallenge: string | undefined, popup: Window | null) => {
 		window.addEventListener('message', function handler(event) {
 			if (redirectUrl && redirectUrl.startsWith(event.origin) && event.data['code']) {
-				// event.data.code = decodeURIComponent(event.data.code);
-				// observer.next(event.data);
-				// popup?.close();
-				// observer.complete();
-				// window.removeEventListener('message', handler);
-				// second stage
-				//  if (params != undefined && params.code != undefined) {
-				//   return {
-				//     code: params.code,
-				//     code_challenge: pkce ? pckeChallenge : undefined,
-				//   };
-				// }
-				// throw new Error(
-				//   `Params for openPopUp is empty or the code is, params:${params}`
-				// );
+				event.data.code = decodeURIComponent(event.data.code)
+				popup?.close()
+				window.removeEventListener('message', handler)
+
+				if (event.data != undefined && event.data.code != undefined) {
+					return setOAuth2Response({
+						status: 'succees',
+						code: event.data.code,
+						code_challenge: pkce ? pckeChallenge : undefined,
+					})
+				}
+				console.error('Empty event data or code', event)
+				setOAuth2Response({
+					status: 'error',
+					errorMessage: 'Can not retrive required data',
+				})
 			}
 		})
 	}
@@ -124,10 +130,12 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 	const onConnectOAuth2 = () => {
 		currentOpenedWindow?.close()
 
+		assertNotNullOrUndefined(OAuth2Settings, 'oAoth2Settings')
 		const pckeChallenge = nanoid()
 		const redirectUrl = constructRedirectUrl(pckeChallenge)
 		const newWidnow = openWindow(redirectUrl)
 		setCurrentOpenedWindow(window)
+		observeWindowForResponse(OAuth2Settings.redirect_url, OAuth2Settings?.pkce, pckeChallenge, newWidnow)
 	}
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -216,14 +224,18 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
 					</div>
-					<Button onClick={() => onConnectOAuth2()} size={'lg'} className="w-full">
+					<Button onClick={() => onConnectOAuth2()} size={'lg'} className="w-full" type="button">
 						Connect
 					</Button>
 					<DialogFooter>
 						<Button onClick={() => setShowDialog(false)} disabled={loading} variant={'outline'}>
 							Cancel
 						</Button>
-						<ButtonClient loading={loading} type="submit" disabled={!appConnectionForm.formState.isValid}>
+						<ButtonClient
+							loading={loading}
+							type="submit"
+							disabled={!appConnectionForm.formState.isValid || !OAuth2Response || OAuth2Response.status === 'error'}
+						>
 							Save
 						</ButtonClient>
 					</DialogFooter>
@@ -241,3 +253,16 @@ interface OAuth2Settings {
 	extraParams: object
 	client_id: string
 }
+
+interface OAuth2ResponseSuccess {
+	status: 'succees'
+	code: string
+	code_challenge?: string
+}
+
+interface OAuth2ResponseError {
+	status: 'error'
+	errorMessage: string
+}
+
+type OAuth2Response = OAuth2ResponseSuccess | OAuth2ResponseError
