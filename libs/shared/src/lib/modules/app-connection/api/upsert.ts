@@ -1,5 +1,6 @@
 import { Id } from '../../../common'
 import { AppConnectionType } from '../app-connection'
+import { OAuth2AuthorizationMethod } from '../oauth2-authorization-method'
 
 interface CommonAuthProps {
 	name: string
@@ -39,23 +40,20 @@ export interface UpsertCustomAuthInput extends CommonAuthProps {
 //     description: 'Platform OAuth2',
 // })
 
-// export const UpsertCloudOAuth2Request = Type.Object({
-//     ...commonAuthProps,
-//     type: Type.Literal(AppConnectionType.CLOUD_OAUTH2),
-//     value: Type.Object({
-//         client_id: Type.String(),
-//         authorization_method: Type.Optional(Type.Enum(OAuth2AuthorizationMethod)),
-//         code: Type.String(),
-//         code_challenge: Type.Optional(Type.String()),
-//         props: Type.Optional(Type.Record(Type.String(), Type.String())),
-//         scope: Type.String(),
-//         type: Type.Literal(AppConnectionType.CLOUD_OAUTH2),
-//         token_url: Type.Optional(Type.String({})),
-//     }),
-// }, {
-//     title: 'Cloud OAuth2',
-//     description: 'Cloud OAuth2',
-// })
+export interface UpsertCloudOAuth2Request extends CommonAuthProps {
+	type: AppConnectionType.CLOUD_OAUTH2
+	value: {
+		client_id: string
+		code: string
+		code_challenge?: string
+		props?: Record<string, string>
+		scope: string
+		type: AppConnectionType.CLOUD_OAUTH2
+		authorization_method: OAuth2AuthorizationMethod
+		// retrived on the backend
+		// token_url?: string
+	}
+}
 
 export interface UpsertSecretTextInput extends CommonAuthProps {
 	type: AppConnectionType.SECRET_TEXT
@@ -108,16 +106,13 @@ export interface UpsertSecretTextInput extends CommonAuthProps {
 //     UpsertCustomAuthRequest,
 // ])
 
-export type UpsertAppConnectionInput = Omit<UpsertCustomAuthInput | UpsertSecretTextInput, 'projectId'>
+export type UpsertAppConnectionInput =
+	| Omit<UpsertCustomAuthInput, 'projectId'>
+	| Omit<UpsertSecretTextInput, 'projectId'>
+	| Omit<UpsertCloudOAuth2Request, 'projectId'>
+
 // export interface UpsertAppConnectionInput extends CommonAuthProps {
 // 	type: AppConnectionType
 // 	value: any
 // }
 
-// export type UpsertCloudOAuth2Request = Static<typeof UpsertCloudOAuth2Request>
-// export type UpsertPlatformOAuth2Request = Static<typeof UpsertPlatformOAuth2Request>
-// export type UpsertOAuth2Request = Static<typeof UpsertOAuth2Request>
-// export type UpsertSecretTextRequest = Static<typeof UpsertSecretTextRequest>
-// export type UpsertBasicAuthRequest = Static<typeof UpsertBasicAuthRequest>
-// export type UpsertCustomAuthRequest = Static<typeof UpsertCustomAuthRequest>
-// export type UpsertAppConnectionRequestBody = Static<typeof UpsertAppConnectionRequestBody>

@@ -3,11 +3,11 @@ import { Body, Controller, Get, Post, Query, Response, UnprocessableEntityExcept
 import { FastifyReply } from 'fastify'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { AdminGuard } from '../../../lib/auth/guards/admin.guard'
-import { Oauth2Service } from './oauth2.service'
+import { OAuth2Service } from './oauth2.service'
 
 @Controller('oauth2')
 export class Oauth2Controller {
-	constructor(private readonly oAuth2Service: Oauth2Service) {}
+	constructor(private readonly oAuth2Service: OAuth2Service) {}
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get('apps')

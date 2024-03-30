@@ -1,4 +1,4 @@
-import { ConnectorAuth, createConnector } from '@linkerry/connectors-framework'
+import { ConnectorAuth, OAuth2AuthorizationMethod, createConnector } from '@linkerry/connectors-framework'
 import { getRowsAction } from './lib/actions/get-rows'
 
 export const googleSheetsAuth = ConnectorAuth.OAuth2({
@@ -7,6 +7,7 @@ export const googleSheetsAuth = ConnectorAuth.OAuth2({
 	tokenUrl: 'https://oauth2.googleapis.com/token',
 	required: true,
 	scope: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.readonly'],
+	authorizationMethod: OAuth2AuthorizationMethod.BODY
 })
 
 export const coingecko = createConnector({

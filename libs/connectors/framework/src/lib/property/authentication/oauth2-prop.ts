@@ -22,7 +22,7 @@ type OAuth2ExtraProps = {
 	tokenUrl: string,
 	scope: string[],
 	pkce?: boolean,
-	authorizationMethod?: OAuth2AuthorizationMethod,
+	authorizationMethod: OAuth2AuthorizationMethod,
 	grantType?: OAuth2GrantType,
 	extra?: Record<string, unknown>,
 }

@@ -1,5 +1,12 @@
 import { ConnectorMetadata, OAuth2Property } from '@linkerry/connectors-framework'
-import { AppConnectionWithoutSensitiveData, assertNotNullOrUndefined } from '@linkerry/shared'
+import {
+	AppConnectionType,
+	AppConnectionWithoutSensitiveData,
+	CustomError,
+	ErrorCode,
+	assertNotNullOrUndefined,
+	isCustomHttpExceptionAxios,
+} from '@linkerry/shared'
 import {
 	ButtonClient,
 	DialogDescription,
@@ -24,6 +31,7 @@ import Markdown from 'react-markdown'
 import { useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
+import { AppConnectionsApi } from '../../app-connections'
 import { OAuth2AppsQueryConfig } from '../../app-connections/query-configs-apps'
 
 export interface OAuth2AuthProps extends HTMLAttributes<HTMLElement> {
@@ -52,7 +60,6 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 			client_id: app.clientId,
 		})
 	}, [status])
-
 
 	/* form */
 	const { toast } = useToast()
@@ -144,53 +151,53 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 		setLoading(true)
 		appConnectionForm.clearErrors()
 
-		const { name, ...formData } = appConnectionForm.getValues()
+		const { name } = appConnectionForm.getValues()
 
-		// let input: UpsertAppConnectionInput
+		try {
+			assertNotNullOrUndefined(OAuth2Settings, 'OAuth2Settings')
+			assertNotNullOrUndefined(OAuth2Response, 'OAuth2Response')
+			assertNotNullOrUndefined(auth.authorizationMethod, 'auth.authorizationMethod')
 
-		// switch (auth.type) {
-		// 	case PropertyType.CUSTOM_AUTH:
-		// 		input = {
-		// 			connectorName: connector.name,
-		// 			name: name,
-		// 			type: AppConnectionType.CUSTOM_AUTH,
-		// 			value: {
-		// 				type: AppConnectionType.CUSTOM_AUTH,
-		// 				props: formData,
-		// 			},
-		// 		}
-		// 		break
-		// 	case PropertyType.OAUTH2:
-		// 	case PropertyType.BASIC_AUTH:
-		// 	case PropertyType.SECRET_TEXT:
-		// 		setLoading(false)
-		// 		throw new Error(`Unsupoerted auth type ${auth.type}`)
-		// }
+			if (OAuth2Response.status === 'error') throw new CustomError('Can not process when OAuth2 response status is error', ErrorCode.INVALID_TYPE)
 
-		// try {
-		// 	const { data } = await AppConnectionsApi.upsert(input)
+			const { data } = await AppConnectionsApi.upsert({
+				connectorName: connector.name,
+				name,
+				type: AppConnectionType.CLOUD_OAUTH2,
+				value: {
+					type: AppConnectionType.CLOUD_OAUTH2,
+					authorization_method: auth.authorizationMethod,
+					client_id: OAuth2Settings.client_id,
+					code: OAuth2Response.code,
+					scope: OAuth2Settings.scope,
+					code_challenge: OAuth2Response.code_challenge,
+					// TODO implment props
+					// props?: Record<string, string>
+				},
+			})
 
-		// 	toast({
-		// 		title: `Connection ${data.name} was succesfully saved`,
-		// 		description: 'You can now use this connection through all of your flows.',
-		// 		variant: 'success',
-		// 	})
+			toast({
+				title: `Connection ${data.name} was succesfully saved`,
+				description: 'You can now use this connection through all of your flows.',
+				variant: 'success',
+			})
 
-		// 	onCreateAppConnection(data)
-		// 	setShowDialog(false)
-		// } catch (error: any) {
-		// 	if (isCustomHttpExceptionAxios(error))
-		// 		appConnectionForm.setError('root', {
-		// 			message: error.response.data.message,
-		// 		})
-		// 	else {
-		// 		appConnectionForm.setError('root', {
-		// 			message: 'Unknwon error occures, try again or inform our Team',
-		// 		})
-		// 	}
-		// } finally {
-		// 	setLoading(false)
-		// }
+			onCreateAppConnection(data)
+			setShowDialog(false)
+		} catch (error: any) {
+			if (isCustomHttpExceptionAxios(error))
+				appConnectionForm.setError('root', {
+					message: error.response.data.message,
+				})
+			else {
+				console.error(error)
+				appConnectionForm.setError('root', {
+					message: 'Unknwon error occures, try again or inform our Team',
+				})
+			}
+		} finally {
+			setLoading(false)
+		}
 	}
 
 	if (status === 'pending') return <Spinner />
@@ -224,7 +231,7 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
 					</div>
-					<Button onClick={() => onConnectOAuth2()} size={'lg'} className="w-full" type="button">
+					<Button onClick={() => onConnectOAuth2()} className="w-full" type="button">
 						Connect
 					</Button>
 					<DialogFooter>

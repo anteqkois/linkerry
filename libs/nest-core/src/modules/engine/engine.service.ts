@@ -58,7 +58,7 @@ export class EngineService {
 		private readonly appEventRoutingService: AppEventRoutingService,
 		private readonly webhookSecretsService: WebhookSecretsService,
 	) {
-		this.serverUrl = this.configService.getOrThrow('SERVER_HOST')
+		this.serverUrl = this.configService.getOrThrow('API_GATEWAY_URL')
 		assertNotNullOrUndefined(this.serverUrl, 'serverUrl', {
 			serverUrl: this.serverUrl,
 		})
