@@ -1,85 +1,70 @@
-import {
-	Menubar,
-	MenubarContent,
-	MenubarItem,
-	MenubarMenu,
-	MenubarSeparator,
-	MenubarShortcut,
-	MenubarTrigger,
-} from '@linkerry/ui-components/client'
+// 'use client'
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from '@linkerry/ui-components/client'
 import { Icons } from '@linkerry/ui-components/server'
 import Link from 'next/link'
 
 interface DesktopProps {
-  children?: React.ReactNode
+	children?: React.ReactNode
 }
 
 export function DesktopMenu({ children }: DesktopProps) {
-  return (
-    <nav className="hidden sm:block fixed top-1 left-1">
-      <Menubar>
-        <MenubarMenu>
-          <MenubarTrigger>Flows</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>
-              <Link href="/app/flows/editor" prefetch={false}>
-                Create New
-              </Link>
-              <MenubarShortcut>
-                <Icons.Plus />
-              </MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Edit Flow
-              <MenubarShortcut>
-                <Icons.Update />
-              </MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              <Link href="/app/flows/list" prefetch={false}>
-                All Flows
-              </Link>
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem disabled>
-              Create First Flow
-              <MenubarShortcut>
-                <Icons.Article />
-              </MenubarShortcut>
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>History</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>
-              Runs Hisory
-              <MenubarShortcut>{/* <Icons.plus /> */}</MenubarShortcut>
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>Connectors</MenubarTrigger>
-          <MenubarContent>
-            <Link href="/app/connectors" prefetch={false}>
-              <MenubarItem>
-                All Connectors
-                <MenubarShortcut>{/* <Icons.plus /> */}</MenubarShortcut>
-              </MenubarItem>
-            </Link>
-            <Link href="/app/connectors/connections" prefetch={false}>
-              <MenubarItem>Your Connected Apps</MenubarItem>
-            </Link>
-            <MenubarSeparator />
-            <MenubarItem disabled>
-              Security
-              <MenubarShortcut>
-                <Icons.Article />
-              </MenubarShortcut>
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        {/* <MenubarMenu>
+	return (
+		// <nav className="hidden sm:block fixed top-1 left-1">
+		<nav className="hidden sm:block ">
+			<Menubar>
+				<MenubarMenu>
+					<MenubarTrigger>Flows</MenubarTrigger>
+					<MenubarContent>
+						<MenubarItem>
+							<Link href="/app/flows/editor" prefetch={false}>
+								Create New
+							</Link>
+							<MenubarShortcut>
+								<Icons.Plus />
+							</MenubarShortcut>
+						</MenubarItem>
+						<MenubarItem>
+							Edit Flow
+							<MenubarShortcut>
+								<Icons.Update />
+							</MenubarShortcut>
+						</MenubarItem>
+						<MenubarItem>
+							<Link href="/app/flows" prefetch={false}>
+								All Flows
+							</Link>
+						</MenubarItem>
+						<MenubarSeparator />
+						<MenubarItem disabled>
+							Create First Flow
+							<MenubarShortcut>
+								<Icons.Article />
+							</MenubarShortcut>
+						</MenubarItem>
+					</MenubarContent>
+				</MenubarMenu>
+				<MenubarMenu>
+					<MenubarTrigger>Connectors</MenubarTrigger>
+					<MenubarContent>
+						<Link href="/app/connectors" prefetch={false}>
+							<MenubarItem>
+								All Connectors
+								<MenubarShortcut>{/* <Icons.plus /> */}</MenubarShortcut>
+							</MenubarItem>
+						</Link>
+						<Link href="/app/connectors/connections" prefetch={false}>
+							<MenubarItem>Your Connected Apps</MenubarItem>
+						</Link>
+						<MenubarSeparator />
+						<MenubarItem disabled>
+							Security
+							<MenubarShortcut>
+								<Icons.Article />
+							</MenubarShortcut>
+						</MenubarItem>
+					</MenubarContent>
+				</MenubarMenu>
+				{/* <MenubarMenu>
         <MenubarTrigger>Profile</MenubarTrigger>
         <MenubarContent>
           <MenubarItem>Dashboard</MenubarItem>
@@ -105,7 +90,7 @@ export function DesktopMenu({ children }: DesktopProps) {
           </MenubarSub>
         </MenubarContent>
       </MenubarMenu> */}
-      </Menubar>
-    </nav>
-  )
+			</Menubar>
+		</nav>
+	)
 }

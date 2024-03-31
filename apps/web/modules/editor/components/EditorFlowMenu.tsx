@@ -100,7 +100,7 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 	}
 
 	return (
-		<nav className="hidden sm:block fixed top-1 left-1/2 -translate-x-1/2 z-40">
+		<nav className="hidden sm:block fixed top-2 left-1/2 -translate-x-1/2 z-40">
 			<Menubar>
 				<MenubarMenu>
 					{/* //TODO implement resiseable input */}

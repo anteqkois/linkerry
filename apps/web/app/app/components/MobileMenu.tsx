@@ -15,7 +15,8 @@ interface MobileProps {
 
 export function MobileMenu({ children }: MobileProps) {
   return (
-    <div className="sm:hidden fixed top-1 left-1">
+    // <div className="sm:hidden fixed top-1 left-1">
+    <div className="sm:hidden">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
