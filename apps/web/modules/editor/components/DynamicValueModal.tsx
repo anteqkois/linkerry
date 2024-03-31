@@ -1,4 +1,4 @@
-import { BaseStepSettings, CustomError, ErrorCode, Step, assertNotNullOrUndefined, flowHelper, isNil, isStepBaseSettings } from '@linkerry/shared'
+import { BaseStepSettings, CustomError, ErrorCode, StepNotEmpty, assertNotNullOrUndefined, flowHelper, isNil, isStepBaseSettings } from '@linkerry/shared'
 import { Separator } from '@linkerry/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@linkerry/ui-components/server'
 import { useClickOutside } from '@react-hookz/web'
@@ -28,7 +28,7 @@ export const DynamicValueModal = () => {
 				if (isNil(step.settings.inputUiInfo.currentSelectedData)) return
 				return step
 			})
-			.filter(Boolean) as Step[]
+			.filter(Boolean) as StepNotEmpty[]
 
 		return steps
 	}, [editedStep])

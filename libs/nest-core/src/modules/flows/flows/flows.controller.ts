@@ -1,5 +1,5 @@
-import { FlowOperationRequest, Id, RequestUser } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
+import { FlowGetManyQuery, FlowOperationRequest, Id, RequestUser } from '@linkerry/shared'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowsService } from './flows.service'
@@ -14,6 +14,16 @@ export class FlowsController {
 		return this.flowsService.findOne({
 			filter: {
 				_id: id,
+				projectId: user.projectId,
+			},
+		})
+	}
+
+	@UseGuards(JwtCookiesAuthGuard)
+	@Get()
+	getFlows(@ReqJwtUser() user: RequestUser, @Query() query: FlowGetManyQuery) {
+		return this.flowsService.findMany({
+			filter: {
 				projectId: user.projectId,
 			},
 		})

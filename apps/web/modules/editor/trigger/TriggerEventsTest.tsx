@@ -88,7 +88,7 @@ export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: Trig
 			setSelectedTriggerEventId(triggerEvents[triggerEvents.length - 1]._id)
 			setInitialTime(dayjs().format())
 		} catch (error) {
-			console.error('ERROR', error)
+			console.error(error)
 			if (isCustomHttpExceptionAxios(error))
 				toast({
 					title: 'Loading trigger sample data failed',

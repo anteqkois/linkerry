@@ -25,6 +25,7 @@ export interface Flow extends DatabaseTimestamp {
 	status: FlowStatus
 	publishedVersionId: Nullable<Id>
 	schedule: Nullable<FlowScheduleOptions>
+	deleted?: boolean
 }
 
 export interface FlowPopulated extends Omit<Flow, 'version'> {

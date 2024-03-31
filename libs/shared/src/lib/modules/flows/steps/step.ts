@@ -1,4 +1,7 @@
-import { ActionConnector } from "../actions";
-import { TriggerConnector } from "../triggers";
+import { Action } from '../actions'
+import { TriggerConnector, TriggerNotEmpty } from '../triggers'
 
-export type Step = ActionConnector | TriggerConnector
+export type StepNotEmpty = Action | TriggerNotEmpty
+
+export type ActionSchemaGraph = Action & { nextAction: ActionSchemaGraph | null }
+export type TriggerSchemaGraph = TriggerConnector & { nextAction: ActionSchemaGraph | null }

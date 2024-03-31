@@ -33,6 +33,7 @@ export class FlowsService {
 		private readonly flowHooks: FlowHooks,
 	) {}
 
+	// TODO imporve TS
 	async findOne({ filter }: { filter: MongoFilter<FlowDocument> }): Promise<
 		| (Document<unknown, object, FlowPopulated> &
 				FlowPopulated &
@@ -44,13 +45,41 @@ export class FlowsService {
 		return this.flowModel.findOne(filter).populate(['version'])
 	}
 
+	async findMany({ filter }: { filter: MongoFilter<FlowDocument> }) {
+		return this.flowModel.find(filter).populate(['version'])
+	}
+
 	async deleteOne(id: Id, projectId: Id) {
-		await this.flowModel.deleteOne({
-			_id: id,
-			projectId,
+		const lock = await this.redisLockService.acquireLock({
+			key: id,
+			timeout: 10000,
 		})
 
-		await this.flowVersionService.deleteRelatedToFlow(id)
+		try {
+			const flowToDelete = await this.findOne({filter:{
+				_id: id,
+				projectId
+			}})
+			assertNotNullOrUndefined(flowToDelete, 'flowToDelete')
+
+			await this.flowHooks.preDelete({flowToDelete })
+
+			// await this.flowModel.deleteOne({
+			// 	_id: id,
+			// 	projectId,
+			// })
+			await this.flowModel.updateOne({
+				_id: id,
+				projectId,
+			},{
+				
+			})
+
+			/* don't delete, in future it can be usefull to train AI model */
+			// await this.flowVersionService.deleteRelatedToFlow(id)
+		} finally {
+			await lock.release()
+		}
 	}
 
 	async patch({ flowId, update }: { flowId: Id; update: Partial<Flow> }) {

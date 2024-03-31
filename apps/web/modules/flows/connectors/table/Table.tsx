@@ -5,7 +5,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { HTMLAttributes } from 'react'
 import { useClientQuery } from '../../../../libs/react-query'
 import { ErrorInfo } from '../../../../shared/components/ErrorInfo'
-import { DataTable } from '../../../../shared/components/table/Table'
+import { DataTable } from '../../../../shared/components/Table/Table'
 import { connectorsMetadataQueryConfig } from '../api/query-configs'
 import { columns } from './defaultColumns'
 

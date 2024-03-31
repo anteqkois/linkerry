@@ -22,7 +22,6 @@ export const columns: ColumnDef<FlowRun>[] = [
 	//   enableSorting: false,
 	//   enableHiding: false,
 	// },
-	// TODO fix errors in console
 	{
 		id: 'status',
 		accessorKey: 'status',

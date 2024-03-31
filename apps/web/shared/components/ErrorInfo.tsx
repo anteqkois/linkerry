@@ -1,3 +1,4 @@
+'use client'
 import { isCustomError, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import { Small } from '@linkerry/ui-components/server'
 import { HTMLAttributes, useEffect, useState } from 'react'

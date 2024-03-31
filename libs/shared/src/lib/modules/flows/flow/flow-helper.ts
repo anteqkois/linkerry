@@ -1,7 +1,8 @@
 import { CustomError, ErrorCode, assertNotNullOrUndefined, clone, deepMerge } from '../../../common'
 import { Action, ActionType } from '../actions/action'
 import { FlowVersion } from '../flow-versions'
-import { Trigger, TriggerType } from '../triggers/trigger'
+import { ActionSchemaGraph, StepNotEmpty, TriggerSchemaGraph } from '../steps/step'
+import { Trigger, TriggerNotEmpty, TriggerType } from '../triggers/trigger'
 import {
 	AddActionRequest,
 	DeleteActionRequest,
@@ -178,6 +179,31 @@ const deleteAction = (flowVersion: FlowVersion, { name }: DeleteActionRequest) =
 	return flowVersion
 }
 
+const buildFlowVersionTriggersSchemaGraph = (flowVersion: FlowVersion) => {
+	const triggersGraph: TriggerSchemaGraph[] = []
+	function buildStep(step: Action): ActionSchemaGraph | null {
+		const actionSchemaGraph: ActionSchemaGraph = { ...step, nextAction: null }
+		if (!actionSchemaGraph.nextActionName) return null
+
+		if (actionSchemaGraph.nextActionName) {
+			// Find the next action and build it
+			const nextAction = flowVersion.actions.find((action) => action.name === actionSchemaGraph.nextActionName) as ActionSchemaGraph
+			if (!nextAction) return null
+			actionSchemaGraph.nextAction = buildStep(nextAction)
+		}
+
+		return actionSchemaGraph
+	}
+
+	// Build the triggers
+	for (const trigger of flowVersion.triggers as TriggerNotEmpty[]) {
+		const action = flowVersion.actions.find((action) => action.name === trigger.nextActionName)
+		triggersGraph.push({ ...trigger, nextAction: action ? buildStep(action) : null })
+	}
+
+	return triggersGraph
+}
+
 export const flowHelper = {
 	isValid,
 	apply(flowVersion: FlowVersion, operation: FlowOperationRequest): FlowVersion {
@@ -226,4 +252,5 @@ export const flowHelper = {
 	getAction,
 	// updateAction,
 	getParentSteps,
+	buildFlowVersionTriggersSchemaGraph,
 }

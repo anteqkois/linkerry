@@ -23,6 +23,9 @@ export class FlowModel<T> extends TimestampDatabaseModel implements Omit<Flow, '
 
 	@Prop({ required: false, type: Object, default: null })
 	schedule: Nullable<FlowScheduleOptions>
+
+	@Prop({ required: false, type: Object, default: false })
+	deleted: boolean
 }
 
 export const FlowSchema = SchemaFactory.createForClass(FlowModel)

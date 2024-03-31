@@ -42,7 +42,7 @@ export const ActionConnectorPanel = () => {
 		data: connectorMetadata,
 		isFetched,
 		isLoading,
-		error,
+		error
 	} = useClientQuery(
 		connectorsMetadataQueryConfig.getOne({
 			connectorName: editedAction.settings.connectorName,

@@ -1,5 +1,5 @@
 import { ConnectorMetadata } from '@linkerry/connectors-framework'
-import { Step, isNil } from '@linkerry/shared'
+import { StepNotEmpty, isNil } from '@linkerry/shared'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
 import Image from 'next/image'
@@ -8,7 +8,7 @@ import { useEditor } from '../useEditor'
 import { DynamicValueEntry } from './DynamicValueEntry'
 
 export interface DynamicValueStepProps extends HTMLAttributes<HTMLElement> {
-	step: Step
+	step: StepNotEmpty
 	connectorMetadata: ConnectorMetadata
 	stepIndex: number
 }

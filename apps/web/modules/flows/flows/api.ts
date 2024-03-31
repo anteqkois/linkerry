@@ -1,4 +1,4 @@
-import { FlowOperationRequest, FlowPopulated, Id } from '@linkerry/shared'
+import { FlowGetManyQuery, FlowOperationRequest, FlowPopulated, Id } from '@linkerry/shared'
 import { apiClient } from '../../../libs/api-client'
 
 export class FlowApi {
@@ -8,17 +8,23 @@ export class FlowApi {
 				indexes: null, // no brackets at all
 			},
 		})
+	}
 
-		// return apiClient.get<IStrategy_GetOneResponse<'strategyBuy.strategyBuy'>>(`/strategies/${id}`, {
-		//   params: query,
-		//   paramsSerializer: {
-		//     indexes: null, // no brackets at all
-		//   },
-		// })
+	static async getMany(query: FlowGetManyQuery) {
+		return apiClient.get<FlowPopulated[]>(`/flows`, {
+			params: query,
+			paramsSerializer: {
+				indexes: null,
+			},
+		})
 	}
 
 	static async create() {
 		return apiClient.post<FlowPopulated>('/flows')
+	}
+
+	static async delete(flowId: Id) {
+		return apiClient.delete<FlowPopulated>(`/flows/${flowId}`)
 	}
 
 	static async operation(id: Id, body: FlowOperationRequest) {
