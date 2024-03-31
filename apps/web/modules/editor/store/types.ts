@@ -69,6 +69,7 @@ export interface FlowAndConnectorsSlice {
 	onClickFlowRuns: () => void
 	selectedFlowRunId: Id | null
 	onSelectFlowRun: (flowRunId: string) => void
+	updateFlowVersionDisplayName: (newName: string) => Promise<void>
 	// CONNECTORS
 	editedConnectorMetadata: ConnectorMetadata | null
 	setEditedConnectorMetadata: (connectorMetadata: ConnectorMetadata | null) => void

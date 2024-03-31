@@ -35,7 +35,7 @@ import {
 	StopIcon,
 	TrashIcon,
 	UpdateIcon,
-	ZoomInIcon
+	ZoomInIcon,
 } from '@radix-ui/react-icons'
 import { VariantProps, cva } from 'class-variance-authority'
 import { cn } from '../../utils'
@@ -54,12 +54,12 @@ const iconVariants = cva('', {
 	},
 })
 
-interface IconProps extends React.HTMLAttributes<SVGElement>, VariantProps<typeof iconVariants> {
+interface IconProps extends React.HTMLAttributes<SVGSVGElement>, React.RefAttributes<SVGSVGElement>, VariantProps<typeof iconVariants> {
 	children?: undefined
 }
 const defaultProps = ({ size, className, ...props }: IconProps): IconProps => ({ ...props, className: cn(iconVariants({ size, className })) })
 
-interface RadixIconProps extends React.HTMLAttributes<SVGElement>, VariantProps<typeof iconVariants> {
+interface RadixIconProps extends React.HTMLAttributes<SVGSVGElement>, React.RefAttributes<SVGSVGElement>, VariantProps<typeof iconVariants> {
 	children?: undefined
 }
 const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): RadixIconProps => ({

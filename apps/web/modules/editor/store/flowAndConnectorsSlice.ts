@@ -101,7 +101,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 				type: FlowOperationType.CHANGE_STATUS,
 				flowVersionId: flow.version._id,
 				request: {
-					status
+					status,
 				},
 			})
 			setFlow(data)
@@ -182,6 +182,27 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 			showLeftDrawer: true,
 			selectedFlowRunId: flowRunId,
 		})
+	},
+	updateFlowVersionDisplayName: async (newName) => {
+		const { flow, setFlow } = get()
+		set({
+			flowOperationRunning: true,
+		})
+
+		try {
+			const { data } = await FlowApi.operation(flow._id, {
+				type: FlowOperationType.CHANGE_NAME,
+				flowVersionId: flow.version._id,
+				request: {
+					displayName: newName,
+				},
+			})
+			setFlow(data)
+		} finally {
+			set({
+				flowOperationRunning: false,
+			})
+		}
 	},
 	// CONNECTORS
 	editedConnectorMetadata: null,

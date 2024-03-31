@@ -1,6 +1,7 @@
 import { FlowStatus, FlowVersionState, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import {
 	ButtonClient,
+	Input,
 	Menubar,
 	MenubarMenu,
 	Switch,
@@ -10,14 +11,17 @@ import {
 	TooltipTrigger,
 	useToast,
 } from '@linkerry/ui-components/client'
-import { Button } from '@linkerry/ui-components/server'
-import { HTMLAttributes, useCallback, useMemo } from 'react'
+import { Button, Icons } from '@linkerry/ui-components/server'
+import { useDebouncedCallback } from '@react-hookz/web'
+import { ChangeEvent, HTMLAttributes, useCallback, useMemo, useRef, useState } from 'react'
 import { useEditor } from '../useEditor'
 
 export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
 
 export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
-	const { flow, publishFlow, flowOperationRunning, setFlowStatus, onClickFlowRuns } = useEditor()
+	const { flow, updateFlowVersionDisplayName, publishFlow, flowOperationRunning, setFlowStatus, onClickFlowRuns } = useEditor()
+	const [flowVersionName, setFlowVersionName] = useState(flow.version.displayName)
+	const inputFlowVersionNameRef = useRef<HTMLInputElement>(null)
 	const { toast } = useToast()
 	const flowValidity = useMemo(() => {
 		if (flow.version.stepsCount < 2) return { invalid: true, message: 'Add one more step. Two steps are required for flow.' }
@@ -82,9 +86,39 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 		}
 	}, [flow.status])
 
+	const updateFlowVersionNameHandler = useDebouncedCallback(
+		async (newName) => {
+			await updateFlowVersionDisplayName(newName)
+		},
+		[flowVersionName],
+		1000,
+	)
+
+	const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+		setFlowVersionName(e.target.value)
+		await updateFlowVersionNameHandler(e.target.value)
+	}
+
 	return (
 		<nav className="hidden sm:block fixed top-1 left-1/2 -translate-x-1/2 z-40">
 			<Menubar>
+				<MenubarMenu>
+					{/* //TODO implement resiseable input */}
+					<div className="text-sm font-extrabold">
+						<Icons.Edit
+							onClick={(e) => !flowOperationRunning && inputFlowVersionNameRef.current?.focus()}
+							size={'sm'}
+							className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
+						/>
+						<Input
+							ref={inputFlowVersionNameRef}
+							value={flowVersionName}
+							onChange={onChangeHandler}
+							disabled={flowOperationRunning}
+							className="border-0 h-7 ml-0 pl-6 w-36"
+						/>
+					</div>
+				</MenubarMenu>
 				<MenubarMenu>
 					<Button className="h-7 rounded-sm" onClick={onClickFlowRuns} variant={'ghost'}>
 						Runs
