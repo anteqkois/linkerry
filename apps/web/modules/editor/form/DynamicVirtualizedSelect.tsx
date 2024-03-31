@@ -28,7 +28,7 @@ export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLE
 export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
 	const { getConnectorOptions, editedConnectorMetadata, editedAction } = useEditor()
-	const { getValues, watch, setError, getFieldState,  } = useFormContext()
+	const { getValues, watch, setError, getFieldState } = useFormContext()
 	const [options, setOptions] = useState<DynamicDropdownState<any>>(initOptions)
 	const [initValue, setInitValue] = useState<DropdownOption<any>>({
 		label: '',
@@ -95,7 +95,7 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 	const handleWatcher = useDebouncedCallback(
 		async (values, { name }) => {
 			if (!name) return
-			if (!property.refreshers.includes(name)) return
+			if (!property.refreshers.includes(name) && name !== 'auth') return
 			await refreshOptions({ values })
 		},
 		[],

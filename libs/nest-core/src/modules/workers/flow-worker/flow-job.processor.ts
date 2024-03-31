@@ -18,6 +18,7 @@ import { Model } from 'mongoose'
 import { FlowRunsService } from '../../flows/flow-runs/flow-runs.service'
 import { FlowVersionDocument, FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
 import { FlowDocument, FlowModel } from '../../flows/flows/schemas/flow.schema'
+import { DedupeService } from '../../flows/triggers/dedupe/dedupe.service'
 import { TriggerHooks } from '../../flows/triggers/trigger-hooks/trigger-hooks.service'
 import { QueuesService } from './queues/queues.service'
 import { DelayedJobData, QUEUES, RenewWebhookJobData, RepeatableJobType, RepeatingJobData, ScheduledJobData } from './queues/types'
@@ -25,8 +26,8 @@ import { DelayedJobData, QUEUES, RenewWebhookJobData, RepeatableJobType, Repeati
 @Processor(QUEUES.NAMES.SCHEDULED_JOB_QUEUE, {
 	concurrency: 10,
 })
-export class ScheduleJobProcessor extends WorkerHost {
-	private readonly logger = new Logger(ScheduleJobProcessor.name)
+export class FlowJobProcessor extends WorkerHost {
+	private readonly logger = new Logger(FlowJobProcessor.name)
 
 	constructor(
 		@InjectQueue(QUEUES.NAMES.SCHEDULED_JOB_QUEUE) readonly scheduleJobQueue: Queue,
@@ -35,6 +36,7 @@ export class ScheduleJobProcessor extends WorkerHost {
 		private readonly triggerHooks: TriggerHooks,
 		private readonly queuesService: QueuesService,
 		private readonly flowRunsService: FlowRunsService,
+		private readonly dedupeService: DedupeService,
 	) {
 		super()
 	}
@@ -104,7 +106,12 @@ export class ScheduleJobProcessor extends WorkerHost {
 
 		this.logger.debug(`#consumeConnectorTrigger payloads.length=${payloads.length}`, payloads)
 
-		const createFlowRuns = payloads.map((payload) =>
+		const filterPayloads = await this.dedupeService.filterUniquePayloads(
+			data.flowVersionId,
+			payloads,
+	)
+
+		const createFlowRuns = filterPayloads.map((payload) =>
 			this.flowRunsService.start({
 				environment: RunEnvironment.PRODUCTION,
 				flowVersionId: data.flowVersionId,

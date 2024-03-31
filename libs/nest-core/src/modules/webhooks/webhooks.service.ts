@@ -11,6 +11,7 @@ import { TriggerEventsService } from '../flows/trigger-events/trigger-events.ser
 import { TriggerHooks } from '../flows/triggers/trigger-hooks/trigger-hooks.service'
 import { CallbackParams, HandshakeParams, SyncParams } from './types'
 import { WebhookSimulationService } from './webhook-simulation/webhook-simulation.service'
+import { DedupeService } from '../flows/triggers/dedupe/dedupe.service'
 
 @Injectable()
 export class WebhooksService {
@@ -22,6 +23,7 @@ export class WebhooksService {
 		private readonly triggerEventsService: TriggerEventsService,
 		private readonly flowRunsService: FlowRunsService,
 		private readonly webhookSimulationService: WebhookSimulationService,
+		private readonly dedupeService: DedupeService,
 	) {
 		//
 	}
@@ -99,8 +101,8 @@ export class WebhooksService {
 			})
 
 			const flowVersion = await this.flowVersionModel.findOne({
-					_id: flow.version._id,
-					projectId,
+				_id: flow.version._id,
+				projectId,
 			})
 
 			if (isNil(flowVersion)) {
@@ -129,7 +131,7 @@ export class WebhooksService {
 		}
 
 		const flowVersion = await this.flowVersionModel.findOne({
-				_id: flow.publishedVersionId,
+			_id: flow.publishedVersionId,
 		})
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
@@ -144,7 +146,9 @@ export class WebhooksService {
 			this._saveSampleDataForWebhookTesting(flow._id, projectId, payload)
 		})
 
-		const createFlowRuns = payloads.map((payload) =>
+		const filterPayloads = await this.dedupeService.filterUniquePayloads(flowVersion.id, payloads)
+
+		const createFlowRuns = filterPayloads.map((payload) =>
 			this.flowRunsService.start({
 				environment: RunEnvironment.PRODUCTION,
 				flowVersionId: flowVersion._id.toString(),

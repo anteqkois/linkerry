@@ -10,14 +10,15 @@ import { FlowVersionsModule } from '../../flows/flow-versions/flow-versions.modu
 import { flowVersionModelFactory } from '../../flows/flow-versions/schemas/flow-version.schema'
 import { FlowsModule } from '../../flows/flows/flows.module'
 import { FlowModelFactory } from '../../flows/flows/schemas/flow.schema'
-import { TriggerHookssModule } from '../../flows/triggers/trigger-hooks/trigger-hooks.module'
+import { TriggerHooksModule } from '../../flows/triggers/trigger-hooks/trigger-hooks.module'
 import { SandboxModule } from '../sandbox/sandbox.module'
 import { FlowWorkerHooks } from './flow-worker.hooks'
 import { FlowWorkerService } from './flow-worker.service'
+import { FlowJobProcessor } from './flow-job.processor'
 import { OneTimeProcessor } from './one-time-job.processor'
 import { QueuesService } from './queues/queues.service'
 import { QUEUES } from './queues/types'
-import { ScheduleJobProcessor } from './schedule-job.processor'
+import { DedupeModule } from '../../flows/triggers/dedupe/dedupe.module'
 
 const EIGHT_MINUTES_IN_MILLISECONDS = 8 * 60 * 1000
 const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
@@ -34,11 +35,12 @@ const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
 		MongooseModule.forFeatureAsync([flowVersionModelFactory, FlowModelFactory, FlowRunModelFactory]),
 		FlowRunsModule,
 		FlowsModule,
-		TriggerHookssModule,
+		TriggerHooksModule,
 		FlowVersionsModule,
 		SandboxModule,
 		EngineModule,
 		FilesModule,
+		DedupeModule,
 		ConnectorsMetadataModule,
 		BullModule.registerQueue({
 			configKey: QUEUES.CONFIG_KEYS.FLOW,
@@ -51,6 +53,6 @@ const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
 			defaultJobOptions,
 		}),
 	],
-	providers: [ScheduleJobProcessor, OneTimeProcessor, QueuesService, FlowWorkerService, FlowWorkerHooks],
+	providers: [FlowJobProcessor, OneTimeProcessor, QueuesService, FlowWorkerService, FlowWorkerHooks],
 })
 export class FlowWorkerModule {}

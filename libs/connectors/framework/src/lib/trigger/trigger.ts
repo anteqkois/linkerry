@@ -3,6 +3,8 @@ import { TriggerHookContext } from '../context'
 import { TriggerBase } from '../metadata'
 import { ConnectorAuthProperty, ConnectorPropertyMap } from '../property'
 
+export const DEDUPE_KEY_PROPERTY = '_dedupe_key'
+
 export enum WebhookHandshakeStrategy {
 	NONE = 'NONE',
 	HEADER_PRESENT = 'HEADER_PRESENT',

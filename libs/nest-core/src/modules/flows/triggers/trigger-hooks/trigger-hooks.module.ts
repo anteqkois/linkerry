@@ -11,4 +11,4 @@ import { TriggerHooks } from './trigger-hooks.service';
 	providers: [TriggerHooks],
 	exports: [TriggerHooks],
 })
-export class TriggerHookssModule {}
+export class TriggerHooksModule {}

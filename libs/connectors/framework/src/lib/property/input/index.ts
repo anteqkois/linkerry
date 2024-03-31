@@ -6,6 +6,7 @@ import { CheckboxProperty } from './checkbox'
 import { DynamicDropdownProperty } from './dynamic-dropdown'
 import { DynamicProperties } from './dynamic-properties'
 import { JsonProperty } from './json'
+import { MarkDownProperty } from './markdown'
 import { NumberProperty } from './number'
 import { ObjectProperty } from './object'
 import { StaticDropdownProperty, StaticDropdownValue } from './static-dropdown'
@@ -21,6 +22,7 @@ export type InputProperty =
 	| ObjectProperty<boolean>
 	| JsonProperty<boolean>
 	| ArrayProperty<boolean>
+	| MarkDownProperty
 
 export const Property = {
 	Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
@@ -33,6 +35,15 @@ export const Property = {
 			defaultValidators: [Validators.string],
 		} as unknown as R extends true ? TextProperty<true> : TextProperty<false>
 	},
+	MarkDown(request: { value: string }): MarkDownProperty {
+    return {
+      displayName: 'Markdown',
+      required: false,
+      description: request.value,
+      type: PropertyType.MARKDOWN,
+      valueSchema: undefined as never,
+    };
+  },
 	Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
 		return { ...config, type: PropertyType.NUMBER, defaultValidators: [Validators.number] } as unknown as R extends true
 			? NumberProperty<true>

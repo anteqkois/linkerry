@@ -1,7 +1,7 @@
 import { Property, Store, StoreScope, Validators, createAction } from '@linkerry/connectors-framework';
 import { isNil } from '@linkerry/shared';
 import { googleSheetsAuth } from '../..';
-import { getAllGoogleSheetRows, getGoogleSheetRows, googleSheetsCommon } from './common/common';
+import { getAllGoogleSheetRows, getGoogleSheetRows, googleSheetsCommon } from '../common/common';
 
 async function getRows(
   store: Store,
