@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid'
 import { googleSheetsAuth } from '../..'
 import { columnToLabel, googleSheetsCommon } from '../common/common'
 
-export const newRowAddedTrigger = createTrigger({
+export const newRowAdded = createTrigger({
 	auth: googleSheetsAuth,
 	name: 'googlesheets_new_row_added',
 	displayName: 'New Row Added',
@@ -19,6 +19,7 @@ export const newRowAddedTrigger = createTrigger({
 		spreadsheet_id: googleSheetsCommon.spreadsheet_id,
 		sheet_id: googleSheetsCommon.sheet_id,
 	},
+	requireAuth: true,
 	type: TriggerStrategy.WEBHOOK,
 	async onEnable(context) {
 		const { spreadsheet_id, sheet_id } = context.propsValue

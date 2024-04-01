@@ -30,7 +30,7 @@ type StepBase = {
 
 export type ActionBase = StepBase
 
-export type TriggerBase = Omit<StepBase, 'requireAuth'> & {
+export type TriggerBase = StepBase & {
 	type: TriggerStrategy
 	sampleData: unknown
 	handshakeConfiguration?: WebhookHandshakeConfiguration

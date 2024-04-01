@@ -26,6 +26,7 @@ import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { DynamicValueModal } from '../components/DynamicValueModal'
+import { ConnectionsSelect } from '../form/ConnectionsSelect'
 import { DynamicField } from '../form/DynamicField'
 import { ConnectorVersion } from '../steps/ConnectorVersion'
 import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
@@ -75,6 +76,10 @@ export const TriggerConnectorPanel = () => {
 				else if (typeof value.defaultValue !== 'undefined') initData[key] = value.defaultValue
 			})
 
+		if (selectedTrigger.requireAuth) {
+			if (editedTrigger.settings.input.auth !== undefined) initData['auth'] = editedTrigger.settings.input['auth']
+		}
+
 		/* add to the end of callstack */
 		setTimeout(() => {
 			triggerForm.reset({
@@ -101,7 +106,7 @@ export const TriggerConnectorPanel = () => {
 					},
 				})
 		},
-		[...Object.values(editedTrigger.settings.input)],
+		[Object.values(editedTrigger.settings.input)],
 		1000,
 	)
 
@@ -203,6 +208,12 @@ export const TriggerConnectorPanel = () => {
 								</FormItem>
 							)}
 						/>
+						{triggerWatcher?.requireAuth && connectorMetadata.auth ? (
+							<ConnectionsSelect
+								auth={connectorMetadata.auth}
+								connector={{ name: connectorMetadata.name, displayName: connectorMetadata.displayName }}
+							/>
+						) : null}
 						{triggerWatcher?.props &&
 							Object.entries(triggerWatcher.props).map(([name, property]) => (
 								<DynamicField property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />

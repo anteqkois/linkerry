@@ -1,5 +1,5 @@
 import { ConnectorProperty, DropdownOption, DynamicDropdownProperty, DynamicDropdownState, PropertyType } from '@linkerry/connectors-framework'
-import { assertNotNullOrUndefined, hasVariableToken, isCustomHttpExceptionAxios, isEmpty } from '@linkerry/shared'
+import { hasVariableToken, isCustomHttpExceptionAxios, isEmpty, isNil, isStepBaseSettings } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { HTMLAttributes, useEffect, useState } from 'react'
@@ -27,7 +27,7 @@ export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLE
 
 export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
-	const { getConnectorOptions, editedConnectorMetadata, editedAction } = useEditor()
+	const { getConnectorOptions, editedConnectorMetadata, editedAction, editedTrigger } = useEditor()
 	const { getValues, watch, setError, getFieldState } = useFormContext()
 	const [options, setOptions] = useState<DynamicDropdownState<any>>(initOptions)
 	const [initValue, setInitValue] = useState<DropdownOption<any>>({
@@ -52,14 +52,14 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 				input,
 			})
 
-			if (!response.options.length) {
-				setOptions({
-					options: response.options,
-					disabled: true,
-					placeholder: 'Options not found',
-				})
-				return { options: [], currentValue: undefined }
-			}
+			// if (response.disabled) {
+			// 	setOptions({
+			// 		options: response.options,
+			// 		disabled: true,
+			// 		placeholder: 'Options not found',
+			// 	})
+			// 	return { options: [], currentValue: undefined }
+			// }
 
 			setOptions({
 				options: response.options,
@@ -103,12 +103,21 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 	)
 
 	useEffect(() => {
-		if (isEmpty(editedAction?.settings.actionName)) return
+		const isEditedTrigger = isNil(editedAction)
+		const editedStep = isEditedTrigger ? editedTrigger : editedAction
+		if (isNil(editedStep)) return console.log(`editedStep empty`)
+		// if (isNil(editedStep.settings)) return console.log(`editedStep.settings empty`)
+
 		/* to prevent triggering options endpoint when selected edited action changed, not all veriables changed at once */
-		if (editedConnectorMetadata?.name !== editedAction?.settings.connectorName) return
+		const editedStepName: string | undefined = isEditedTrigger ? editedStep.settings.triggerName : editedStep.settings.actionName
+		if (isNil(editedStepName)) return console.log(`stepName empty`)
+		if (!isStepBaseSettings(editedStep.settings)) return console.log(`editedStep.settings ins't baseSettings`)
+
+		if (editedStep.settings.connectorName !== editedConnectorMetadata?.name)
+			return console.log(`connectors different; editedStep.name=${editedStep.name}, editedConnectorMetadata.name=${editedConnectorMetadata?.name}`)
 
 		/* Check id user used dynamic value */
-		const currentValue = editedAction?.settings.input[name]
+		const currentValue = editedStep?.settings.input[name]
 		if (currentValue && hasVariableToken(currentValue)) {
 			// // TODO (better in dynamic text compoienent amd set as required when back to base field)
 			// /* set all refreshers as not required */
@@ -119,37 +128,41 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 		}
 
 		/* check if refreshers are filled, if filled, fetch options */
+
+		const selectedStepProps = Object.values(isEditedTrigger ? editedConnectorMetadata.triggers : editedConnectorMetadata.actions).find(
+			(step) => step.name === editedStepName,
+		)?.props
+		if (isNil(selectedStepProps)) return console.log(`selectedStepProps empty`)
+		const stepProperties = Object.keys(selectedStepProps)
+		/* In property.refreshers can be propeerties which aren't showing to user, and then missingRefreshers will be empty */
+		property.refreshers = property.refreshers.filter((refresher) => stepProperties.includes(refresher))
+
 		const values = getValues()
 		const missingRefresherNames: string[] = []
-
-		const allValidRefreshers = property.refreshers
+		const allValidRefresherNames = property.refreshers
 			.map((refresher) => ({ ...getFieldState(refresher), value: values[refresher], refresher }))
 			.filter((data) => {
 				const isValid = !!(!data.error && !data.invalid && !isEmpty(data.value))
 				if (!isValid) missingRefresherNames.push(data.refresher)
 				return isValid
 			})
+			.map((data) => data.refresher)
 
-		if (allValidRefreshers.length !== property.refreshers.length) {
-			assertNotNullOrUndefined(editedConnectorMetadata, 'editedConnectorMetadata')
-			assertNotNullOrUndefined(editedAction, 'editedAction')
-
-			const selectedActionProps = Object.values(editedConnectorMetadata.actions).find(
-				(action) => action.name === editedAction.settings.actionName,
-			)?.props
-			if (!selectedActionProps) return
-
-			const missingRefreshers = property.refreshers.filter((refresherName) => selectedActionProps[refresherName].displayName)
+		if (missingRefresherNames.length) {
+			const missingPropDisplayNames = Object.entries(selectedStepProps)
+				.filter(([name]) => missingRefresherNames.includes(name))
+				.map(([name, value]) => value.displayName)
 
 			/* Move to end of callstack */
 			setTimeout(() => {
-				setError(`__temp__${name}`, {
-					message: `First fill options: ${missingRefreshers}`,
-				})
+				if (missingRefresherNames.length)
+					setError(`__temp__${name}`, {
+						message: `First fill options: ${missingPropDisplayNames.join(', ')}`,
+					})
 			}, 0)
 		}
 
-		if (allValidRefreshers.length === property.refreshers.length) {
+		if (allValidRefresherNames.length === property.refreshers.length) {
 			refreshOptions({ values: getValues() })
 				.then(({ currentValue, options }) => {
 					/* check if current value includes options */
@@ -172,6 +185,7 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 
 		const subscription = watch(handleWatcher)
 		return () => subscription.unsubscribe()
+		// TODO fix not refreshing options when dependent refresher was selected, check if it necessary to add in dependencies refresher inputs
 	}, [])
 
 	return (

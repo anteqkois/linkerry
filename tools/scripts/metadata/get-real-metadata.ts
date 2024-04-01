@@ -1,5 +1,6 @@
 import { Connector, ConnectorMetadata } from 'libs/connectors/framework/src'
 import { ConnectorGroup, ConnectorType, PackageType } from 'libs/shared/src'
+import { join } from 'path'
 import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
 import { getAvailableConnectorNames } from '../utils/get-available-connector-names'
@@ -17,7 +18,9 @@ export const getRealMetadata = async () => {
 
 		const packageJson = await readPackageJson(packagePath)
 
-		const module = await import(`${packagePath}/src/index.ts`)
+		// const module = await import(`${packagePath}/src/index.ts`)
+
+		const module = await import(join(packagePath, 'src', 'index'))
 		const { name: connectorName, version: connectorVersion } = packageJson
 		const connector = extractConnectorFromModule({ module })
 
