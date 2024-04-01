@@ -179,18 +179,17 @@ const deleteAction = (flowVersion: FlowVersion, { name }: DeleteActionRequest) =
 	return flowVersion
 }
 
-const buildFlowVersionTriggersSchemaGraph = (flowVersion: FlowVersion) => {
+const buildFlowVersionTriggersGraph = (flowVersion: FlowVersion) => {
 	const triggersGraph: TriggerSchemaGraph[] = []
+
 	function buildStep(step: Action): ActionSchemaGraph | null {
 		const actionSchemaGraph: ActionSchemaGraph = { ...step, nextAction: null }
-		if (!actionSchemaGraph.nextActionName) return null
+		if (!actionSchemaGraph.nextActionName) return actionSchemaGraph
 
-		if (actionSchemaGraph.nextActionName) {
-			// Find the next action and build it
-			const nextAction = flowVersion.actions.find((action) => action.name === actionSchemaGraph.nextActionName) as ActionSchemaGraph
-			if (!nextAction) return null
-			actionSchemaGraph.nextAction = buildStep(nextAction)
-		}
+		// Find the next action and build it
+		const nextAction = flowVersion.actions.find((action) => action.name === actionSchemaGraph.nextActionName) as ActionSchemaGraph
+		if (!nextAction) return null
+		actionSchemaGraph.nextAction = buildStep(nextAction)
 
 		return actionSchemaGraph
 	}
@@ -202,6 +201,46 @@ const buildFlowVersionTriggersSchemaGraph = (flowVersion: FlowVersion) => {
 	}
 
 	return triggersGraph
+}
+
+// const getRelationConnectorNamesFromTriggersGraph = (triggerSchemaGraph: TriggerSchemaGraph) => {
+// 	const connectorNames: string[] = []
+// 	const getName = (actionSchemaGraph: ActionSchemaGraph) => {
+// 		console.log('actionSchemaGraph', actionSchemaGraph)
+// 		if (actionSchemaGraph.nextAction) getName(actionSchemaGraph.nextAction)
+// 		connectorNames.push(actionSchemaGraph.settings.connectorName)
+// 	}
+
+// 	if (triggerSchemaGraph.nextAction) getName(triggerSchemaGraph.nextAction)
+// 	connectorNames.push(triggerSchemaGraph.settings.connectorName)
+// 	return connectorNames.reverse()
+// }
+const transformFlowVersionToChainMap = (flowVersion: FlowVersion) => {
+	const triggersMap: StepNotEmpty[][] = []
+
+	let triggerIndex = 0
+	let triggerMap: StepNotEmpty[] = []
+	const loadAction = (action: StepNotEmpty) => {
+		if (action.nextActionName) {
+			const nextAction = flowVersion.actions.find((a) => a.name === action.nextActionName)
+			if (nextAction) loadAction(nextAction)
+		}
+		triggerMap.push(action)
+	}
+
+	for (const trigger of flowVersion.triggers) {
+		if (trigger.nextActionName) {
+			const action = flowVersion.actions.find((action) => action.name === trigger.nextActionName)
+			if (action) loadAction(action)
+		}
+		triggerMap.push(trigger as TriggerNotEmpty)
+
+		triggersMap[triggerIndex] = triggerMap.reverse()
+		triggerMap = []
+		triggerIndex++
+	}
+
+	return triggersMap
 }
 
 export const flowHelper = {
@@ -252,5 +291,6 @@ export const flowHelper = {
 	getAction,
 	// updateAction,
 	getParentSteps,
-	buildFlowVersionTriggersSchemaGraph,
+	buildFlowVersionTriggersGraph,
+	transformFlowVersionToChainMap,
 }

@@ -15,25 +15,23 @@ export function DesktopMenu({ children }: DesktopProps) {
 				<MenubarMenu>
 					<MenubarTrigger>Flows</MenubarTrigger>
 					<MenubarContent>
-						<MenubarItem>
-							<Link href="/app/flows/editor" prefetch={false}>
+						<Link href="/app/flows/editor" prefetch={false}>
+							<MenubarItem>
 								Create New
-							</Link>
-							<MenubarShortcut>
-								<Icons.Plus />
-							</MenubarShortcut>
-						</MenubarItem>
+								<MenubarShortcut>
+									<Icons.Plus />
+								</MenubarShortcut>
+							</MenubarItem>
+						</Link>
 						<MenubarItem>
 							Edit Flow
 							<MenubarShortcut>
 								<Icons.Update />
 							</MenubarShortcut>
 						</MenubarItem>
-						<MenubarItem>
-							<Link href="/app/flows" prefetch={false}>
-								All Flows
-							</Link>
-						</MenubarItem>
+						<Link href="/app/flows" prefetch={false}>
+							<MenubarItem>All Flows</MenubarItem>
+						</Link>
 						<MenubarSeparator />
 						<MenubarItem disabled>
 							Create First Flow

@@ -24,7 +24,7 @@ export default function Page() {
 
 	const onClickRowHndler = useCallback(async (row: Row<FlowPopulated>) => {
 		console.log('onClickRowHndler', row)
-		// await push(`/app/flows/${row.original._id}`)
+		// await push(`/app/flows/editor/${row.original._id}`)
 	}, [])
 
 	const onChangeFlowStatus = useCallback(async (flow: FlowPopulated) => {
@@ -83,7 +83,7 @@ export default function Page() {
 				data={data}
 				columns={columns}
 				clickable
-				// onClickRow={onClickRowHndler}
+				onClickRow={onClickRowHndler}
 				meta={{ onChangeFlowStatus, runningOperation }}
 				// filterAccessor="displayName"
 				// chooseFilters={[

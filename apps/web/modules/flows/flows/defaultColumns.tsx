@@ -1,8 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
-import { FlowPopulated, FlowStatus, assertNotNullOrUndefined, flowHelper, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import {
+	FlowOperationType,
+	FlowPopulated,
+	FlowStatus,
+	assertNotNullOrUndefined,
+	flowHelper,
+	isCustomHttpExceptionAxios,
+	isTrigger,
+} from '@linkerry/shared'
+import {
+	ButtonClient,
 	Dialog,
 	DialogContent,
 	DialogDescription,
@@ -15,6 +24,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 	Input,
+	MenubarShortcut,
 	Switch,
 	Tooltip,
 	TooltipContent,
@@ -25,6 +35,7 @@ import {
 import { Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 import { useCallback, useState } from 'react'
 import { getBrowserQueryCllient } from '../../../libs/react-query'
 import { TableColumnHeader } from '../../../shared/components/Table/TableColumnHeader'
@@ -36,7 +47,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 		accessorKey: 'name',
 		header: ({ column }) => <TableColumnHeader column={column} title="Name" className="ml-2" sortable />,
 		cell: ({ row }) => {
-			return <div className="font-medium">{row.original.version.displayName}</div>
+			return <div className="font-medium ml-2">{row.original.version.displayName}</div>
 		},
 	},
 	{
@@ -44,14 +55,31 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 		accessorFn: (row) => row.version.stepsCount,
 		header: ({ column }) => <TableColumnHeader column={column} title="Steps" sortable />,
 		cell: ({ row }) => {
-			// return <div className="font-medium pl-4">{row.original.version.stepsCount}</div>
-			const schema = flowHelper.buildFlowVersionTriggersSchemaGraph(row.original.version)
-			console.log('schema', schema)
+			const flowVersionChainMap = flowHelper.transformFlowVersionToChainMap(row.original.version)
+
 			return (
-				<div className="font-medium pl-4">
-					<span>{row.original.version.stepsCount}</span>
-					{/* <div>{row.original.version.actions.map(step => step.)}</div> */}
-				</div>
+				<TooltipProvider delayDuration={100}>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<div className="font-medium max-w-[150px] whitespace-nowrap text-ellipsis overflow-hidden">
+								{/* {`${row.original.version.stepsCount} ${flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}`} */}
+
+								<span className="text-primary font-bold">{row.original.version.stepsCount}:</span>
+								<span className="pl-1 max-w-[10px] overflow-hidden">
+									{flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}
+								</span>
+							</div>
+						</TooltipTrigger>
+						<TooltipContent>
+							{flowVersionChainMap[0].map((step) => (
+								<div key={step.name} className="flex flex-col ">
+									{!isTrigger(step) && <Icons.ArrowDown className="w-full" />}
+									<p>{`${isTrigger(step) ? 'Trigger' : 'Action'}: ${step.settings.connectorName} - ${step.displayName}`}</p>
+								</div>
+							))}
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			)
 		},
 	},
@@ -81,7 +109,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 					<TooltipProvider delayDuration={100}>
 						<Tooltip>
 							<TooltipTrigger asChild>
-								<div className="flex-center">
+								<div>
 									<Switch
 										id="flow-enabled"
 										checked={row.original.status === FlowStatus.ENABLED}
@@ -105,8 +133,11 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 		id: 'buttons',
 		cell: ({ row }) => {
 			const { toast } = useToast()
+			const [runingOperation, setRuningOperation] = useState(false)
 			const [confirmDeleteInput, setConfirmDeleteInput] = useState('')
 			const [confirmDialog, setConfirmDialog] = useState(false)
+			const [renameInput, setRenameInput] = useState(row.original.version.displayName)
+			const [renameDialog, setRenameDialog] = useState(false)
 			const [flowToDelete, setFlowToDelete] = useState<FlowPopulated>()
 
 			const onDeleteFlow = useCallback(async (flow: FlowPopulated) => {
@@ -114,13 +145,55 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 				setFlowToDelete(flow)
 			}, [])
 
-			const onConfirmDelete = useCallback(async () => {
-				console.log(confirmDeleteInput)
-				if (confirmDeleteInput !== 'DELETE')
-					return toast({
-						title: `Invalid confirmation input value: "${confirmDeleteInput}"`,
+			const onClickRename = useCallback(async (newName: string) => {
+				setRuningOperation(true)
+
+				try {
+					const { data } = await FlowApi.operation(row.original._id, {
+						type: FlowOperationType.CHANGE_NAME,
+						flowVersionId: row.original.version._id,
+						request: {
+							displayName: newName,
+						},
+					})
+
+					toast({
+						title: `Flow version name updated`,
+						variant: 'success',
+					})
+
+					const queryClient = getBrowserQueryCllient()
+					const cache = queryClient.getQueryData<FlowPopulated[]>(['flows'])
+					queryClient.setQueryData(
+						['flows'],
+						cache?.map((flow) => (flow._id === data._id ? data : flow)),
+					)
+					setRenameDialog(false)
+				} catch (error) {
+					if (isCustomHttpExceptionAxios(error))
+						return toast({
+							title: `Something went wrong`,
+							description: error.response.data.message,
+							variant: 'destructive',
+						})
+
+					console.error(error)
+					toast({
+						title: `Something went wrong`,
+						description: `The flow version name wasn't updated. Try again and when action still don't work, inform our Team`,
 						variant: 'destructive',
 					})
+				} finally {
+					setRuningOperation(false)
+				}
+			}, [])
+
+			const onConfirmDelete = useCallback(async () => {
+				// if (confirmDeleteInput !== 'DELETE')
+				// 	return toast({
+				// 		title: `Invalid confirmation input value: "${confirmDeleteInput}"`,
+				// 		variant: 'destructive',
+				// 	})
 
 				try {
 					assertNotNullOrUndefined(flowToDelete, 'flowToDelete')
@@ -136,6 +209,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 						['flows'],
 						data?.filter((flow) => flow._id !== flowToDelete._id),
 					)
+					setConfirmDialog(false)
 				} catch (error) {
 					if (isCustomHttpExceptionAxios(error))
 						return toast({
@@ -162,19 +236,53 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
+						<Link href={`/app/flows/editor/${row.original._id}`}>
+							<DropdownMenuItem disabled={runingOperation}>
+								Edit
+								<MenubarShortcut>
+									<Icons.Edit />
+								</MenubarShortcut>
+							</DropdownMenuItem>
+						</Link>
+						<Dialog open={renameDialog} onOpenChange={setRenameDialog}>
+							<DialogTrigger asChild>
+								<DropdownMenuItem disabled={runingOperation}>
+									Rename
+									<MenubarShortcut>
+										<Icons.Typing />
+									</MenubarShortcut>
+								</DropdownMenuItem>
+							</DialogTrigger>
+							<DialogContent className="sm:max-w-[425px]">
+								<DialogHeader>
+									<DialogTitle>Rename Flow</DialogTitle>
+								</DialogHeader>
+								<div className="gap-4 py-4">
+									<Input id="rename" value={renameInput} onChange={(e) => setRenameInput(e.target.value)} className="w-full" />
+								</div>
+								<DialogFooter>
+									<ButtonClient onClick={() => onClickRename(renameInput)} loading={runingOperation}>
+										Confirm
+									</ButtonClient>
+								</DialogFooter>
+							</DialogContent>
+						</Dialog>
+
 						<DropdownMenuItem disabled={true}>Statistics</DropdownMenuItem>
 						<Dialog open={confirmDialog} onOpenChange={setConfirmDialog}>
-							<DialogTrigger asChild>
+							<DialogTrigger asChild disabled={runingOperation}>
 								<DropdownMenuItem
-									className="flex select-none items-center cursor-pointer bg-negative/60 hover:bg-negative focus:bg-negative focus:text-negative-foreground"
+									className="bg-negative/60 focus:bg-negative focus:text-negative-foreground"
 									onClick={(e) => {
 										e.preventDefault()
-										// e.stopPropagation()
+										e.stopPropagation()
 										onDeleteFlow(row.original)
 									}}
 								>
 									Delete
-									<Icons.Delete className="ml-auto" />
+									<MenubarShortcut>
+										<Icons.Delete />
+									</MenubarShortcut>
 								</DropdownMenuItem>
 							</DialogTrigger>
 							<DialogContent className="sm:max-w-[425px]">
@@ -184,11 +292,11 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 										Your data will be deleted from your main app views like this flow list. Data related to flow like flow runs, trigger events will
 										be pernament deleted. Flow strusture and flow versions will be archived.
 									</DialogDescription>
-									<DialogDescription>
+									{/* <DialogDescription>
 										Type <span className="font-bold">DELETE</span> and press Confirm to process delete action
-									</DialogDescription>
+									</DialogDescription> */}
 								</DialogHeader>
-								<div className="gap-4 py-4">
+								{/* <div className="gap-4 py-4">
 									<Input
 										id="delete"
 										value={confirmDeleteInput}
@@ -196,12 +304,9 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 										className="w-full"
 										placeholder="DELETE"
 									/>
-								</div>
-								<Button type="submit" variant={'destructive'} onClick={onConfirmDelete}>
-									Confirm 2
-								</Button>
+								</div> */}
 								<DialogFooter>
-									<Button type="submit" variant={'destructive'} onClick={onConfirmDelete}>
+									<Button variant={'destructive'} onClick={onConfirmDelete}>
 										Confirm
 									</Button>
 								</DialogFooter>
