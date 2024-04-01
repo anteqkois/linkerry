@@ -12,7 +12,7 @@ export interface HandshakeParams  {
 }
 
 
-export interface SyncParams  {
+export interface CallbackParams  {
     flow: FlowPopulated
     payload: EventPayload
     synchronousHandlerId?: string

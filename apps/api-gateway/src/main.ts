@@ -1,4 +1,5 @@
 import fastifyCookie from '@fastify/cookie'
+import fastifyMultipart from '@fastify/multipart'
 import { exceptionFactoryDto } from '@linkerry/nest-core'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -9,35 +10,44 @@ import { AppModule } from './app/app.module'
 const globalPrefix = '/api/v1'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
+	const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
 
-  const configService = app.get(ConfigService)
-  const frontendUrl = configService.get('FRONTEND_HOST')
+	const configService = app.get(ConfigService)
+	const frontendUrl = configService.get('FRONTEND_HOST')
 
-  app.enableCors({
-    origin: [frontendUrl],
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true,
-  })
+	app.enableCors({
+		origin: [frontendUrl],
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+		credentials: true,
+	})
 
-  await app.register(fastifyCookie, {
-    secret: configService.get('COOKIES_SIGNATURE'),
-  })
+	await app.register(fastifyMultipart, {
+		attachFieldsToBody: 'keyValues',
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		async onFile(part: any) {
+			const buffer = await part.toBuffer()
+			part.value = buffer
+		},
+	})
 
-  app.setGlobalPrefix(globalPrefix)
+	await app.register(fastifyCookie, {
+		secret: configService.get('COOKIES_SIGNATURE'),
+	})
 
-  const port = process.env.PORT_API_GATEWAY || 3001
+	app.setGlobalPrefix(globalPrefix)
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      exceptionFactory: exceptionFactoryDto,
-      whitelist: true,
-    }),
-  )
+	const port = process.env.PORT_API_GATEWAY || 3001
 
-  await app.listen(port)
-  Logger.log(`🚀 Api service is running on: http://localhost:${port}${globalPrefix}`)
+	app.useGlobalPipes(
+		new ValidationPipe({
+			transform: true,
+			exceptionFactory: exceptionFactoryDto,
+			whitelist: true,
+		}),
+	)
+
+	await app.listen(port)
+	Logger.log(`🚀 Api service is running on: http://localhost:${port}${globalPrefix}`)
 }
 
 bootstrap()

@@ -12,7 +12,7 @@
 		"flow-executor": "nx serve flow-executor",
 		"nx-dev": "npx nx run-many -t serve -p api-gateway web flow-executor",
 		"dev": "concurrently -p \"[{name}]\" -n \"api-gateway,web\" -c \"bgBlue.bold,bgGreen.bold,bgCyan.bold\" \"npm:api-gateway\" \"npm:web\"",
-		"registry": "npx nx local-registry"
+		"registry": "sleep 3 && make publish-connectors & npx nx local-registry"
 	},
 	"private": true,
 	"devDependencies": {
@@ -81,6 +81,7 @@
 		"@codemirror/lang-json": "^6.0.1",
 		"@fastify/basic-auth": "^5.1.1",
 		"@fastify/cookie": "^8.3.0",
+		"@fastify/multipart": "^8.2.0",
 		"@hookform/resolvers": "^3.1.1",
 		"@liaoliaots/nestjs-redis": "^9.0.5",
 		"@nestjs/bullmq": "^10.1.0",

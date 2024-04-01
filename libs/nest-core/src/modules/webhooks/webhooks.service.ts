@@ -1,17 +1,19 @@
+import '@fastify/multipart'
 import { WebhookResponse } from '@linkerry/connectors-framework'
-import { ExecutionType, FlowStatus, FlowVersion, Id, RunEnvironment, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
+import { EventPayload, ExecutionType, FlowStatus, FlowVersion, Id, RunEnvironment, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import { FastifyRequest } from 'fastify'
 import { Model } from 'mongoose'
 import { FlowRunsService } from '../flows/flow-runs/flow-runs.service'
 import { FlowRunDocument } from '../flows/flow-runs/schemas/flow-runs.schema'
 import { HookType } from '../flows/flow-runs/types'
 import { FlowVersionDocument, FlowVersionModel } from '../flows/flow-versions/schemas/flow-version.schema'
 import { TriggerEventsService } from '../flows/trigger-events/trigger-events.service'
-import { TriggerHooks } from '../flows/triggers/trigger-hooks/trigger-hooks.service'
-import { CallbackParams, HandshakeParams, SyncParams } from './types'
-import { WebhookSimulationService } from './webhook-simulation/webhook-simulation.service'
 import { DedupeService } from '../flows/triggers/dedupe/dedupe.service'
+import { TriggerHooks } from '../flows/triggers/trigger-hooks/trigger-hooks.service'
+import { CallbackParams, HandshakeParams } from './types'
+import { WebhookSimulationService } from './webhook-simulation/webhook-simulation.service'
 
 @Injectable()
 export class WebhooksService {
@@ -38,6 +40,31 @@ export class WebhooksService {
 			.catch((e) => {
 				this.logger.error(`#saveSampleDataForWebhookTesting triggerEventService.saveEvent`, e)
 			})
+	}
+
+	async convertRequest(request: FastifyRequest): Promise<EventPayload> {
+		const payload: EventPayload = {
+			method: request.method,
+			headers: request.headers as Record<string, string>,
+			body: await this.convertBody(request),
+			queryParams: request.query as Record<string, string>,
+		}
+		return payload
+	}
+
+	async convertBody(request: FastifyRequest): Promise<unknown> {
+		if (request.isMultipart()) {
+			const jsonResult: Record<string, unknown> = {}
+			const requestBodyEntries = Object.entries(request.body as Record<string, unknown>)
+
+			for (const [key, value] of requestBodyEntries) {
+				jsonResult[key] = value instanceof Buffer ? value.toString('base64') : value
+			}
+
+			this.logger.debug(`#_convertBody`, jsonResult)
+			return jsonResult
+		}
+		return request.body
 	}
 
 	async handshake({ flow, payload, simulate }: HandshakeParams): Promise<WebhookResponse | null> {
@@ -87,9 +114,8 @@ export class WebhooksService {
 		return response
 	}
 
-	async callback({ flow, payload, synchronousHandlerId }: SyncParams): Promise<FlowRunDocument[]> {
-		// logger.info(`[WebhookService#callback] flowId=${flow.id}`)
-		this.logger.debug(`#callback`, {
+	async callback({ flow, payload, synchronousHandlerId }: CallbackParams): Promise<FlowRunDocument[]> {
+		this.logger.log(`#callback`, {
 			flowId: flow._id,
 		})
 
