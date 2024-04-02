@@ -1,7 +1,7 @@
 import { TypedValidatorFn, ValidationInputType } from '../validators/types'
 
 export enum PropertyType {
-	TEXT = 'TEXT',
+	SHORT_TEXT = 'SHORT_TEXT',
 	LONG_TEXT = 'LONG_TEXT',
 	MARKDOWN = 'MARKDOWN',
 	STATIC_DROPDOWN = 'STATIC_DROPDOWN',
@@ -37,7 +37,7 @@ export type PropertyValue<S, T extends PropertyType, V extends ValidationInputTy
 	processors?: any[]
 	validators?: TypedValidatorFn<V>[]
 	defaultValidators?: TypedValidatorFn<V>[]
-	defaultValue?: T extends PropertyType.TEXT
+	defaultValue?: T extends PropertyType.SHORT_TEXT
 		? string
 		: T extends PropertyType.LONG_TEXT
 		? string

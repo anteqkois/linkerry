@@ -10,10 +10,11 @@ import { MarkDownProperty } from './markdown'
 import { NumberProperty } from './number'
 import { ObjectProperty } from './object'
 import { StaticDropdownProperty, StaticDropdownValue } from './static-dropdown'
-import { TextProperty } from './text'
+import { LongTextProperty, ShortTextProperty } from './text'
 
 export type InputProperty =
-	| TextProperty
+	| ShortTextProperty
+	| LongTextProperty
 	| NumberProperty
 	| CheckboxProperty
 	| StaticDropdownProperty
@@ -25,24 +26,30 @@ export type InputProperty =
 	| MarkDownProperty
 
 export const Property = {
-	Text<R extends boolean>(config: Properties<TextProperty<R>>): R extends true ? TextProperty<true> : TextProperty<false> {
+	ShortText<R extends boolean>(config: Properties<ShortTextProperty<R>>): R extends true ? ShortTextProperty<true> : ShortTextProperty<false> {
 		return {
 			...config,
 			valueSchema: undefined,
-			type: PropertyType.TEXT,
-			// TODO add processors
-			// defaultProcessors: [Processors.string],
+			type: PropertyType.SHORT_TEXT,
 			defaultValidators: [Validators.string],
-		} as unknown as R extends true ? TextProperty<true> : TextProperty<false>
+		} as unknown as R extends true ? ShortTextProperty<true> : ShortTextProperty<false>
 	},
-	MarkDown(config: Pick<Properties<MarkDownProperty>, 'displayName'|'description'>): MarkDownProperty {
-    return {
-			... config,
-      required: false,
-      type: PropertyType.MARKDOWN,
-      valueSchema: undefined as never,
-    };
-  },
+	LongText<R extends boolean>(config: Properties<LongTextProperty<R>>): R extends true ? LongTextProperty<true> : LongTextProperty<false> {
+		return {
+			...config,
+			valueSchema: undefined,
+			type: PropertyType.LONG_TEXT,
+			defaultValidators: [Validators.string],
+		} as unknown as R extends true ? LongTextProperty<true> : LongTextProperty<false>
+	},
+	MarkDown(config: Pick<Properties<MarkDownProperty>, 'displayName' | 'description'>): MarkDownProperty {
+		return {
+			...config,
+			required: false,
+			type: PropertyType.MARKDOWN,
+			valueSchema: undefined as never,
+		}
+	},
 	Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
 		return { ...config, type: PropertyType.NUMBER, defaultValidators: [Validators.number] } as unknown as R extends true
 			? NumberProperty<true>
@@ -53,36 +60,28 @@ export const Property = {
 			? CheckboxProperty<true>
 			: CheckboxProperty<false>
 	},
-	Json<R extends boolean>(
-    request: Properties<JsonProperty<R>>
-  ): R extends true ? JsonProperty<true> : JsonProperty<false> {
-    return {
-      ...request,
-      valueSchema: undefined,
-      type: PropertyType.JSON,
-      defaultProcessors: [Processors.json],
-    } as unknown as R extends true ? JsonProperty<true> : JsonProperty<false>;
-  },
-  Array<R extends boolean>(
-    request: Properties<ArrayProperty<R>>
-  ): R extends true ? ArrayProperty<true> : ArrayProperty<false> {
-    return {
-      ...request,
-      valueSchema: undefined,
-      type: PropertyType.ARRAY,
-    } as unknown as R extends true ? ArrayProperty<true> : ArrayProperty<false>;
-  },
-	Object<R extends boolean>(
-    config: Properties<ObjectProperty<R>>
-  ): R extends true ? ObjectProperty<true> : ObjectProperty<false> {
-    return {
-      ...config,
-      valueSchema: undefined,
-      type: PropertyType.OBJECT,
-    } as unknown as R extends true
-      ? ObjectProperty<true>
-      : ObjectProperty<false>;
-  },
+	Json<R extends boolean>(request: Properties<JsonProperty<R>>): R extends true ? JsonProperty<true> : JsonProperty<false> {
+		return {
+			...request,
+			valueSchema: undefined,
+			type: PropertyType.JSON,
+			defaultProcessors: [Processors.json],
+		} as unknown as R extends true ? JsonProperty<true> : JsonProperty<false>
+	},
+	Array<R extends boolean>(request: Properties<ArrayProperty<R>>): R extends true ? ArrayProperty<true> : ArrayProperty<false> {
+		return {
+			...request,
+			valueSchema: undefined,
+			type: PropertyType.ARRAY,
+		} as unknown as R extends true ? ArrayProperty<true> : ArrayProperty<false>
+	},
+	Object<R extends boolean>(config: Properties<ObjectProperty<R>>): R extends true ? ObjectProperty<true> : ObjectProperty<false> {
+		return {
+			...config,
+			valueSchema: undefined,
+			type: PropertyType.OBJECT,
+		} as unknown as R extends true ? ObjectProperty<true> : ObjectProperty<false>
+	},
 	StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
 		config: Properties<StaticDropdownProperty<T, R>>,
 	): R extends true ? StaticDropdownProperty<T, true> : StaticDropdownProperty<T, false> {

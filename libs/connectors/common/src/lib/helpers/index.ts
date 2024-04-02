@@ -35,7 +35,7 @@ export function createCustomApiCallAction({
 				refreshers: [],
 				props: async ({ auth }) => {
 					return {
-						url: Property.Text({
+						url: Property.ShortText({
 							displayName: 'URL',
 							description: 'Add the endpoint to use. For example, /models',
 							required: true,

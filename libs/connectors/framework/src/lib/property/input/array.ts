@@ -3,13 +3,13 @@ import { BaseProperty, PropertyType, PropertyValue } from '../base'
 import { CheckboxProperty } from './checkbox'
 import { NumberProperty } from './number'
 import { StaticDropdownProperty } from './static-dropdown'
-import { TextProperty } from './text'
+import { LongTextProperty, ShortTextProperty } from './text'
 
 export type ArrayProperty<R extends boolean> = BaseProperty & {
 	properties?: Record<
 		string,
-		| TextProperty<R>
-		// | LongTextProperty<R>
+		| ShortTextProperty<R>
+		| LongTextProperty<R>
 		| StaticDropdownProperty<any, R>
 		// | MultiSelectDropdownProperty<any, R>
 		// | StaticMultiSelectDropdownProperty<any, R>

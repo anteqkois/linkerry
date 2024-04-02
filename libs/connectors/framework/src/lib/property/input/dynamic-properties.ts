@@ -2,9 +2,9 @@ import { PropertyContext } from '../../context'
 import { ValidationInputType } from '../../validators/types'
 import { BaseProperty, PropertyType, PropertyValue } from '../base'
 import { StaticDropdownProperty } from './static-dropdown'
-import { TextProperty } from './text'
+import { ShortTextProperty } from './text'
 
-type DynamicProp = TextProperty<boolean> | StaticDropdownProperty<any, boolean> // | StaticMultiSelectDropdownProperty<any,boolean>;
+type DynamicProp = ShortTextProperty<boolean> | StaticDropdownProperty<any, boolean> // | StaticMultiSelectDropdownProperty<any,boolean>;
 
 export type DynamicPropsValue = Record<string, DynamicProp['valueSchema']>
 

@@ -1,4 +1,4 @@
-import { ConnectorProperty, TextProperty } from '@linkerry/connectors-framework'
+import { ConnectorProperty, ShortTextProperty } from '@linkerry/connectors-framework'
 import { FormControl, FormField, FormItem, FormMessage, Input } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -6,7 +6,7 @@ import { PropertyLabel } from './PropertyLabel'
 import { useDynamicField } from './useFieldCustomValidation'
 
 interface TextFieldProps {
-	property: TextProperty
+	property: ShortTextProperty
 	name: string
 	refreshedProperties: ConnectorProperty[]
 }

@@ -4,7 +4,7 @@ import { createHash } from 'crypto'
 import { google } from 'googleapis'
 import { OAuth2Client } from 'googleapis-common'
 import { nanoid } from 'nanoid'
-import { googleSheetsAuth } from '../..'
+import { googleSheetsAuth } from '..'
 import { columnToLabel, googleSheetsCommon } from '../common/common'
 
 export const newRowAdded = createTrigger({

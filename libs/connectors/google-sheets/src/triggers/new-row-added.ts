@@ -1,6 +1,6 @@
 import { DedupeStrategy, OAuth2PropertyValue, Polling, Property, createTrigger, pollingHelper } from '@linkerry/connectors-framework';
 import { TriggerStrategy, isNil } from '@linkerry/shared';
-import { googleSheetsAuth } from '../..';
+import { googleSheetsAuth } from '..';
 import { googleSheetsCommon } from '../common/common';
 
 const polling: Polling<

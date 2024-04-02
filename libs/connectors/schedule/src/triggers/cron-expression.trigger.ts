@@ -7,7 +7,7 @@ export const cronExpressionTrigger = createTrigger({
 	displayName: 'Cron Expression',
 	description: 'Trigger based on cron expression',
 	props: {
-		expression: Property.Text({
+		expression: Property.ShortText({
 			displayName: 'Cron Expression',
 			description: 'Cron expression to trigger',
 			required: true,

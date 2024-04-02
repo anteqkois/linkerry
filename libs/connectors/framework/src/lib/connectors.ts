@@ -11,7 +11,6 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
   private readonly _triggers: Record<string, Trigger> = {}
 
   constructor(
-    public readonly name: string,
     public readonly displayName: string,
     public readonly logoUrl: string,
     public readonly description: string,
@@ -30,7 +29,6 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
   metadata() {
     return {
       displayName: this.displayName,
-      name: this.name,
       description: this.description,
       logoUrl: this.logoUrl,
       actions: this._actions,
@@ -60,7 +58,6 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
 }
 
 type CreateConnectorParams<ConnectorAuth extends ConnectorAuthProperty = ConnectorAuthProperty> = {
-  name: string
   displayName: string
   logoUrl: string
   description: string
@@ -76,7 +73,6 @@ type CreateConnectorParams<ConnectorAuth extends ConnectorAuthProperty = Connect
 
 export const createConnector = <ConnectorAuth extends ConnectorAuthProperty>(params: CreateConnectorParams<ConnectorAuth>) => {
   return new Connector(
-    params.name,
     params.displayName,
     params.logoUrl,
     params.description,

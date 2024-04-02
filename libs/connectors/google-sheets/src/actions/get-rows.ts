@@ -1,6 +1,6 @@
 import { Property, Store, StoreScope, Validators, createAction } from '@linkerry/connectors-framework';
 import { isNil } from '@linkerry/shared';
-import { googleSheetsAuth } from '../..';
+import { googleSheetsAuth } from '..';
 import { getAllGoogleSheetRows, getGoogleSheetRows, googleSheetsCommon } from '../common/common';
 
 async function getRows(
@@ -70,7 +70,7 @@ export const getRowsAction = createAction({
     spreadsheet_id: googleSheetsCommon.spreadsheet_id,
     include_team_drives: googleSheetsCommon.include_team_drives,
     sheet_id: googleSheetsCommon.sheet_id,
-    memKey: Property.Text({
+    memKey: Property.ShortText({
       displayName: 'Memory Key',
       description: 'The key used to store the current row number in memory',
       required: true,

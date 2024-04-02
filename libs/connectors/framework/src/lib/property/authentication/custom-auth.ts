@@ -4,14 +4,14 @@ import { PropertyType, PropertyValue } from "../base";
 import { CheckboxProperty } from "../input/checkbox";
 import { NumberProperty } from "../input/number";
 import { StaticDropdownProperty } from "../input/static-dropdown";
-import { TextProperty } from "../input/text";
+import { ShortTextProperty } from "../input/text";
 import { BaseConnectorAuthSchema } from "./base";
 import { SecretTextProperty } from "./secret-text";
 
 
 export type CustomAuthProps = Record<
 	string,
-	| TextProperty<boolean>
+	| ShortTextProperty<boolean>
 	| SecretTextProperty<boolean>
 	| NumberProperty<boolean>
 	| StaticDropdownProperty

@@ -8,7 +8,7 @@ export const fetchCoin = createAction({
 	requireAuth: false,
 	name: 'fetch_coin',
 	props: {
-		query: Property.Text({
+		query: Property.ShortText({
 			description: 'Type query phrase to search for coin',
 			displayName: 'Search Query',
 			required: true,

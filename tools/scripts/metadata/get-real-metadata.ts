@@ -18,8 +18,6 @@ export const getRealMetadata = async () => {
 
 		const packageJson = await readPackageJson(packagePath)
 
-		// const module = await import(`${packagePath}/src/index.ts`)
-
 		const module = await import(join(packagePath, 'src', 'index'))
 		const { name: connectorName, version: connectorVersion } = packageJson
 		const connector = extractConnectorFromModule({ module })
@@ -30,9 +28,9 @@ export const getRealMetadata = async () => {
 
 		const metadata: Omit<ConnectorMetadata, '_id'> = {
 			...fullMetadata,
-			connectorType: customConnectors.includes(connector.name) ? ConnectorType.CUSTOM : ConnectorType.OFFICIAL,
+			connectorType: customConnectors.includes(connectorName) ? ConnectorType.CUSTOM : ConnectorType.OFFICIAL,
 			packageType: PackageType.REGISTRY,
-			group: coreConnectors.includes(connector.name) ? ConnectorGroup.CORE : ConnectorGroup.APP,
+			group: coreConnectors.includes(connectorName) ? ConnectorGroup.CORE : ConnectorGroup.APP,
 			name: connectorName,
 			version: connectorVersion,
 			minimumSupportedRelease: connector.minimumSupportedRelease,

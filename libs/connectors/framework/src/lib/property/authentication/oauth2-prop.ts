@@ -1,14 +1,14 @@
 import { OAuth2GrantType } from '@linkerry/shared'
 import { BaseConnectorAuthSchema, PropertyType, PropertyValue, SecretTextProperty, StaticDropdownProperty, StaticPropsValue } from '..'
 import { ValidationInputType } from '../../validators/types'
-import { TextProperty } from '../input/text'
+import { ShortTextProperty } from '../input/text'
 
 export enum OAuth2AuthorizationMethod {
 	HEADER = 'HEADER',
 	BODY = 'BODY',
 }
 
-type OAuthProp = TextProperty<true> | SecretTextProperty<boolean> | StaticDropdownProperty<any, true>
+type OAuthProp = ShortTextProperty<true> | SecretTextProperty<boolean> | StaticDropdownProperty<any, true>
 
 export type OAuth2Props = {
 	[key: string]: OAuthProp
