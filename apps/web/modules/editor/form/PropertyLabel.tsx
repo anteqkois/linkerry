@@ -10,7 +10,7 @@ export interface PropertyLabelProps extends Omit<HTMLAttributes<HTMLElement>, 'p
 
 export const PropertyLabel = ({ property, refreshedProperties }: PropertyLabelProps) => {
 	return !refreshedProperties.length ? (
-		<FormLabel>{property.displayName}</FormLabel>
+		<FormLabel >{property.displayName}</FormLabel>
 	) : (
 		<div className="flex justify-between">
 			<FormLabel>{property.displayName}</FormLabel>

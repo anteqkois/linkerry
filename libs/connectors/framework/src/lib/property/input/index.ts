@@ -35,11 +35,10 @@ export const Property = {
 			defaultValidators: [Validators.string],
 		} as unknown as R extends true ? TextProperty<true> : TextProperty<false>
 	},
-	MarkDown(request: { value: string }): MarkDownProperty {
+	MarkDown(config: Pick<Properties<MarkDownProperty>, 'displayName'|'description'>): MarkDownProperty {
     return {
-      displayName: 'Markdown',
+			... config,
       required: false,
-      description: request.value,
       type: PropertyType.MARKDOWN,
       valueSchema: undefined as never,
     };

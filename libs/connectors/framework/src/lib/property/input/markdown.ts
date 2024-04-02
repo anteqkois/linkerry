@@ -3,7 +3,7 @@ import { BaseProperty, PropertyType, PropertyValue } from "../base";
 
 export type MarkDownProperty = BaseProperty &
     PropertyValue<
-        undefined,
+        string,
         PropertyType.MARKDOWN,
         ValidationInputType.ANY,
         false

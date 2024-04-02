@@ -14,7 +14,8 @@ export const newRowAdded = createTrigger({
 	description: 'Triggers when a new row is added to bottom of a spreadsheet.',
 	props: {
 		info: Property.MarkDown({
-			value: 'Please note that there might be a delay of up to 3 minutes for the trigger to be fired, due to a delay from Google.',
+			displayName: 'Delay Info',
+			description: 'Be aware that there could be a delay of up to 3 minutes before the trigger activates, as a result of a delay from Google.',
 		}),
 		spreadsheet_id: googleSheetsCommon.spreadsheet_id,
 		sheet_id: googleSheetsCommon.sheet_id,

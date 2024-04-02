@@ -28,7 +28,7 @@ export interface DynamicVirtualizedSelectProps extends Omit<HTMLAttributes<HTMLE
 export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }: DynamicVirtualizedSelectProps) => {
 	const { toast } = useToast()
 	const { getConnectorOptions, editedConnectorMetadata, editedAction, editedTrigger } = useEditor()
-	const { getValues, watch, setError, getFieldState } = useFormContext()
+	const { getValues, watch, setError, getFieldState, clearErrors } = useFormContext()
 	const [options, setOptions] = useState<DynamicDropdownState<any>>(initOptions)
 	const [initValue, setInitValue] = useState<DropdownOption<any>>({
 		label: '',
@@ -94,8 +94,10 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 
 	const handleWatcher = useDebouncedCallback(
 		async (values, { name }) => {
-			if (!name) return
-			if (!property.refreshers.includes(name) && name !== 'auth') return
+			const fixedName = name.includes('__temp__') ? name.split('__temp__')[1] : name
+			if (!fixedName) return
+			if (!property.refreshers.includes(fixedName) && fixedName !== 'auth') return
+			clearErrors([name, fixedName])
 			await refreshOptions({ values })
 		},
 		[],
@@ -106,7 +108,6 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 		const isEditedTrigger = isNil(editedAction)
 		const editedStep = isEditedTrigger ? editedTrigger : editedAction
 		if (isNil(editedStep)) return console.log(`editedStep empty`)
-		// if (isNil(editedStep.settings)) return console.log(`editedStep.settings empty`)
 
 		/* to prevent triggering options endpoint when selected edited action changed, not all veriables changed at once */
 		const editedStepName: string | undefined = isEditedTrigger ? editedStep.settings.triggerName : editedStep.settings.actionName
@@ -185,7 +186,6 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 
 		const subscription = watch(handleWatcher)
 		return () => subscription.unsubscribe()
-		// TODO fix not refreshing options when dependent refresher was selected, check if it necessary to add in dependencies refresher inputs
 	}, [])
 
 	return (

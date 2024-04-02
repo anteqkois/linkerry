@@ -5,6 +5,7 @@ import { NumberField } from './NumberField'
 import { SecretTextField } from './SecretTextField'
 import { TextField } from './TextField'
 import { VirtualizedSelect } from './VirtualizedSelect'
+import { MarkdownProperty } from './MarkdownProperty'
 
 interface DynamicFieldProps {
 	property: ConnectorProperty
@@ -26,6 +27,8 @@ export const DynamicField = ({ name, property, refreshedProperties }: DynamicFie
 			return <VirtualizedSelect name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.DYNAMIC_DROPDOWN:
 			return <DynamicVirtualizedSelect name={name} property={property} refreshedProperties={refreshedProperties} />
+		case PropertyType.MARKDOWN:
+			return <MarkdownProperty name={name} property={property} refreshedProperties={refreshedProperties} />
 
 		default:
 			break
