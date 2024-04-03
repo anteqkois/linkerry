@@ -1,12 +1,19 @@
-import { DedupeStrategy, Polling, Property, createTrigger, pollingHelper } from '@linkerry/connectors-framework';
-import { TriggerStrategy } from '@linkerry/shared';
-import { CoingeckoApi } from '../common';
+import { DedupeStrategy, Polling, Property, createTrigger, pollingHelper } from '@linkerry/connectors-framework'
+import { TriggerStrategy } from '@linkerry/shared'
+import { CoingeckoApi } from '../common'
+
+const coinId = `
+
+1. Go to coin page (in this example Ethereum coin page) [Ethereum page](https://www.coingecko.com/en/coins/ethereum).
+2. Search in information for \`API ID\`
+3. Copy \`API ID\`, for Ethereum it is \`ethereum\`
+`
 
 const polling: Polling<
 	any,
 	{
-		coin_id: string;
-    interval: number;
+		coin_id: string
+		interval: number
 	}
 > = {
 	strategy: DedupeStrategy.TIMEBASED,
@@ -24,7 +31,11 @@ export const fetchById = createTrigger({
 	type: TriggerStrategy.POLLING,
 	requireAuth: false,
 	props: {
-		// todo refactor to use dynamic dropdown
+		// TODO refactor to use dynamic dropdown?
+		instructions: Property.MarkDown({
+			displayName: 'Obtaining Coin ID',
+			description: coinId,
+		}),
 		coin_id: Property.ShortText({
 			displayName: 'Coin ID',
 			required: true,
