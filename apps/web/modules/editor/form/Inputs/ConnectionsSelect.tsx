@@ -16,11 +16,11 @@ import {
 } from '@linkerry/ui-components/client'
 import { HTMLAttributes, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
-import { appConnectionsQueryConfig } from '../../app-connections/query-configs-app-connections'
-import { CustomAuth } from '../app-connections/CustomAuth'
-import { OAuth2Auth } from '../app-connections/OAuth2Auth'
-import { SecretTextAuth } from '../app-connections/SecretTextAuth'
+import { getBrowserQueryCllient, useClientQuery } from '../../../../libs/react-query'
+import { appConnectionsQueryConfig } from '../../../app-connections/query-configs-app-connections'
+import { CustomAuth } from '../../app-connections/CustomAuth'
+import { OAuth2Auth } from '../../app-connections/OAuth2Auth'
+import { SecretTextAuth } from '../../app-connections/SecretTextAuth'
 
 export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	auth: ConnectorAuthProperty

@@ -4,8 +4,8 @@ import { useToast } from '@linkerry/ui-components/client'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
-import { useEditor } from '../useEditor'
+import { retriveStepInputFromObject } from '../../steps/retriveStepInputFromObject'
+import { useEditor } from '../../useEditor'
 import { VirtualizedSelect } from './VirtualizedSelect'
 
 const initOptions = {

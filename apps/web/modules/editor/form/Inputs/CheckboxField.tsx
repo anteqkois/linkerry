@@ -1,10 +1,12 @@
 import { CheckboxProperty, ConnectorProperty } from '@linkerry/connectors-framework'
+import { hasVariableToken, isNil } from '@linkerry/shared'
 import { Checkbox, FormControl, FormField, FormItem } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { PropertyDescription } from './PropertyDescription'
-import { PropertyLabel } from './PropertyLabel'
-import { useDynamicField } from './useFieldCustomValidation'
+import { PropertyDescription } from '../PropertyDescription'
+import { PropertyLabel } from '../PropertyLabel'
+import { useDynamicField } from '../useFieldCustomValidation'
+import { DynamicValueField } from './DynamicValueField'
 
 interface CheckboxFieldProps {
 	property: CheckboxProperty
@@ -13,16 +15,24 @@ interface CheckboxFieldProps {
 }
 
 export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxFieldProps) => {
-	const { control, trigger } = useFormContext()
-	const { rules } = useDynamicField({
+	const { control, trigger, getValues } = useFormContext()
+	const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
 		property,
 	})
 
 	useEffect(() => {
 		trigger(name)
+
+		const value = getValues(name)
+		if (isNil(value) || typeof value === 'boolean') return
+		else if (hasVariableToken(value)) {
+			setUseDynamicValue(true)
+		}
 	}, [])
 
-	return (
+	return useDynamicValue ? (
+		<DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={true} />
+	) : (
 		<FormField
 			control={control}
 			name={name}
@@ -32,8 +42,8 @@ export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxF
 					<FormControl>
 						<Checkbox checked={field.value} onCheckedChange={field.onChange} />
 					</FormControl>
-					<div className="space-y-1 leading-none">
-						<PropertyLabel property={property} refreshedProperties={refreshedProperties} />
+					<div className="space-y-1 leading-none flex-grow">
+						<PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
 						<PropertyDescription>{property.description}</PropertyDescription>
 					</div>
 				</FormItem>

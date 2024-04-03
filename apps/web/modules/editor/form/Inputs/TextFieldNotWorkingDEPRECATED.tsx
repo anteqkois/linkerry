@@ -4,8 +4,8 @@ import { cn } from '@linkerry/ui-components/utils'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { KeyboardEvent, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { useEditor } from '../useEditor'
-import { useDynamicField } from './useFieldCustomValidation'
+import { useEditor } from '../../useEditor'
+import { useDynamicField } from '../useFieldCustomValidation'
 
 interface TextFieldProps {
 	property: ConnectorProperty
@@ -24,7 +24,7 @@ type Tokens =
 			value: string
 	  }
 
-export const TextField = ({ property, name }: TextFieldProps) => {
+export const TextFieldDEPRECATED = ({ property, name }: TextFieldProps) => {
 	const { toast } = useToast()
 	const { setShowDynamicValueModal } = useEditor()
 	const { control, trigger, setValue, getValues } = useFormContext()

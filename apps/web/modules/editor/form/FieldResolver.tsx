@@ -1,11 +1,11 @@
 import { ConnectorProperty, PropertyType } from '@linkerry/connectors-framework'
-import { CheckboxField } from './CheckboxField'
-import { DynamicVirtualizedSelect } from './DynamicVirtualizedSelect'
-import { MarkdownProperty } from './MarkdownProperty'
-import { NumberField } from './NumberField'
-import { SecretTextField } from './SecretTextField'
-import { TextField } from './TextField'
-import { VirtualizedSelect } from './VirtualizedSelect'
+import { CheckboxField } from './Inputs/CheckboxField'
+import { DynamicVirtualizedSelect } from './Inputs/DynamicVirtualizedSelect'
+import { MarkdownField } from './Inputs/MarkdownField'
+import { NumberField } from './Inputs/NumberField'
+import { SecretTextField } from './Inputs/SecretTextField'
+import { TextField } from './Inputs/TextField'
+import { VirtualizedSelect } from './Inputs/VirtualizedSelect'
 
 interface DynamicFieldProps {
 	property: ConnectorProperty
@@ -13,7 +13,7 @@ interface DynamicFieldProps {
 	refreshedProperties: ConnectorProperty[]
 }
 
-export const DynamicField = ({ name, property, refreshedProperties }: DynamicFieldProps) => {
+export const FieldResolver = ({ name, property, refreshedProperties }: DynamicFieldProps) => {
 	switch (property.type) {
 		case PropertyType.SHORT_TEXT:
 			return <TextField name={name} property={property} refreshedProperties={refreshedProperties} />
@@ -28,7 +28,7 @@ export const DynamicField = ({ name, property, refreshedProperties }: DynamicFie
 		case PropertyType.DYNAMIC_DROPDOWN:
 			return <DynamicVirtualizedSelect name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.MARKDOWN:
-			return <MarkdownProperty name={name} property={property} refreshedProperties={refreshedProperties} />
+			return <MarkdownField name={name} property={property} refreshedProperties={refreshedProperties} />
 
 		default:
 			break

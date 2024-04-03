@@ -2,8 +2,9 @@ import { ConnectorProperty, SecretTextProperty } from '@linkerry/connectors-fram
 import { FormControl, FormField, FormItem, FormMessage, Input } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { PropertyLabel } from './PropertyLabel'
-import { useDynamicField } from './useFieldCustomValidation'
+import { PropertyLabel } from '../PropertyLabel'
+import { useDynamicField } from '../useFieldCustomValidation'
+import { PropertyDescription } from '../PropertyDescription'
 
 interface SecretTextFieldProps {
 	property: SecretTextProperty
@@ -33,6 +34,7 @@ export const SecretTextField = ({ property, name, refreshedProperties }: SecretT
 					<FormControl>
 						<Input {...field} type='password' />
 					</FormControl>
+					<PropertyDescription>{property.description}</PropertyDescription>
 					<FormMessage />
 				</FormItem>
 			)}

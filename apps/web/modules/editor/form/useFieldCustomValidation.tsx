@@ -1,8 +1,10 @@
 import { ConnectorProperty, Validators } from '@linkerry/connectors-framework'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { RegisterOptions } from 'react-hook-form'
 
 export const useDynamicField = ({ property }: { property: ConnectorProperty }) => {
+	const [useDynamicValue, setUseDynamicValue] = useState(false)
+
 	const validate = useMemo(() => {
 		const output: RegisterOptions['validate'] = {}
 		for (const validator of property.validators?.concat(...(property.defaultValidators ?? [])) ?? []) {
@@ -24,5 +26,5 @@ export const useDynamicField = ({ property }: { property: ConnectorProperty }) =
 		}
 	}, [property.required, validate])
 
-	return { validate, rules }
+	return { validate, rules, useDynamicValue, setUseDynamicValue }
 }

@@ -1,6 +1,6 @@
 import { ConnectorProperty, MarkDownProperty } from '@linkerry/connectors-framework'
-import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
-import { PropertyLabel } from './PropertyLabel'
+import { MarkdownBase } from '../../../../shared/components/Markdown/MarkdownBase'
+import { PropertyLabel } from '../PropertyLabel'
 
 interface MarkdownPropertyProps {
 	property: MarkDownProperty
@@ -8,7 +8,7 @@ interface MarkdownPropertyProps {
 	refreshedProperties: ConnectorProperty[]
 }
 
-export const MarkdownProperty = ({ property, refreshedProperties }: MarkdownPropertyProps) => {
+export const MarkdownField = ({ property, refreshedProperties }: MarkdownPropertyProps) => {
 	return (
 		<div className='space-y-1'>
 			<PropertyLabel property={property} refreshedProperties={refreshedProperties} />

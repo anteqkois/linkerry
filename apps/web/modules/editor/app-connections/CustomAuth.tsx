@@ -21,7 +21,7 @@ import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useState } from 'r
 import { useForm } from 'react-hook-form'
 import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { AppConnectionsApi } from '../../app-connections'
-import { DynamicField } from '../form/DynamicField'
+import { FieldResolver } from '../form/FieldResolver'
 
 export interface CustomAuthProps extends HTMLAttributes<HTMLElement> {
 	onCreateAppConnection: (newConnection: AppConnectionWithoutSensitiveData) => void
@@ -108,7 +108,7 @@ export const CustomAuth = ({ onCreateAppConnection, auth, connector, setShowDial
 					/>
 					<MarkdownBase >{auth.description}</MarkdownBase>
 					{Object.entries(auth.props).map(([name, property]) => (
-						<DynamicField property={property} name={name} key={name} refreshedProperties={[]} />
+						<FieldResolver property={property} name={name} key={name} refreshedProperties={[]} />
 					))}
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}

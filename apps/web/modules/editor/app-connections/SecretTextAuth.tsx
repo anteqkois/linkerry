@@ -21,7 +21,7 @@ import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useState } from 'r
 import { useForm } from 'react-hook-form'
 import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { AppConnectionsApi } from '../../app-connections'
-import { SecretTextField } from '../form/SecretTextField'
+import { SecretTextField } from '../form/Inputs/SecretTextField'
 
 export interface SecretTextAuthProps extends HTMLAttributes<HTMLElement> {
 	onCreateAppConnection: (newConnection: AppConnectionWithoutSensitiveData) => void

@@ -26,8 +26,8 @@ import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { DynamicValueModal } from '../components/DynamicValueModal'
-import { ConnectionsSelect } from '../form/ConnectionsSelect'
-import { DynamicField } from '../form/DynamicField'
+import { FieldResolver } from '../form/FieldResolver'
+import { ConnectionsSelect } from '../form/Inputs/ConnectionsSelect'
 import { ConnectorVersion } from '../steps/ConnectorVersion'
 import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
 import { useEditor } from '../useEditor'
@@ -196,7 +196,7 @@ export const TriggerConnectorPanel = () => {
 											<SelectContent position="popper">
 												{Object.values(connectorMetadata.triggers).map((trigger) => {
 													return (
-														<SelectItem value={trigger.name} key={trigger.name}>
+														<SelectItem value={trigger.name} key={trigger.name} className="max-w-[400px]">
 															<p>{trigger.displayName}</p>
 															<p className="text-xs text-muted-foreground">{trigger.description}</p>
 														</SelectItem>
@@ -217,7 +217,7 @@ export const TriggerConnectorPanel = () => {
 						) : null}
 						{triggerWatcher?.props &&
 							Object.entries(triggerWatcher.props).map(([name, property]) => (
-								<DynamicField property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />
+								<FieldResolver property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />
 							))}
 					</form>
 				</Form>
