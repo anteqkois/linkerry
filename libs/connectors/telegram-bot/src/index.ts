@@ -1,6 +1,9 @@
+import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
 import { ConnectorAuth, createConnector } from '@linkerry/connectors-framework'
 import { telegramSendMessageAction } from './actions/send-text-message'
+import { telegramCommons } from './common'
 import { telegramNewMessage } from './triggers/new-message'
+import { GetMe } from './types/getMe'
 
 const markdownDescription = `
 **Authentication**:
@@ -17,6 +20,31 @@ export const telegramBotAuth = ConnectorAuth.SecretText({
 	displayName: 'Bot Token',
 	description: markdownDescription,
 	required: true,
+	validate: async ({ auth }) => {
+		const request: HttpRequest = {
+			method: HttpMethod.GET,
+			url: telegramCommons.getApiUrl(auth, 'getMe'),
+		}
+
+		try {
+			const response = await httpClient.sendRequest<GetMe>(request)
+
+			if (response.body.ok)
+				return {
+					valid: true,
+				}
+			else
+				return {
+					valid: true,
+					error: 'Invalid Bot Token',
+				}
+		} catch (error: any) {
+			return {
+				valid: false,
+				error: error?.message,
+			}
+		}
+	},
 })
 
 export const telegramBot = createConnector({
@@ -28,7 +56,7 @@ export const telegramBot = createConnector({
 	tags: ['communication', 'bots', 'cryptocurrency'],
 	auth: telegramBotAuth,
 	actions: [
-		telegramSendMessageAction
+		telegramSendMessageAction,
 		// telegramSendMediaAction,
 		// telegramGetChatMemberAction,
 		// telegramCreateInviteLinkAction,

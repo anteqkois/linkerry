@@ -2,6 +2,7 @@ import { ConnectorProperty, ShortTextProperty } from '@linkerry/connectors-frame
 import { FormControl, FormField, FormItem, FormMessage, Input } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { PropertyDescription } from './PropertyDescription'
 import { PropertyLabel } from './PropertyLabel'
 import { useDynamicField } from './useFieldCustomValidation'
 
@@ -33,6 +34,7 @@ export const TextField = ({ property, name, refreshedProperties }: TextFieldProp
 					<FormControl>
 						<Input {...field} />
 					</FormControl>
+					<PropertyDescription>{property.description}</PropertyDescription>
 					<FormMessage />
 				</FormItem>
 			)}

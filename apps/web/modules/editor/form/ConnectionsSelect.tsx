@@ -20,6 +20,7 @@ import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-quer
 import { appConnectionsQueryConfig } from '../../app-connections/query-configs-app-connections'
 import { CustomAuth } from '../app-connections/CustomAuth'
 import { OAuth2Auth } from '../app-connections/OAuth2Auth'
+import { SecretTextAuth } from '../app-connections/SecretTextAuth'
 
 export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
 	auth: ConnectorAuthProperty
@@ -96,6 +97,9 @@ export const ConnectionsSelect = ({ auth, connector }: ConnectionsSelectProps) =
 					)}
 					{auth.type === PropertyType.OAUTH2 && (
 						<OAuth2Auth onCreateAppConnection={handleAddedConnection} auth={auth} connector={connector} setShowDialog={setShowDialog} />
+					)}
+					{auth.type === PropertyType.SECRET_TEXT && (
+						<SecretTextAuth onCreateAppConnection={handleAddedConnection} auth={auth} connector={connector} setShowDialog={setShowDialog} />
 					)}
 				</DialogContent>
 			</Dialog>

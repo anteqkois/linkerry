@@ -10,6 +10,7 @@ export const telegramNewMessage = createTrigger({
   description: 'Triggers when Telegram receives a new message',
   props: {},
   type: TriggerStrategy.WEBHOOK,
+	requireAuth: true,
   sampleData: {
     body: {
       message: {

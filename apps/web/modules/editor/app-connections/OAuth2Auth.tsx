@@ -27,9 +27,9 @@ import dayjs from 'dayjs'
 import { nanoid } from 'nanoid'
 import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Markdown from 'react-markdown'
 import { useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
+import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { Spinner } from '../../../shared/components/Spinner'
 import { AppConnectionsApi } from '../../app-connections'
 import { OAuth2AppsQueryConfig } from '../../app-connections/query-configs-apps'
@@ -210,7 +210,7 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 				<DialogDescription>This connection will be able to be used by {connector.displayName} connector </DialogDescription>
 			</DialogHeader>
 			<Form {...appConnectionForm}>
-				<form className="space-y-5" onSubmit={onSubmit}>
+				<form className="space-y-8" onSubmit={onSubmit}>
 					<FormField
 						control={appConnectionForm.control}
 						name={'name'}
@@ -227,7 +227,7 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 							</FormItem>
 						)}
 					/>
-					<Markdown>{auth.description}</Markdown>
+					<MarkdownBase>{auth.description}</MarkdownBase>
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
 					</div>

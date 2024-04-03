@@ -58,7 +58,7 @@ export interface UpsertCloudOAuth2Request extends CommonAuthProps {
 export interface UpsertSecretTextInput extends CommonAuthProps {
 	type: AppConnectionType.SECRET_TEXT
 	value: {
-		type: AppConnectionType.CUSTOM_AUTH
+		type: AppConnectionType.SECRET_TEXT
 		secret_text: string
 	}
 }

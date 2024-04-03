@@ -1,5 +1,5 @@
 import { ConnectorProperty, MarkDownProperty } from '@linkerry/connectors-framework'
-import Markdown from 'react-markdown'
+import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { PropertyLabel } from './PropertyLabel'
 
 interface MarkdownPropertyProps {
@@ -12,7 +12,7 @@ export const MarkdownProperty = ({ property, refreshedProperties }: MarkdownProp
 	return (
 		<div className='space-y-1'>
 			<PropertyLabel property={property} refreshedProperties={refreshedProperties} />
-			<Markdown className="w-full rounded-md border border-dashed border-input bg-card p-3 text-sm shadow-sm">{property.description}</Markdown>
+			<MarkdownBase className="w-full rounded-md border border-dashed border-input bg-card p-3 text-sm shadow-sm">{property.description}</MarkdownBase>
 		</div>
 	)
 }

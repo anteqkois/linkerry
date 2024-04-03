@@ -42,7 +42,7 @@ export const ActionConnectorPanel = () => {
 		data: connectorMetadata,
 		isFetched,
 		isLoading,
-		error
+		error,
 	} = useClientQuery(
 		connectorsMetadataQueryConfig.getOne({
 			connectorName: editedAction.settings.connectorName,
@@ -182,7 +182,7 @@ export const ActionConnectorPanel = () => {
 					</div>
 				</div>
 				<Form {...actionForm}>
-					<form className="space-y-5 mt-6" onSubmit={(e) => e.preventDefault()}>
+					<form className="space-y-8 mt-6" onSubmit={(e) => e.preventDefault()}>
 						<FormField
 							control={actionForm.control}
 							name="actionName"
@@ -198,15 +198,16 @@ export const ActionConnectorPanel = () => {
 											}}
 										>
 											<SelectTrigger>
-												<SelectValue placeholder="Select action" />
+												<SelectValue placeholder="Select action">
+													<p>{actionWatcher?.displayName}</p>
+												</SelectValue>
 											</SelectTrigger>
 											<SelectContent position="popper">
 												{Object.values(connectorMetadata.actions).map((action) => {
 													return (
 														<SelectItem value={action.name} key={action.name}>
-															<span className="flex gap-2 items-center">
-																<p>{action.displayName}</p>
-															</span>
+															<p>{action.displayName}</p>
+															<p className="text-xs text-muted-foreground">{action.description}</p>
 														</SelectItem>
 													)
 												})}

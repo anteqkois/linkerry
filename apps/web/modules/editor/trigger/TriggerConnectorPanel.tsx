@@ -173,7 +173,7 @@ export const TriggerConnectorPanel = () => {
 				Change trigger
 			</Button> */}
 				<Form {...triggerForm}>
-					<form className="space-y-5 mt-6" onSubmit={(e) => e.preventDefault()}>
+					<form className="space-y-8 mt-6" onSubmit={(e) => e.preventDefault()}>
 						<FormField
 							control={triggerForm.control}
 							name="triggerName"
@@ -189,15 +189,16 @@ export const TriggerConnectorPanel = () => {
 											}}
 										>
 											<SelectTrigger>
-												<SelectValue placeholder="Select flow trigger" />
+												<SelectValue placeholder="Select flow trigger">
+													<p>{triggerWatcher?.displayName}</p>
+												</SelectValue>
 											</SelectTrigger>
 											<SelectContent position="popper">
 												{Object.values(connectorMetadata.triggers).map((trigger) => {
 													return (
 														<SelectItem value={trigger.name} key={trigger.name}>
-															<span className="flex gap-2 items-center">
-																<p>{trigger.displayName}</p>
-															</span>
+															<p>{trigger.displayName}</p>
+															<p className="text-xs text-muted-foreground">{trigger.description}</p>
 														</SelectItem>
 													)
 												})}

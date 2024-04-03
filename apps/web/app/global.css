@@ -216,11 +216,34 @@
 	}
 
 	.flex-center {
-    @apply flex items-center justify-center;
-  }
-  .position-center {
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
-  }
+		@apply flex items-center justify-center;
+	}
+	.position-center {
+		@apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+	}
+
+	.markdown {
+		ol,
+		ul {
+			padding-left: theme('spacing.6');
+		}
+
+		ol {
+			list-style-type: decimal;
+		}
+
+		ul {
+			list-style-type: disc;
+		}
+
+		a {
+			@apply underline text-primary;
+		}
+
+		p{
+			@apply my-2;
+		}
+	}
 }
 
 /* html {

@@ -61,7 +61,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 				<TooltipProvider delayDuration={100}>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<div className="font-medium max-w-[150px] whitespace-nowrap text-ellipsis overflow-hidden">
+							<div className="font-medium max-w-[150px] truncate">
 								{/* {`${row.original.version.stepsCount} ${flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}`} */}
 
 								<span className="text-primary font-bold">{row.original.version.stepsCount}:</span>

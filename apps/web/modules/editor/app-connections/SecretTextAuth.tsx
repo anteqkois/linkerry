@@ -1,4 +1,4 @@
-import { ConnectorMetadata, CustomAuthProperty } from '@linkerry/connectors-framework'
+import { ConnectorMetadata, SecretTextProperty } from '@linkerry/connectors-framework'
 import { AppConnectionType, AppConnectionWithoutSensitiveData, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import {
 	ButtonClient,
@@ -21,19 +21,20 @@ import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useState } from 'r
 import { useForm } from 'react-hook-form'
 import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { AppConnectionsApi } from '../../app-connections'
-import { DynamicField } from '../form/DynamicField'
+import { SecretTextField } from '../form/SecretTextField'
 
-export interface CustomAuthProps extends HTMLAttributes<HTMLElement> {
+export interface SecretTextAuthProps extends HTMLAttributes<HTMLElement> {
 	onCreateAppConnection: (newConnection: AppConnectionWithoutSensitiveData) => void
-	auth: CustomAuthProperty
+	auth: SecretTextProperty
 	connector: Pick<ConnectorMetadata, 'displayName' | 'name'>
 	setShowDialog: Dispatch<SetStateAction<boolean>>
 }
-export const CustomAuth = ({ onCreateAppConnection, auth, connector, setShowDialog }: CustomAuthProps) => {
-	const appConnectionForm = useForm<{ name: string } & Record<string, any>>({
+export const SecretTextAuth = ({ onCreateAppConnection, auth, connector, setShowDialog }: SecretTextAuthProps) => {
+	const appConnectionForm = useForm({
 		mode: 'all',
 		defaultValues: {
 			name: `${connector.name.replace('@linkerry/', '').toLocaleLowerCase()}-${dayjs().unix()}`,
+			secretText: '',
 		},
 	})
 	const [loading, setLoading] = useState(false)
@@ -46,16 +47,16 @@ export const CustomAuth = ({ onCreateAppConnection, auth, connector, setShowDial
 		setLoading(true)
 		appConnectionForm.clearErrors()
 
-		const { name, ...formData } = appConnectionForm.getValues()
+		const { name, secretText } = appConnectionForm.getValues()
 
 		try {
 			const { data } = await AppConnectionsApi.upsert({
 				connectorName: connector.name,
 				name: name,
-				type: AppConnectionType.CUSTOM_AUTH,
+				type: AppConnectionType.SECRET_TEXT,
 				value: {
-					type: AppConnectionType.CUSTOM_AUTH,
-					props: formData,
+					type: AppConnectionType.SECRET_TEXT,
+					secret_text: secretText,
 				},
 			})
 
@@ -106,10 +107,8 @@ export const CustomAuth = ({ onCreateAppConnection, auth, connector, setShowDial
 							</FormItem>
 						)}
 					/>
-					<MarkdownBase >{auth.description}</MarkdownBase>
-					{Object.entries(auth.props).map(([name, property]) => (
-						<DynamicField property={property} name={name} key={name} refreshedProperties={[]} />
-					))}
+					<MarkdownBase className="markdown w-full rounded-md border border-dashed border-input bg-card p-3 text-sm shadow-sm">{auth.description}</MarkdownBase>
+					<SecretTextField property={auth} name={'secretText'} key={'secretText'} refreshedProperties={[]} />
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
 					</div>

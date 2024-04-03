@@ -271,7 +271,6 @@ export class AppConnectionsService {
 					projectId,
 					auth: connection.value as AppConnectionValue,
 				})
-
 				break
 			// default:
 			// 	throw new Error(`Unimplemented auth type ${connection.value.type}`)
@@ -342,7 +341,6 @@ export class AppConnectionsService {
 
 		const validateAuthResult = engineResponse.result
 
-		console.log('validateAuthResult', validateAuthResult)
 		if (!validateAuthResult.valid && 'error' in validateAuthResult)
 			throw new CustomError(validateAuthResult.error, ErrorCode.INVALID_APP_CONNECTION, validateAuthResult)
 	}
