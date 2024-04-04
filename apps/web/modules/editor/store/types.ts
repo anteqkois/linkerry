@@ -11,6 +11,7 @@ import {
 	Trigger,
 	TriggerConnector,
 	TriggerEvent,
+	WEBSOCKET_NAMESPACE,
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
@@ -85,6 +86,7 @@ export interface TriggersSlice {
 	patchEditedTriggerConnector: (update: DeepPartial<Omit<TriggerConnector, '_id'>>) => Promise<void>
 	resetTrigger: (triggerName: string) => Promise<void>
 	testPoolTrigger: () => Promise<TriggerEvent[]>
+	testWebhookTrigger: () => Promise<TriggerEvent[]>
 }
 
 export interface ActionsSlice {
@@ -110,7 +112,7 @@ export interface StepsSlice {
 export interface WebSocketSlice {
 	// socket: Socket<DefaultEventsMap, DefaultEventsMap>	| null
 	socket: Socket | null
-	initWebSocketConnection: () => Socket
+	initWebSocketConnection: ({ namespace }: { namespace: WEBSOCKET_NAMESPACE }) => Socket
 	closeWebSocketConnection: () => Promise<void>
 }
 

@@ -13,13 +13,13 @@ import { TriggerApi } from '../../flows/triggers/api'
 import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
 import { useEditor } from '../useEditor'
 
-export interface TriggerEventsProps extends HTMLAttributes<HTMLElement> {
+export interface TriggerTestFunctionProps extends HTMLAttributes<HTMLElement> {
 	panelSize: number
 	disabled: boolean
 	disabledMessage: string
 }
 
-export const TriggerEventsTest = ({ panelSize, disabled, disabledMessage }: TriggerEventsProps) => {
+export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: TriggerTestFunctionProps) => {
 	const { toast } = useToast()
 	const { flow, editedTrigger, testPoolTrigger, flowOperationRunning, patchEditedTriggerConnector } = useEditor()
 	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')

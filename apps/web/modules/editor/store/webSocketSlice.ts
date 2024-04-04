@@ -1,14 +1,14 @@
-import { assertNotNullOrUndefined } from '@linkerry/shared'
+import { WEBSOCKET_NAMESPACE, assertNotNullOrUndefined } from '@linkerry/shared'
 import io from 'socket.io-client'
 import { API_URL } from '../../../libs/api-client'
 import { CreateSlice, WebSocketSlice } from './types'
 
 export const createWebSocketSlice: CreateSlice<WebSocketSlice> = (set, get) => ({
 	socket: null,
-	initWebSocketConnection: () => {
+	initWebSocketConnection: ({ namespace }: { namespace: WEBSOCKET_NAMESPACE }) => {
 		assertNotNullOrUndefined(API_URL, 'API_URL')
 
-		const socket = io(API_URL, {
+		const socket = io(`${API_URL}/${namespace}`, {
 			timeout: 2_000,
 			reconnectionDelayMax: 4000,
 			withCredentials: true,

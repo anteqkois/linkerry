@@ -1,6 +1,7 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
 	CustomError,
+	CustomWebSocketExceptionResponse,
 	DeepPartial,
 	ErrorCode,
 	FlowOperationType,
@@ -9,6 +10,10 @@ import {
 	TriggerEmpty,
 	TriggerTestPoolResponse,
 	TriggerType,
+	WEBSOCKET_EVENT,
+	WEBSOCKET_NAMESPACE,
+	WatchTriggerEventsWSInput,
+	WatchTriggerEventsWSResponse,
 	assertNotNullOrUndefined,
 	deepMerge,
 	flowHelper,
@@ -188,23 +193,79 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				})
 			).data
 
-			const trigger = flowHelper.getTrigger(testResult.flowVersion, editedTrigger.name)
-			if (!trigger || !isConnectorTrigger(trigger))
+			const updatedTrigger = flowHelper.getTrigger(testResult.flowVersion, editedTrigger.name)
+			if (!updatedTrigger || !isConnectorTrigger(updatedTrigger))
 				throw new CustomError(`Can not find trigger`, ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND, {
-					trigger,
+					trigger: updatedTrigger,
 				})
 
-			patchNode(trigger.name, {
+			patchNode(updatedTrigger.name, {
 				data: {
-					trigger,
+					trigger: updatedTrigger,
 				},
 			})
-			set({ editedTrigger: trigger })
+			set({ editedTrigger: updatedTrigger })
 			setFlow({ ...flow, version: testResult.flowVersion })
 		} finally {
 			set({ flowOperationRunning: false })
 		}
 
 		return testResult.triggerEvents
+	},
+	async testWebhookTrigger() {
+		const { flow, setFlow, patchNode, editedTrigger, initWebSocketConnection, closeWebSocketConnection } = get()
+		if (!isConnectorTrigger(editedTrigger))
+			throw new CustomError(`Invalid trigger type: ${editedTrigger?.type}`, ErrorCode.INVALID_TYPE, editedTrigger ?? undefined)
+
+		set({
+			flowOperationRunning: true,
+		})
+
+		const socket = initWebSocketConnection({
+			namespace: WEBSOCKET_NAMESPACE.TRIGGER_EVENTS,
+		})
+		assertNotNullOrUndefined(socket, 'socket')
+
+		return new Promise((resolve, reject) => {
+			socket.emit(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS, {
+				flowId: flow._id,
+				triggerName: editedTrigger.name,
+			} as WatchTriggerEventsWSInput)
+
+			socket.on(WEBSOCKET_EVENT.EXCEPTION, (error: CustomWebSocketExceptionResponse) => {
+				set({
+					flowOperationRunning: false,
+				})
+
+				socket.off(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS_RESPONSE)
+				socket.off(WEBSOCKET_EVENT.EXCEPTION)
+				closeWebSocketConnection()
+
+				console.log(error.message)
+				return reject(error.message)
+			})
+
+			socket.on(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS_RESPONSE, ({ triggerEvents, flowVersion }: WatchTriggerEventsWSResponse) => {
+				const updatedTrigger = flowHelper.getTrigger(flowVersion, editedTrigger.name)
+				if (!updatedTrigger || !isConnectorTrigger(updatedTrigger))
+					throw new CustomError(`Can not find trigger`, ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND, {
+						trigger: updatedTrigger,
+					})
+
+				patchNode(updatedTrigger.name, {
+					data: {
+						trigger: updatedTrigger,
+					},
+				})
+				set({ editedTrigger: updatedTrigger, flowOperationRunning: false })
+				setFlow({ ...flow, version: flowVersion })
+
+				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
+				socket.off(WEBSOCKET_EVENT.EXCEPTION)
+				closeWebSocketConnection()
+
+				return resolve(triggerEvents)
+			})
+		})
 	},
 })

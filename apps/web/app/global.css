@@ -34,6 +34,8 @@
 		--positive-foreground: 210 20% 98%;
 		--negative: 0 72.2% 50.6%;
 		--negative-foreground: 0 85.7% 97.3%;
+		--warning: 32 98% 43%;
+		--warning-foreground: 30 90% 94%;
 	}
 
 	.dark {
@@ -62,6 +64,8 @@
 		--positive-foreground: 210 20% 98%;
 		--negative: 0 72.2% 50.6%;
 		--negative-foreground: 0 85.7% 97.3%;
+		--warning: 32 98% 83%;
+		--warning-foreground: 0 20% 14%;
 	}
 
 	/* Purole from 08.08.2023 */

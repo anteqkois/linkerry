@@ -47,8 +47,5 @@ export const telegramNewMessage = createTrigger({
   },
   async run(context) {
     return [context.payload.body];
-  },
-  async test(context) {
-    return [context.payload.body];
-  },
+  }
 });

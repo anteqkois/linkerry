@@ -1,8 +1,5 @@
-import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis'
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
-import { REDIS_CLIENT_NAMESPACE } from '../../configs/redis'
 import { FilesModule } from '../../files/files.module'
 import { AuthModule } from '../../users/auth'
 import { QueuesModule } from '../../workers/flow-worker/queues/queues.module'

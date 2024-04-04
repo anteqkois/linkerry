@@ -1,12 +1,12 @@
-import { Cookies, FlowRunWSInput, WEBSOCKET_EVENT, WEBSOCKET_NAMESPACE, parseCookieString } from '@linkerry/shared'
+import { Cookies, RequestUser, WEBSOCKET_EVENT, WEBSOCKET_NAMESPACE, WatchTriggerEventsWSInput, parseCookieString } from '@linkerry/shared'
 import { Logger, UseFilters, UseGuards } from '@nestjs/common'
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
 import { JwtCookiesWebsocketAuthGuard } from '../../../lib/auth/guards/jwt-cookies-websocket-auth.guard'
 import { AllExceptionsWebsocketFilter } from '../../../lib/nest-utils'
 import { AuthService } from '../../users/auth/auth.service'
-import { FlowRunWatcherService } from './flow-runs-watcher.service'
-import { FlowRunsService } from './flow-runs.service'
+import { WebsocketJwtUser } from '../../users/auth/decorators/websocket-jwt-user.decorator'
+import { TriggerEventsService } from './trigger-events.service'
 
 @WebSocketGateway({
 	cors: {
@@ -16,19 +16,16 @@ import { FlowRunsService } from './flow-runs.service'
 	withCredentials: true,
 	cookie: true,
 	connectTimeout: 10_000,
-	namespace: WEBSOCKET_NAMESPACE.FLOW_RUNS,
+	namespace: WEBSOCKET_NAMESPACE.TRIGGER_EVENTS,
 })
-export class FlowRunsWebSocketService implements OnGatewayConnection, OnGatewayDisconnect {
+export class TriggerEventsWebSocketService implements OnGatewayConnection, OnGatewayDisconnect {
 	// @WebSocketServer()
 	// server: Server;
-	private readonly logger = new Logger(FlowRunsWebSocketService.name)
+	private readonly logger = new Logger(TriggerEventsWebSocketService.name)
 
-	constructor(
-		private readonly flowRunsService: FlowRunsService,
-		private authService: AuthService,
-		private readonly flowResponseService: FlowRunWatcherService,
-	) {}
+	constructor(private authService: AuthService, private readonly triggerEventsService: TriggerEventsService) {}
 
+	// TODO move to parent class to share auth logic
 	handleConnection(client: Socket, ...args: any[]): void | Socket {
 		if (typeof client.handshake.headers.cookie !== 'string') return client.disconnect(true)
 
@@ -44,15 +41,21 @@ export class FlowRunsWebSocketService implements OnGatewayConnection, OnGatewayD
 
 	@UseGuards(JwtCookiesWebsocketAuthGuard)
 	@UseFilters(new AllExceptionsWebsocketFilter())
-	@SubscribeMessage(WEBSOCKET_EVENT.TEST_FLOW)
-	async handleTestFlowEvent(@ConnectedSocket() client: Socket, @MessageBody() data: FlowRunWSInput) {
-		const flowRun = await this.flowRunsService.test({
-			projectId: data.projectId,
-			flowVersionId: data.flowVersionId,
-		})
-		client.emit(WEBSOCKET_EVENT.TEST_FLOW_STARTED, flowRun)
-
-		await this.flowResponseService.listen(flowRun._id.toString(), false)
-		client.emit(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, flowRun)
+	@SubscribeMessage(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS)
+	async handleTestFlowEvent(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() data: WatchTriggerEventsWSInput,
+		@WebsocketJwtUser() user: RequestUser,
+	) {
+		const response = await this.triggerEventsService.watchTriggerEvents(
+			{
+				flowId: data.flowId,
+				triggerName: data.triggerName,
+			},
+			user.projectId,
+			user.id,
+			true,
+		)
+		client.emit(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS_RESPONSE, response)
 	}
 }

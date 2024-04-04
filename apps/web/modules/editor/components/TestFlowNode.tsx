@@ -10,7 +10,7 @@ const testFlowVariants = cva('flex-center border-2 rounded-3xl', {
 	variants: {
 		valid: {
 			true: 'text-primary bg-primary/20 border-primary/50 cursor-pointer',
-			false: 'text-orange-200 bg-orange-500/20 border-orange-500/50 border-dashed cursor-not-allowed',
+			false: 'text-warning bg-warning-foreground border-warning/50 border-dashed cursor-not-allowed',
 		},
 	},
 })

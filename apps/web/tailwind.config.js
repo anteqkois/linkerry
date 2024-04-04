@@ -88,7 +88,11 @@ module.exports = {
 				},
 				negative: {
 					DEFAULT: 'hsl(var(--negative))',
-					foreground: 'hsl(var(--positive-negative))',
+					foreground: 'hsl(var(--negative-foreground))',
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))',
 				},
 			},
 			space: newSizes,

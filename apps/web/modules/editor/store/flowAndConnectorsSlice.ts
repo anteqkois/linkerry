@@ -13,6 +13,7 @@ import {
 	Id,
 	Trigger,
 	WEBSOCKET_EVENT,
+	WEBSOCKET_NAMESPACE,
 	assertNotNullOrUndefined,
 	isConnectorAction,
 	isConnectorTrigger,
@@ -115,7 +116,9 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 	flowRun: null,
 	async testFlowVersion() {
 		const { onSelectFlowRun, setLeftDrawer, flow, initWebSocketConnection, closeWebSocketConnection } = get()
-		const socket = initWebSocketConnection()
+		const socket = initWebSocketConnection({
+			namespace: WEBSOCKET_NAMESPACE.FLOW_RUNS,
+		})
 		assertNotNullOrUndefined(socket, 'socket')
 
 		return new Promise((resolve, reject) => {
@@ -134,6 +137,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
+				socket.off(WEBSOCKET_EVENT.EXCEPTION)
 
 				closeWebSocketConnection()
 				console.log(error.message)
@@ -155,6 +159,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
 				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
+				socket.off(WEBSOCKET_EVENT.EXCEPTION)
 
 				closeWebSocketConnection()
 

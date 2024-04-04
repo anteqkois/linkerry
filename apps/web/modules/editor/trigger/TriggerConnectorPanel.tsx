@@ -1,5 +1,5 @@
 import { TriggerBase, getRefreshersToRefreshedProperties } from '@linkerry/connectors-framework'
-import { ConnectorGroup, TriggerStrategy, TriggerType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
+import { ConnectorGroup, TriggerTestStrategy, TriggerType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
 	Form,
 	FormControl,
@@ -31,7 +31,8 @@ import { ConnectionsSelect } from '../form/Inputs/ConnectionsSelect'
 import { ConnectorVersion } from '../steps/ConnectorVersion'
 import { retriveStepInputFromObject } from '../steps/retriveStepInputFromObject'
 import { useEditor } from '../useEditor'
-import { TriggerEventsTest } from './TriggerEventsTest'
+import { TriggerTestFunction } from './TriggerTestFunction'
+import { TriggerWebhookSimulation } from './TriggerWebhookSimulation'
 
 export const TriggerConnectorPanel = () => {
 	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, setEditedConnectorMetadata } = useEditor()
@@ -224,16 +225,30 @@ export const TriggerConnectorPanel = () => {
 				<ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />
 			</ResizablePanel>
 			<ResizableHandle withHandle />
-			{connectorMetadata.group !== ConnectorGroup.CORE && triggerWatcher?.type === TriggerStrategy.POLLING && (
+			{connectorMetadata.group !== ConnectorGroup.CORE && triggerWatcher?.testStrategy === TriggerTestStrategy.TEST_FUNCTION && (
 				<ResizablePanel
 					defaultSize={editedTrigger.settings.inputUiInfo.currentSelectedData ? 60 : 30}
 					maxSize={80}
 					onResize={(size) => setTestDataPanelHeight(size)}
 				>
-					<TriggerEventsTest
+					<TriggerTestFunction
 						panelSize={testDataPanelHeight}
 						disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0}
 						disabledMessage={isEmpty(triggerWatcher?.props) ? 'Choose Trigger' : 'First fill all required Trigger fields'}
+					/>
+				</ResizablePanel>
+			)}
+			{connectorMetadata.group !== ConnectorGroup.CORE && triggerWatcher?.testStrategy === TriggerTestStrategy.SIMULATION && (
+				<ResizablePanel
+					defaultSize={editedTrigger.settings.inputUiInfo.currentSelectedData ? 60 : 30}
+					maxSize={80}
+					onResize={(size) => setTestDataPanelHeight(size)}
+				>
+					<TriggerWebhookSimulation
+						panelSize={testDataPanelHeight}
+						disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0}
+						disabledMessage={isEmpty(triggerWatcher?.props) ? 'Choose Trigger' : 'First fill all required Trigger fields'}
+						triggerDisplayName={triggerWatcher.displayName}
 					/>
 				</ResizablePanel>
 			)}

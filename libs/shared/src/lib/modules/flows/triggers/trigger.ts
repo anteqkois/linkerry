@@ -47,8 +47,8 @@ export const triggerConnectorSchema = baseStepSchema.merge(
 	}),
 )
 
-export const isConnectorTrigger = (trigger: Trigger): trigger is TriggerConnector => {
-	return trigger.type === TriggerType.CONNECTOR
+export const isConnectorTrigger = (trigger: any): trigger is TriggerConnector => {
+	return trigger?.type === TriggerType.CONNECTOR
 }
 
 export interface TriggerConnector extends z.infer<typeof triggerConnectorSchema> {}
