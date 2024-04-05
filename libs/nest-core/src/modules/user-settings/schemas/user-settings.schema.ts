@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 
 export type UserSettingsDocument = mongoose.HydratedDocument<UserSettingsModel>
 
-@Schema({ timestamps: true, collection:'user-settings' })
+@Schema({ timestamps: true, collection:'user_settings' })
 export class UserSettingsModel implements UserSettings {
   _id: string
 

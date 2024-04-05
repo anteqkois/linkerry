@@ -19,8 +19,6 @@ import { TriggerEventsService } from './trigger-events.service'
 	namespace: WEBSOCKET_NAMESPACE.TRIGGER_EVENTS,
 })
 export class TriggerEventsWebSocketService implements OnGatewayConnection, OnGatewayDisconnect {
-	// @WebSocketServer()
-	// server: Server;
 	private readonly logger = new Logger(TriggerEventsWebSocketService.name)
 
 	constructor(private authService: AuthService, private readonly triggerEventsService: TriggerEventsService) {}
@@ -41,7 +39,7 @@ export class TriggerEventsWebSocketService implements OnGatewayConnection, OnGat
 
 	@UseGuards(JwtCookiesWebsocketAuthGuard)
 	@UseFilters(new AllExceptionsWebsocketFilter())
-	@SubscribeMessage(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS)
+	@SubscribeMessage(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS)
 	async handleTestFlowEvent(
 		@ConnectedSocket() client: Socket,
 		@MessageBody() data: WatchTriggerEventsWSInput,
@@ -56,6 +54,6 @@ export class TriggerEventsWebSocketService implements OnGatewayConnection, OnGat
 			user.id,
 			true,
 		)
-		client.emit(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS_RESPONSE, response)
+		client.emit(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE, response)
 	}
 }

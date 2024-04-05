@@ -18,7 +18,9 @@ import { EngineService } from '../../engine/engine.service'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
-import { Model } from 'mongoose'
+import mongoose, { Model } from 'mongoose'
+import { RedisLockService } from '../../../lib/redis-lock'
+import { WebhookSimulationService } from '../../webhooks/webhook-simulation/webhook-simulation.service'
 import { WebhookUrlsService } from '../../webhooks/webhook-urls/webhook-urls.service'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
@@ -46,6 +48,8 @@ export class TriggerEventsService {
 		private readonly flowVersionsService: FlowVersionsService,
 		private readonly engineService: EngineService,
 		private readonly webhookUrlsService: WebhookUrlsService,
+		private readonly webhookSimulationService: WebhookSimulationService,
+		private readonly redisLockService: RedisLockService,
 		private readonly configService: ConfigService,
 	) {
 		this.WEBHOOK_TIMEOUT_MS = (+configService.get('WEBHOOK_TIMEOUT_SECONDS') ?? 30) * 1000
@@ -209,12 +213,52 @@ export class TriggerEventsService {
 
 	async watchTriggerEvents(input: WatchTriggerEventsWSInput, projectId: Id, userId: Id, timeoutRequest: boolean) {
 		const flow = await this.flowModel
-			.findOne<FlowPopulated>({
+			.findOne<FlowDocument<'version'>>({
 				_id: input.flowId,
 				projectId,
 			})
 			.populate('version')
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
+
+		/* Enable webhook */
+		const lock = await this.redisLockService.acquireLock({
+			key: `${input.flowId}-webhook-simulation`,
+			timeout: 5_000,
+		})
+		try {
+			/* if exist, delete */
+			const webhookSimulation = await this.webhookSimulationService.get({
+				flowId: input.flowId,
+				projectId,
+				flowVersionId: flow.version._id,
+			})
+			if (webhookSimulation)
+				await this.webhookSimulationService.delete({
+					flowId: input.flowId,
+					projectId,
+					flowVersionId: flow.version._id,
+					parentLock: lock,
+				})
+		} catch (error) {
+			const notWebhookSimulationNotFoundError = !(error instanceof CustomError && error.code === ErrorCode.ENTITY_NOT_FOUND)
+			if (notWebhookSimulationNotFoundError) {
+				throw error
+			}
+		}
+
+		await this.webhookSimulationService._preCreateSideEffect({
+			flowId: input.flowId,
+			projectId,
+			flowVersionId: flow.version._id,
+		})
+
+		await this.webhookSimulationService.create({
+			flowId: input.flowId,
+			projectId,
+			flowVersionId: flow.version._id,
+		})
+
+		await lock.release()
 
 		const flowTrigger = flowHelper.getTrigger(flow.version, input.triggerName)
 		assertNotNullOrUndefined(flowTrigger, 'flowTrigger')
@@ -226,21 +270,21 @@ export class TriggerEventsService {
 		const listenerKey = `${flow._id}:${sourceName}`
 
 		/* Create database watcher */
-
-		const changeStreamWatcher = this.flowModel.collection
+		this.logger.debug(`#watchTriggerEvents watch for changes with sourceName=${sourceName}`)
+		const changeStreamWatcher = this.triggerEventsModel.collection
 			.watch([
-				// {
-				// 	$match: {
-				// 		operationType: 'insert',
-				// 	},
-				// },
+				{
+					$match: {
+						operationType: 'insert',
+						'fullDocument.flowId': flow._id,
+						'fullDocument.projectId': new mongoose.Types.ObjectId(projectId),
+						'fullDocument.sourceName': sourceName,
+					},
+				},
 			])
 			.on('change', async (change: InsertNewTrigerEventEvent) => {
-				console.log('NEW EVENT')
-				console.dir(change, { depth: null })
-
 				await this._deleteOldFilesForTestData({
-					flowId: flow._id,
+					flowId: flow._id.toString(),
 					projectId,
 					stepName: flowTrigger.name,
 				})
@@ -254,19 +298,9 @@ export class TriggerEventsService {
 
 				// delete old event data related to this trigger
 				await this.deleteAllRelatedToTrigger({
-					flowId: flow._id,
+					flowId: flow._id.toString(),
 					trigger: flowTrigger,
 				})
-
-				// const sourceName = this._getSourceName(flowTrigger)
-				// for (const payload of result.output) {
-				// 	await this.saveEvent({
-				// 		flowId: flow._id,
-				// 		sourceName,
-				// 		payload,
-				// 		projectId,
-				// 	})
-				// }
 
 				flowTrigger.valid = true
 				flowTrigger.settings = {
@@ -298,26 +332,28 @@ export class TriggerEventsService {
 				}
 				this.logger.log(`#watchTriggerEvents remove listenerKey=${listenerKey}`)
 			})
+			.on('error', (error) => {
+				this.logger.error(`#watchTriggerEvents watch error`, error)
+				throw new CustomError(`Can not subscribe to webhook events. Please inform our Team`, ErrorCode.INTERNAL_SERVER, { ...input, sourceName })
+			})
 
 		changeStreamWatchers.set(listenerKey, changeStreamWatcher)
 
-		this.logger.debug(`#watchTriggerEvents key=${listenerKey}`)
+		this.logger.debug(`#watchTriggerEvents listenerKey=${listenerKey}`)
 		return new Promise((resolve, reject) => {
-			// const defaultResponse: WatchTriggerEventsWSResponse = {[
-			// 	{
-			// 		_id: generateId().toString(),
-			// 		createdAt: dayjs().toISOString(),
-			// 		flowId: flow._id,
-			// 		payload: {},
-			// 		projectId,
-			// 		sourceName,
-			// 		updatedAt: dayjs().toISOString(),
-			// 	},
-			// ]}
-			const responseHandler = async (data: WatchTriggerEventsWSResponse) => {
-				clearTimeout(timeout)
+			const clearData = async () => {
 				const changeStreamWatcher = changeStreamWatchers.get(listenerKey)
 				await changeStreamWatcher?.close()
+				await this.webhookSimulationService.delete({
+					flowId: input.flowId,
+					projectId,
+					flowVersionId: flow.version._id,
+				})
+			}
+
+			const responseHandler = async (data: WatchTriggerEventsWSResponse) => {
+				clearTimeout(timeout)
+				await clearData()
 				resolve(data)
 			}
 			let timeout: NodeJS.Timeout
@@ -325,95 +361,12 @@ export class TriggerEventsService {
 				listeners.set(listenerKey, resolve)
 			} else {
 				timeout = setTimeout(async () => {
-					/* clear watcher and listener */
-					const changeStreamWatcher = changeStreamWatchers.get(listenerKey)
-					await changeStreamWatcher?.close()
-					listeners.delete(listenerKey)
-
+					await clearData()
 					reject(new CustomError(`Trigger events timeout`, ErrorCode.EXECUTION_TIMEOUT, input))
 				}, this.WEBHOOK_TIMEOUT_MS)
 				listeners.set(listenerKey, responseHandler)
 			}
 		})
-
-		// const this.changeStream = this.postsModel.collection
-		// .watch([
-		// 	{
-		// 		$match: {
-		// 			operationType: 'insert',
-		// 		},
-		// 	},
-		// ])
-		// .on('change', this.processChangeStream.bind(this));
-
-		// await this._deleteOldFilesForTestData({
-		// 	flowId: flow._id,
-		// 	projectId,
-		// 	stepName: flowTrigger.name,
-		// })
-
-		// const { result } = await this.engineService.executeTrigger({
-		// 	flowVersion: flow.version,
-		// 	hookType: TriggerHookType.TEST,
-		// 	triggerName: flowTrigger.name,
-		// 	webhookUrl: await this.webhookUrlsService.getWebhookUrl({
-		// 		flowId: flow._id,
-		// 		simulate: true,
-		// 	}),
-		// 	projectId,
-		// })
-
-		// if (!result.success) {
-		// 	throw new CustomError(result?.message ?? 'Execute trigger failed', ErrorCode.TEST_TRIGGER_FAILED, {
-		// 		userMessage: 'Execute trigger failed',
-		// 	})
-		// }
-
-		// // delete old event data related to this trigger
-		// await this.deleteAllRelatedToTrigger({
-		// 	flowId: flow._id,
-		// 	trigger: flowTrigger,
-		// })
-
-		// const sourceName = this._getSourceName(flowTrigger)
-		// for (const payload of result.output) {
-		// 	await this.saveEvent({
-		// 		flowId: flow._id,
-		// 		sourceName,
-		// 		payload,
-		// 		projectId,
-		// 	})
-		// }
-
-		// flowTrigger.valid = true
-		// flowTrigger.settings = {
-		// 	...flowTrigger.settings,
-		// 	inputUiInfo: {
-		// 		currentSelectedData: result.output.pop(),
-		// 		lastTestDate: dayjs().format(),
-		// 	},
-		// }
-
-		// const flowVersion = await this.flowVersionsService.applyOperation({
-		// 	flowVersion: flow.version,
-		// 	projectId,
-		// 	userId,
-		// 	userOperation: {
-		// 		type: FlowOperationType.UPDATE_TRIGGER,
-		// 		flowVersionId: flow.version._id,
-		// 		request: flowTrigger,
-		// 	},
-		// })
-
-		// const triggerEvents = await this.findMany({
-		// 	flowLike: flow,
-		// 	triggerName: flowTrigger.name,
-		// })
-
-		// return {
-		// 	triggerEvents,
-		// 	flowVersion,
-		// }
 	}
 
 	async getMany(query: GetManyDto, projectId: Id) {

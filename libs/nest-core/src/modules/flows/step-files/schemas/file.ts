@@ -7,8 +7,11 @@ import { FlowModel } from '../../flows/schemas/flow.schema'
 
 export type StepFileDocument = mongoose.HydratedDocument<StepFileModel>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'step-files' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'step_files' })
 export class StepFileModel extends TimestampDatabaseModel implements Omit<StepFile, '_id'> {
+	@Prop({ required: true, type: Object })
+	data: any
+
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })
 	flowId: Id
 
@@ -16,10 +19,13 @@ export class StepFileModel extends TimestampDatabaseModel implements Omit<StepFi
 	projectId: Id
 
 	@Prop({ required: true, type: String })
-	sourceName: string
+	name: string
 
-	@Prop({ required: false, type: Object })
-	payload?: any
+	@Prop({ required: true, type: Number })
+	size: number
+
+	@Prop({ required: true, type: String })
+	stepName: string
 }
 
 export const StepFileSchema = SchemaFactory.createForClass(StepFileModel)

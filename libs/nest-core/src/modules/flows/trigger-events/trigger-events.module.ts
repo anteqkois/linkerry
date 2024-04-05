@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
+import { RedisLockModule } from '../../../lib/redis-lock'
 import { EngineModule } from '../../engine/engine.module'
 import { AuthModule } from '../../users/auth'
+import { WebhookSimulationModule } from '../../webhooks/webhook-simulation'
 import { WebhooksUrlsModule } from '../../webhooks/webhook-urls/webhook-urls.module'
 import { FlowVersionsModule } from '../flow-versions/flow-versions.module'
 import { flowVersionModelFactory } from '../flow-versions/schemas/flow-version.schema'
@@ -19,6 +21,8 @@ import { TriggerEventsService } from './trigger-events.service'
 		EngineModule,
 		FlowVersionsModule,
 		StepFilesModule,
+		RedisLockModule,
+		WebhookSimulationModule,
 		WebhooksUrlsModule
 	],
 	controllers: [TriggerEventsController],

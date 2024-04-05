@@ -237,7 +237,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 					flowOperationRunning: false,
 				})
 
-				socket.off(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS_RESPONSE)
+				socket.off(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE)
 				socket.off(WEBSOCKET_EVENT.EXCEPTION)
 				closeWebSocketConnection()
 
@@ -245,7 +245,8 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				return reject(error.message)
 			})
 
-			socket.on(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS_RESPONSE, ({ triggerEvents, flowVersion }: WatchTriggerEventsWSResponse) => {
+			socket.on(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE, ({ triggerEvents, flowVersion }: WatchTriggerEventsWSResponse) => {
+				console.log('RESPONSE', { triggerEvents, flowVersion });
 				const updatedTrigger = flowHelper.getTrigger(flowVersion, editedTrigger.name)
 				if (!updatedTrigger || !isConnectorTrigger(updatedTrigger))
 					throw new CustomError(`Can not find trigger`, ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND, {

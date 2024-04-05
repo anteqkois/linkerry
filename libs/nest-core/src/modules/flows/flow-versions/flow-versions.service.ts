@@ -53,17 +53,18 @@ export class FlowVersionsService {
 	}
 
 	private async _preApplyOperationSideEffect({ projectId, flowVersion, operation }: OnApplyOperationParams) {
-		if (operation.type === FlowOperationType.UPDATE_TRIGGER) {
-			try {
-				await this._deleteWebhookSimulation({
-					projectId,
-					flowId: flowVersion.flow,
-				})
-			} catch (e) {
-				// Ignore error and continue the operation peacefully
-				// exceptionHandler.handle(e)
-			}
-		}
+		/* disable action was moved to trigger events watcher */
+		// if (operation.type === FlowOperationType.UPDATE_TRIGGER) {
+		// 	try {
+		// 		await this._deleteWebhookSimulation({
+		// 			projectId,
+		// 			flowId: flowVersion.flow,
+		// 		})
+		// 	} catch (e) {
+		// 		// Ignore error and continue the operation peacefully
+		// 		// exceptionHandler.handle(e)
+		// 	}
+		// }
 	}
 
 	private _decorateValidityAndUpdatedBy({ flowVersion, userId }: DecorateValidityUpdatedByParams) {

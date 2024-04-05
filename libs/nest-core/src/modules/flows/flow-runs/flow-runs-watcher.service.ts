@@ -111,7 +111,6 @@ export class FlowRunWatcherService implements OnApplicationBootstrap {
 		const flowResponse = await this.getFlowResponse(result)
 		const message: FlowResponseWithId = { flowRunId, flowResponse }
 		await this.publisher.publish(`flow-run:sync:${handlerId}`, JSON.stringify(message))
-		// await this.redisPublisher.publish(`flow-run:sync:${handlerId}`, JSON.stringify(message))
 	}
 
 	async getFlowResponse(result: FlowRunResponse): Promise<FlowResponse> {

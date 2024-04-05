@@ -9,7 +9,7 @@ import { FlowModel } from '../../flows/schemas/flow.schema'
 export type FlowRunDocument<T extends keyof FlowRun = never> = mongoose.HydratedDocument<FlowRunModel<T>>
 export type FlowRunWithStepsDocument<T extends keyof FlowRun = never> = mongoose.HydratedDocument<FlowRunModel<T> & { steps: FlowRun }>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'flow-runs' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'flow_runs' })
 export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<FlowRun, '_id' | 'projectId' | 'flowId' | 'logsFileId' | 'steps'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
 	projectId: IdObjectOrPopulated<T, 'projectId', Project>

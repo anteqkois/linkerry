@@ -5,7 +5,7 @@ import { TimestampDatabaseModel } from '../../../../lib/mongodb'
 
 export type WebhookSimulationDocument = mongoose.HydratedDocument<WebhookSimulationModel>
 
-@Schema({ timestamps: true, collection: 'webhook-simulations' })
+@Schema({ timestamps: true, collection: 'webhook_simulations' })
 export class WebhookSimulationModel extends TimestampDatabaseModel implements WebhookSimulation {
 	_id: string
 

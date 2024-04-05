@@ -6,7 +6,7 @@ import { ProjectsModel } from '../../projects/schemas/projects.schema'
 
 export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'app-connections' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'app_connections' })
 export class AppConnectionsModel extends TimestampDatabaseModel implements AppConnectionEncrypted {
 	_id: string
 

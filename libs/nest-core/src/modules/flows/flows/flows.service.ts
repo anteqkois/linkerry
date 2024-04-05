@@ -64,15 +64,11 @@ export class FlowsService {
 
 			await this.flowHooks.preDelete({flowToDelete })
 
-			// await this.flowModel.deleteOne({
-			// 	_id: id,
-			// 	projectId,
-			// })
 			await this.flowModel.updateOne({
 				_id: id,
 				projectId,
 			},{
-				
+
 			})
 
 			/* don't delete, in future it can be usefull to train AI model */

@@ -1,13 +1,13 @@
 import { Id, TriggerEvent } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import { TimestampDatabaseModel } from '../../../../lib/mongodb'
 import { ProjectsModel } from '../../../projects/schemas/projects.schema'
 import { FlowModel } from '../../flows/schemas/flow.schema'
-import { TimestampDatabaseModel } from '../../../../lib/mongodb'
 
 export type TriggerEventDocument = mongoose.HydratedDocument<TriggerEvent>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'trigger-events' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'trigger_events' })
 export class TriggerEventModel extends TimestampDatabaseModel implements TriggerEvent {
 	_id: string
 

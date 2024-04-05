@@ -163,11 +163,13 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 							loading={flowOperationRunning}
 						/>
 					</div>
-					<WarningInfo>
-						<Small>
-							Action Required: Please go to {editedConnectorMetadata?.displayName} and perform action to trigger &quot;{triggerDisplayName}&quot;
-						</Small>
-					</WarningInfo>
+					{flowOperationRunning ? (
+						<WarningInfo>
+							<Small>
+								Action Required: Please go to {editedConnectorMetadata?.displayName} and perform action to trigger &quot;{triggerDisplayName}&quot;
+							</Small>
+						</WarningInfo>
+					) : null}
 				</>
 			)}
 
