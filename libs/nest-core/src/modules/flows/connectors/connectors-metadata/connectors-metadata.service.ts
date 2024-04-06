@@ -1,5 +1,15 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { ConnectorPackage, CustomError, EXACT_VERSION_PATTERN, ErrorCode, Id, PackageType, PrivateConnectorPackage, PublicConnectorPackage, assertNotNullOrUndefined } from '@linkerry/shared'
+import {
+	ConnectorPackage,
+	CustomError,
+	EXACT_VERSION_PATTERN,
+	ErrorCode,
+	Id,
+	PackageType,
+	PrivateConnectorPackage,
+	PublicConnectorPackage,
+	assertNotNullOrUndefined,
+} from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
@@ -69,7 +79,7 @@ export class ConnectorsMetadataService {
 		const connector = await this.connectorMetadataModel.findOne({
 			name: connectorName,
 		})
-		assertNotNullOrUndefined(connector, 'connector')
+		assertNotNullOrUndefined(connector, `connector connectorName=${connectorName}`)
 
 		const trigger = Object.entries(connector.triggers).find(([name]) => name === triggerName)?.[1]
 		assertNotNullOrUndefined(trigger, 'trigger', {

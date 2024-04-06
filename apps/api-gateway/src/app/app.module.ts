@@ -15,6 +15,7 @@ import {
 	TriggerEventsModule,
 	UsersModule,
 	WebhookSimulationModule,
+	WebhooksModule,
 } from '@linkerry/nest-core'
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
@@ -37,7 +38,8 @@ import { AppService } from './app.service'
 		WebhookSimulationModule,
 		FlowWorkerModule,
 		FilesModule,
-		Oauth2Module
+		Oauth2Module,
+		WebhooksModule
 	],
 	controllers: [AppController],
 	providers: [AppService],

@@ -10,7 +10,18 @@ import { AppModule } from './app/app.module'
 const globalPrefix = '/api/v1'
 
 async function bootstrap() {
-	const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
+	const app = await NestFactory.create<NestFastifyApplication>(
+		AppModule,
+		new FastifyAdapter({
+			// logger: (process.env['LOG_LEVELS'].split(',') as LogLevel[]) ?? (['error', 'log', 'verbose', 'warn'] as LogLevel[]),
+			// logger: (process.env['LOG_LEVELS'].split(',') as LogLevel[]) ?? (['error', 'log', 'verbose', 'warn'] as LogLevel[]),
+			logger: {
+				// level: (process.env['LOG_LEVELS'].split(',') as LogLevel[]) ?? (['error', 'log', 'verbose', 'warn'] as LogLevel[])
+				// level: ['']
+				level: 'error',
+			},
+		}),
+	)
 
 	const configService = app.get(ConfigService)
 	const frontendUrl = configService.get('FRONTEND_HOST')

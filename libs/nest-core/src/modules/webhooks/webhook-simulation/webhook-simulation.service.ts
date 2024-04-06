@@ -1,13 +1,20 @@
-import { CustomError, DatabaseTimestampKeys, EngineResponseStatus, ErrorCode, Id, WebhookSimulation, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
+import {
+	CustomError,
+	EngineResponseStatus,
+	ErrorCode,
+	Id,
+	WebhookSimulation,
+	assertNotNullOrUndefined,
+	isNil
+} from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { generateId } from '../../../lib/mongodb'
+import { FilterQuery, Model } from 'mongoose'
 import { RedisLockService } from '../../../lib/redis-lock'
 import { ApLock } from '../../../lib/redis-lock/types'
 import { FlowVersionDocument, FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
 import { TriggerHooks } from '../../flows/triggers/trigger-hooks/trigger-hooks.service'
-import { WebhookSimulationModel } from './schemas/webhook-simulation.schema'
+import { WebhookSimulationDocument, WebhookSimulationModel } from './schemas/webhook-simulation.schema'
 
 type BaseParams = {
 	flowId: Id
@@ -47,13 +54,14 @@ export class WebhookSimulationService {
 	) {}
 
 	/* Side Effects */
-	async _preCreateSideEffect({ projectId, flowId, flowVersionId }: PreCreateParams): Promise<void> {
+	async _preCreateSideEffect({ projectId, flowId }: PreCreateParams): Promise<void> {
 		const flowVersion = await this.flowVersionModel.findOne(
-			{},
 			{
 				flow: flowId,
+				// _id: flowVersionId,
 				projectId,
 			},
+			{},
 			{
 				sort: {
 					createdAt: -1,
@@ -78,12 +86,12 @@ export class WebhookSimulationService {
 
 	async _preDeleteSideEffect({ projectId, flowId, flowVersionId }: PreDeleteParams): Promise<void> {
 		const flowVersion = await this.flowVersionModel.findOne(
-			{},
 			{
-				_id:flowVersionId,
+				// _id: flowVersionId,
 				flow: flowId,
 				projectId,
 			},
+			{},
 			{
 				sort: {
 					createdAt: -1,
@@ -105,9 +113,9 @@ export class WebhookSimulationService {
 		}
 	}
 
-	async _createLock({ flowId }: AcquireLockParams): Promise<ApLock> {
+	async createLock({ flowId }: AcquireLockParams): Promise<ApLock> {
 		const key = `${flowId}-webhook-simulation`
-		return this.redisLockService.acquireLock({ key, timeout: 5000 })
+		return this.redisLockService.acquireLock({ key, timeout: 5_000 })
 	}
 
 	async create(params: CreateParams): Promise<WebhookSimulation> {
@@ -117,7 +125,7 @@ export class WebhookSimulationService {
 
 		const { flowId, flowVersionId, projectId } = params
 
-		const lock = await this._createLock({
+		const lock = await this.createLock({
 			flowId,
 		})
 
@@ -135,17 +143,17 @@ export class WebhookSimulationService {
 				})
 			}
 
-			const webhookSimulation: Omit<WebhookSimulation, DatabaseTimestampKeys> = {
-				_id: generateId().toString(),
-				...params,
-			}
+			// const webhookSimulation: Omit<WebhookSimulation, DatabaseTimestampKeys> = {
+			// 	_id: generateId().toString(),
+			// 	...params,
+			// }
 
 			await this._preCreateSideEffect({
 				flowId,
 				projectId,
 			})
 
-			return await this.webhookSimulationModel.create(webhookSimulation)
+			return await this.webhookSimulationModel.create(params)
 		} finally {
 			await lock.release()
 		}
@@ -163,7 +171,6 @@ export class WebhookSimulationService {
 		if (isNil(webhookSimulation)) {
 			this.logger.debug('#get not found')
 			throw new CustomError(`WebhookSimulation not found`, ErrorCode.ENTITY_NOT_FOUND, {
-				webhookSimulation,
 				flowId,
 				projectId,
 			})
@@ -180,7 +187,7 @@ export class WebhookSimulationService {
 		let lock: ApLock | null = null
 
 		if (isNil(parentLock)) {
-			lock = await this._createLock({
+			lock = await this.createLock({
 				flowId,
 			})
 		}
@@ -205,5 +212,9 @@ export class WebhookSimulationService {
 				await lock.release()
 			}
 		}
+	}
+
+	async exists(filter: FilterQuery<WebhookSimulationDocument>) {
+		return this.webhookSimulationModel.exists(filter)
 	}
 }

@@ -37,8 +37,8 @@ export class WebhooksService {
 				payload,
 				projectId,
 			})
-			.catch((e) => {
-				this.logger.error(`#saveSampleDataForWebhookTesting triggerEventService.saveEvent`, e)
+			.catch((error) => {
+				this.logger.error(`#_saveSampleDataForWebhookTesting`, error)
 			})
 	}
 
@@ -68,9 +68,7 @@ export class WebhooksService {
 	}
 
 	async handshake({ flow, payload, simulate }: HandshakeParams): Promise<WebhookResponse | null> {
-		this.logger.debug(`#handshake`, {
-			flowId: flow._id,
-		})
+		this.logger.debug(`#handshake flow._id=${flow._id} simulate=${simulate}`)
 
 		const { projectId } = flow
 
@@ -78,7 +76,7 @@ export class WebhooksService {
 		if (simulate) {
 			flowVersion = await this.flowVersionModel.findOne(
 				{
-					flowId: flow._id,
+					flow: flow._id,
 				},
 				{},
 				{
@@ -94,7 +92,7 @@ export class WebhooksService {
 		}
 
 		if (isNil(flowVersion)) {
-			this.logger.error(`#handshake flowInstance not found`, { flowId: flow._id })
+			this.logger.error(`#handshake flowVersion not foundId=${flow._id}`)
 			return null
 		}
 
@@ -106,6 +104,7 @@ export class WebhooksService {
 			flowVersion,
 			payload,
 		})
+		
 		if (response !== null) {
 			this.logger.debug(`#handshake condition met, handshake executed, response`, {
 				response,

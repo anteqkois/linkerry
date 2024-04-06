@@ -13,8 +13,9 @@ export class WebhookUrlsService {
 	async getWebhookUrl({ flowId, simulate }: GetWebhookUrlParams): Promise<string> {
 		const suffix: WebhookUrlSuffix = simulate ? '/simulate' : ''
 		const webhookPrefix = await this.getWebhookPrefix()
-		this.logger.debug(`#getWebhookUrl`, webhookPrefix)
-		return `${webhookPrefix}/${flowId}${suffix}`
+		const webhookUrl = `${webhookPrefix}/${flowId}${suffix}`
+		this.logger.debug(`#getWebhookUrl ${webhookUrl}`)
+		return webhookUrl
 	}
 }
 
@@ -24,4 +25,3 @@ export interface GetWebhookUrlParams {
 	flowId: Id
 	simulate?: boolean
 }
-

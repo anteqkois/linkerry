@@ -227,7 +227,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		assertNotNullOrUndefined(socket, 'socket')
 
 		return new Promise((resolve, reject) => {
-			socket.emit(WEBSOCKET_EVENT.WATCH_TRIGGER_EVENTS, {
+			socket.emit(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS, {
 				flowId: flow._id,
 				triggerName: editedTrigger.name,
 			} as WatchTriggerEventsWSInput)

@@ -26,6 +26,7 @@ type IpMetadata = {
 	ip: string
 }
 
+// TODO prepare for dev server, local server and prod
 export const getServerUrl = async (): Promise<string> => {
 	// const environment = system.get(SystemProp.ENVIRONMENT)
 	const environment = process.env['NODE_ENV']
@@ -40,7 +41,7 @@ export const getServerUrl = async (): Promise<string> => {
 	}
 
 	const slash = url.endsWith('/') ? '' : '/'
-	const redirect = environment === Environment.Prod ? 'api/' : ''
+	const redirect = environment === Environment.Prod ? 'api/' : 'api/'
 
 	return `${url}${slash}${redirect}`
 }

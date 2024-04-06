@@ -87,7 +87,7 @@ export class TriggerHooks {
 		const { payload, flowVersion, projectId } = params
 		const flowTrigger = flowVersion.triggers[0]
 		if (flowTrigger.type === TriggerType.CONNECTOR) {
-			const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.name, flowTrigger.settings.triggerName)
+			const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
 			const handshakeConfig = connectorTrigger.handshakeConfiguration
 			if (isNil(handshakeConfig)) {
 				return null

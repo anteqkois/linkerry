@@ -1,10 +1,9 @@
 import { CustomError, ErrorCode, EventPayload, FlowPopulated, Id, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
-import { All, Controller, Logger, Param, Request, Response, UseGuards } from '@nestjs/common'
+import { All, Controller, Logger, Param, Query, Request, Response } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { HttpStatusCode } from 'axios'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { Model } from 'mongoose'
-import { JwtBearerTokenAuthGuard } from '../../lib/auth'
 import { FlowRunWatcherService } from '../flows/flow-runs/flow-runs-watcher.service'
 import { FlowDocument, FlowModel } from '../flows/flows/schemas/flow.schema'
 import { WebhooksService } from './webhooks.service'
@@ -19,7 +18,8 @@ export class WebhooksController {
 		private readonly flowRunWatcherService: FlowRunWatcherService,
 	) {}
 
-	@UseGuards(JwtBearerTokenAuthGuard)
+	// TODO add guard for all types, to get know who post to route, somethinkg like ALL_PRINCIPAL_TYPES
+	// @UseGuards(JwtBearerTokenAuthGuard)
 	@All(':flowId/sync')
 	async sync(@Param('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
 		const flow = await this.getFlowOrThrow(flowId)
@@ -49,9 +49,9 @@ export class WebhooksController {
 		await response.status(flowWatcherResponse.status).headers(flowWatcherResponse.headers).send(flowWatcherResponse.body)
 	}
 
-	@UseGuards(JwtBearerTokenAuthGuard)
-	@All(':flowId/sync')
-	async handshake(@Param('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
+	// @UseGuards(JwtBearerTokenAuthGuard)
+	@All(':flowId')
+	async handleWebhookParams(@Param('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
 		const flow = await this.getFlowOrThrow(flowId)
 		const payload = await this.webhooksService.convertRequest(request)
 
@@ -61,17 +61,33 @@ export class WebhooksController {
 		}
 		// this._asyncHandler(payload, flow.toObject()).catch(exceptionHandler.handle)
 		this._asyncHandler(payload, flow.toObject()).catch((error) => {
-			this.logger.error(`#handshake _asyncHandler failure`, ErrorCode.INTERNAL_SERVER, { error: error?.message })
+			this.logger.error(`#handleWebhookParams _asyncHandler failure`, ErrorCode.INTERNAL_SERVER, { error: error?.message })
 		})
 	}
 
-	@UseGuards(JwtBearerTokenAuthGuard)
+	// @UseGuards(JwtBearerTokenAuthGuard)
+	@All()
+	async handleWebhookQuery(@Query('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
+		const flow = await this.getFlowOrThrow(flowId)
+		const payload = await this.webhooksService.convertRequest(request)
+
+		const isHandshake = await this._handshakeHandler(flow.toObject(), payload, false, response)
+		if (isHandshake) {
+			return
+		}
+		// this._asyncHandler(payload, flow.toObject()).catch(exceptionHandler.handle)
+		this._asyncHandler(payload, flow.toObject()).catch((error) => {
+			this.logger.error(`#handleWebhookQuery _asyncHandler failure`, ErrorCode.INTERNAL_SERVER, { error: error?.message })
+		})
+	}
+
+	// @UseGuards(JwtBearerTokenAuthGuard)
 	@All(':flowId/simulate')
 	async simulate(@Param('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
 		const flow = await this.getFlowOrThrow(flowId)
 		const payload = await this.webhooksService.convertRequest(request)
 
-		const isHandshake = await this._handshakeHandler(flow.toObject(), payload, false, response)
+		const isHandshake = await this._handshakeHandler(flow.toObject(), payload, true, response)
 		if (isHandshake) {
 			return
 		}
@@ -155,9 +171,6 @@ export class WebhooksController {
 		// }
 		// // END EE
 
-		return flow.toObject()
+		return flow
 	}
-
-	// TODO implement webhooks handlers
-	// /Users/anteqkois/Code/Projects/me/activepieces/packages/server/api/src/app/webhooks/webhook-controller.ts
 }

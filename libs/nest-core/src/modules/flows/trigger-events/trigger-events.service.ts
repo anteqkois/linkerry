@@ -74,7 +74,7 @@ export class TriggerEventsService {
 	async saveEvent(data: SaveTriggerEventInput) {
 		if (!data.sourceName) {
 			const flowVersion = await this.flowVersionModel.findOne({
-				_id: data.flowId,
+				flow: data.flowId,
 				projectId: data.projectId,
 			})
 
@@ -212,6 +212,7 @@ export class TriggerEventsService {
 	}
 
 	async watchTriggerEvents(input: WatchTriggerEventsWSInput, projectId: Id, userId: Id, timeoutRequest: boolean) {
+		this.logger.log(`#watchTriggerEvents flowId=${input.flowId} triggerName=${input.triggerName}`)
 		const flow = await this.flowModel
 			.findOne<FlowDocument<'version'>>({
 				_id: input.flowId,
@@ -220,46 +221,6 @@ export class TriggerEventsService {
 			.populate('version')
 		if (!flow) throw new UnprocessableEntityException(`Can not retrive flow by given id`)
 
-		/* Enable webhook */
-		const lock = await this.redisLockService.acquireLock({
-			key: `${input.flowId}-webhook-simulation`,
-			timeout: 5_000,
-		})
-		try {
-			/* if exist, delete */
-			const webhookSimulation = await this.webhookSimulationService.get({
-				flowId: input.flowId,
-				projectId,
-				flowVersionId: flow.version._id,
-			})
-			if (webhookSimulation)
-				await this.webhookSimulationService.delete({
-					flowId: input.flowId,
-					projectId,
-					flowVersionId: flow.version._id,
-					parentLock: lock,
-				})
-		} catch (error) {
-			const notWebhookSimulationNotFoundError = !(error instanceof CustomError && error.code === ErrorCode.ENTITY_NOT_FOUND)
-			if (notWebhookSimulationNotFoundError) {
-				throw error
-			}
-		}
-
-		await this.webhookSimulationService._preCreateSideEffect({
-			flowId: input.flowId,
-			projectId,
-			flowVersionId: flow.version._id,
-		})
-
-		await this.webhookSimulationService.create({
-			flowId: input.flowId,
-			projectId,
-			flowVersionId: flow.version._id,
-		})
-
-		await lock.release()
-
 		const flowTrigger = flowHelper.getTrigger(flow.version, input.triggerName)
 		assertNotNullOrUndefined(flowTrigger, 'flowTrigger')
 
@@ -267,9 +228,9 @@ export class TriggerEventsService {
 
 		const sourceName = this._getSourceName(flowTrigger)
 		assertNotNullOrUndefined(sourceName, 'sourceName')
-		const listenerKey = `${flow._id}:${sourceName}`
+		const listenerKey = `${flow._id}/${sourceName}`
 
-		/* Create database watcher */
+		/* first create database watcher, before webhook enabled, to prevent missing webhooks whihc are send almost at enable */
 		this.logger.debug(`#watchTriggerEvents watch for changes with sourceName=${sourceName}`)
 		const changeStreamWatcher = this.triggerEventsModel.collection
 			.watch([
@@ -336,19 +297,50 @@ export class TriggerEventsService {
 				this.logger.error(`#watchTriggerEvents watch error`, error)
 				throw new CustomError(`Can not subscribe to webhook events. Please inform our Team`, ErrorCode.INTERNAL_SERVER, { ...input, sourceName })
 			})
-
 		changeStreamWatchers.set(listenerKey, changeStreamWatcher)
+
+		/* Enable webhook */
+		// const lock = await this.webhookSimulationService.createLock({
+		// 	flowId: input.flowId,
+		// })
+
+		try {
+			const webhookSimulationExists = await this.webhookSimulationService.exists({
+				flowId: input.flowId,
+				projectId,
+				flowVersionId: flow.version._id,
+			})
+			if (webhookSimulationExists) {
+				await this.webhookSimulationService.delete({
+					flowId: input.flowId,
+					projectId,
+					flowVersionId: flow.version._id,
+					// parentLock: lock,
+				})
+			}
+
+			await this.webhookSimulationService._preCreateSideEffect({
+				flowId: input.flowId,
+				projectId,
+				flowVersionId: flow.version._id,
+			})
+
+			await this.webhookSimulationService.create({
+				flowId: input.flowId,
+				projectId,
+				flowVersionId: flow.version._id,
+			})
+		} finally {
+			/* Disable now dou to error: ExecutionError: The operation was unable to achieve a quorum during its retry window. */
+			// await lock.release()
+		}
 
 		this.logger.debug(`#watchTriggerEvents listenerKey=${listenerKey}`)
 		return new Promise((resolve, reject) => {
 			const clearData = async () => {
 				const changeStreamWatcher = changeStreamWatchers.get(listenerKey)
 				await changeStreamWatcher?.close()
-				await this.webhookSimulationService.delete({
-					flowId: input.flowId,
-					projectId,
-					flowVersionId: flow.version._id,
-				})
+				/* Webhook simulation endpoint is disabled by webhook handler */
 			}
 
 			const responseHandler = async (data: WatchTriggerEventsWSResponse) => {
@@ -361,6 +353,7 @@ export class TriggerEventsService {
 				listeners.set(listenerKey, resolve)
 			} else {
 				timeout = setTimeout(async () => {
+					this.logger.debug(`#watchTriggerEvents timeout`)
 					await clearData()
 					reject(new CustomError(`Trigger events timeout`, ErrorCode.EXECUTION_TIMEOUT, input))
 				}, this.WEBHOOK_TIMEOUT_MS)
