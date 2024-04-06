@@ -135,10 +135,6 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 					testingFlowVersion: false,
 				})
 
-				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
-				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
-				socket.off(WEBSOCKET_EVENT.EXCEPTION)
-
 				closeWebSocketConnection()
 				console.log(error.message)
 				return reject(error.message)
@@ -156,10 +152,6 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 					flowRun,
 					selectedFlowRunId: flowRun._id,
 				})
-
-				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
-				socket.off(WEBSOCKET_EVENT.TEST_FLOW_FINISHED)
-				socket.off(WEBSOCKET_EVENT.EXCEPTION)
 
 				closeWebSocketConnection()
 

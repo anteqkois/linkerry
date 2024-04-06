@@ -38,6 +38,7 @@ export const createWebSocketSlice: CreateSlice<WebSocketSlice> = (set, get) => (
 	},
 	closeWebSocketConnection: async () => {
 		const { socket } = get()
+		socket?.removeAllListeners()
 		socket?.disconnect()
 	},
 })

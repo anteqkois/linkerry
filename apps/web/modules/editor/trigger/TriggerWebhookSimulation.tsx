@@ -1,6 +1,7 @@
 import { CustomError, ErrorCode, Id, assertNotNullOrUndefined, isConnectorTrigger } from '@linkerry/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from '@linkerry/ui-components/client'
-import { Icons, Muted, Small } from '@linkerry/ui-components/server'
+import { Button, Icons, Muted, Small } from '@linkerry/ui-components/server'
+import { WarningInfo } from 'apps/web/shared/components/WarningInfo'
 import dayjs from 'dayjs'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
@@ -9,7 +10,6 @@ import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-quer
 import { CodeEditor } from '../../../shared/components/Code/CodeEditor'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { Spinner } from '../../../shared/components/Spinner'
-import { WarningInfo } from '../../../shared/components/WarningInfo'
 import { TriggerApi } from '../../flows/triggers/api'
 import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
 import { useEditor } from '../useEditor'
@@ -23,7 +23,16 @@ export interface TriggerWebhookSimulationProps extends HTMLAttributes<HTMLElemen
 
 export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage, triggerDisplayName }: TriggerWebhookSimulationProps) => {
 	const { toast } = useToast()
-	const { flow, editedTrigger, testWebhookTrigger, flowOperationRunning, patchEditedTriggerConnector, editedConnectorMetadata } = useEditor()
+	const {
+		flow,
+		editedTrigger,
+		testWebhookTrigger,
+		flowOperationRunning,
+		patchEditedTriggerConnector,
+		editedConnectorMetadata,
+		cancelWebhookTrigger,
+		webhookTriggerWatcherWorks,
+	} = useEditor()
 	assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
 	if (!isConnectorTrigger(editedTrigger))
 		throw new CustomError('Invalid trigger type, can not use other than ConnectorTrigger', ErrorCode.INVALID_TYPE, {
@@ -83,11 +92,18 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 
 	const onClickTest = async () => {
 		try {
-			const triggerEvents = await testWebhookTrigger()
+			const triggerEventsData = await testWebhookTrigger()
+			if (typeof triggerEventsData === 'string')
+				return toast({
+					title: 'Stop Test Trigger Webhook',
+					description: triggerEventsData,
+					variant: 'default',
+				})
+
 			const queryClient = getBrowserQueryCllient()
-			queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEvents)
-			setRecord(prepareCodeMirrorValue(triggerEvents[triggerEvents.length - 1].payload))
-			setSelectedTriggerEventId(triggerEvents[triggerEvents.length - 1]._id)
+			queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEventsData)
+			setRecord(prepareCodeMirrorValue(triggerEventsData[triggerEventsData.length - 1].payload))
+			setSelectedTriggerEventId(triggerEventsData[triggerEventsData.length - 1]._id)
 			setInitialTime(dayjs().format())
 		} catch (error: any) {
 			if (typeof error === 'string')
@@ -107,13 +123,57 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 		}
 	}
 
-	// TODO improve rerenndeing (change pane size debounce)
+	const onClickCancel = async () => {
+		try {
+			await cancelWebhookTrigger()
+		} catch (error: any) {
+			if (typeof error === 'string')
+				toast({
+					title: 'Cancelation Operation failed',
+					description: `${error}\nWe forced a cancellation.`,
+					variant: 'destructive',
+				})
+			else {
+				console.log(error)
+				toast({
+					title: 'Test Trigger Webhook Error',
+					description: 'Unknwon error occurred. We forced a cancellation',
+					variant: 'destructive',
+				})
+			}
+		}
+	}
+
+	const GenerateDataButton = () =>
+		flowOperationRunning && webhookTriggerWatcherWorks ? (
+			<Button variant="secondary" size={'sm'} onClick={onClickCancel}>
+				<Icons.Spinner className="h-4 w-4 mr-1" />
+				Cancel Test
+			</Button>
+		) : (
+			<GenerateTestDataButton
+				// or when test starts but the watcher isn't yet enabled
+				disabled={disabled || (flowOperationRunning && !webhookTriggerWatcherWorks)}
+				disabledMessage={disabledMessage}
+				text={data?.length ? 'Regenerate Data' : 'Generate Data'}
+				onClick={onClickTest}
+				loading={flowOperationRunning}
+			/>
+		)
+
 	return (
 		<div>
 			<div className="pt-3 pl-1">
 				<Small>Generate sample sata</Small>
 				<Muted>The sample sata can be used in next steps</Muted>
 			</div>
+			{flowOperationRunning ? (
+				<WarningInfo className='my-2'>
+					<Small>
+						Action Required: Please go to {editedConnectorMetadata?.displayName} and perform action to trigger &quot;{triggerDisplayName}&quot;
+					</Small>
+				</WarningInfo>
+			) : null}
 			{data?.length ? (
 				<>
 					{/* TODO handle error state */}
@@ -127,13 +187,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 								<Muted className="ml-7">{relativeTime}</Muted>
 							</div>
 						) : null}
-						<GenerateTestDataButton
-							disabled={disabled}
-							disabledMessage={disabledMessage}
-							text="Regenerate Data"
-							onClick={onClickTest}
-							loading={flowOperationRunning}
-						/>
+						<GenerateDataButton />
 					</div>
 					<Select onValueChange={onChangeTriggerEvent} value={selectedTriggerEventId}>
 						<SelectTrigger className="w-full">
@@ -144,7 +198,9 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 								return (
 									<SelectItem value={triggerEvent._id} key={triggerEvent._id}>
 										<span className="flex gap-2 items-center">
-											<p>Trigger event {index + 1}</p>
+											<p>
+												Event {index + 1} - {dayjs(triggerEvent.createdAt).format('YYYY/MM/DD HH:mm:ss')}
+											</p>
 										</span>
 									</SelectItem>
 								)
@@ -153,24 +209,9 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 					</Select>
 				</>
 			) : (
-				<>
-					<div className="flex h-20 px-1 flex-center">
-						<GenerateTestDataButton
-							disabled={disabled}
-							disabledMessage={disabledMessage}
-							text="Generate Data"
-							onClick={onClickTest}
-							loading={flowOperationRunning}
-						/>
-					</div>
-					{flowOperationRunning ? (
-						<WarningInfo>
-							<Small>
-								Action Required: Please go to {editedConnectorMetadata?.displayName} and perform action to trigger &quot;{triggerDisplayName}&quot;
-							</Small>
-						</WarningInfo>
-					) : null}
-				</>
+				<div className="flex h-14 px-1 flex-center">
+					<GenerateDataButton />
+				</div>
 			)}
 
 			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={180} title="Output" className="mt-2" />}

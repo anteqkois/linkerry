@@ -212,6 +212,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 		return testResult.triggerEvents
 	},
+	webhookTriggerWatcherWorks: false,
 	async testWebhookTrigger() {
 		const { flow, setFlow, patchNode, editedTrigger, initWebSocketConnection, closeWebSocketConnection } = get()
 		if (!isConnectorTrigger(editedTrigger))
@@ -235,18 +236,36 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			socket.on(WEBSOCKET_EVENT.EXCEPTION, (error: CustomWebSocketExceptionResponse) => {
 				set({
 					flowOperationRunning: false,
+					webhookTriggerWatcherWorks: false,
 				})
 
-				socket.off(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE)
-				socket.off(WEBSOCKET_EVENT.EXCEPTION)
 				closeWebSocketConnection()
 
-				console.log(error.message)
+				console.error(error.message)
 				return reject(error.message)
 			})
 
-			socket.on(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE, ({ triggerEvents, flowVersion }: WatchTriggerEventsWSResponse) => {
-				console.log('RESPONSE', { triggerEvents, flowVersion });
+			socket.on(WEBSOCKET_EVENT.WEBHOOK_TRIGGER_EVENTS_STARTED, () => {
+				set({
+					webhookTriggerWatcherWorks: true,
+				})
+			})
+
+			socket.on(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE, (data: WatchTriggerEventsWSResponse) => {
+				set({
+					webhookTriggerWatcherWorks: false,
+				})
+				if (typeof data === 'string') {
+					// neutral message like "manual cancelation", "timeout"
+					set({
+						flowOperationRunning: false,
+					})
+					closeWebSocketConnection()
+					return resolve(data)
+				}
+
+				const { triggerEvents, flowVersion } = data
+
 				const updatedTrigger = flowHelper.getTrigger(flowVersion, editedTrigger.name)
 				if (!updatedTrigger || !isConnectorTrigger(updatedTrigger))
 					throw new CustomError(`Can not find trigger`, ErrorCode.CONNECTOR_TRIGGER_NOT_FOUND, {
@@ -261,11 +280,45 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				set({ editedTrigger: updatedTrigger, flowOperationRunning: false })
 				setFlow({ ...flow, version: flowVersion })
 
-				socket.off(WEBSOCKET_EVENT.TEST_FLOW_STARTED)
-				socket.off(WEBSOCKET_EVENT.EXCEPTION)
 				closeWebSocketConnection()
 
 				return resolve(triggerEvents)
+			})
+		})
+	},
+	async cancelWebhookTrigger() {
+		const { flow, editedTrigger, closeWebSocketConnection, socket } = get()
+		assertNotNullOrUndefined(editedTrigger, 'editedTrigger')
+
+		if (!socket?.connected) throw new CustomError(`Client isn't connected to websocket`, ErrorCode.WEB_SOCKET_ERROR)
+
+		set({
+			flowOperationRunning: true,
+		})
+
+		return new Promise((resolve, reject) => {
+			socket.emit(WEBSOCKET_EVENT.CANCEL_WEBHOOK_WATCHER, {
+				flowId: flow._id,
+				triggerName: editedTrigger.name,
+			} as WatchTriggerEventsWSInput)
+
+			socket.on(WEBSOCKET_EVENT.EXCEPTION, (error: CustomWebSocketExceptionResponse) => {
+				set({
+					flowOperationRunning: false,
+					webhookTriggerWatcherWorks: false,
+				})
+
+				closeWebSocketConnection()
+
+				console.error(error.message)
+				return reject(error.message)
+			})
+
+			socket.on(WEBSOCKET_EVENT.WEBHOOK_WATCHER_CANCELED, () => {
+				set({ flowOperationRunning: false, webhookTriggerWatcherWorks: false })
+
+				closeWebSocketConnection()
+				return resolve()
 			})
 		})
 	},

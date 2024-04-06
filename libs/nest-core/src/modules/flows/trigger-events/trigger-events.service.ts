@@ -32,8 +32,9 @@ import { GetManyDto } from './dto/get-many.dto'
 import { TriggerEventModel } from './schemas/trigger-events.schema'
 import { InsertNewTrigerEventEvent, SaveTriggerEventInput } from './types'
 
-const listeners = new Map<string, (data: WatchTriggerEventsWSResponse) => void>()
-const changeStreamWatchers = new Map<string, ReturnType<Model<FlowDocument>['collection']['watch']>>()
+// const listeners = new Map<string, (data: WatchTriggerEventsWSResponse) => void>()
+const listeners = new Map<string, { resolve: (data: WatchTriggerEventsWSResponse) => Promise<void>; cancel: () => Promise<void> }>()
+const triggerEventsWatchers = new Map<string, ReturnType<Model<FlowDocument>['collection']['watch']>>()
 
 @Injectable()
 export class TriggerEventsService {
@@ -53,6 +54,7 @@ export class TriggerEventsService {
 		private readonly configService: ConfigService,
 	) {
 		this.WEBHOOK_TIMEOUT_MS = (+configService.get('WEBHOOK_TIMEOUT_SECONDS') ?? 30) * 1000
+		// this.WEBHOOK_TIMEOUT_MS = (+configService.get('WEBHOOK_TIMEOUT_SECONDS') ?? 5) * 1000
 	}
 
 	private async _deleteOldFilesForTestData({ projectId, flowId, stepName }: { projectId: string; flowId: string; stepName: string }): Promise<void> {
@@ -228,8 +230,8 @@ export class TriggerEventsService {
 
 		const sourceName = this._getSourceName(flowTrigger)
 		assertNotNullOrUndefined(sourceName, 'sourceName')
-		const listenerKey = `${flow._id}/${sourceName}`
 
+		const listenerKey = `${input.flowId}/${input.triggerName}`
 		/* first create database watcher, before webhook enabled, to prevent missing webhooks whihc are send almost at enable */
 		this.logger.debug(`#watchTriggerEvents watch for changes with sourceName=${sourceName}`)
 		const changeStreamWatcher = this.triggerEventsModel.collection
@@ -285,19 +287,17 @@ export class TriggerEventsService {
 
 				const listener = listeners.get(listenerKey)
 				if (listener) {
-					listener({
+					listener.resolve({
 						triggerEvents: [change.fullDocument],
 						flowVersion,
 					})
-					listeners.delete(listenerKey)
 				}
-				this.logger.log(`#watchTriggerEvents remove listenerKey=${listenerKey}`)
 			})
 			.on('error', (error) => {
 				this.logger.error(`#watchTriggerEvents watch error`, error)
 				throw new CustomError(`Can not subscribe to webhook events. Please inform our Team`, ErrorCode.INTERNAL_SERVER, { ...input, sourceName })
 			})
-		changeStreamWatchers.set(listenerKey, changeStreamWatcher)
+		triggerEventsWatchers.set(listenerKey, changeStreamWatcher)
 
 		/* Enable webhook */
 		// const lock = await this.webhookSimulationService.createLock({
@@ -335,31 +335,51 @@ export class TriggerEventsService {
 			// await lock.release()
 		}
 
-		this.logger.debug(`#watchTriggerEvents listenerKey=${listenerKey}`)
-		return new Promise((resolve, reject) => {
-			const clearData = async () => {
-				const changeStreamWatcher = changeStreamWatchers.get(listenerKey)
-				await changeStreamWatcher?.close()
-				/* Webhook simulation endpoint is disabled by webhook handler */
-			}
+		this.logger.debug(`#watchTriggerEvents add listener listenerKey=${listenerKey}`)
+		return async (): Promise<WatchTriggerEventsWSResponse> =>
+			new Promise((resolve) => {
+				const clearSideEffects = async () => {
+					const changeStreamWatcher = triggerEventsWatchers.get(listenerKey)
+					await changeStreamWatcher?.close()
+					triggerEventsWatchers.delete(listenerKey)
+					listeners.delete(listenerKey)
+					clearTimeout(timeout)
+					/* Webhook simulation endpoint is disabled by webhook handler */
+				}
 
-			const responseHandler = async (data: WatchTriggerEventsWSResponse) => {
-				clearTimeout(timeout)
-				await clearData()
-				resolve(data)
-			}
-			let timeout: NodeJS.Timeout
-			if (!timeoutRequest) {
-				listeners.set(listenerKey, resolve)
-			} else {
-				timeout = setTimeout(async () => {
-					this.logger.debug(`#watchTriggerEvents timeout`)
-					await clearData()
-					reject(new CustomError(`Trigger events timeout`, ErrorCode.EXECUTION_TIMEOUT, input))
-				}, this.WEBHOOK_TIMEOUT_MS)
-				listeners.set(listenerKey, responseHandler)
-			}
-		})
+				const listenerHandlers = {
+					resolve: async (data: WatchTriggerEventsWSResponse) => {
+						await clearSideEffects()
+						this.logger.log(`#watchTriggerEvents success listenerKey=${listenerKey}`)
+						resolve(data)
+					},
+					cancel: async () => {
+						await clearSideEffects()
+						this.logger.log(`#watchTriggerEvents canceled listenerKey=${listenerKey}`)
+						resolve('Manula cancelation')
+					},
+				}
+				let timeout: NodeJS.Timeout
+				if (!timeoutRequest) {
+					listeners.set(listenerKey, listenerHandlers)
+				} else {
+					timeout = setTimeout(async () => {
+						this.logger.debug(`#watchTriggerEvents timeout`)
+						await clearSideEffects()
+						resolve(`Trigger events timeout`)
+					}, this.WEBHOOK_TIMEOUT_MS)
+					listeners.set(listenerKey, listenerHandlers)
+				}
+			})
+	}
+
+	async cancelTriggerEventsWatcher(input: WatchTriggerEventsWSInput) {
+		const listenerKey = `${input.flowId}/${input.triggerName}`
+
+		const listener = listeners.get(listenerKey)
+		if (listener) {
+			await listener.cancel()
+		}
 	}
 
 	async getMany(query: GetManyDto, projectId: Id) {

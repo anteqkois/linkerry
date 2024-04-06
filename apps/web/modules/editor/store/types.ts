@@ -86,7 +86,9 @@ export interface TriggersSlice {
 	patchEditedTriggerConnector: (update: DeepPartial<Omit<TriggerConnector, '_id'>>) => Promise<void>
 	resetTrigger: (triggerName: string) => Promise<void>
 	testPoolTrigger: () => Promise<TriggerEvent[]>
-	testWebhookTrigger: () => Promise<TriggerEvent[]>
+	testWebhookTrigger: () => Promise<TriggerEvent[] | string>
+	webhookTriggerWatcherWorks: boolean,
+	cancelWebhookTrigger: () => Promise<void>
 }
 
 export interface ActionsSlice {

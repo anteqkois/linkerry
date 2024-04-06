@@ -135,7 +135,9 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
 								return (
 									<SelectItem value={triggerEvent._id} key={triggerEvent._id}>
 										<span className="flex gap-2 items-center">
-											<p>Trigger event {index + 1}</p>
+											<p>
+												Event {index + 1} - {dayjs(triggerEvent.createdAt).format('YYYY/MM/DD HH:mm:ss')}
+											</p>
 										</span>
 									</SelectItem>
 								)

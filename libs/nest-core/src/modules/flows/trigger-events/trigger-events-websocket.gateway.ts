@@ -1,4 +1,11 @@
-import { Cookies, RequestUser, WEBSOCKET_EVENT, WEBSOCKET_NAMESPACE, WatchTriggerEventsWSInput, parseCookieString } from '@linkerry/shared'
+import {
+	Cookies,
+	RequestUser,
+	WEBSOCKET_EVENT,
+	WEBSOCKET_NAMESPACE,
+	WatchTriggerEventsWSInput,
+	parseCookieString
+} from '@linkerry/shared'
 import { Logger, UseFilters, UseGuards } from '@nestjs/common'
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
@@ -40,12 +47,12 @@ export class TriggerEventsWebSocketService implements OnGatewayConnection, OnGat
 	@UseGuards(JwtCookiesWebsocketAuthGuard)
 	@UseFilters(new AllExceptionsWebsocketFilter())
 	@SubscribeMessage(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS)
-	async handleTestFlowEvent(
+	async handleWatchWebhookTriggerEvents(
 		@ConnectedSocket() client: Socket,
 		@MessageBody() data: WatchTriggerEventsWSInput,
 		@WebsocketJwtUser() user: RequestUser,
 	) {
-		const response = await this.triggerEventsService.watchTriggerEvents(
+		const watcher = await this.triggerEventsService.watchTriggerEvents(
 			{
 				flowId: data.flowId,
 				triggerName: data.triggerName,
@@ -54,6 +61,19 @@ export class TriggerEventsWebSocketService implements OnGatewayConnection, OnGat
 			user.id,
 			true,
 		)
+		client.emit(WEBSOCKET_EVENT.WEBHOOK_TRIGGER_EVENTS_STARTED)
+		const response = await watcher()
 		client.emit(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE, response)
+	}
+
+	@UseGuards(JwtCookiesWebsocketAuthGuard)
+	@UseFilters(new AllExceptionsWebsocketFilter())
+	@SubscribeMessage(WEBSOCKET_EVENT.CANCEL_WEBHOOK_WATCHER)
+	async handleTriggerEventWatcherCancelation(@ConnectedSocket() client: Socket, @MessageBody() data: WatchTriggerEventsWSInput) {
+		await this.triggerEventsService.cancelTriggerEventsWatcher({
+			flowId: data.flowId,
+			triggerName: data.triggerName,
+		})
+		client.emit(WEBSOCKET_EVENT.WEBHOOK_WATCHER_CANCELED)
 	}
 }

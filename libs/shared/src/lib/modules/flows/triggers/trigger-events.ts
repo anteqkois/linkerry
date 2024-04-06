@@ -19,7 +19,9 @@ export interface WatchTriggerEventsWSInput {
 	triggerName: string
 }
 
-export interface WatchTriggerEventsWSResponse {
-	triggerEvents: TriggerEvent[]
-	flowVersion: FlowVersion
-}
+export type WatchTriggerEventsWSResponse =
+	| {
+			triggerEvents: TriggerEvent[]
+			flowVersion: FlowVersion
+	  }
+	| string
