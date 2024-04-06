@@ -231,6 +231,19 @@ export class TriggerEventsService {
 		const sourceName = this._getSourceName(flowTrigger)
 		assertNotNullOrUndefined(sourceName, 'sourceName')
 
+		/* disabled now */
+		// await this._deleteOldFilesForTestData({
+		// 	flowId: flow._id.toString(),
+		// 	projectId,
+		// 	stepName: flowTrigger.name,
+		// })
+
+		// // delete old event data related to this trigger
+		// await this.deleteAllRelatedToTrigger({
+		// 	flowId: flow._id.toString(),
+		// 	trigger: flowTrigger,
+		// })
+
 		const listenerKey = `${input.flowId}/${input.triggerName}`
 		/* first create database watcher, before webhook enabled, to prevent missing webhooks whihc are send almost at enable */
 		this.logger.debug(`#watchTriggerEvents watch for changes with sourceName=${sourceName}`)
@@ -246,24 +259,12 @@ export class TriggerEventsService {
 				},
 			])
 			.on('change', async (change: InsertNewTrigerEventEvent) => {
-				await this._deleteOldFilesForTestData({
-					flowId: flow._id.toString(),
-					projectId,
-					stepName: flowTrigger.name,
-				})
-
 				// TODO handle in some way case when handle webhook fails
 				// if (!result.success) {
 				// 	throw new CustomError(result?.message ?? 'Execute trigger failed', ErrorCode.TEST_TRIGGER_FAILED, {
 				// 		userMessage: 'Execute trigger failed',
 				// 	})
 				// }
-
-				// delete old event data related to this trigger
-				await this.deleteAllRelatedToTrigger({
-					flowId: flow._id.toString(),
-					trigger: flowTrigger,
-				})
 
 				flowTrigger.valid = true
 				flowTrigger.settings = {

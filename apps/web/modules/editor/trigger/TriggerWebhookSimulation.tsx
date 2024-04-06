@@ -1,15 +1,12 @@
 import { CustomError, ErrorCode, Id, assertNotNullOrUndefined, isConnectorTrigger } from '@linkerry/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from '@linkerry/ui-components/client'
 import { Button, Icons, Muted, Small } from '@linkerry/ui-components/server'
-import { WarningInfo } from 'apps/web/shared/components/WarningInfo'
 import dayjs from 'dayjs'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { prepareCodeMirrorValue } from '../../../libs/code-mirror'
 import { useRelativeTime } from '../../../libs/dayjs'
 import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
-import { CodeEditor } from '../../../shared/components/Code/CodeEditor'
-import { ErrorInfo } from '../../../shared/components/ErrorInfo'
-import { Spinner } from '../../../shared/components/Spinner'
+import { CodeEditor, ErrorInfo, Spinner, WarningInfo } from '../../../shared/components'
 import { TriggerApi } from '../../flows/triggers/api'
 import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
 import { useEditor } from '../useEditor'
@@ -168,7 +165,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 				<Muted>The sample sata can be used in next steps</Muted>
 			</div>
 			{flowOperationRunning ? (
-				<WarningInfo className='my-2'>
+				<WarningInfo className="my-2">
 					<Small>
 						Action Required: Please go to {editedConnectorMetadata?.displayName} and perform action to trigger &quot;{triggerDisplayName}&quot;
 					</Small>
