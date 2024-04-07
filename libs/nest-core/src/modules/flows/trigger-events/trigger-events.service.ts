@@ -247,6 +247,9 @@ export class TriggerEventsService {
 		const listenerKey = `${input.flowId}/${input.triggerName}`
 		/* first create database watcher, before webhook enabled, to prevent missing webhooks whihc are send almost at enable */
 		this.logger.debug(`#watchTriggerEvents watch for changes with sourceName=${sourceName}`)
+
+		/* to prevent missing data when webhook arrived before added listener */
+		let prematureData: WatchTriggerEventsWSResponse
 		const changeStreamWatcher = this.triggerEventsModel.collection
 			.watch([
 				{
@@ -292,6 +295,11 @@ export class TriggerEventsService {
 						triggerEvents: [change.fullDocument],
 						flowVersion,
 					})
+				} else {
+					prematureData = {
+						triggerEvents: [change.fullDocument],
+						flowVersion,
+					}
 				}
 			})
 			.on('error', (error) => {
@@ -360,6 +368,9 @@ export class TriggerEventsService {
 						resolve('Manula cancelation')
 					},
 				}
+
+				if (prematureData) listenerHandlers.resolve(prematureData)
+
 				let timeout: NodeJS.Timeout
 				if (!timeoutRequest) {
 					listeners.set(listenerKey, listenerHandlers)

@@ -143,7 +143,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 
 	const GenerateDataButton = () =>
 		flowOperationRunning && webhookTriggerWatcherWorks ? (
-			<Button variant="secondary" size={'sm'} onClick={onClickCancel}>
+			<Button variant="secondary" size={'sm'} onClick={onClickCancel} className="whitespace-nowrap">
 				<Icons.Spinner className="h-4 w-4 mr-1" />
 				Cancel Test
 			</Button>
@@ -211,7 +211,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 				</div>
 			)}
 
-			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={180} title="Output" className="mt-2" />}
+			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={230} title="Output" className="mt-2" />}
 		</div>
 	)
 }

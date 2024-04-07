@@ -62,7 +62,9 @@ export class TriggerEventsWebSocketService implements OnGatewayConnection, OnGat
 			true,
 		)
 		client.emit(WEBSOCKET_EVENT.WEBHOOK_TRIGGER_EVENTS_STARTED)
+		console.log('WATCHER 1');
 		const response = await watcher()
+		console.log('WATCHER 2');
 		client.emit(WEBSOCKET_EVENT.WATCH_WEBHOOK_TRIGGER_EVENTS_RESPONSE, response)
 	}
 
