@@ -37,8 +37,8 @@ const getAllPrependSteps = (flowVersion: FlowVersion, stepName: string): Step[] 
 
 		let action = flowHelper.getAction(flowVersion, trigger.nextActionName)
 		while (action) {
-			steps.push(action)
 			if (action.name === stepName) return steps
+			steps.push(action)
 			action = flowHelper.getAction(flowVersion, action.nextActionName)
 		}
 	}

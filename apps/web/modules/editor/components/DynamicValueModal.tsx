@@ -1,4 +1,13 @@
-import { BaseStepSettings, CustomError, ErrorCode, StepNotEmpty, assertNotNullOrUndefined, flowHelper, isNil, isStepBaseSettings } from '@linkerry/shared'
+import {
+	BaseStepSettings,
+	CustomError,
+	ErrorCode,
+	StepNotEmpty,
+	assertNotNullOrUndefined,
+	flowHelper,
+	isNil,
+	isStepBaseSettings,
+} from '@linkerry/shared'
 import { Separator } from '@linkerry/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@linkerry/ui-components/server'
 import { useClickOutside } from '@react-hookz/web'
@@ -11,18 +20,19 @@ import { DynamicValueStep } from './DynamicValueStep'
 // export interface DynamicValueModalProps extends HTMLAttributes<HTMLElement> {}
 
 export const DynamicValueModal = () => {
-	const { showDynamicValueModal, setShowDynamicValueModal, flow, editedAction, editedTrigger } = useEditor()
+	const { showDynamicValueModal, setShowDynamicValueModal, flow, editedAction } = useEditor()
 
-	const editedStep = useMemo(() => {
-		if (!isNil(editedAction)) return editedAction
-		else if (!isNil(editedTrigger)) return editedTrigger
-	}, [editedAction, editedTrigger])
+	/* Can not use modal by trigger, there are no data */
+	// const editedStep = useMemo(() => {
+	// 	if (!isNil(editedAction)) return editedAction
+	// 	else if (!isNil(editedTrigger)) return editedTrigger
+	// }, [editedAction, editedTrigger])
 
 	const avaibleSteps = useMemo(() => {
-		if (!editedStep) return []
+		if (!editedAction) return []
 
 		const steps = flowHelper
-			.getAllPrependSteps(flow.version, editedStep.name)
+			.getAllPrependSteps(flow.version, editedAction.name)
 			.map((step) => {
 				if (!isStepBaseSettings(step.settings)) return
 				if (isNil(step.settings.inputUiInfo.currentSelectedData)) return
@@ -31,7 +41,7 @@ export const DynamicValueModal = () => {
 			.filter(Boolean) as StepNotEmpty[]
 
 		return steps
-	}, [editedStep])
+	}, [editedAction])
 
 	const connectorsMetadata = useQueries({
 		queries: avaibleSteps.map((step) => {

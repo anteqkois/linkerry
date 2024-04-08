@@ -1,20 +1,20 @@
-import { ConnectorProperty, ShortTextProperty } from '@linkerry/connectors-framework'
-import { FormControl, FormField, FormItem, FormMessage, Input } from '@linkerry/ui-components/client'
+import { ConnectorProperty, LongTextProperty } from '@linkerry/connectors-framework'
+import { hasVariableToken, isNil } from '@linkerry/shared'
+import { FormControl, FormField, FormItem, FormMessage, Textarea } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { PropertyDescription } from '../PropertyDescription'
 import { PropertyLabel } from '../PropertyLabel'
 import { useDynamicField } from '../useFieldCustomValidation'
 import { DynamicValueField } from './DynamicValueField'
-import { hasVariableToken, isNil } from '@linkerry/shared'
 
-interface TextFieldProps {
-	property: ShortTextProperty
+interface LongTextFieldProps {
+	property: LongTextProperty
 	name: string
 	refreshedProperties: ConnectorProperty[]
 }
 
-export const TextField = ({ property, name, refreshedProperties }: TextFieldProps) => {
+export const LongTextField = ({ property, name, refreshedProperties }: LongTextFieldProps) => {
 	const { control, trigger, getValues } = useFormContext()
 	const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
 		property,
@@ -40,9 +40,9 @@ export const TextField = ({ property, name, refreshedProperties }: TextFieldProp
 			rules={rules}
 			render={({ field }) => (
 				<FormItem>
-					<PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue}/>
+					<PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
 					<FormControl>
-						<Input {...field} />
+						<Textarea {...field} />
 					</FormControl>
 					<PropertyDescription>{property.description}</PropertyDescription>
 					<FormMessage />

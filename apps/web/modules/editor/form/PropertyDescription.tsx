@@ -10,8 +10,8 @@ export const PropertyDescription = ({ children }: PropertyDescriptionProps) => {
 				<TooltipTrigger asChild>
 					<p className="text-xs text-muted-foreground h-4 truncate">{children}</p>
 				</TooltipTrigger>
-				<TooltipContent side="bottom" align="start" asChild>
-					<p>{children}</p>
+				<TooltipContent side="bottom" align="start">
+					{children}
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>

@@ -36,20 +36,20 @@ export const DynamicValueEntry = ({ keyName, value, deepLevel, tokenString }: Dy
 			>
 				<HoverCard openDelay={200} closeDelay={100}>
 					<HoverCardTrigger asChild>
-						<div className="flex items-center p-2 overflow-hidden max-h-8">
-							<p className="text-sm text-card-foreground/40 font-medium leading-none pl-2">
-								{keyName}
-								{typeof value !== 'object' ? (
+						<div className="p-2 overflow-hidden max-h-10">
+							<div className="flex items-center text-sm text-card-foreground/40 font-medium leading-none pl-2 ">
+								<p>{keyName}</p>
+								{typeof value !== 'object' && typeof value !== 'boolean' ? (
 									<>
-										:<span className="text-card-foreground pl-1">{value}</span>
+										<p className="truncate text-card-foreground pl-1">{value}</p>
 									</>
 								) : null}
-								{value === null ? (
+								{value === null || typeof value === 'boolean' ? (
 									<>
-										:<span className="text-card-foreground pl-1">null</span>
+										:<p className="text-card-foreground truncate pl-1">{JSON.stringify(value)}</p>
 									</>
 								) : null}
-							</p>
+							</div>
 						</div>
 					</HoverCardTrigger>
 					<HoverCardContent side="top" align="start" sideOffset={10} className="overflow-scroll w-full max-w-xl max-h-96 p-2">
