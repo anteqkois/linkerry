@@ -2,6 +2,8 @@ export * from './lib/common'
 export * from './lib/constants'
 
 export * from './lib/modules/app-connection'
+export * from './lib/modules/billing/products'
+export * from './lib/modules/billing/subscription'
 export * from './lib/modules/connectors'
 export * from './lib/modules/file'
 export * from './lib/modules/flow-runs'
