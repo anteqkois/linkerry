@@ -23,11 +23,11 @@ export interface SubscriptionCommonFields {
 	projectId: Id
 	products: Id[]
 	subscriptionStatus: SubscriptionStatus
-	trialStartedAt: string | null
-	trialEndedAt: string | null
-	validTo: string | null
-	currentPeriodEnd: string | null
-	canceledAt: string | null
+	validTo: string
+	currentPeriodEnd: string
+	canceledAt?: string
+	trialStartedAt?: string
+	trialEndedAt?: string
 	period: SubscriptionPeriod
 }
 

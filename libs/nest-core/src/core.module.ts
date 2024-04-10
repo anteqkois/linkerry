@@ -10,8 +10,6 @@ import { MongodbModule } from './lib/mongodb'
 import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/nest-utils'
 import { RedisLockModule } from './lib/redis-lock'
 import { QUEUES } from './modules/workers/flow-worker/queues/types'
-import { SubscriptionsModule } from './modules/billing/subscriptions/subscriptions.module';
-import { ProductsModule } from './modules/billing/products/products.module';
 
 @Module({
 	imports: [
@@ -51,8 +49,6 @@ import { ProductsModule } from './modules/billing/products/products.module';
 				},
 			},
 		}),
-		SubscriptionsModule,
-		ProductsModule,
 	],
 	controllers: [],
 	providers: [

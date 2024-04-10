@@ -12,7 +12,7 @@ export class PriceModel<T> extends TimestampDatabaseModel implements Price {
 	@Prop({ required: true, type: Number })
 	price: number
 
-	@Prop({ required: true, type: Number })
+	@Prop({ required: true, type: String, enum: SubscriptionPeriod })
 	period: SubscriptionPeriod
 
 	@Prop({ required: true, type: Boolean })
@@ -20,6 +20,9 @@ export class PriceModel<T> extends TimestampDatabaseModel implements Price {
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'products' })
 	productId: string
+
+	@Prop({ required: true, type: String })
+	stripeId: string
 
 	@Prop({ required: true, type: String })
 	currencyCode: string

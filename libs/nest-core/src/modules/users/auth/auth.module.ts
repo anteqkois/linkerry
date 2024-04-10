@@ -9,6 +9,7 @@ import { JwtBearerTokenStrategy } from '../../../lib/auth/strategies/jwt-bearer-
 import { JwtCookiesStrategy } from '../../../lib/auth/strategies/jwt-cookies.strategy'
 import { JwtWebsocketStrategy } from '../../../lib/auth/strategies/jwt-websocket.strategy'
 import { LocalStrategy } from '../../../lib/auth/strategies/local.strategy'
+import { SubscriptionsModule } from '../../billing/subscriptions/subscriptions.module'
 import { ProjectsModule } from '../../projects/projects.module'
 import { UserModel, UserSchema } from '../schemas/user.schema'
 import { UsersModule } from '../users.module'
@@ -22,6 +23,7 @@ import { AuthService } from './auth.service'
 		PassportModule,
 		ConfigModule,
 		ProjectsModule,
+		SubscriptionsModule,
 		JwtModule.registerAsync({
 			imports: [ConfigModule],
 			useFactory: (configService: ConfigService) => {

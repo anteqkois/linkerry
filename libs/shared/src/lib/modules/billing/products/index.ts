@@ -16,6 +16,7 @@ export interface Price {
 	visible: boolean
 	priority: number
 	productId: Id
+	stripeId: string,
 	currencyCode: string
 }
 
@@ -27,7 +28,6 @@ export interface Product {
 	priority: number
 	visible: boolean
 	//  comparisionId ???
-	// prices []
 	stripeProductId: string
 }
 

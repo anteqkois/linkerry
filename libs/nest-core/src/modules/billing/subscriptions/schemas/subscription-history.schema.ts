@@ -15,13 +15,13 @@ export class SubscriptionHistoryModel<T> extends TimestampDatabaseModel implemen
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'subscriptions' })
 	subscriptionId: string
 
-	@Prop({
-		required: true,
-		type: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'products',
-		},
-	})
+	// @Prop({
+	// 	required: true,
+	// 	type: {
+	// 		type: mongoose.Schema.Types.ObjectId,
+	// 		ref: 'products',
+	// 	},
+	// })
 	products: Id[]
 
 	@Prop({ required: true, type: String })

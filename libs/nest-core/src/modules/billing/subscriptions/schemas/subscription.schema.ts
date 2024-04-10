@@ -5,7 +5,7 @@ import { TimestampDatabaseModel } from '../../../../lib/mongodb'
 
 export type SubscriptionDocument<T extends keyof Subscription = never> = mongoose.HydratedDocument<SubscriptionModel<T>>
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'subscription' })
+@Schema({ timestamps: true, autoIndex: true, collection: 'subscriptions' })
 export class SubscriptionModel<T> extends TimestampDatabaseModel implements Common<Subscription> {
 	_id: string
 
@@ -16,11 +16,12 @@ export class SubscriptionModel<T> extends TimestampDatabaseModel implements Comm
 	paymentGateway: PaymentGateway
 
 	@Prop({
-		required: true,
-		type: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'products',
-		},
+		type: [
+			{
+				type: mongoose.Types.ObjectId,
+				ref: 'products',
+			},
+		],
 	})
 	products: Id[]
 
@@ -33,20 +34,20 @@ export class SubscriptionModel<T> extends TimestampDatabaseModel implements Comm
 	@Prop({ required: false, type: String })
 	stripeSubscriptionId?: string
 
-	@Prop({ required: false, type: String, default: null })
-	trialStartedAt: string | null
+	@Prop({ required: false, type: String })
+	trialStartedAt?: string
 
-	@Prop({ required: false, type: String, default: null })
-	trialEndedAt: string | null
+	@Prop({ required: false, type: String })
+	trialEndedAt?: string
 
-	@Prop({ required: false, type: String, default: null })
-	validTo: string | null
+	@Prop({ required: false, type: String })
+	validTo: string
 
-	@Prop({ required: false, type: String, default: null })
-	currentPeriodEnd: string | null
+	@Prop({ required: false, type: String })
+	currentPeriodEnd: string
 
-	@Prop({ required: false, type: String, default: null })
-	canceledAt: string | null
+	@Prop({ required: false, type: String })
+	canceledAt?: string
 
 	@Prop({ required: false, type: String })
 	defaultPaymentMethod: null

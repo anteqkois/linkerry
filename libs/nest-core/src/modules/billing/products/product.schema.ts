@@ -1,7 +1,7 @@
-import { Id, Product, ProductConfig, ProductType } from '@linkerry/shared'
+import { Product, ProductConfig, ProductType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { TimestampDatabaseModel } from '../../../lib/mongodb'
 
 export type ProductDocument<T extends keyof Product = never> = mongoose.HydratedDocument<ProductModel<T>>
 
@@ -26,9 +26,6 @@ export class ProductModel<T> extends TimestampDatabaseModel implements Product {
 
 	@Prop({ required: true, type: String })
 	stripeProductId: string
-
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'projects' })
-	projectId: Id
 }
 
 export const ProductSchema = SchemaFactory.createForClass(ProductModel)

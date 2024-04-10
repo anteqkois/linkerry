@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { HashService } from '../../../lib/auth/hash.service'
 import { JWTCustomService } from '../../../lib/auth/jwt-custom.service'
+import { SubscriptionsService } from '../../billing/subscriptions/subscriptions.service'
 import { ProjectsService } from '../../projects/projects.service'
 import { UserDocument, UserModel } from '../schemas/user.schema'
 import { UsersService } from '../users.service'
@@ -15,12 +16,13 @@ export class AuthService {
 	private readonly logger = new Logger(AuthService.name)
 
 	constructor(
-		@InjectModel(UserModel.name) private userModel: Model<UserDocument>,
-		private usersService: UsersService,
-		private jwtCustomService: JWTCustomService,
-		private hashService: HashService,
-		private projectsService: ProjectsService,
+		@InjectModel(UserModel.name) private readonly userModel: Model<UserDocument>,
+		private readonly usersService: UsersService,
+		private readonly jwtCustomService: JWTCustomService,
+		private readonly hashService: HashService,
+		private readonly projectsService: ProjectsService,
 		private readonly jwtService: JwtService,
+		private readonly subscriptionsService: SubscriptionsService,
 	) {}
 
 	verifyJwt(token: string) {
@@ -57,6 +59,9 @@ export class AuthService {
 			ownerId: user.id,
 			users: [user.id],
 		})
+
+		/* create default subscription */
+		await this.subscriptionsService.createDefault(newProject.id)
 
 		return {
 			user,
