@@ -1,4 +1,5 @@
 import { Id } from '../../../common'
+import { Product } from '../products'
 
 export enum SubscriptionPeriod {
 	MONTHLY = 'monthly',
@@ -44,7 +45,9 @@ export interface SubscriptionStripe extends SubscriptionCommonFields {
 }
 
 export type Subscription = SubscriptionBlank | SubscriptionStripe
-export type SubscriptionT<T> = Pick<T, keyof T>
+export type SubscriptionPopulated = Omit<SubscriptionBlank | SubscriptionStripe, 'products'> & {
+	products: Product[]
+}
 
 export interface SubscriptionHistory {
 	_id: Id

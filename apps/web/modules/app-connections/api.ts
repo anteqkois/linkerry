@@ -1,4 +1,4 @@
-import { AppConnectionWithoutSensitiveData, OAuth2AppDecrypted, UpsertAppConnectionInput } from '@linkerry/shared'
+import { AppConnectionWithoutSensitiveData, OAuth2AppEncrypted, UpsertAppConnectionInput } from '@linkerry/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class AppConnectionsApi {
@@ -12,6 +12,6 @@ export class AppConnectionsApi {
 
 export class OAuth2Api {
 	static async getManyApps() {
-		return apiClient.get<Omit<OAuth2AppDecrypted, 'clientSecret'>>(`/oauth2/apps`)
+		return apiClient.get<Omit<OAuth2AppEncrypted, 'clientSecret'>[]>(`/oauth2/apps`)
 	}
 }

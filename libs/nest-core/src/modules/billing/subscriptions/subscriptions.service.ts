@@ -38,7 +38,7 @@ export class SubscriptionsService {
 	}
 
 	async findMany() {
-		return this.subscriptionModel.find()
+		return this.subscriptionModel.find().populate('products')
 	}
 
 	async findOne(id: Id) {

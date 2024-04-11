@@ -2,13 +2,14 @@ import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HtmlHTMLAttributes } from 'react'
 
-const buttonVariants = cva('container px-2 pt-16 h-screen w-screen lg:max-w-none', {
+const buttonVariants = cva('container px-2 mt-16 h-screen w-screen lg:max-w-none', {
 	variants: {
 		variant: {
 			fromTop: '',
 			centered: 'flex justify-center',
 		},
 		padding: {
+			large: 'px-10 py-2',
 			default: 'px-2',
 			none: 'px-0',
 		},

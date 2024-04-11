@@ -2,6 +2,7 @@ import { Common, Id, PaymentGateway, Subscription, SubscriptionPeriod, Subscript
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { ProductModel } from '../../products/product.schema'
 
 export type SubscriptionDocument<T extends keyof Subscription = never> = mongoose.HydratedDocument<SubscriptionModel<T>>
 
@@ -19,7 +20,7 @@ export class SubscriptionModel<T> extends TimestampDatabaseModel implements Comm
 		type: [
 			{
 				type: mongoose.Types.ObjectId,
-				ref: 'products',
+				ref: ProductModel.name,
 			},
 		],
 	})
