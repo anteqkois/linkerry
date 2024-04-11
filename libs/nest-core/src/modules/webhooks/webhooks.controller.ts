@@ -1,10 +1,12 @@
-import { CustomError, ErrorCode, EventPayload, FlowPopulated, Id, assertNotNullOrUndefined, isNil } from '@linkerry/shared'
+import { CustomError, ErrorCode, EventPayload, FlowPopulated, FlowStatus, Id, assertNotNullOrUndefined, isCustomError, isNil } from '@linkerry/shared'
 import { All, Controller, Logger, Param, Query, Request, Response } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { HttpStatusCode } from 'axios'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { Model } from 'mongoose'
+import { TasksUsageService } from '../billing/usage/tasks/tasks.service'
 import { FlowRunWatcherService } from '../flows/flow-runs/flow-runs-watcher.service'
+import { FlowsService } from '../flows/flows/flows.service'
 import { FlowDocument, FlowModel } from '../flows/flows/schemas/flow.schema'
 import { WebhooksService } from './webhooks.service'
 
@@ -16,6 +18,8 @@ export class WebhooksController {
 		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowDocument>,
 		private readonly webhooksService: WebhooksService,
 		private readonly flowRunWatcherService: FlowRunWatcherService,
+		private readonly tasksUsageService: TasksUsageService,
+		private readonly flowsService: FlowsService,
 	) {}
 
 	// TODO add guard for all types, to get know who post to route, somethinkg like ALL_PRINCIPAL_TYPES
@@ -149,27 +153,19 @@ export class WebhooksController {
 			throw new CustomError('flowId not found', ErrorCode.FLOW_NOT_FOUND)
 		}
 
-		// TODO implement billing
-		// // BEGIN EE
-		// const edition = getEdition()
-		// if ([ApEdition.CLOUD, ApEdition.ENTERPRISE].includes(edition)) {
-		// 	try {
-		// 		await tasksLimit.limit({
-		// 			projectId: flow.projectId,
-		// 		})
-		// 	} catch (e) {
-		// 		if (e instanceof ActivepiecesError && e.error.code === ErrorCode.QUOTA_EXCEEDED) {
-		// 			logger.info(`[webhookController] removing flow.id=${flow.id} run out of flow quota`)
-		// 			await flowService.updateStatus({
-		// 				id: flow.id,
-		// 				projectId: flow.projectId,
-		// 				newStatus: FlowStatus.DISABLED,
-		// 			})
-		// 		}
-		// 		throw e
-		// 	}
-		// }
-		// // END EE
+		try {
+			await this.tasksUsageService.checkTaskLimitAndThrow(flow.projectId.toString())
+		} catch (error) {
+			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED) {
+				this.logger.log(`#getFlowOrThrow removing flow.id=${flow._id}, exceeded tasks limit`)
+				await this.flowsService.changeStatus({
+					newStatus: FlowStatus.DISABLED,
+					id: flow.id,
+					projectId: flow.projectId.toString(),
+				})
+			}
+			throw error
+		}
 
 		return flow
 	}

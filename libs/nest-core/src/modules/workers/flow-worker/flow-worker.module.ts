@@ -1,6 +1,7 @@
 import { BullModule, RegisterQueueOptions } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
+import { TasksUsageModule } from '../../billing/usage/tasks/tasks.module'
 import { EngineModule } from '../../engine/engine.module'
 import { FilesModule } from '../../files/files.module'
 import { ConnectorsMetadataModule } from '../../flows/connectors/connectors-metadata/connectors-metadata.module'
@@ -10,15 +11,15 @@ import { FlowVersionsModule } from '../../flows/flow-versions/flow-versions.modu
 import { flowVersionModelFactory } from '../../flows/flow-versions/schemas/flow-version.schema'
 import { FlowsModule } from '../../flows/flows/flows.module'
 import { FlowModelFactory } from '../../flows/flows/schemas/flow.schema'
+import { DedupeModule } from '../../flows/triggers/dedupe/dedupe.module'
 import { TriggerHooksModule } from '../../flows/triggers/trigger-hooks/trigger-hooks.module'
 import { SandboxModule } from '../sandbox/sandbox.module'
+import { FlowJobProcessor } from './flow-job.processor'
 import { FlowWorkerHooks } from './flow-worker.hooks'
 import { FlowWorkerService } from './flow-worker.service'
-import { FlowJobProcessor } from './flow-job.processor'
 import { OneTimeProcessor } from './one-time-job.processor'
 import { QueuesService } from './queues/queues.service'
 import { QUEUES } from './queues/types'
-import { DedupeModule } from '../../flows/triggers/dedupe/dedupe.module'
 
 const EIGHT_MINUTES_IN_MILLISECONDS = 8 * 60 * 1000
 const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
@@ -42,6 +43,7 @@ const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
 		FilesModule,
 		DedupeModule,
 		ConnectorsMetadataModule,
+		TasksUsageModule,
 		BullModule.registerQueue({
 			configKey: QUEUES.CONFIG_KEYS.FLOW,
 			name: QUEUES.NAMES.ONE_TIME_JOB_QUEUE,

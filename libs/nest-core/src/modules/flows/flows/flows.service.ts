@@ -101,7 +101,7 @@ export class FlowsService {
 					projectId,
 				})
 			} else if (operation.type === FlowOperationType.CHANGE_STATUS) {
-				return await this._changeStatus({
+				return await this.changeStatus({
 					id,
 					projectId,
 					newStatus: operation.request.status,
@@ -178,7 +178,7 @@ export class FlowsService {
 		).populate(['version'])
 	}
 
-	private async _changeStatus({ newStatus, id, projectId }: UpdateStatusInput) {
+	async changeStatus({ newStatus, id, projectId }: UpdateStatusInput) {
 		const flowToUpdate = await this.flowModel.findOne<FlowDocument<'version'>>({ _id: id, projectId }).populate('version')
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
 

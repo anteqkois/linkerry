@@ -1,7 +1,7 @@
 import { CreateWebhookSimulationInput, DeleteWebhookSimulationInput, GetWebhookSimulationQuery, RequestUser } from '@linkerry/shared'
 import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { ReqJwtUser } from '../../users/auth'
+import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { WebhookSimulationService } from './webhook-simulation.service'
 
 @Controller('webhook-simulation')

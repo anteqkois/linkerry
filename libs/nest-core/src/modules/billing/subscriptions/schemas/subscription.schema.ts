@@ -1,13 +1,13 @@
-import { Common, Id, PaymentGateway, Subscription, SubscriptionPeriod, SubscriptionStatus } from '@linkerry/shared'
+import { Common, PaymentGateway, Product, Subscription, SubscriptionPeriod, SubscriptionStatus } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../../lib/mongodb'
 import { ProductModel } from '../../products/product.schema'
 
 export type SubscriptionDocument<T extends keyof Subscription = never> = mongoose.HydratedDocument<SubscriptionModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'subscriptions' })
-export class SubscriptionModel<T> extends TimestampDatabaseModel implements Common<Subscription> {
+export class SubscriptionModel<T> extends TimestampDatabaseModel implements Omit<Common<Subscription>, 'products'> {
 	_id: string
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'projects' })
@@ -24,10 +24,10 @@ export class SubscriptionModel<T> extends TimestampDatabaseModel implements Comm
 			},
 		],
 	})
-	products: Id[]
+	products: IdObjectOrPopulated<T, 'products', Product[]>
 
 	@Prop({ required: true, type: String, enum: SubscriptionStatus })
-	subscriptionStatus: SubscriptionStatus
+	status: SubscriptionStatus
 
 	@Prop({ required: true, type: String })
 	period: SubscriptionPeriod

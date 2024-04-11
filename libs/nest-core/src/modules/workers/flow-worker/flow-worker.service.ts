@@ -11,6 +11,7 @@ import {
 	FileType,
 	FlowRunResponse,
 	FlowRunStatus,
+	FlowStatus,
 	FlowVersion,
 	Id,
 	MAX_LOG_SIZE,
@@ -35,6 +36,7 @@ import { FlowRunWatcherService } from '../../flows/flow-runs/flow-runs-watcher.s
 import { FlowRunsService } from '../../flows/flow-runs/flow-runs.service'
 import { HookType } from '../../flows/flow-runs/types'
 import { FlowVersionDocument, FlowVersionModel } from '../../flows/flow-versions/schemas/flow-version.schema'
+import { FlowsService } from '../../flows/flows/flows.service'
 import { SandboxProvisionerService } from '../sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../sandbox/sandboxes/sandbox'
 import { FlowWorkerHooks } from './flow-worker.hooks'
@@ -63,6 +65,7 @@ export class FlowWorkerService {
 
 	constructor(
 		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
+		private readonly flowsService: FlowsService,
 		private readonly flowRunsService: FlowRunsService,
 		private readonly flowWorkerHooks: FlowWorkerHooks,
 		private readonly connectorsMetadataService: ConnectorsMetadataService,
@@ -308,8 +311,15 @@ export class FlowWorkerService {
 					Date.now() - startTime
 				} ms`,
 			)
-		} catch (e: unknown) {
-			if (isCustomError(e) && e.code === ErrorCode.QUOTA_EXCEEDED) {
+		} catch (error: unknown) {
+			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED) {
+				this.logger.log(`#executeFlow removing flow.id=${flowVersionWithLockedConnectors.flow._id}, exceeded tasks limit`)
+				await this.flowsService.changeStatus({
+					newStatus: FlowStatus.DISABLED,
+					id: flowVersionWithLockedConnectors.flow._id.toString(),
+					projectId: jobData.projectId,
+				})
+
 				await this.flowRunsService.finish({
 					flowRunId: jobData.runId,
 					status: FlowRunStatus.QUOTA_EXCEEDED,
@@ -317,7 +327,7 @@ export class FlowWorkerService {
 					logsFileId: null,
 					tags: [],
 				})
-			} else if (isCustomError(e) && e.code === ErrorCode.EXECUTION_TIMEOUT) {
+			} else if (isCustomError(error) && error.code === ErrorCode.EXECUTION_TIMEOUT) {
 				await this.flowRunsService.finish({
 					flowRunId: jobData.runId,
 					status: FlowRunStatus.TIMEOUT,
@@ -334,7 +344,7 @@ export class FlowWorkerService {
 					logsFileId: null,
 					tags: [],
 				})
-				this._throwErrorToRetry(e as Error, jobData.runId)
+				this._throwErrorToRetry(error as Error, jobData.runId)
 			}
 		}
 	}

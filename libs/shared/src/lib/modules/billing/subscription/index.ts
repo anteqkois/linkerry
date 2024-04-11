@@ -23,7 +23,7 @@ export interface SubscriptionCommonFields {
 	_id: Id
 	projectId: Id
 	products: Id[]
-	subscriptionStatus: SubscriptionStatus
+	status: SubscriptionStatus
 	validTo: string
 	currentPeriodEnd: string
 	canceledAt?: string

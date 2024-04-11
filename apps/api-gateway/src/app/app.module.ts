@@ -17,6 +17,7 @@ import {
 	SubscriptionsModule,
 	TestTriggerModule,
 	TriggerEventsModule,
+	UsageModule,
 	UsersModule,
 	WebhookSimulationModule,
 	WebhooksModule,
@@ -47,7 +48,8 @@ import { AppService } from './app.service'
 		ProductsModule,
 		SubscriptionsModule,
 		PricesModule,
-		SubscriptionHistoryModule
+		SubscriptionHistoryModule,
+		UsageModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

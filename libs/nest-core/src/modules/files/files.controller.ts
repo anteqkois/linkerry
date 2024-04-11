@@ -1,7 +1,7 @@
 import { Id, RequestUser } from '@linkerry/shared';
 import { Controller, Get, Header, Param, UseGuards } from '@nestjs/common';
 import { JwtCookiesAuthGuard } from '../../lib/auth';
-import { ReqJwtUser } from '../users/auth';
+import { ReqJwtUser } from '../users/auth/decorators/req-jwt-user.decorator';
 import { FilesService } from './files.service';
 
 @Controller('files')

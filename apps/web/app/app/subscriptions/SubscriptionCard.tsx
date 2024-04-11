@@ -3,39 +3,11 @@ import { Separator } from '@linkerry/ui-components/client'
 import { Card, CardContent, H4 } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'
 import { HTMLAttributes } from 'react'
+import { ConfigurationItem } from './ConfigItem'
+import { productConfigurationDetails } from './config'
 
 export interface SubscriptionCardProps extends HTMLAttributes<HTMLElement> {
 	subscription: SubscriptionPopulated
-}
-
-const configuration: Record<
-	keyof ProductConfig,
-	{
-		displayName: string
-		// description:''
-	}
-> = {
-	connections: { displayName: 'Number of added app connections' },
-	connectors: { displayName: 'Avaible connectors' },
-	fileUploadsMB: { displayName: 'Files upload space [MB]' },
-	flowRunIntervalGap: { displayName: 'Time between single flow runs' },
-	flows: { displayName: 'Created flows amount' },
-	flowSteps: { displayName: 'Number of steps for single flow' },
-	maximumActiveFlows: { displayName: 'Active Flows' },
-	maximumExecutionTime: { displayName: 'Maximum flow time execution' },
-	minimumPollingInterval: { displayName: 'Pooling interval for trigger connectors' },
-	projectMembers: { displayName: 'Project members' },
-	tasks: { displayName: 'Avaible tasks amount per month' },
-	triggersAmount: { displayName: 'Triggers amount in single flow' },
-}
-
-const ConfigurationItem = ({ label, value }: { label: string; value: string | number }) => {
-	return (
-		<p className="flex justify-between hover:bg-accent hover:text-accent-foreground py-1 px-2 rounded-md">
-			<span className='text-muted-foreground'>{label}:</span>
-			<span>{value}</span>
-		</p>
-	)
 }
 
 export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
@@ -77,7 +49,7 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
 								Product: <span className="font-normal">{product.name}</span>
 							</H4>
 							{(Object.entries(product.config) as [keyof ProductConfig, any][]).map(([name, value]) => (
-								<ConfigurationItem key={name} label={configuration[name].displayName} value={value} />
+								<ConfigurationItem key={name} label={productConfigurationDetails[name].displayName} value={value} />
 							))}
 						</div>
 					</div>

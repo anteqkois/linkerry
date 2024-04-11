@@ -2,7 +2,7 @@ import { Id, PaymentGateway, Subscription, SubscriptionPeriod, SubscriptionStatu
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
-import mongoose, { Model } from 'mongoose'
+import mongoose, { FilterQuery, Model } from 'mongoose'
 import { SubscriptionDocument, SubscriptionModel } from './schemas/subscription.schema'
 
 @Injectable()
@@ -24,7 +24,7 @@ export class SubscriptionsService {
 			paymentGateway: PaymentGateway.NONE,
 			period: SubscriptionPeriod.MONTHLY,
 			projectId,
-			subscriptionStatus: SubscriptionStatus.ACTIVE,
+			status: SubscriptionStatus.ACTIVE,
 			validTo: this.DEFAULT_VALIDITY_DATE,
 			products: [new mongoose.Types.ObjectId(this.DEFAULT_PRODUCT_ID)],
 		})
@@ -37,13 +37,11 @@ export class SubscriptionsService {
 		return createdSubscription
 	}
 
-	async findMany() {
-		return this.subscriptionModel.find().populate('products')
+	async findMany(filter: FilterQuery<Subscription>): Promise<SubscriptionDocument<'products'>[]> {
+		return this.subscriptionModel.find(filter).populate('products')
 	}
 
-	async findOne(id: Id) {
-		return this.subscriptionModel.findOne({
-			_id: id,
-		})
+	async findOne(filter: FilterQuery<Subscription>) {
+		return this.subscriptionModel.findOne(filter)
 	}
 }

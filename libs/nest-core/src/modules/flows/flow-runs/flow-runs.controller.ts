@@ -1,7 +1,7 @@
 import { FlowRunsGetManyQuery, Id, RequestUser } from '@linkerry/shared'
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { ReqJwtUser } from '../../users/auth'
+import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowRunsService } from './flow-runs.service'
 
 // TODO don't forget about tags search

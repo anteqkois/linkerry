@@ -2,7 +2,7 @@ import { RequestWorker } from '@linkerry/shared'
 import { Body, Controller, Delete, Get, Header, Param, Post, Query, Request, Response, UseGuards } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { JwtBearerTokenAuthGuard } from '../../../lib/auth'
-import { ReqJwtWorker } from '../../users/auth'
+import { ReqJwtWorker } from '../../users/auth/decorators/req-jwt-worker.decorator'
 import { CreateDto } from './dto/create.dto'
 import { StepFilesService } from './step-files.service'
 

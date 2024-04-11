@@ -1,7 +1,7 @@
 import { PutStoreEntryRequest, RequestWorker } from '@linkerry/shared'
 import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
-import { ReqJwtWorker } from '../users/auth'
+import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { StoreEntryService } from './store-entry.service'
 
 @Controller('store-entries')

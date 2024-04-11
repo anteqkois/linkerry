@@ -9,6 +9,8 @@ import { TriggerHooksModule } from '../flows/triggers/trigger-hooks/trigger-hook
 import { WebhookSimulationModule } from './webhook-simulation/webhook-simulation.module'
 import { WebhooksController } from './webhooks.controller'
 import { WebhooksService } from './webhooks.service'
+import { TasksUsageModule } from '../billing/usage/tasks/tasks.module'
+import { FlowsModule } from '../flows/flows/flows.module'
 
 @Module({
 	imports: [
@@ -18,6 +20,8 @@ import { WebhooksService } from './webhooks.service'
 		TriggerHooksModule,
 		FlowRunsModule,
 		DedupeModule,
+		TasksUsageModule,
+		FlowsModule
 	],
 	controllers: [WebhooksController],
 	providers: [WebhooksService],

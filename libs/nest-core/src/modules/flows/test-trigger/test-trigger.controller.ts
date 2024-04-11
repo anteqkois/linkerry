@@ -1,7 +1,7 @@
 import { RequestUser, TestTriggerRequestBody } from '@linkerry/shared'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { ReqJwtUser } from '../../users/auth'
+import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { TestTriggerService } from './test-trigger.service'
 
 @Controller('test-trigger')

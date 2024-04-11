@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
+import { TasksUsageModule } from '../../billing/usage/tasks/tasks.module'
 import { FilesModule } from '../../files/files.module'
 import { AuthModule } from '../../users/auth'
 import { QueuesModule } from '../../workers/flow-worker/queues/queues.module'
@@ -17,6 +18,7 @@ import { FlowRunModelFactory } from './schemas/flow-runs.schema'
 		QueuesModule,
 		FilesModule,
 		AuthModule,
+		TasksUsageModule
 		// this don't work dou to other namesapce, find way to create two redis instamces with other TOKENS
 		// RedisModule.forRootAsync(
 		// 	{
