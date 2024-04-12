@@ -1,6 +1,6 @@
 'use client'
 
-import { SubscriptionStatus } from '@linkerry/shared'
+import { ProductType, SubscriptionStatus } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useMemo } from 'react'
 import { useClientQuery } from '../../../libs/react-query'
@@ -23,10 +23,18 @@ export const useSubscriptions = () => {
 		}
 	}, [subscriptions, subscriptionsStatus])
 
+	const currentPlanConfiguration = useMemo(() => {
+		if (!currentSubscription) return null
+		const currentPlanProducts = currentSubscription.products.filter((product) => product.type === ProductType.PLAN)
+		if (currentPlanProducts.length > 1) console.warn(`More than one product plan`, currentPlanProducts)
+		return currentPlanProducts[0].config
+	}, [currentSubscription])
+
 	return {
 		subscriptions,
 		subscriptionsError,
 		subscriptionsStatus,
-		currentSubscription
+		currentSubscription,
+		currentPlanConfiguration
 	}
 }

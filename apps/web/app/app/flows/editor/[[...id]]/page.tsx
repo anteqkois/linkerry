@@ -1,11 +1,13 @@
 'use client'
 
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { ActionType, CustomError, ErrorCode, FlowVersion, TriggerType, assertNotNullOrUndefined } from '@linkerry/shared'
+import { ActionType, CustomError, ErrorCode, FlowVersion, TriggerType, assertNotNullOrUndefined, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import { useToast } from '@linkerry/ui-components/client'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
 import { useClientQuery } from '../../../../../libs/react-query'
+import { useReachLimitDialog } from '../../../../../modules/billing/useReachLimitDialog'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
 import {
 	actionNodeFactory,
@@ -102,6 +104,8 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 export default function Page({ params }: { params: { id: string } }) {
 	const { data: connectorsMetadata, status } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
 	const { loadFlow, setFlow, setEdges, setNodes } = useEditor()
+	const { toast } = useToast()
+	const { isQuotaErrorThenShowDialog } = useReachLimitDialog()
 	const { push } = useRouter()
 
 	const initEditor = useCallback(async () => {
@@ -119,13 +123,26 @@ export default function Page({ params }: { params: { id: string } }) {
 			}
 		}
 		// Create new flow
-		const { data } = await FlowApi.create()
-		setFlow(data)
+		try {
+			const { data } = await FlowApi.create()
+			setFlow(data)
 
-		push(`/app/flows/editor/${data._id}`)
+			push(`/app/flows/editor/${data._id}`)
 
-		setNodes([selectTriggerNodeFactory({ trigger: data.version.triggers[0] })])
-		setEdges([])
+			setNodes([selectTriggerNodeFactory({ trigger: data.version.triggers[0] })])
+			setEdges([])
+		} catch (error) {
+			let errorDescription = ''
+			if (isCustomHttpExceptionAxios(error)) {
+				if (isQuotaErrorThenShowDialog(error.response.data)) return
+				else errorDescription = error.response.data.message
+			} else errorDescription = 'We can not retrive error message. Please inform our Team'
+
+			toast({
+				title: 'Can not create new Flow',
+				description: errorDescription,
+			})
+		}
 	}, [params.id, connectorsMetadata])
 
 	useEffect(() => {

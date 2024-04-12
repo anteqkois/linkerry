@@ -95,9 +95,14 @@ module.exports = {
 					foreground: 'hsl(var(--warning-foreground))',
 				},
 			},
-			space: newSizes,
+			space: {
+				...newSizes,
+			},
 			width: {
 				...newSizes,
+			},
+			maxWidth: {
+				modal: 'var(--max-w-modal)',
 			},
 			height: newSizes,
 			translate: newSizes,

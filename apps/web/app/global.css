@@ -36,6 +36,8 @@
 		--negative-foreground: 0 85.7% 97.3%;
 		--warning: 32 98% 43%;
 		--warning-foreground: 30 90% 94%;
+
+		--max-w-modal: 40rem;
 	}
 
 	.dark {
@@ -244,7 +246,7 @@
 			@apply underline text-primary;
 		}
 
-		p{
+		p {
 			@apply my-2;
 		}
 	}
