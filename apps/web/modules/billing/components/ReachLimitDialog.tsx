@@ -1,6 +1,6 @@
 'use client'
 
-import { PlanProductConfiguration, PlanConfigurationDetailsValue, planConfigurationDetails } from '@linkerry/shared'
+import { PlanConfigurationDetailsValue, PlanProductConfiguration, planConfigurationDetails } from '@linkerry/shared'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@linkerry/ui-components/client'
 import { Button } from '@linkerry/ui-components/server'
 import Link from 'next/link'
@@ -14,11 +14,13 @@ import { ConfigurationItem } from './ConfigItem'
 export interface ReachLimitDialogProps extends HTMLAttributes<HTMLElement> {}
 
 export const ReachLimitDialog = () => {
-	const { showDialog, setShowDialog, exceededConfigurationEntry } = useReachLimitDialog()
+	const { showDialog, setShowDialog, exceededConfigurationEntry, setCustomConfigurationItemValues, customConfigurationItemValues } =
+		useReachLimitDialog()
 	const { currentSubscription, subscriptionsError, subscriptionsStatus } = useSubscriptions()
 	const { usage, usageError, usageStatus } = useUsage()
 
 	return (
+		// TODO show highter plan to the right
 		<Dialog open={showDialog} onOpenChange={setShowDialog}>
 			<DialogContent className="sm:max-w-modal">
 				<DialogHeader>
@@ -39,14 +41,19 @@ export const ReachLimitDialog = () => {
 					{subscriptionsError || usageError ? <ErrorInfo errorObject={subscriptionsError || usageError} /> : null}
 					{subscriptionsStatus === 'pending' || usageStatus === 'pending' ? <Spinner /> : null}
 					{usage && currentSubscription ? (
-						(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => (
-							<ConfigurationItem
-								key={name}
-								className={name === exceededConfigurationEntry?.name ? 'text-negative' : ''}
-								label={value.displayName}
-								value={usage[name] ? `${usage[name]} / ${currentSubscription.products[0].config[name]}` : '-'}
-							/>
-						))
+						(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => {
+							let itemValue = customConfigurationItemValues[name]
+							if (!itemValue) itemValue = usage[name] ? `${usage[name]} / ${currentSubscription.products[0].config[name]}` : '-'
+
+							return (
+								<ConfigurationItem
+									key={name}
+									className={name === exceededConfigurationEntry?.name ? 'text-negative hover:text-negative' : ''}
+									label={value.displayName}
+									value={itemValue}
+								/>
+							)
+						})
 					) : (
 						<ErrorInfo message="Can not retrive your subscription or your usage" />
 					)}
@@ -54,7 +61,13 @@ export const ReachLimitDialog = () => {
 
 				<DialogFooter>
 					<Link href="/app/subscriptions">
-						<Button type="submit" onClick={() => setShowDialog(false)}>
+						<Button
+							type="submit"
+							onClick={() => {
+								setShowDialog(false)
+								setCustomConfigurationItemValues({})
+							}}
+						>
 							Upgrade to Higher Plan
 						</Button>
 					</Link>

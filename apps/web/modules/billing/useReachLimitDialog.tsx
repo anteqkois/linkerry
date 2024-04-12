@@ -1,6 +1,14 @@
 'use client'
 
-import { CustomError, CustomHttpExceptionResponse, ErrorCodeQuota, isQuotaErrorCode, PlanConfigurationDetailsValue, planConfigurationDetails } from '@linkerry/shared'
+import {
+	CustomError,
+	CustomHttpExceptionResponse,
+	ErrorCodeQuota,
+	PlanConfigurationDetailsValue,
+	PlanProductConfiguration,
+	isQuotaErrorCode,
+	planConfigurationDetails,
+} from '@linkerry/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 
 type ReturnType = {
@@ -10,6 +18,8 @@ type ReturnType = {
 	setReachedLimitErrorCode: Dispatch<SetStateAction<ErrorCodeQuota | undefined>>
 	isQuotaErrorThenShowDialog: (error: CustomError | CustomHttpExceptionResponse) => boolean
 	exceededConfigurationEntry: PlanConfigurationDetailsValue | null
+	customConfigurationItemValues: Partial<Record<keyof PlanProductConfiguration, string>>
+	setCustomConfigurationItemValues: Dispatch<SetStateAction<Partial<Record<keyof PlanProductConfiguration, string>>>>
 }
 
 const Context = createContext<ReturnType>({} as ReturnType)
@@ -17,6 +27,7 @@ const Context = createContext<ReturnType>({} as ReturnType)
 export const ReachLimitDialogProvider = ({ children }: PropsWithChildren) => {
 	const [showDialog, setShowDialog] = useState(false)
 	const [reachedLimitErrorCode, setReachedLimitErrorCode] = useState<ErrorCodeQuota>()
+	const [customConfigurationItemValues, setCustomConfigurationItemValues] = useState<Partial<Record<keyof PlanProductConfiguration, string>>>({})
 
 	const isQuotaErrorThenShowDialog = (error: CustomError | CustomHttpExceptionResponse) => {
 		if (isQuotaErrorCode(error.code)) {
@@ -45,6 +56,8 @@ export const ReachLimitDialogProvider = ({ children }: PropsWithChildren) => {
 				setReachedLimitErrorCode,
 				isQuotaErrorThenShowDialog,
 				exceededConfigurationEntry,
+				customConfigurationItemValues,
+				setCustomConfigurationItemValues,
 			}}
 		>
 			{children}

@@ -7,6 +7,7 @@ import {
 	DeepPartial,
 	ErrorCode,
 	FlowOperationType,
+	QuotaError,
 	RunActionResponse,
 	assertNotNullOrUndefined,
 	deepMerge,
@@ -34,7 +35,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	onClickSelectAction(nodeIdName: string) {
-		const {setRightDrawer, flow} = get()
+		const { setRightDrawer, flow } = get()
 		setRightDrawer('select_action')
 		const actionName = `action_${flow.version.stepsCount + 1}`
 		set({
@@ -47,8 +48,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	},
 	async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
 		const { getNodeById, editStepMetadata, setRightDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge, limits } = get()
-		/* Check limits */
-		if(flow.version.stepsCount >= limits.flowSteps) throw new CustomError(``)
+		if (flow.version.stepsCount >= limits.flowSteps) throw new QuotaError('flowSteps')
 
 		assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
 
