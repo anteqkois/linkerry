@@ -285,7 +285,6 @@ export class FlowWorkerService {
 				await this.flowRunWatcherService.publish(jobData.runId, jobData.synchronousHandlerId, result)
 			}
 
-			console.dir(result.steps, { depth: null })
 			const logsFile = await this._saveToLogFile({
 				fileId: logFileId,
 				projectId: jobData.projectId,
@@ -337,9 +336,11 @@ export class FlowWorkerService {
 					tags: [],
 				})
 			} else {
+				this.logger.error(`#executeFlow`, error)
 				await this.flowRunsService.finish({
 					flowRunId: jobData.runId,
 					status: FlowRunStatus.INTERNAL_ERROR,
+					// TODO revisit it if it should be set to 0 ?
 					tasks: 0,
 					logsFileId: null,
 					tags: [],

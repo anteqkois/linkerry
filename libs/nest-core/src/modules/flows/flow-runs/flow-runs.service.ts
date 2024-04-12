@@ -61,7 +61,15 @@ export class FlowRunsService {
 	}
 
 	private async _finishSideEffect({ flowRun }: { flowRun: FlowRun }): Promise<void> {
-		await this.flowRunsHooks.onFinish({ projectId: flowRun.projectId, tasks: flowRun.tasks! })
+		if (
+			flowRun.status === FlowRunStatus.PAUSED ||
+			flowRun.status === FlowRunStatus.STOPPED ||
+			flowRun.status === FlowRunStatus.SUCCEEDED ||
+			(flowRun.status === FlowRunStatus.TIMEOUT && flowRun.tasks === 0) ||
+			typeof flowRun.tasks !== 'number'
+		)
+			throw new CustomError(`Missing tasks amount for flowRun=${flowRun._id}`, ErrorCode.INVALID_TYPE)
+		await this.flowRunsHooks.onFinish({ projectId: flowRun.projectId, tasks: flowRun.tasks })
 		// TODO implement notifications system
 		// await notifications.notifyRun({
 		//     flowRun,

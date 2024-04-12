@@ -1,7 +1,8 @@
 import { CustomError, ErrorCode, Id, SubscriptionStatus, assertNotNullOrUndefined } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import dayjs from 'dayjs'
+import mongoose, { Model } from 'mongoose'
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service'
 import { TasksUsageDocument, TasksUsageModel } from './tasks.schema'
 
@@ -29,19 +30,35 @@ export class TasksUsageService {
 	}
 
 	async getCurrentPeriodUsage(projectId: Id) {
-		// TODO
-		return 0
+		const monthStart = dayjs().set('date', 1).set('hours', 0).set('minutes', 0).set('seconds', 0).set('milliseconds', 0)
+
+		const usageTasks = (await this.tasksUsageModel.aggregate([
+			{
+				$match: {
+					projectId: new mongoose.Types.ObjectId(projectId),
+					createdAt: {
+						$gte: monthStart.toDate(),
+					},
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					tasks: { $sum: '$tasks' },
+				},
+			},
+		])) as [{ _id: null; tasks: number }] | []
+
+		return usageTasks[0]?.tasks ?? 0
 	}
 
 	async increaseTasks({ projectId, tasks }: { projectId: Id; tasks: number }) {
-		await this.tasksUsageModel.findOneAndUpdate(
+		return this.tasksUsageModel.findOneAndUpdate(
 			{
 				projectId,
 			},
 			{
-				tasks: {
-					$inc: tasks,
-				},
+				$inc: { tasks: tasks },
 			},
 			{
 				new: true,

@@ -5,6 +5,7 @@ import {
 	FlowOperationType,
 	FlowPopulated,
 	FlowStatus,
+	TriggerType,
 	assertNotNullOrUndefined,
 	flowHelper,
 	isCustomHttpExceptionAxios,
@@ -56,6 +57,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 		header: ({ column }) => <TableColumnHeader column={column} title="Steps" sortable />,
 		cell: ({ row }) => {
 			const flowVersionChainMap = flowHelper.transformFlowVersionToChainMap(row.original.version)
+			const isEmptyFlow = flowVersionChainMap[0][0].type === TriggerType.EMPTY
 
 			return (
 				<TooltipProvider delayDuration={100}>
@@ -66,18 +68,20 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 
 								<span className="text-primary font-bold">{row.original.version.stepsCount}:</span>
 								<span className="pl-1 max-w-[10px] overflow-hidden">
-									{flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}
+									{isEmptyFlow ? 'Empty Trigger' : flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}
 								</span>
 							</div>
 						</TooltipTrigger>
-						<TooltipContent>
-							{flowVersionChainMap[0].map((step) => (
-								<div key={step.name} className="flex flex-col ">
-									{!isTrigger(step) && <Icons.ArrowDown className="w-full" />}
-									<p>{`${isTrigger(step) ? 'Trigger' : 'Action'}: ${step.settings.connectorName} - ${step.displayName}`}</p>
-								</div>
-							))}
-						</TooltipContent>
+						{isEmptyFlow ? null : (
+							<TooltipContent>
+								{flowVersionChainMap[0].map((step) => (
+									<div key={step.name} className="flex flex-col ">
+										{!isTrigger(step) && <Icons.ArrowDown className="w-full" />}
+										<p>{`${isTrigger(step) ? 'Trigger' : 'Action'}: ${step.settings.connectorName} - ${step.displayName}`}</p>
+									</div>
+								))}
+							</TooltipContent>
+						)}
 					</Tooltip>
 				</TooltipProvider>
 			)

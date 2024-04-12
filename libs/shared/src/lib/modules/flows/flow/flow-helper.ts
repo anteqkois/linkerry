@@ -2,7 +2,7 @@ import { CustomError, ErrorCode, assertNotNullOrUndefined, clone, deepMerge } fr
 import { Action, ActionType } from '../actions/action'
 import { FlowVersion } from '../flow-versions'
 import { ActionSchemaGraph, StepNotEmpty, TriggerSchemaGraph } from '../steps/step'
-import { Trigger, TriggerNotEmpty, TriggerType } from '../triggers/trigger'
+import { Trigger, TriggerEmpty, TriggerNotEmpty, TriggerType } from '../triggers/trigger'
 import {
 	AddActionRequest,
 	DeleteActionRequest,
@@ -215,8 +215,8 @@ const buildFlowVersionTriggersGraph = (flowVersion: FlowVersion) => {
 // 	connectorNames.push(triggerSchemaGraph.settings.connectorName)
 // 	return connectorNames.reverse()
 // }
-const transformFlowVersionToChainMap = (flowVersion: FlowVersion) => {
-	const triggersMap: StepNotEmpty[][] = []
+const transformFlowVersionToChainMap = (flowVersion: FlowVersion): StepNotEmpty[][] | [[TriggerEmpty]] => {
+	const triggersMap: StepNotEmpty[][] | [[TriggerEmpty]] = []
 
 	let triggerIndex = 0
 	let triggerMap: StepNotEmpty[] = []

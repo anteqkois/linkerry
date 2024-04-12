@@ -24,7 +24,7 @@ export default function Page() {
 				subscriptions.map((subscription) => (
 					<div key={subscription._id} className="grid grid-cols-2 gap-2">
 						<SubscriptionCard subscription={subscription} />
-						<UsageCard  usage={usage} />
+						<UsageCard  usage={usage} subscription={subscription}/>
 					</div>
 				))
 			)}

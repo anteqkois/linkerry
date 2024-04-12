@@ -1,4 +1,4 @@
-import { ProductConfig } from '@linkerry/shared'
+import { ProductConfig, SubscriptionPopulated } from '@linkerry/shared'
 import { Separator } from '@linkerry/ui-components/client'
 import { Card, CardContent, H4 } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'
@@ -8,10 +8,11 @@ import { ConfigurationItem } from './ConfigItem'
 import { ProductConfigurationDetailsValue, productConfigurationDetails } from './config'
 
 export interface UsageCardProps extends HTMLAttributes<HTMLElement> {
+	subscription: SubscriptionPopulated
 	usage?: Partial<ProductConfig>
 }
 
-export const UsageCard = ({ usage }: UsageCardProps) => {
+export const UsageCard = ({ usage, subscription }: UsageCardProps) => {
 	return (
 		<Card>
 			<CardContent>
@@ -31,29 +32,14 @@ export const UsageCard = ({ usage }: UsageCardProps) => {
 				{usage ? (
 					<div className="my-2">
 						<H4 className="mb-2">Current Usage</H4>
-						{/* {(Object.entries(productConfigurationDetails) as [keyof ProductConfig, ][]).map(([name, value]) => ( */}
 						{(Object.entries(productConfigurationDetails) as [keyof ProductConfig, ProductConfigurationDetailsValue][]).map(([name, value]) => (
-							<ConfigurationItem key={name} label={value.displayName} value={usage[name] ?? 'Fixed Usage'} />
+							// <ConfigurationItem key={name} label={value.displayName} value={usage[name] ?? '-'} />
+							<ConfigurationItem key={name} label={value.displayName} value={`${usage[name] ?? '_'} / ${subscription.products[0].config[name]}`} />
 						))}
-						{/* {(Object.entries(product.config) as [keyof ProductConfig, any][]).map(([name, value]) => (
-							<ConfigurationItem key={name} label={configuration[name].displayName} value={value} />
-						))} */}
 					</div>
 				) : (
 					<ErrorInfo message="Can not retrive your current usage" className="p-4" />
-				)}
-				{/* {subscription.products.map((product) => (
-					<div className="w-1/2" key={product._id}>
-						<div className="my-2" key={product._id}>
-							<H4 className="mb-2">
-								Product: <span className="font-normal">{product.name}</span>
-							</H4>
-							{(Object.entries(product.config) as [keyof ProductConfig, any][]).map(([name, value]) => (
-								<ConfigurationItem key={name} label={configuration[name].displayName} value={value} />
-							))}
-						</div>
-					</div>
-				))} */}
+				)}{' '}
 			</CardContent>
 		</Card>
 	)
