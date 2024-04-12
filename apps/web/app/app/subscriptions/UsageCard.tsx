@@ -34,7 +34,12 @@ export const UsageCard = ({ usage, subscription }: UsageCardProps) => {
 						<H4 className="mb-2">Current Usage</H4>
 						{(Object.entries(productConfigurationDetails) as [keyof ProductConfig, ProductConfigurationDetailsValue][]).map(([name, value]) => (
 							// <ConfigurationItem key={name} label={value.displayName} value={usage[name] ?? '-'} />
-							<ConfigurationItem key={name} label={value.displayName} value={`${usage[name] ?? '_'} / ${subscription.products[0].config[name]}`} />
+							// <ConfigurationItem key={name} label={value.displayName} value={`${usage[name] ?? '_'} / ${subscription.products[0].config[name]}`} />
+							<ConfigurationItem
+								key={name}
+								label={value.displayName}
+								value={usage[name] ? `${usage[name]} / ${subscription.products[0].config[name]}` : '-'}
+							/>
 						))}
 					</div>
 				) : (

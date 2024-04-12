@@ -8,7 +8,7 @@ import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schem
 export type FlowDocument<T extends keyof Flow = never> = mongoose.HydratedDocument<FlowModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flows' })
-export class FlowModel<T> extends TimestampDatabaseModel implements Omit<Flow, '_id' | 'version' | 'projectId' | 'publishedVersionId'> {
+export class FlowModel<T = ''> extends TimestampDatabaseModel implements Omit<Flow, '_id' | 'version' | 'projectId' | 'publishedVersionId'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
 	projectId: ObjectId
 
