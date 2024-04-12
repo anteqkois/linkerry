@@ -1,33 +1,44 @@
 'use client'
 
 import { H4 } from '@linkerry/ui-components/server'
-import { useClientQuery } from '../../../libs/react-query'
-import { subscriptionsQueryConfig } from '../../../modules/billing/subscriptions/query-configs'
-import { usageQueryConfig } from '../../../modules/billing/usage/query-configs'
+import { useSubscriptions } from '../../../modules/billing/subscriptions/useSubscriptions'
+import { useUsage } from '../../../modules/billing/usage/useUsage'
 import { ErrorInfo, Spinner } from '../../../shared/components'
 import { PageContainer } from '../components/PageContainer'
 import { SubscriptionCard } from './SubscriptionCard'
 import { UsageCard } from './UsageCard'
 
 export default function Page() {
-	const { data: subscriptions, error: subscriptionsError, status: subscriptionsStatus } = useClientQuery(subscriptionsQueryConfig.getMany())
-	const { data: usage, error: usageError, status: usageStatus } = useClientQuery(usageQueryConfig.getMany())
+	const { currentSubscription, subscriptionsError, subscriptionsStatus } = useSubscriptions()
+	const { usage } = useUsage()
 
 	return (
 		<PageContainer padding={'large'}>
 			<H4 className="mb-2 pl-1">Your Subscription</H4>
-			{subscriptionsStatus === 'pending' ? (
+			{subscriptionsStatus === 'error' ? (
+				<ErrorInfo errorObject={subscriptionsError} />
+			) : subscriptionsStatus === 'pending' ? (
+				<Spinner />
+			) : currentSubscription ? (
+				<div key={currentSubscription._id} className="grid grid-cols-2 gap-2">
+					<SubscriptionCard subscription={currentSubscription} />
+					<UsageCard usage={usage} subscription={currentSubscription} />
+				</div>
+			) : (
+				<ErrorInfo message="Can not retrive subscription" />
+			)}
+			{/* {subscriptionsStatus === 'pending' ? (
 				<Spinner />
 			) : subscriptionsStatus === 'error' ? (
 				<ErrorInfo errorObject={subscriptionsError} />
 			) : (
-				subscriptions.map((subscription) => (
+				subscriptions?.map((subscription) => (
 					<div key={subscription._id} className="grid grid-cols-2 gap-2">
 						<SubscriptionCard subscription={subscription} />
-						<UsageCard  usage={usage} subscription={subscription}/>
+						<UsageCard usage={usage} subscription={subscription} />
 					</div>
 				))
-			)}
+			)} */}
 		</PageContainer>
 	)
 }

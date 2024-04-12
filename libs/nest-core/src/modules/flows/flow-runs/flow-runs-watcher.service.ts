@@ -160,7 +160,7 @@ export class FlowRunWatcherService implements OnApplicationBootstrap {
 					headers: {},
 				}
 			case FlowRunStatus.SUCCEEDED:
-			case FlowRunStatus.QUOTA_EXCEEDED:
+			case FlowRunStatus.QUOTA_EXCEEDED_TASKS:
 				return {
 					status: HttpStatus.NO_CONTENT,
 					body: {},

@@ -77,7 +77,7 @@ export class FlowJobProcessor extends WorkerHost {
 				await this._consumeConnectorTrigger(data)
 			}
 		} catch (error: any) {
-			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED) {
+			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED_TASKS) {
 				this.logger.debug(`#consumeRepeatingJob removing project._id=${data.projectId} run out of flow quota`)
 				await this.flowModel.updateOne(
 					{

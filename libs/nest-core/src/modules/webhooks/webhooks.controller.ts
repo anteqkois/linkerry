@@ -156,7 +156,7 @@ export class WebhooksController {
 		try {
 			await this.tasksUsageService.checkTaskLimitAndThrow(flow.projectId.toString())
 		} catch (error) {
-			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED) {
+			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED_TASKS) {
 				this.logger.log(`#getFlowOrThrow removing flow.id=${flow._id}, exceeded tasks limit`)
 				await this.flowsService.changeStatus({
 					newStatus: FlowStatus.DISABLED,

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { CryptoModule } from '../../lib/crypto'
 import { RedisLockModule } from '../../lib/redis-lock'
+import { SubscriptionsModule } from '../billing/subscriptions/subscriptions.module'
 import { EngineModule } from '../engine/engine.module'
 import { ConnectorsMetadataModule } from '../flows/connectors/connectors-metadata/connectors-metadata.module'
 import { AppConnectionsController } from './app-connections.controller'
@@ -18,6 +19,7 @@ import { WorkerAppConnectionsController } from './worker-app-connections.control
 		CryptoModule,
 		RedisLockModule,
 		Oauth2Module,
+		SubscriptionsModule,
 	],
 	controllers: [AppConnectionsController, WorkerAppConnectionsController],
 	providers: [AppConnectionsService],

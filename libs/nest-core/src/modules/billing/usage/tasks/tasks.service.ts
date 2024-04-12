@@ -24,7 +24,7 @@ export class TasksUsageService {
 		const planProduct = activeSubscriptions[0].products[0]
 		const currentUsage = await this.getCurrentPeriodUsage(projectId)
 		if (currentUsage >= planProduct.config.tasks)
-			throw new CustomError(`Exceeded tasks limit for current plan`, ErrorCode.QUOTA_EXCEEDED, {
+			throw new CustomError(`Exceeded tasks limit for current plan`, ErrorCode.QUOTA_EXCEEDED_TASKS, {
 				currentUsage,
 			})
 	}

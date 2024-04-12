@@ -2,7 +2,7 @@ import { ExecutionState } from './execution-output'
 
 export enum FlowRunStatus {
 	FAILED = 'FAILED',
-	QUOTA_EXCEEDED = 'QUOTA_EXCEEDED',
+	QUOTA_EXCEEDED_TASKS = 'QUOTA_EXCEEDED_TASKS',
 	INTERNAL_ERROR = 'INTERNAL_ERROR',
 	PAUSED = 'PAUSED',
 	RUNNING = 'RUNNING',
@@ -56,7 +56,7 @@ export type FlowRunResponse = (
 				| FlowRunStatus.FAILED
 				| FlowRunStatus.SUCCEEDED
 				| FlowRunStatus.RUNNING
-				| FlowRunStatus.QUOTA_EXCEEDED
+				| FlowRunStatus.QUOTA_EXCEEDED_TASKS
 				| FlowRunStatus.TIMEOUT
 				| FlowRunStatus.INTERNAL_ERROR
 				| FlowRunStatus.STOPPED

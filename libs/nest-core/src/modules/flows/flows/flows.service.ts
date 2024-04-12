@@ -1,4 +1,6 @@
 import {
+	CustomError,
+	ErrorCode,
 	Flow,
 	FlowOperationRequest,
 	FlowOperationType,
@@ -17,6 +19,7 @@ import mongoose, { Document, Model } from 'mongoose'
 import { generateId } from '../../../lib/mongodb'
 import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { RedisLockService } from '../../../lib/redis-lock'
+import { SubscriptionsService } from '../../billing/subscriptions/subscriptions.service'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowHooks } from './flows.hooks'
 import { FlowDocument, FlowModel } from './schemas/flow.schema'
@@ -31,6 +34,7 @@ export class FlowsService {
 		private readonly flowVersionService: FlowVersionsService,
 		private readonly redisLockService: RedisLockService,
 		private readonly flowHooks: FlowHooks,
+		private readonly subscriptionsService: SubscriptionsService,
 	) {}
 
 	// TODO imporve TS
@@ -56,20 +60,23 @@ export class FlowsService {
 		})
 
 		try {
-			const flowToDelete = await this.findOne({filter:{
-				_id: id,
-				projectId
-			}})
+			const flowToDelete = await this.findOne({
+				filter: {
+					_id: id,
+					projectId,
+				},
+			})
 			assertNotNullOrUndefined(flowToDelete, 'flowToDelete')
 
-			await this.flowHooks.preDelete({flowToDelete })
+			await this.flowHooks.preDelete({ flowToDelete })
 
-			await this.flowModel.updateOne({
-				_id: id,
-				projectId,
-			},{
-
-			})
+			await this.flowModel.updateOne(
+				{
+					_id: id,
+					projectId,
+				},
+				{},
+			)
 
 			/* don't delete, in future it can be usefull to train AI model */
 			// await this.flowVersionService.deleteRelatedToFlow(id)
@@ -166,6 +173,13 @@ export class FlowsService {
 	}
 
 	async createEmpty(projectId: Id, userId: Id) {
+		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
+		const projectFlowsAmount = await this.flowModel.count({ projectId })
+		if (projectFlowsAmount >= currentPlan.flows)
+			throw new CustomError(`Reach created flow limit`, ErrorCode.QUOTA_EXCEEDED_FLOWS, {
+				limit: 'flows',
+			})
+
 		const flowId = generateId()
 		const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString(), projectId, userId)
 
@@ -179,6 +193,13 @@ export class FlowsService {
 	}
 
 	async changeStatus({ newStatus, id, projectId }: UpdateStatusInput) {
+		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
+		const projectFlowsRunningAmount = await this.flowModel.count({ projectId, status: FlowStatus.ENABLED })
+		if (projectFlowsRunningAmount >= currentPlan.maximumActiveFlows)
+			throw new CustomError(`Reach running flow limit`, ErrorCode.QUOTA_EXCEEDED_MAXIUMUM_ACTIVE_FLOWS, {
+				limit: 'maximumActiveFlows',
+			})
+
 		const flowToUpdate = await this.flowModel.findOne<FlowDocument<'version'>>({ _id: id, projectId }).populate('version')
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')
 

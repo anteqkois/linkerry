@@ -49,7 +49,7 @@ export const columns: ColumnDef<FlowRun>[] = [
 						</TooltipProvider>
 					</div>
 				)
-			else if (status === FlowRunStatus.QUOTA_EXCEEDED)
+			else if (status === FlowRunStatus.QUOTA_EXCEEDED_TASKS)
 				return (
 					<div className="font-medium flex-center">
 						<TooltipProvider delayDuration={100}>

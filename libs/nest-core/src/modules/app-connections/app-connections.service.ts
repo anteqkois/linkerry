@@ -20,6 +20,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { CryptoService } from '../../lib/crypto'
 import { RedisLockService } from '../../lib/redis-lock'
+import { SubscriptionsService } from '../billing/subscriptions/subscriptions.service'
 import { EngineService } from '../engine/engine.service'
 import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
 import { oauth2Util } from './oauth2'
@@ -37,6 +38,7 @@ export class AppConnectionsService {
 		private readonly cryptoService: CryptoService,
 		private readonly redisLockService: RedisLockService,
 		private readonly oAuth2Service: OAuth2Service,
+		private readonly subscriptionsService: SubscriptionsService,
 	) {
 		//
 	}
@@ -170,6 +172,10 @@ export class AppConnectionsService {
 	}
 
 	async upsert(projectId: Id, body: UpsertAppConnectionInput) {
+		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
+		const appConectionsAmount = await this.appConnectionsModel.count({ projectId })
+		if (appConectionsAmount >= currentPlan.connections) throw new CustomError(`Reach app connections limit`, ErrorCode.QUOTA_EXCEEDED_CONNECTIONS)
+
 		const validatedConnectionValue = await this._validateConnectionValue({
 			connection: body,
 			projectId,

@@ -311,7 +311,7 @@ export class FlowWorkerService {
 				} ms`,
 			)
 		} catch (error: unknown) {
-			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED) {
+			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED_TASKS) {
 				this.logger.log(`#executeFlow removing flow.id=${flowVersionWithLockedConnectors.flow._id}, exceeded tasks limit`)
 				await this.flowsService.changeStatus({
 					newStatus: FlowStatus.DISABLED,
@@ -321,7 +321,7 @@ export class FlowWorkerService {
 
 				await this.flowRunsService.finish({
 					flowRunId: jobData.runId,
-					status: FlowRunStatus.QUOTA_EXCEEDED,
+					status: FlowRunStatus.QUOTA_EXCEEDED_TASKS,
 					tasks: 0,
 					logsFileId: null,
 					tags: [],
