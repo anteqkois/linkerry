@@ -1,4 +1,4 @@
-import { CustomError, ErrorCode, EventPayload, FlowPopulated, FlowStatus, Id, assertNotNullOrUndefined, isCustomError, isNil } from '@linkerry/shared'
+import { CustomError, ErrorCode, EventPayload, FlowPopulated, FlowStatus, Id, assertNotNullOrUndefined, isNil, isQuotaError } from '@linkerry/shared'
 import { All, Controller, Logger, Param, Query, Request, Response } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { HttpStatusCode } from 'axios'
@@ -156,7 +156,7 @@ export class WebhooksController {
 		try {
 			await this.tasksUsageService.checkTaskLimitAndThrow(flow.projectId.toString())
 		} catch (error) {
-			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED_TASKS) {
+			if (isQuotaError(error)) {
 				this.logger.log(`#getFlowOrThrow removing flow.id=${flow._id}, exceeded tasks limit`)
 				await this.flowsService.changeStatus({
 					newStatus: FlowStatus.DISABLED,

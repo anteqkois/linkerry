@@ -1,4 +1,4 @@
-import { Product, ProductConfig, ProductType } from '@linkerry/shared'
+import { PlanProductConfiguration, Product, ProductType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { TimestampDatabaseModel } from '../../../lib/mongodb'
@@ -16,7 +16,7 @@ export class ProductModel<T> extends TimestampDatabaseModel implements Product {
 	type: ProductType
 
 	@Prop({ required: true, type: Object })
-	config: ProductConfig
+	config: PlanProductConfiguration
 
 	@Prop({ required: true, type: Number })
 	priority: number

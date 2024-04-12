@@ -16,7 +16,7 @@ import { FlowRunsListPanel } from './flow-runs/FlowRunsListPanel'
 import { SelectTriggerNodeElement } from './trigger/SelectTriggerNode'
 import { SelectTriggerPanel } from './trigger/SelectTriggerPanel'
 import { TriggerConnectorPanel } from './trigger/TriggerConnectorPanel'
-import { EditorDrawer } from './types'
+import { EditorDrawer, EditorLimits } from './types'
 import { useEditor } from './useEditor'
 
 export const editorDrawers: Record<EditorDrawer['name'], () => JSX.Element> = {
@@ -26,7 +26,7 @@ export const editorDrawers: Record<EditorDrawer['name'], () => JSX.Element> = {
 	action_connector: ActionConnectorPanel,
 	flow_run: FlowRunPanel,
 	flow_runs_list: FlowRunsListPanel,
-	flow_testing: Spinner
+	flow_testing: Spinner,
 }
 
 const nodeTypes = {
@@ -37,7 +37,7 @@ const nodeTypes = {
 }
 
 interface EditorProps {
-	limits: undefined // How many strategies buy can be etc.
+	limits: EditorLimits
 	mode: 'demo' | 'production'
 	// nodeTypes: Record<string, (...props: any) => JSX.Element>
 	cache: {
@@ -45,7 +45,7 @@ interface EditorProps {
 	}
 }
 
-export const Editor = ({ mode }: EditorProps) => {
+export const Editor = ({ mode, limits }: EditorProps) => {
 	const {
 		nodes,
 		onNodesChange,
@@ -59,11 +59,13 @@ export const Editor = ({ mode }: EditorProps) => {
 		loaded,
 		showLeftDrawer,
 		setShowLeftDrawer,
+		setLimits,
 	} = useEditor()
 	const reactFlowWrapper = useRef(null)
 
 	useEffect(() => {
 		console.log(`Editor mode: ${mode}`)
+		setLimits(limits)
 	}, [])
 
 	const EditorRightDrawer = editorDrawers[rightDrawer.name]

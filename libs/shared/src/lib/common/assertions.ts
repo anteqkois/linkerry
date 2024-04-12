@@ -1,4 +1,5 @@
-import { CustomError, ErrorCode } from './error'
+import { CustomError } from './error'
+import { ErrorCode } from './errorCodes'
 
 export function assertEqual<T>(actual: T, expected: T, fieldName1: string, fieldName2: string): asserts actual is T {
 	if (actual !== expected) {

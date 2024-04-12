@@ -1,8 +1,7 @@
 'use client'
 
-import { CustomError, CustomHttpExceptionResponse, ErrorCodeQuota, isQuotaErrorCode } from '@linkerry/shared'
+import { CustomError, CustomHttpExceptionResponse, ErrorCodeQuota, isQuotaErrorCode, PlanConfigurationDetailsValue, planConfigurationDetails } from '@linkerry/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
-import { PlanConfigurationDetailsValue, planConfigurationDetails } from './planConfigurationDetails'
 
 type ReturnType = {
 	showDialog: boolean

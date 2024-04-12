@@ -9,6 +9,7 @@ import {
 	assertNotNullOrUndefined,
 	isCustomError,
 	isNil,
+	isQuotaError,
 } from '@linkerry/shared'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
@@ -77,7 +78,7 @@ export class FlowJobProcessor extends WorkerHost {
 				await this._consumeConnectorTrigger(data)
 			}
 		} catch (error: any) {
-			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED_TASKS) {
+			if (isQuotaError(error)) {
 				this.logger.debug(`#consumeRepeatingJob removing project._id=${data.projectId} run out of flow quota`)
 				await this.flowModel.updateOne(
 					{

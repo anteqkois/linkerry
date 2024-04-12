@@ -34,8 +34,9 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	onClickSelectAction(nodeIdName: string) {
-		get().setRightDrawer('select_action')
-		const actionName = `action_${get().flow.version.stepsCount + 1}`
+		const {setRightDrawer, flow} = get()
+		setRightDrawer('select_action')
+		const actionName = `action_${flow.version.stepsCount + 1}`
 		set({
 			showRightDrawer: true,
 			editStepMetadata: {
@@ -45,7 +46,10 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		})
 	},
 	async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
-		const { getNodeById, editStepMetadata, setRightDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge } = get()
+		const { getNodeById, editStepMetadata, setRightDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge, limits } = get()
+		/* Check limits */
+		if(flow.version.stepsCount >= limits.flowSteps) throw new CustomError(``)
+
 		assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
 
 		const action: ActionConnector = {

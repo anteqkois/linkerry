@@ -1,7 +1,7 @@
 import { Id } from '../../../common'
 import { SubscriptionPeriod } from '../subscription'
-import { ProductConfig, ProductConfigItem } from './config'
-export * from './config'
+import { PlanProductConfiguration, ProductConfigItem } from './planProductConfiguration'
+export * from './planProductConfiguration'
 
 // [Free, Baisc, Professional, Enterprise]
 export enum ProductType {
@@ -24,7 +24,7 @@ export interface Product {
 	_id: Id
 	name: string
 	type: ProductType
-	config: ProductConfig
+	config: PlanProductConfiguration
 	priority: number
 	visible: boolean
 	//  comparisionId ???
@@ -32,5 +32,5 @@ export interface Product {
 }
 
 export interface ProductView extends Omit<Product, 'config'> {
-	config: Record<keyof ProductConfig, ProductConfigItem>
+	config: Record<keyof PlanProductConfiguration, ProductConfigItem>
 }

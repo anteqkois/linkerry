@@ -24,6 +24,7 @@ import {
 	flowHelper,
 	isCustomError,
 	isNil,
+	isQuotaError,
 	isTrigger,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
@@ -311,7 +312,7 @@ export class FlowWorkerService {
 				} ms`,
 			)
 		} catch (error: unknown) {
-			if (isCustomError(error) && error.code === ErrorCode.QUOTA_EXCEEDED_TASKS) {
+			if (isQuotaError(error)) {
 				this.logger.log(`#executeFlow removing flow.id=${flowVersionWithLockedConnectors.flow._id}, exceeded tasks limit`)
 				await this.flowsService.changeStatus({
 					newStatus: FlowStatus.DISABLED,

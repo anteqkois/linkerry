@@ -1,4 +1,26 @@
-import { ErrorCodeQuota, ProductConfig } from '@linkerry/shared'
+import { ErrorCodeQuota } from "../../../common/errorCodes"
+
+export interface PlanProductConfiguration {
+	minimumPollingInterval: number
+	connections: number
+	connectors: number
+	tasks: number
+	projectMembers: number
+	flowSteps: number
+	triggersAmount: number
+	flows: number
+	fileUploadsMB: number
+	flowRunIntervalGap: number
+	maximumActiveFlows: number
+	maximumExecutionTime: number
+}
+
+export interface ProductConfigItem {
+	name: string
+	displayName: string
+	description: string
+}
+
 
 export interface PlanConfigurationDetailsValue {
 	displayName: string
@@ -7,7 +29,7 @@ export interface PlanConfigurationDetailsValue {
 	// description:''
 }
 
-export type PlanConfigurationDetails = Record<keyof ProductConfig, PlanConfigurationDetailsValue>
+export type PlanConfigurationDetails = Record<keyof PlanProductConfiguration, PlanConfigurationDetailsValue>
 
 /* UI will show in the same order */
 export const planConfigurationDetails: PlanConfigurationDetails = {

@@ -1,6 +1,6 @@
 import { assertNotNullOrUndefined } from '@linkerry/shared'
 import { SetStateAction } from 'react'
-import { EditorDrawer } from '../types'
+import { EditorDrawer, EditorLimits } from '../types'
 import { CreateSlice, EditorSlice } from './types'
 
 export const editorDrawers: EditorDrawer[] = [
@@ -37,7 +37,17 @@ export const editorDrawers: EditorDrawer[] = [
 export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({
 	isLoading: false,
 	setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
-	// TODO refactor to use useContext and store drwer state in defined for this Components with Provider
+	limits: {
+		connections: 5,
+		flowSteps: 5,
+		triggersAmount: 1,
+	},
+	setLimits: (newLimits: EditorLimits) => {
+		set({
+			limits: newLimits,
+		})
+	},
+	// TODO refactor to use useContext and store drwer state in defined for this Components with Provider ?
 	showRightDrawer: false,
 	setShowRightDrawer: (value: SetStateAction<boolean>) => {
 		if (typeof value === 'function') set((state) => ({ showRightDrawer: value(state.showRightDrawer) }))

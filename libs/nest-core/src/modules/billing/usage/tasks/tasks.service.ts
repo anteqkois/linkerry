@@ -1,4 +1,4 @@
-import { CustomError, ErrorCode, Id, SubscriptionStatus, assertNotNullOrUndefined } from '@linkerry/shared'
+import { CustomError, ErrorCode, Id, QuotaError, SubscriptionStatus, assertNotNullOrUndefined } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
@@ -24,9 +24,7 @@ export class TasksUsageService {
 		const planProduct = activeSubscriptions[0].products[0]
 		const currentUsage = await this.getCurrentPeriodUsage(projectId)
 		if (currentUsage >= planProduct.config.tasks)
-			throw new CustomError(`Exceeded tasks limit for current plan`, ErrorCode.QUOTA_EXCEEDED_TASKS, {
-				currentUsage,
-			})
+			throw new QuotaError('tasks')
 	}
 
 	async getCurrentPeriodUsage(projectId: Id) {

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
 import { useClientQuery } from '../../../../../libs/react-query'
+import { useSubscriptions } from '../../../../../modules/billing/subscriptions/useSubscriptions'
 import { useReachLimitDialog } from '../../../../../modules/billing/useReachLimitDialog'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
 import {
@@ -19,6 +20,7 @@ import {
 import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/flows/connectors/api/query-configs'
 import { FlowApi } from '../../../../../modules/flows/flows/api'
+import { ErrorInfo, Spinner } from '../../../../../shared/components'
 
 const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetadataSummary[]) => {
 	const nodes: CustomNode[] = [
@@ -106,6 +108,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	const { loadFlow, setFlow, setEdges, setNodes } = useEditor()
 	const { toast } = useToast()
 	const { isQuotaErrorThenShowDialog } = useReachLimitDialog()
+	const { currentPlanConfiguration, subscriptionsStatus, subscriptionsError } = useSubscriptions()
 	const { push } = useRouter()
 
 	const initEditor = useCallback(async () => {
@@ -152,5 +155,9 @@ export default function Page({ params }: { params: { id: string } }) {
 		})()
 	}, [status])
 
-	return <Editor mode="production" limits={undefined} cache={{ saveState: undefined }} />
+	if (subscriptionsStatus === 'pending') return <Spinner />
+	if (subscriptionsStatus === 'error') return <ErrorInfo errorObject={subscriptionsError} />
+	if (!currentPlanConfiguration) return <ErrorInfo message="Can not retrive yor plan configuration" />
+
+	return <Editor mode="production" limits={currentPlanConfiguration} cache={{ saveState: undefined }} />
 }

@@ -18,7 +18,7 @@ import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
 import { Socket } from 'socket.io-client'
 import { StoreApi } from 'zustand'
 import { CustomEdge, CustomEdgeId } from '../edges/types'
-import { CustomNode, CustomNodeId, EditorDrawer } from '../types'
+import { CustomNode, CustomNodeId, EditorDrawer, EditorLimits } from '../types'
 
 // type EditorNode = Node | CustomNode
 type EditorNode = CustomNode
@@ -45,6 +45,8 @@ export interface ReactFlowSlice {
 export interface EditorSlice {
 	isLoading: boolean
 	setIsLoading: (value: boolean) => void
+	limits: EditorLimits
+	setLimits: (newLimits: EditorLimits) => void
 	rightDrawer: EditorDrawer
 	setRightDrawer: (name: EditorDrawer['name']) => void
 	showRightDrawer: boolean
@@ -87,7 +89,7 @@ export interface TriggersSlice {
 	resetTrigger: (triggerName: string) => Promise<void>
 	testPoolTrigger: () => Promise<TriggerEvent[]>
 	testWebhookTrigger: () => Promise<TriggerEvent[] | string>
-	webhookTriggerWatcherWorks: boolean,
+	webhookTriggerWatcherWorks: boolean
 	cancelWebhookTrigger: () => Promise<void>
 }
 

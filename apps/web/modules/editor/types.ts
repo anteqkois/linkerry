@@ -1,5 +1,5 @@
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { Action, Trigger } from '@linkerry/shared'
+import { Action, PlanProductConfiguration, Trigger } from '@linkerry/shared'
 import { NodeProps, Node as ReactFlowNode } from 'reactflow'
 
 export interface EditorDrawer {
@@ -39,3 +39,4 @@ export enum CustomNodeType {
 
 export type CustomNodeProps<N extends CustomNode> = NodeProps<N['data']> & { id: N['id'] }
 export type CustomNodeId = CustomNode['id']
+export type EditorLimits = Pick<PlanProductConfiguration, 'connections' | 'flowSteps' | 'triggersAmount'>

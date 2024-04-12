@@ -1,12 +1,11 @@
 'use client'
 
-import { ProductConfig } from '@linkerry/shared'
+import { PlanProductConfiguration, PlanConfigurationDetailsValue, planConfigurationDetails } from '@linkerry/shared'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@linkerry/ui-components/client'
 import { Button } from '@linkerry/ui-components/server'
 import Link from 'next/link'
 import { HTMLAttributes } from 'react'
 import { ErrorInfo, Spinner } from '../../../shared/components'
-import { PlanConfigurationDetailsValue, planConfigurationDetails } from '../planConfigurationDetails'
 import { useSubscriptions } from '../subscriptions/useSubscriptions'
 import { useUsage } from '../usage/useUsage'
 import { useReachLimitDialog } from '../useReachLimitDialog'
@@ -40,7 +39,7 @@ export const ReachLimitDialog = () => {
 					{subscriptionsError || usageError ? <ErrorInfo errorObject={subscriptionsError || usageError} /> : null}
 					{subscriptionsStatus === 'pending' || usageStatus === 'pending' ? <Spinner /> : null}
 					{usage && currentSubscription ? (
-						(Object.entries(planConfigurationDetails) as [keyof ProductConfig, PlanConfigurationDetailsValue][]).map(([name, value]) => (
+						(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => (
 							<ConfigurationItem
 								key={name}
 								className={name === exceededConfigurationEntry?.name ? 'text-negative' : ''}
