@@ -22,6 +22,7 @@ export class UsageService {
 		})
 		const projectFlows = await this.flowModel.count({
 			projectId,
+			deleted: false,
 		})
 		const projectRunningFlows = await this.flowModel.count({
 			projectId,

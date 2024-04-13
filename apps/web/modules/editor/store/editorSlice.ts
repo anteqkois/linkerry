@@ -35,6 +35,12 @@ export const editorDrawers: EditorDrawer[] = [
 ]
 
 export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({
+	useLocalStorage: false,
+	setUseLocalStorage: (newState: boolean) => {
+		set({
+			useLocalStorage: newState,
+		})
+	},
 	isLoading: false,
 	setIsLoading: (value: boolean) => set((state) => ({ isLoading: value })),
 	limits: {

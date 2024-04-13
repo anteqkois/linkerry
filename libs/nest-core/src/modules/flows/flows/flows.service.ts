@@ -9,7 +9,7 @@ import {
 	Id,
 	QuotaError,
 	UpdateStatusInput,
-	assertNotNullOrUndefined
+	assertNotNullOrUndefined,
 } from '@linkerry/shared'
 import { ConflictException, Injectable, Logger } from '@nestjs/common'
 import { InjectConnection, InjectModel } from '@nestjs/mongoose'
@@ -74,7 +74,9 @@ export class FlowsService {
 					_id: id,
 					projectId,
 				},
-				{},
+				{
+					deleted: true
+				},
 			)
 
 			/* don't delete, in future it can be usefull to train AI model */
@@ -173,7 +175,7 @@ export class FlowsService {
 
 	async createEmpty(projectId: Id, userId: Id) {
 		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
-		const projectFlowsAmount = await this.flowModel.count({ projectId })
+		const projectFlowsAmount = await this.flowModel.count({ projectId, deleted: false })
 		if (projectFlowsAmount >= currentPlan.flows) throw new QuotaError('flows')
 
 		const flowId = generateId()
@@ -191,7 +193,7 @@ export class FlowsService {
 	async changeStatus({ newStatus, id, projectId }: UpdateStatusInput) {
 		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
 		const projectFlowsRunningAmount = await this.flowModel.count({ projectId, status: FlowStatus.ENABLED })
-		if (projectFlowsRunningAmount >= currentPlan.maximumActiveFlows) throw new QuotaError('maximumActiveFlows')
+		if (newStatus === FlowStatus.ENABLED && projectFlowsRunningAmount >= currentPlan.maximumActiveFlows) throw new QuotaError('maximumActiveFlows')
 
 		const flowToUpdate = await this.flowModel.findOne<FlowDocument<'version'>>({ _id: id, projectId }).populate('version')
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')

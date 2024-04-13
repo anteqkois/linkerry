@@ -21,6 +21,7 @@ import {
 	GearIcon,
 	HamburgerMenuIcon,
 	HomeIcon,
+	InfoCircledIcon,
 	LapTimerIcon,
 	LightningBoltIcon,
 	MagicWandIcon,
@@ -69,6 +70,7 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	Info: (props: RadixIconProps) => <InfoCircledIcon {...defaultRadixProps(props)} />,
 	FullScreen: (props: RadixIconProps) => <EnterFullScreenIcon {...defaultRadixProps(props)} />,
 	Stop: (props: RadixIconProps) => <StopIcon {...defaultRadixProps(props)} />,
 	ZoomIn: (props: RadixIconProps) => <ZoomInIcon {...defaultRadixProps(props)} />,

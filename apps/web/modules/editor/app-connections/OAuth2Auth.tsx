@@ -6,6 +6,7 @@ import {
 	ErrorCode,
 	assertNotNullOrUndefined,
 	isCustomHttpExceptionAxios,
+	isQuotaErrorCode
 } from '@linkerry/shared'
 import {
 	ButtonClient,
@@ -33,6 +34,7 @@ import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { Spinner } from '../../../shared/components/Spinner'
 import { AppConnectionsApi } from '../../app-connections'
 import { OAuth2AppsQueryConfig } from '../../app-connections/query-configs-apps'
+import { useReachLimitDialog } from '../../billing/useReachLimitDialog'
 
 export interface OAuth2AuthProps extends HTMLAttributes<HTMLElement> {
 	onCreateAppConnection: (newConnection: AppConnectionWithoutSensitiveData) => void
@@ -42,6 +44,7 @@ export interface OAuth2AuthProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDialog }: OAuth2AuthProps) => {
+	const { showDialogBasedOnErrorCode } = useReachLimitDialog()
 	const { data, status } = useClientQuery(OAuth2AppsQueryConfig.getManyApps())
 	const [OAuth2Settings, setOAuth2Settings] = useState<OAuth2Settings | null>(null)
 	const [OAuth2Response, setOAuth2Response] = useState<OAuth2Response | null>(null)
@@ -185,16 +188,18 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 			onCreateAppConnection(data)
 			setShowDialog(false)
 		} catch (error: any) {
-			if (isCustomHttpExceptionAxios(error))
-				appConnectionForm.setError('root', {
-					message: error.response.data.message,
-				})
-			else {
+			let errorDescription = 'Unknwon error occures, try again or inform our Team'
+
+			if (isCustomHttpExceptionAxios(error)) {
+				if (isQuotaErrorCode(error.response.data.code)) return showDialogBasedOnErrorCode(error.response.data.code)
+				else errorDescription = error.response.data.message
+			} else {
 				console.error(error)
-				appConnectionForm.setError('root', {
-					message: 'Unknwon error occures, try again or inform our Team',
-				})
 			}
+
+			appConnectionForm.setError('root', {
+				message: errorDescription,
+			})
 		} finally {
 			setLoading(false)
 		}
@@ -210,7 +215,7 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 				<DialogDescription>This connection will be able to be used by {connector.displayName} connector </DialogDescription>
 			</DialogHeader>
 			<Form {...appConnectionForm}>
-				<form className="space-y-8" onSubmit={onSubmit}>
+				<form onSubmit={onSubmit}>
 					<FormField
 						control={appConnectionForm.control}
 						name={'name'}
@@ -227,14 +232,14 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 							</FormItem>
 						)}
 					/>
-					<MarkdownBase>{auth.description}</MarkdownBase>
+					{auth.description ? <MarkdownBase>{auth.description}</MarkdownBase> : null}
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
 					</div>
-					<Button onClick={() => onConnectOAuth2()} className="w-full" type="button">
+					<Button onClick={() => onConnectOAuth2()} className="w-full mt-4" type="button">
 						Connect
 					</Button>
-					<DialogFooter>
+					<DialogFooter className="mt-4">
 						<Button onClick={() => setShowDialog(false)} disabled={loading} variant={'outline'}>
 							Cancel
 						</Button>

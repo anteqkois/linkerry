@@ -43,6 +43,8 @@ export interface ReactFlowSlice {
 }
 
 export interface EditorSlice {
+	useLocalStorage: boolean
+	setUseLocalStorage: (newState: boolean) => void
 	isLoading: boolean
 	setIsLoading: (value: boolean) => void
 	limits: EditorLimits

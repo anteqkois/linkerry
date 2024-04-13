@@ -13,6 +13,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@linker
 import { useClickOutside } from '@react-hookz/web'
 import { useQueries } from '@tanstack/react-query'
 import { useMemo, useRef } from 'react'
+import { InfoMessage } from '../../../shared/components/InfoMessage'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
 import { useEditor } from '../useEditor'
 import { DynamicValueStep } from './DynamicValueStep'
@@ -20,7 +21,7 @@ import { DynamicValueStep } from './DynamicValueStep'
 // export interface DynamicValueModalProps extends HTMLAttributes<HTMLElement> {}
 
 export const DynamicValueModal = () => {
-	const { showDynamicValueModal, setShowDynamicValueModal, flow, editedAction } = useEditor()
+	const { showDynamicValueModal, setShowDynamicValueModal, flow, editedAction, editedTrigger } = useEditor()
 
 	/* Can not use modal by trigger, there are no data */
 	// const editedStep = useMemo(() => {
@@ -89,6 +90,7 @@ export const DynamicValueModal = () => {
 						<Separator />
 					</div>
 				))}
+				{editedTrigger && !steps.length ? <InfoMessage className='m-2'>Triggers can&apos;t use dynamic values, becouse they starts the flow.</InfoMessage> : null}
 			</CardContent>
 		</Card>
 	) : null

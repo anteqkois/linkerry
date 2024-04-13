@@ -24,8 +24,9 @@ const polling: Polling<
 	},
 }
 
+/* It is no sense to use it, should use schedule trigger and simple action */
 export const fetchById = createTrigger({
-	description: 'Fetch by coingecko id',
+	description: '',
 	displayName: 'Fetch by coingecko id',
 	name: 'fetch_by_id',
 	type: TriggerStrategy.POLLING,

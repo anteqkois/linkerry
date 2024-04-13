@@ -53,7 +53,8 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 	flowOperationRunning: false,
 	flow: emptyFlow,
 	loadFlow: async (id: Id) => {
-		let flow: string | FlowPopulated | null = localStorage.getItem('flow')
+		const { useLocalStorage } = get()
+		let flow: string | FlowPopulated | null = useLocalStorage ? localStorage.getItem('flow') : null
 		if (flow) {
 			flow = JSON.parse(flow) as FlowPopulated
 		} else {
@@ -68,8 +69,9 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 		return flow
 	},
 	setFlow: (flow: FlowPopulated) => {
+		const { useLocalStorage } = get()
 		set({ flow })
-		localStorage.setItem('flow', JSON.stringify(flow))
+		useLocalStorage && localStorage.setItem('flow', JSON.stringify(flow))
 	},
 	publishFlow: async () => {
 		const { flow, setFlow } = get()

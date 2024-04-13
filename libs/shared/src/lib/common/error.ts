@@ -74,12 +74,15 @@ export const isCustomError = (object: unknown): object is CustomError => {
 }
 
 export class QuotaError extends CustomError {
+	override code: ErrorCodeQuota
 	constructor(limitName: keyof PlanProductConfiguration) {
 		super(`Reach plan limit: ${limitName}`, planConfigurationDetails[limitName].errorCode)
+		this.code = planConfigurationDetails[limitName].errorCode
 	}
 }
 
-export const isQuotaError = (object: unknown): object is CustomError & { code: ErrorCodeQuota } => {
+export const isQuotaError = (object: unknown): object is QuotaError & { code: ErrorCodeQuota } => {
+	console.log(object instanceof CustomError)
 	if (object instanceof CustomError && object.code.includes('QUOTA_EXCEEDED')) return true
 	return false
 }

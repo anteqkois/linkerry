@@ -1,14 +1,13 @@
 'use client'
 
-import { FlowOperationType, FlowPopulated, FlowStatus, isCustomHttpExceptionAxios } from '@linkerry/shared'
-import {
-	useToast
-} from '@linkerry/ui-components/client'
+import { FlowOperationType, FlowPopulated, FlowStatus, isCustomHttpExceptionAxios, isQuotaErrorCode } from '@linkerry/shared'
+import { useToast } from '@linkerry/ui-components/client'
 import { H5 } from '@linkerry/ui-components/server'
 import { Row } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { useClientQuery } from '../../../libs/react-query'
+import { useReachLimitDialog } from '../../../modules/billing/useReachLimitDialog'
 import { FlowApi } from '../../../modules/flows'
 import { columns } from '../../../modules/flows/flows/defaultColumns'
 import { flowQueryConfig } from '../../../modules/flows/flows/query-config'
@@ -20,6 +19,7 @@ export default function Page() {
 	const { data, error } = useClientQuery(flowQueryConfig.getMany({}))
 	const { toast } = useToast()
 	const { push } = useRouter()
+	const { showDialogBasedOnErrorCode } = useReachLimitDialog()
 	const [runningOperation, setRunningOperation] = useState(false)
 
 	const onClickRowHndler = useCallback(async (row: Row<FlowPopulated>) => {
@@ -61,12 +61,16 @@ export default function Page() {
 					break
 			}
 		} catch (error) {
-			let message = 'Unknown error occured, can not update your flow status. Try again and inform our Team.'
+			let errorDescription = 'Unknown error occured, can not update your flow status. Try again and inform our Team.'
 
-			if (isCustomHttpExceptionAxios(error)) message = error.response.data.message
+			if (isCustomHttpExceptionAxios(error)) {
+				if (isQuotaErrorCode(error.response.data.code)) return showDialogBasedOnErrorCode(error.response.data.code)
+				else errorDescription = error.response.data.message
+			}
 
 			toast({
-				title: message,
+				title: 'Can not change flow status',
+				description: errorDescription,
 				variant: 'destructive',
 			})
 		} finally {
@@ -82,7 +86,6 @@ export default function Page() {
 			<DataTable
 				data={data}
 				columns={columns}
-				clickable
 				onClickRow={onClickRowHndler}
 				meta={{ onChangeFlowStatus, runningOperation }}
 				// filterAccessor="displayName"

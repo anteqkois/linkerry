@@ -157,7 +157,7 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
 				</div>
 			)}
 
-			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={180} title="Output" className="mt-2" />}
+			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={230} title="Output" className="mt-2" />}
 		</div>
 	)
 }

@@ -25,6 +25,7 @@ export class FlowsController {
 		return this.flowsService.findMany({
 			filter: {
 				projectId: user.projectId,
+				deleted: false,
 			},
 		})
 	}

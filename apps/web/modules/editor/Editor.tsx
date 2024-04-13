@@ -39,13 +39,14 @@ const nodeTypes = {
 interface EditorProps {
 	limits: EditorLimits
 	mode: 'demo' | 'production'
+	useLocalStorage?: boolean
 	// nodeTypes: Record<string, (...props: any) => JSX.Element>
 	cache: {
 		saveState: undefined
 	}
 }
 
-export const Editor = ({ mode, limits }: EditorProps) => {
+export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) => {
 	const {
 		nodes,
 		onNodesChange,

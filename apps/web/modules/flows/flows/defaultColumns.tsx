@@ -27,6 +27,7 @@ import {
 	Input,
 	MenubarShortcut,
 	Switch,
+	ToastAction,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
@@ -44,11 +45,19 @@ import { FlowApi } from './api'
 
 export const columns: ColumnDef<FlowPopulated>[] = [
 	{
+		id: 'id',
+		accessorKey: 'id',
+		header: ({ column }) => <TableColumnHeader column={column} title="No." className="ml-2" />,
+		cell: ({ row }) => {
+			return <div className="font-medium ml-2">{row.index + 1}</div>
+		},
+	},
+	{
 		id: 'name',
 		accessorKey: 'name',
-		header: ({ column }) => <TableColumnHeader column={column} title="Name" className="ml-2" sortable />,
+		header: ({ column }) => <TableColumnHeader column={column} title="Name" sortable />,
 		cell: ({ row }) => {
-			return <div className="font-medium ml-2">{row.original.version.displayName}</div>
+			return <div className="font-medium ">{row.original.version.displayName}</div>
 		},
 	},
 	{
@@ -108,6 +117,22 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 		accessorKey: 'status',
 		header: ({ column }) => <TableColumnHeader column={column} title="Status" sortable />,
 		cell: ({ row, table }) => {
+			const { toast } = useToast()
+
+			const hanleChangeStatus = () => {
+				if (!row.original.publishedVersionId)
+					return toast({
+						title: "Flow isn't published yet",
+						description: 'Your flow required to be finidhed and published. Go to flow and edit their settings.',
+						variant: 'destructive',
+						action: (
+							<ToastAction altText="Edit Flow">
+								<Link href={`/app/flows/editor/${row.original._id}`}>Edit Flow</Link>
+							</ToastAction>
+						),
+					})
+			}
+
 			return (
 				<div className="font-medium">
 					<TooltipProvider delayDuration={100}>
@@ -117,7 +142,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 									<Switch
 										id="flow-enabled"
 										checked={row.original.status === FlowStatus.ENABLED}
-										onCheckedChange={() => (table.options?.meta as any).onChangeFlowStatus(row.original)}
+										onCheckedChange={hanleChangeStatus}
 										disabled={(table.options?.meta as any).runningOperation}
 									/>
 								</div>
@@ -140,11 +165,12 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 			const [runingOperation, setRuningOperation] = useState(false)
 			const [confirmDeleteInput, setConfirmDeleteInput] = useState('')
 			const [confirmDialog, setConfirmDialog] = useState(false)
+			const [showActions, setShowActions] = useState(false)
 			const [renameInput, setRenameInput] = useState(row.original.version.displayName)
 			const [renameDialog, setRenameDialog] = useState(false)
 			const [flowToDelete, setFlowToDelete] = useState<FlowPopulated>()
 
-			const onDeleteFlow = useCallback(async (flow: FlowPopulated) => {
+			const onDeleteFlow = useCallback((flow: FlowPopulated) => {
 				setConfirmDialog(true)
 				setFlowToDelete(flow)
 			}, [])
@@ -214,6 +240,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 						data?.filter((flow) => flow._id !== flowToDelete._id),
 					)
 					setConfirmDialog(false)
+					setShowActions(false)
 				} catch (error) {
 					if (isCustomHttpExceptionAxios(error))
 						return toast({
@@ -232,9 +259,9 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 			}, [confirmDeleteInput, flowToDelete])
 
 			return (
-				<DropdownMenu>
+				<DropdownMenu open={showActions} onOpenChange={setShowActions} modal={false}>
 					<DropdownMenuTrigger asChild>
-						<Button variant="ghost" className="h-8 w-8 p-0">
+						<Button variant="ghost" className="h-8 w-8 p-0" onClick={() => setShowActions(true)}>
 							<span className="sr-only">Open menu</span>
 							<Icons.More className="h-4 w-4" />
 						</Button>

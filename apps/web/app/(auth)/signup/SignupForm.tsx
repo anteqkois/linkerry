@@ -49,7 +49,6 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
       toast({
         title: 'Check your email',
         description: 'We sent you a login link. Be sure to check your spam too.',
-        duration: 6000,
       })
 
       setIsLoading(false)

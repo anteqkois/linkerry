@@ -118,7 +118,6 @@ export class EngineService {
 
 			const sandboxPath = sandbox.getSandboxFolderPath()
 
-			console.dir(input, { depth: null })
 			await fs.writeFile(`${sandboxPath}/input.json`, JSON.stringify(input))
 			const sandboxResponse = await sandbox.runOperation(operation)
 
@@ -126,8 +125,10 @@ export class EngineService {
 				// if (f.trim().length > 0) this.logger.debug(f)
 			})
 
+			/* Returning  sandboxResponse.standardError to frontend can be dangerous, so only log here*/
 			sandboxResponse.standardError.split('\n').forEach((f) => {
-				if (f.trim().length > 0) this.logger.error(f)
+				if (f.includes('NODE_TLS_REJECT_UNAUTHORIZED')) return
+				if (f.trim().length > 0) this.logger.error(`${operation} ${f}`)
 			})
 
 			if (sandboxResponse.verdict === EngineResponseStatus.TIMEOUT) {

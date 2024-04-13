@@ -26,7 +26,16 @@ export const telegramSendMessageAction = createAction({
 		}),
 		chat_id: Property.ShortText({
 			displayName: 'Chat Id',
-			description:'The message will be send to this chat ID',
+			description: 'The message will be send to this chat ID',
+			required: true,
+		}),
+		instructions_format: Property.MarkDown({
+			displayName: 'Avaible Formats',
+			description: format,
+		}),
+		message: Property.LongText({
+			displayName: 'Message',
+			description: 'The message to be sent',
 			required: true,
 		}),
 		message_thread_id: Property.ShortText({
@@ -50,22 +59,13 @@ export const telegramSendMessageAction = createAction({
 					},
 				],
 			},
-			defaultValue: 'MarkdownV2',
-		}),
-		instructions_format: Property.MarkDown({
-			displayName: 'Avaible Formats',
-			description: format,
-		}),
-		message: Property.LongText({
-			displayName: 'Message',
-			description: 'The message to be sent',
-			required: true,
+			defaultValue: 'HTML',
 		}),
 		reply_markup: Property.Json({
 			required: false,
 			displayName: 'Reply Markup',
 			description:
-				'Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user. Use special actions such as Build Inline Keyboard to generate this JSON object.',
+				'Additional Telegram interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user. Use special actions such as Build Inline Keyboard to generate this JSON object.',
 		}),
 	},
 	async run(ctx) {

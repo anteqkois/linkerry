@@ -1,13 +1,10 @@
 'use client'
 
 import {
-	CustomError,
-	CustomHttpExceptionResponse,
 	ErrorCodeQuota,
 	PlanConfigurationDetailsValue,
 	PlanProductConfiguration,
-	isQuotaErrorCode,
-	planConfigurationDetails,
+	planConfigurationDetails
 } from '@linkerry/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 
@@ -16,7 +13,7 @@ type ReturnType = {
 	setShowDialog: Dispatch<SetStateAction<boolean>>
 	reachedLimitErrorCode: ErrorCodeQuota | undefined
 	setReachedLimitErrorCode: Dispatch<SetStateAction<ErrorCodeQuota | undefined>>
-	isQuotaErrorThenShowDialog: (error: CustomError | CustomHttpExceptionResponse) => boolean
+	showDialogBasedOnErrorCode: (error: ErrorCodeQuota) => void
 	exceededConfigurationEntry: PlanConfigurationDetailsValue | null
 	customConfigurationItemValues: Partial<Record<keyof PlanProductConfiguration, string>>
 	setCustomConfigurationItemValues: Dispatch<SetStateAction<Partial<Record<keyof PlanProductConfiguration, string>>>>
@@ -29,14 +26,9 @@ export const ReachLimitDialogProvider = ({ children }: PropsWithChildren) => {
 	const [reachedLimitErrorCode, setReachedLimitErrorCode] = useState<ErrorCodeQuota>()
 	const [customConfigurationItemValues, setCustomConfigurationItemValues] = useState<Partial<Record<keyof PlanProductConfiguration, string>>>({})
 
-	const isQuotaErrorThenShowDialog = (error: CustomError | CustomHttpExceptionResponse) => {
-		if (isQuotaErrorCode(error.code)) {
-			setReachedLimitErrorCode(error.code)
-			setShowDialog(true)
-			return true
-		}
-
-		return false
+	const showDialogBasedOnErrorCode = (code: ErrorCodeQuota) => {
+		setReachedLimitErrorCode(code)
+		setShowDialog(true)
 	}
 
 	const exceededConfigurationEntry = useMemo(() => {
@@ -54,7 +46,7 @@ export const ReachLimitDialogProvider = ({ children }: PropsWithChildren) => {
 				setShowDialog,
 				reachedLimitErrorCode,
 				setReachedLimitErrorCode,
-				isQuotaErrorThenShowDialog,
+				showDialogBasedOnErrorCode,
 				exceededConfigurationEntry,
 				customConfigurationItemValues,
 				setCustomConfigurationItemValues,

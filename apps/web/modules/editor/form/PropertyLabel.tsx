@@ -24,13 +24,11 @@ export const PropertyLabel = ({ property, refreshedProperties, setUseDynamicValu
 								<p>
 									This property is a refresher for other properties:{' '}
 									{refreshedProperties.map((property) => (
-										<>
+										<span key={property.displayName} className="font-black">
 											&quot;
-											<span key={property.displayName} className="font-black">
-												{property.displayName}
-											</span>
+											{property.displayName}
 											&quot;
-										</>
+										</span>
 									))}
 									. If you change &quot;
 									<span className="font-black">{property.displayName}</span>

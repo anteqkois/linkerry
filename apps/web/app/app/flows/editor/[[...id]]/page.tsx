@@ -1,7 +1,16 @@
 'use client'
 
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
-import { ActionType, CustomError, ErrorCode, FlowVersion, TriggerType, assertNotNullOrUndefined, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import {
+	ActionType,
+	CustomError,
+	ErrorCode,
+	FlowVersion,
+	TriggerType,
+	assertNotNullOrUndefined,
+	isCustomHttpExceptionAxios,
+	isQuotaErrorCode
+} from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
@@ -107,7 +116,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	const { data: connectorsMetadata, status } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
 	const { loadFlow, setFlow, setEdges, setNodes } = useEditor()
 	const { toast } = useToast()
-	const { isQuotaErrorThenShowDialog } = useReachLimitDialog()
+	const { showDialogBasedOnErrorCode } = useReachLimitDialog()
 	const { currentPlanConfiguration, subscriptionsStatus, subscriptionsError } = useSubscriptions()
 	const { push } = useRouter()
 
@@ -135,15 +144,17 @@ export default function Page({ params }: { params: { id: string } }) {
 			setNodes([selectTriggerNodeFactory({ trigger: data.version.triggers[0] })])
 			setEdges([])
 		} catch (error) {
-			let errorDescription = ''
+			let errorDescription = 'We can not retrive error message. Please inform our Team'
+
 			if (isCustomHttpExceptionAxios(error)) {
-				if (isQuotaErrorThenShowDialog(error.response.data)) return
+				if (isQuotaErrorCode(error.response.data.code)) return showDialogBasedOnErrorCode(error.response.data.code)
 				else errorDescription = error.response.data.message
-			} else errorDescription = 'We can not retrive error message. Please inform our Team'
+			}
 
 			toast({
 				title: 'Can not create new Flow',
 				description: errorDescription,
+				variant: 'destructive',
 			})
 		}
 	}, [params.id, connectorsMetadata])

@@ -1,5 +1,6 @@
 import { ConnectorMetadataSummary, connectorTag } from '@linkerry/connectors-framework'
-import { isQuotaError } from '@linkerry/shared'
+import { isCustomHttpExceptionAxios, isQuotaErrorCode } from '@linkerry/shared'
+import { useToast } from '@linkerry/ui-components/client'
 import { Row } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useClientQuery } from '../../../libs/react-query'
@@ -11,8 +12,9 @@ import { useEditor } from '../useEditor'
 
 export const SelectActionPanel = () => {
 	const { data } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
-	const { isQuotaErrorThenShowDialog, setCustomConfigurationItemValues } = useReachLimitDialog()
-	const { handleSelectActionConnector, flow, limits } = useEditor()
+	const { showDialogBasedOnErrorCode } = useReachLimitDialog()
+	const { handleSelectActionConnector } = useEditor()
+	const { toast } = useToast()
 	const connectorsWithActions = useMemo(() => {
 		if (!data?.length) return []
 		return data.filter((connectorMetadata) => connectorMetadata.actions)
@@ -22,11 +24,18 @@ export const SelectActionPanel = () => {
 		try {
 			await handleSelectActionConnector(row.original)
 		} catch (error) {
-			if (isQuotaError(error) && isQuotaErrorThenShowDialog(error)) {
-				return setCustomConfigurationItemValues({
-					flowSteps: `${flow.version.stepsCount} / ${limits.flowSteps}`,
-				})
+			let errorDescription = 'We can not add new step to your flow. Please inform our Team'
+
+			if (isCustomHttpExceptionAxios(error)) {
+				if (isQuotaErrorCode(error.response.data.code)) return showDialogBasedOnErrorCode(error.response.data.code)
+				else errorDescription = error.response.data.message
 			}
+
+			toast({
+				title: 'Can not update Flow',
+				description: errorDescription,
+				variant: 'destructive',
+			})
 		}
 	}
 
