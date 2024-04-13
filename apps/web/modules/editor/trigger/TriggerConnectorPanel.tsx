@@ -35,7 +35,7 @@ import { TriggerTestFunction } from './TriggerTestFunction'
 import { TriggerWebhookSimulation } from './TriggerWebhookSimulation'
 
 export const TriggerConnectorPanel = () => {
-	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, setEditedConnectorMetadata } = useEditor()
+	const { editedTrigger, patchEditedTriggerConnector, updateEditedTrigger, setEditedConnectorMetadata, flowOperationRunning } = useEditor()
 	if (!editedTrigger || editedTrigger?.type !== TriggerType.CONNECTOR) throw new Error('Missing editedTrigger')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
@@ -163,7 +163,7 @@ export const TriggerConnectorPanel = () => {
 
 	return (
 		<ResizablePanelGroup direction="vertical" className="max-h-screen p-1">
-			<ResizablePanel defaultSize={60} className="px-1">
+			<ResizablePanel defaultSize={60} className="px-1 overflow-scroll">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
 					<div>
@@ -233,8 +233,9 @@ export const TriggerConnectorPanel = () => {
 				>
 					<TriggerTestFunction
 						panelSize={testDataPanelHeight}
-						disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0}
-						disabledMessage={isEmpty(triggerWatcher?.props) ? 'Choose Trigger' : 'First fill all required Trigger fields'}
+						// TODO refactor this
+						disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0 || flowOperationRunning}
+						disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Trigger fields'}
 					/>
 				</ResizablePanel>
 			)}
@@ -246,8 +247,8 @@ export const TriggerConnectorPanel = () => {
 				>
 					<TriggerWebhookSimulation
 						panelSize={testDataPanelHeight}
-						disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0}
-						disabledMessage={isEmpty(triggerWatcher?.props) ? 'Choose Trigger' : 'First fill all required Trigger fields'}
+						disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0 || flowOperationRunning}
+						disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Trigger fields'}
 						triggerDisplayName={triggerWatcher.displayName}
 					/>
 				</ResizablePanel>

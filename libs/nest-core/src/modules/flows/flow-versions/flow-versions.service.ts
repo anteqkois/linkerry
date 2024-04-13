@@ -74,7 +74,7 @@ export class FlowVersionsService {
 	}
 
 	private async _applySingleOperation(projectId: Id, flowVersion: FlowVersion, operation: FlowOperationRequest): Promise<FlowVersion> {
-		this.logger.debug(`#applySingleOperation ${operation.type} to ${flowVersion.displayName}`)
+		this.logger.debug(`#applySingleOperation ${operation.type} to ${flowVersion._id}`)
 
 		await this._preApplyOperationSideEffect({
 			projectId,

@@ -34,7 +34,7 @@ import { useEditor } from '../useEditor'
 import { ActionTest } from './ActionTest'
 
 export const ActionConnectorPanel = () => {
-	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata } = useEditor()
+	const { editedAction, patchEditedAction, updateEditedAction, setEditedConnectorMetadata, flowOperationRunning } = useEditor()
 	if (!editedAction || editedAction?.type !== ActionType.CONNECTOR) throw new Error('Missing editedAction')
 	const [testDataPanelHeight, setTestDataPanelHeight] = useState(30)
 
@@ -241,8 +241,8 @@ export const ActionConnectorPanel = () => {
 				>
 					<ActionTest
 						panelSize={testDataPanelHeight}
-						disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0}
-						disabledMessage={isEmpty(actionWatcher?.props) ? 'Choose Action' : 'First fill all required Action fields'}
+						disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0 || flowOperationRunning}
+						disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Action fields'}
 					/>
 				</ResizablePanel>
 			)}

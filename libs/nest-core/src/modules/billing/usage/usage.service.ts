@@ -27,6 +27,7 @@ export class UsageService {
 		const projectRunningFlows = await this.flowModel.count({
 			projectId,
 			status: FlowStatus.ENABLED,
+			deleted: false,
 		})
 
 		return {
