@@ -143,7 +143,7 @@ export class AuthService {
 
 	async verifyEmailCode({ code, userId }: VerifyEmailCodeParams) {
 		const cachedDataUserId = await this.redis.get(REDIS_KEYS.AUTH.EMAIL_VERIFICATION_CODE({ code, userId }))
-		if (!cachedDataUserId) throw new UnprocessableEntityException(`Invalid Verification code`)
+		if (!cachedDataUserId) throw new UnprocessableEntityException(`Invalid Verification code or code expired`)
 		if (cachedDataUserId !== userId) throw new UnprocessableEntityException(`Invalid Verification code for user`)
 
 		const user = await this.userModel.findOneAndUpdate(
