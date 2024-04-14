@@ -77,4 +77,8 @@ export type Prettify<T> = {
 	[K in keyof T]: T[K]
 } & {}
 
-export type Common<T> = Pick<T, keyof T>;
+export type Common<T> = Pick<T, keyof T>
+
+export type TypeOrDefaultType<LiteralStrings, LiteralString extends string, Type, DefaultType> = LiteralString extends LiteralStrings
+	? Type
+	: DefaultType

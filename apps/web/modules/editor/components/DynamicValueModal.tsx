@@ -23,7 +23,7 @@ import { DynamicValueStep } from './DynamicValueStep'
 export const DynamicValueModal = () => {
 	const { showDynamicValueModal, setShowDynamicValueModal, flow, editedAction, editedTrigger } = useEditor()
 
-	/* Can not use modal by trigger, there are no data */
+	/* Can not use dialog by trigger, there are no data */
 	// const editedStep = useMemo(() => {
 	// 	if (!isNil(editedAction)) return editedAction
 	// 	else if (!isNil(editedTrigger)) return editedTrigger

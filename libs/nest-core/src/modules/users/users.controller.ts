@@ -11,7 +11,7 @@ export class UsersController {
   @UseGuards(JwtCookiesAuthGuard)
   @Get()
   getUser(@ReqJwtUser() user: RequestUser) {
-    return this.usersService.find()
+    // return this.usersService.findOne()
   }
 
 	/* handled by authModule */

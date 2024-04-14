@@ -1,8 +1,9 @@
 import '@fastify/cookie'
-import { AuthStatus, Cookies, IAuthLoginResponse, IAuthLogoutResponse, IAuthSignUpResponse, User } from '@linkerry/shared'
+import { AuthStatus, Cookies, IAuthLoginResponse, IAuthLogoutResponse, IAuthSignUpResponse, RequestUser, User } from '@linkerry/shared'
 import { Body, Controller, Post, Response, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { FastifyReply } from 'fastify'
+import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { LocalAuthGuard } from '../../../lib/auth/guards/local-auth.guard'
 import { AuthService } from './auth.service'
 import { ReqUser } from './decorators/req-user.decorator'
@@ -48,7 +49,7 @@ export class AuthController {
 			path: '/',
 		})
 
-		return res.send({ user: userRes, error: undefined })
+		return res.send({ user: userRes })
 	}
 
 	// @UseGuards(JwtCookiesAuthGuard)
@@ -63,6 +64,18 @@ export class AuthController {
 		})
 
 		return res.send({ error: undefined })
+	}
+
+	@UseGuards(JwtCookiesAuthGuard)
+	@Post('email/verify')
+	async verifyEmail(@Body() body: { code: string }, @ReqUser() user: RequestUser) {
+		return this.authService.verifyEmailCode({ code: body.code, userId: user.id })
+	}
+
+	@UseGuards(JwtCookiesAuthGuard)
+	@Post('email/resend')
+	async resendCode(@ReqUser() user: RequestUser) {
+		return this.authService.resendEmailCode({ userId: user.id })
 	}
 
 	// @UseGuards(LocalAuthGuard)

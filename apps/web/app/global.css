@@ -37,7 +37,7 @@
 		--warning: 32 98% 43%;
 		--warning-foreground: 30 90% 94%;
 
-		--max-w-modal: 40rem;
+		--max-w-dialog: 40rem;
 	}
 
 	.dark {

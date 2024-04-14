@@ -1,3 +1,4 @@
+import { RedisModule } from '@liaoliaots/nestjs-redis'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
@@ -10,6 +11,8 @@ import { JwtCookiesStrategy } from '../../../lib/auth/strategies/jwt-cookies.str
 import { JwtWebsocketStrategy } from '../../../lib/auth/strategies/jwt-websocket.strategy'
 import { LocalStrategy } from '../../../lib/auth/strategies/local.strategy'
 import { SubscriptionsModule } from '../../billing/subscriptions/subscriptions.module'
+import { RedisConfigService } from '../../configs/redis-config.service'
+import { EmailModule } from '../../notifications/email/email.module'
 import { ProjectsModule } from '../../projects/projects.module'
 import { UserModel, UserSchema } from '../schemas/user.schema'
 import { UsersModule } from '../users.module'
@@ -24,6 +27,14 @@ import { AuthService } from './auth.service'
 		ConfigModule,
 		ProjectsModule,
 		SubscriptionsModule,
+		EmailModule,
+		ConfigModule,
+		// TODO refactor this to global module
+		RedisModule.forRootAsync({
+			imports: [ConfigModule],
+			inject: [ConfigService],
+			useClass: RedisConfigService,
+		}),
 		JwtModule.registerAsync({
 			imports: [ConfigModule],
 			useFactory: (configService: ConfigService) => {

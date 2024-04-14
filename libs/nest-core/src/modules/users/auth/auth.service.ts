@@ -1,11 +1,27 @@
-import { JWTPrincipalType, JwtWorkerTokenPayload, NotificationStatus, User, UserRole } from '@linkerry/shared'
-import { Injectable, Logger } from '@nestjs/common'
+import { InjectRedis } from '@liaoliaots/nestjs-redis'
+import {
+	CustomError,
+	ErrorCode,
+	Id,
+	JWTPrincipalType,
+	JwtWorkerTokenPayload,
+	NotificationStatus,
+	User,
+	UserRole,
+	assertNotNullOrUndefined,
+} from '@linkerry/shared'
+import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { InjectModel } from '@nestjs/mongoose'
+import dayjs from 'dayjs'
+import { Redis } from 'ioredis'
 import { Model } from 'mongoose'
 import { HashService } from '../../../lib/auth/hash.service'
 import { JWTCustomService } from '../../../lib/auth/jwt-custom.service'
 import { SubscriptionsService } from '../../billing/subscriptions/subscriptions.service'
+import { REDIS_CLIENT_NAMESPACE, REDIS_KEYS } from '../../configs/redis'
+import { EmailService } from '../../notifications/email/email.service'
 import { ProjectsService } from '../../projects/projects.service'
 import { UserDocument, UserModel } from '../schemas/user.schema'
 import { UsersService } from '../users.service'
@@ -13,9 +29,11 @@ import { SignUpDto } from './dto/sign-up.dto'
 
 @Injectable()
 export class AuthService {
+	private readonly EMAIL_CODE_VERIFICATION_EXPIRE_MS
 	private readonly logger = new Logger(AuthService.name)
 
 	constructor(
+		@InjectRedis(REDIS_CLIENT_NAMESPACE.SERVER) private readonly redis: Redis,
 		@InjectModel(UserModel.name) private readonly userModel: Model<UserDocument>,
 		private readonly usersService: UsersService,
 		private readonly jwtCustomService: JWTCustomService,
@@ -23,7 +41,33 @@ export class AuthService {
 		private readonly projectsService: ProjectsService,
 		private readonly jwtService: JwtService,
 		private readonly subscriptionsService: SubscriptionsService,
-	) {}
+		private readonly emailService: EmailService,
+		private readonly configService: ConfigService,
+	) {
+		this.EMAIL_CODE_VERIFICATION_EXPIRE_MS = configService.getOrThrow('EMAIL_CODE_VERIFICATION_EXPIRE_MS')
+	}
+
+	private async _sendVerificationCode({ userId, emailAdsress }: { userId: Id; emailAdsress: string }) {
+		const codeToken = this._generateCodeToken({ length: 6 })
+
+		await this.redis.set(REDIS_KEYS.AUTH.EMAIL_VERIFICATION_CODE({ code: codeToken, userId }), userId)
+		await this.redis.expire(REDIS_KEYS.AUTH.EMAIL_VERIFICATION_CODE({ code: codeToken, userId }), this.EMAIL_CODE_VERIFICATION_EXPIRE_MS / 1000)
+
+		await this.emailService.sendEmail({
+			subject: 'Linkerry - email verification',
+			to: emailAdsress,
+			html: `<h4>Welcome in Linkerry community!</h4><p>To continue, you must verifi your account. Type this:<br><strong style="text-align-center; font-size: 2rem">${codeToken}</strong><br>verification code.<br>Wishing you an amazing adventure with Linkerry!`,
+		})
+	}
+
+	private _generateCodeToken({ length }: { length: number }) {
+		const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+		let token = ''
+		for (let i = 0; i < length; i++) {
+			token += chars[Math.floor(Math.random() * chars.length)]
+		}
+		return token
+	}
 
 	verifyJwt(token: string) {
 		return this.jwtService.decode(token)
@@ -63,6 +107,11 @@ export class AuthService {
 		/* create default subscription */
 		await this.subscriptionsService.createDefault(newProject.id)
 
+		await this._sendVerificationCode({
+			emailAdsress: user.email,
+			userId: user.id,
+		})
+
 		return {
 			user,
 			access_token: this.jwtCustomService.generateToken({
@@ -89,4 +138,54 @@ export class AuthService {
 			}),
 		}
 	}
+
+	async verifyEmailCode({ code, userId }: VerifyEmailCodeParams) {
+		const cachedDataUserId = await this.redis.get(REDIS_KEYS.AUTH.EMAIL_VERIFICATION_CODE({ code, userId }))
+		if (!cachedDataUserId) throw new UnprocessableEntityException(`Invalid Verification code`)
+		if (cachedDataUserId !== userId) throw new UnprocessableEntityException(`Invalid Verification code for user`)
+
+		const user = await this.userModel.findOneAndUpdate(
+			{ _id: userId },
+			{
+				emailVerifiedAtDate: dayjs().toISOString(),
+			},
+			{
+				new: true,
+				projection: {
+					password: 0,
+				},
+			},
+		)
+
+		/* Can be many codes, so delete all */
+		const keysToDelete = await this.redis.keys(REDIS_KEYS.AUTH.EMAIL_VERIFICATION_CODE_WILDCARD({ userId }))
+		await await this.redis.del(keysToDelete)
+
+		return user
+	}
+
+	async resendEmailCode({ userId }: { userId: Id }) {
+		/* check how many codes are in cache for given user */
+		const keysToDelete = await this.redis.keys(REDIS_KEYS.AUTH.EMAIL_VERIFICATION_CODE_WILDCARD({ userId }))
+		if (keysToDelete.length >= 3)
+			throw new CustomError(
+				`We have been send you 3 or more verification codes. Please check your email inbox, also spam. If you will still hava problem with verification, concact with our Team`,
+				ErrorCode.EXCEED_CODES_AMOUNT,
+			)
+
+		const user = await this.usersService.findOne({
+			_id: userId,
+		})
+		assertNotNullOrUndefined(user, 'user')
+
+		await this._sendVerificationCode({
+			emailAdsress: user.email,
+			userId: user.id,
+		})
+	}
+}
+
+export interface VerifyEmailCodeParams {
+	code: string
+	userId: Id
 }

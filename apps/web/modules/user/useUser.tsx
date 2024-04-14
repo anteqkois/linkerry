@@ -1,16 +1,7 @@
 'use client'
-import {
-	AuthStatus,
-	Cookies,
-	IAuthLoginInput,
-	IAuthLoginResponse,
-	IAuthLogoutResponse,
-	IAuthSignUpInput,
-	IAuthSignUpResponse,
-	User,
-} from '@linkerry/shared'
-import { useRouter } from 'next/navigation'
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext } from 'react'
+import { AuthStatus, Cookies, IAuthLoginInput, IAuthLogoutResponse, IAuthSignUpInput, IAuthSignUpResponse, User } from '@linkerry/shared'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react'
 import { useCookie } from '../../shared/hooks/useCookie'
 import { useLocalStorage } from '../../shared/hooks/useLocalStorage'
 import { AuthApi } from './api'
@@ -21,8 +12,11 @@ type ReturnType = {
 	user: User
 	setUser: Dispatch<SetStateAction<User>>
 	signUp: (data: IAuthSignUpInput) => Promise<IAuthSignUpResponse>
-	login: (data: IAuthLoginInput) => Promise<IAuthLoginResponse>
+	login: (data: IAuthLoginInput) => Promise<void>
 	logout: () => Promise<IAuthLogoutResponse>
+	/* emial verification */
+	emialVerificationDialog: boolean
+	setEmialVerificationDialog: Dispatch<SetStateAction<boolean>>
 }
 
 const Context = createContext<ReturnType>({} as ReturnType)
@@ -30,7 +24,9 @@ const Context = createContext<ReturnType>({} as ReturnType)
 export function UserProvider({ children }: PropsWithChildren) {
 	const [authStatus, setAuthStatus] = useCookie<AuthStatus>(Cookies.AUTH_STATUS, AuthStatus.LOADING)
 	const [user, setUser] = useLocalStorage('user-data', {} as User)
+	const [emialVerificationDialog, setEmialVerificationDialog] = useState<boolean>(false)
 	const { push } = useRouter()
+	const { get } = useSearchParams()
 
 	const signUp = useCallback(async (data: IAuthSignUpInput) => {
 		const response = await AuthApi.signUp(data)
@@ -40,15 +36,23 @@ export function UserProvider({ children }: PropsWithChildren) {
 		return response.data
 	}, [])
 
-	const login = useCallback(async (data: IAuthLoginInput) => {
-		const response = await AuthApi.login({
-			email: data.email,
-			password: data.password,
+	const login = useCallback(async (input: IAuthLoginInput) => {
+		const { data } = await AuthApi.login({
+			email: input.email,
+			password: input.password,
 		})
 
-		setUser(response.data.user)
+		setUser(data.user)
 		setAuthStatus(AuthStatus.AUTHENTICATED)
-		return response.data
+
+		if (!data.user.emailVerifiedAtDate) {
+			return push('/app/dashboard')
+		}
+
+		const from = get('from')
+		if (from) return push(from)
+
+		return push('/app/dashboard')
 	}, [])
 
 	const logout = useCallback(async () => {
@@ -72,6 +76,8 @@ export function UserProvider({ children }: PropsWithChildren) {
 				signUp,
 				login,
 				logout,
+				emialVerificationDialog,
+				setEmialVerificationDialog,
 			}}
 		>
 			{children}

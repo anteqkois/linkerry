@@ -42,7 +42,9 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem>Dashboard</DropdownMenuItem>
+					<Link href="/app/dashboard" prefetch={false}>
+						<DropdownMenuItem>Dashboard</DropdownMenuItem>
+					</Link>
 					<Link href="/app/subscriptions" prefetch={false}>
 						<DropdownMenuItem>Subscriptions</DropdownMenuItem>
 					</Link>

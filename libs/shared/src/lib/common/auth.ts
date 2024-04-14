@@ -1,4 +1,5 @@
 import { Language } from '../modules/language'
+import { User } from '../modules/user'
 import { Id } from './database'
 
 export interface IAuthSignUpInput {
@@ -9,6 +10,7 @@ export interface IAuthSignUpInput {
 	consents: Record<string, boolean>
 }
 
+// TODO refactor this to not use error field, insted server should throw error
 export interface IAuthSignUpResponse {
 	user: any
 	error: string | undefined
@@ -20,8 +22,7 @@ export interface IAuthLoginInput {
 }
 
 export interface IAuthLoginResponse {
-	user: any
-	error: string | undefined
+	user: User
 }
 
 export interface IAuthLogoutResponse {

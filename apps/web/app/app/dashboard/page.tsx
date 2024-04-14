@@ -1,7 +1,10 @@
+import { EmailVerification } from './components/EmailVerification'
+
 export default function Page() {
-  return (
-    <div className="container grid h-screen w-screen flex-col items-center justify-center lg:max-w-none lg:px-0">
-      Dashboard
-    </div>
-  )
+	return (
+		<div className="container grid h-screen w-screen flex-col items-center justify-center lg:max-w-none lg:px-0">
+			Dashboard
+			<EmailVerification />
+		</div>
+	)
 }

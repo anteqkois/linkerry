@@ -74,7 +74,7 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 		},
 	})
 
-	/* OAuth2 modal window */
+	/* OAuth2 dialog window */
 	const [currentOpenedWindow, setCurrentOpenedWindow] = useState<Window | null>()
 	const constructRedirectUrl = useCallback(
 		(pckeChallenge: string) => {
