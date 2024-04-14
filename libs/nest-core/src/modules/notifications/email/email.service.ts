@@ -1,17 +1,20 @@
 import { MailerService } from '@nestjs-modules/mailer'
 import { Injectable } from '@nestjs/common'
+import { render } from '@react-email/render'
 
 @Injectable()
 export class EmailService {
 	constructor(private readonly mailerService: MailerService) {}
 
-	async sendEmail({ subject, to, html, text }: SendEmialProps) {
+	async sendEmail({ subject, to, reactEmailComponent, props, text }: SendEmialProps) {
+		const emailHtml = reactEmailComponent ? render(reactEmailComponent(props ?? {})) : undefined
+
 		await this.mailerService.sendMail({
 			to,
 			from: '"Welcome to the Linkerry" <linkerry@gmail.com>',
 			subject,
 			text,
-			html,
+			html: emailHtml,
 		})
 	}
 }
@@ -20,5 +23,8 @@ export interface SendEmialProps {
 	to: string
 	subject: string
 	text?: string
-	html?: string
+	// TODO fix type for react to support prop types
+	// reactEmailComponent?: ReactElement
+	reactEmailComponent?: any
+	props?: object
 }

@@ -20,13 +20,14 @@
 			"@linkerry/coingecko": ["libs/connectors/coingecko/src/index.ts"],
 			"@linkerry/connectors-common": ["libs/connectors/common/src/index.ts"],
 			"@linkerry/connectors-framework": ["libs/connectors/framework/src/index.ts"],
-			"@linkerry/telegram-bot": ["libs/connectors/telegram-bot/src/index.ts"],
 			"@linkerry/engine": ["libs/engine/src/index.ts"],
 			"@linkerry/google-sheets": ["libs/connectors/google-sheets/src/index.ts"],
 			"@linkerry/linkerry-schedule": ["libs/connectors/schedule/src/index.ts"],
 			"@linkerry/nest-core": ["libs/nest-core/src/index.ts"],
 			"@linkerry/props": ["libs/connectors/props/src/index.ts"],
+			"@linkerry/react-email": ["libs/react-email/index.ts"],
 			"@linkerry/shared": ["libs/shared/src/index.ts"],
+			"@linkerry/telegram-bot": ["libs/connectors/telegram-bot/src/index.ts"],
 			"@linkerry/tools": ["tools/index.ts"],
 			"@linkerry/ui-components/*": ["libs/ui-components/src/*"]
 		}

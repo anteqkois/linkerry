@@ -1,0 +1,8 @@
+{
+	"name": "@linkerry/react-email",
+	"version": "0.0.1",
+	"type": "commonjs",
+	"scripts": {
+		"dev": "DEV_EMAIL=true email dev"
+	}
+}

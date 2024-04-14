@@ -1,0 +1,32 @@
+{
+	"name": "react-email",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/react-email/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nx/js:tsc",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/libs/react-email",
+				"main": "libs/react-email/src/index.ts",
+				"tsConfig": "libs/react-email/tsconfig.lib.json",
+				"assets": ["libs/react-email/*.md"]
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["libs/react-email/**/*.ts"]
+			}
+		},
+		"serve": {
+			"executor": "nx:run-script",
+			"options": {
+				"script": "dev"
+			}
+		}
+	},
+	"tags": []
+}

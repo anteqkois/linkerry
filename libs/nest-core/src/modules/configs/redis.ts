@@ -1,4 +1,4 @@
-import { Id } from "@linkerry/shared"
+import { Id } from '@linkerry/shared';
 
 export const REDIS_CLIENT_NAMESPACE = {
 	PUBLISHER: 'FLOW_RUN_PUBLISHER',
@@ -8,7 +8,7 @@ export const REDIS_CLIENT_NAMESPACE = {
 
 export const REDIS_KEYS = {
 	AUTH: {
-		EMAIL_VERIFICATION_CODE: ({ code, userId }: { code: string, userId: Id }) => `user/${userId}/auth/email-code/${code}`,
-		EMAIL_VERIFICATION_CODE_WILDCARD: ({ userId }: {userId: Id }) => `user/${userId}/auth/email-code/*`,
+		EMAIL_VERIFICATION_CODE: ({ code, userId }: { code: string; userId: Id }) => `linkerry/user/${userId}/auth/email-code/${code}`,
+		EMAIL_VERIFICATION_CODE_WILDCARD: ({ userId }: { userId: Id }) => `linkerry/user/${userId}/auth/email-code/*`,
 	},
 }

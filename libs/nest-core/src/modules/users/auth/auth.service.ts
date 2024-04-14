@@ -1,4 +1,5 @@
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
+import { VerificationEmail } from '@linkerry/react-email'
 import {
 	CustomError,
 	ErrorCode,
@@ -56,7 +57,8 @@ export class AuthService {
 		await this.emailService.sendEmail({
 			subject: 'Linkerry - email verification',
 			to: emailAdsress,
-			html: `<h4>Welcome in Linkerry community!</h4><p>To continue, you must verifi your account. Type this:<br><strong style="text-align-center; font-size: 2rem">${codeToken}</strong><br>verification code.<br>Wishing you an amazing adventure with Linkerry!`,
+			reactEmailComponent: VerificationEmail,
+			props: { verificationCode: codeToken },
 		})
 	}
 
