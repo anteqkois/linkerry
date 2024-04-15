@@ -21,6 +21,6 @@ export class FlowRunsController {
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get()
 	getMany(@ReqJwtUser() user: RequestUser, @Query() query: FlowRunsGetManyQuery) {
-		return this.flowRunsService.findMany(query)
+		return this.flowRunsService.findMany(query, user.projectId)
 	}
 }

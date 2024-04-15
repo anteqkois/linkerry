@@ -6,5 +6,6 @@ export interface FlowRunWSInput {
 }
 
 export interface FlowRunsGetManyQuery {
-	flowId: Id
+	flowId?: Id
+	fromDate?: string
 }

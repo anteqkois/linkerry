@@ -1,4 +1,4 @@
-import { FlowStatus, Id, PlanProductConfiguration } from '@linkerry/shared'
+import { FlowStatus, Id, UsageResponse } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
@@ -14,9 +14,10 @@ export class UsageService {
 		private readonly tasksUsageService: TasksUsageService,
 	) {}
 
-	async currentPlanUsage(projectId: Id): Promise<Partial<PlanProductConfiguration>> {
+	async currentPlanUsage(projectId: Id): Promise<UsageResponse> {
 		// TODO retrive app connections
 		const tasks = await this.tasksUsageService.getCurrentPeriodUsage(projectId)
+		const tasksPastSevenDays = await this.tasksUsageService.getPastSevenDaysUsage(projectId)
 		const projectAppConnections = await this.appConnectionsModel.count({
 			projectId,
 		})
@@ -32,6 +33,7 @@ export class UsageService {
 
 		return {
 			tasks,
+			tasksPastSevenDays,
 			connections: projectAppConnections,
 			projectMembers: 1,
 			flows: projectFlows,

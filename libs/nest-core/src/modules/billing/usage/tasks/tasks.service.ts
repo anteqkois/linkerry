@@ -23,12 +23,11 @@ export class TasksUsageService {
 
 		const planProduct = activeSubscriptions[0].products[0]
 		const currentUsage = await this.getCurrentPeriodUsage(projectId)
-		if (currentUsage >= planProduct.config.tasks)
-			throw new QuotaError('tasks')
+		if (currentUsage >= planProduct.config.tasks) throw new QuotaError('tasks')
 	}
 
 	async getCurrentPeriodUsage(projectId: Id) {
-		const monthStart = dayjs().set('date', 1).set('hours', 0).set('minutes', 0).set('seconds', 0).set('milliseconds', 0)
+		const monthStart = dayjs().set('date', 1).startOf('day')
 
 		const usageTasks = (await this.tasksUsageModel.aggregate([
 			{
@@ -48,6 +47,27 @@ export class TasksUsageService {
 		])) as [{ _id: null; tasks: number }] | []
 
 		return usageTasks[0]?.tasks ?? 0
+	}
+
+	async getPastSevenDaysUsage(projectId: Id) {
+		const monthStart = dayjs().subtract(7, 'days').startOf('day')
+
+		const sevenDaysUsage = await this.tasksUsageModel.find(
+			{
+				projectId: new mongoose.Types.ObjectId(projectId),
+				createdAt: {
+					$gte: monthStart.toDate(),
+				},
+			},
+			{},
+			{
+				sort: {
+					createdAt: -1,
+				},
+			},
+		)
+
+		return sevenDaysUsage
 	}
 
 	async increaseTasks({ projectId, tasks }: { projectId: Id; tasks: number }) {

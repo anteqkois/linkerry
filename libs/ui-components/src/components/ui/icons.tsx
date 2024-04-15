@@ -228,4 +228,53 @@ export const Icons = {
 			<path d="M21 12a9 9 0 1 1-6.219-8.56" />
 		</svg>
 	),
+	Upgarde: ({ ...props }: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			{...defaultProps(props)}
+		>
+			<path d="m3 8 4-4 4 4" />
+			<path d="M7 4v16" />
+			<path d="M11 12h10" />
+			<path d="M11 16h7" />
+			<path d="M11 20h4" />
+		</svg>
+	),
+	BankCard: ({ ...props }: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			{...defaultProps(props)}
+		>
+			<rect width="20" height="14" x="2" y="5" rx="2" />
+			<path d="M2 10h20" />
+		</svg>
+	),
+	Analytics: ({ ...props }: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			{...defaultProps(props)}
+		>
+			<path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+		</svg>
+	),
 }

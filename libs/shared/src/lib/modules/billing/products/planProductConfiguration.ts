@@ -1,4 +1,5 @@
-import { ErrorCodeQuota } from "../../../common/errorCodes"
+import { ErrorCodeQuota } from '../../../common/errorCodes'
+import { TasksUsage } from '../usage'
 
 export interface PlanProductConfiguration {
 	minimumPollingInterval: number
@@ -21,12 +22,15 @@ export interface ProductConfigItem {
 	description: string
 }
 
-
 export interface PlanConfigurationDetailsValue {
 	displayName: string
 	errorCode: ErrorCodeQuota
 	name: string
 	// description:''
+}
+
+export interface UsageResponse extends Partial<PlanProductConfiguration> {
+	tasksPastSevenDays: TasksUsage[]
 }
 
 export type PlanConfigurationDetails = Record<keyof PlanProductConfiguration, PlanConfigurationDetailsValue>

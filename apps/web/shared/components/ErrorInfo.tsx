@@ -5,6 +5,7 @@ import { HTMLAttributes, useEffect, useState } from 'react'
 
 export interface ErrorInfoProps extends HTMLAttributes<HTMLElement> {
 	message?: string
+	/* It can be CustomError or Error from ReactQuery - retrived uisng isCustomHttpExceptionAxios*/
 	errorObject?: unknown
 }
 

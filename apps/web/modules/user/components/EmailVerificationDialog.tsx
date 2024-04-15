@@ -122,7 +122,7 @@ export const EmailVerificationDialog = () => {
 									<FormDescription>
 										<span className="block">Please enter the code you receive in email.</span>
 										<span className="block">
-											Didn't receive email ?{' '}
+											Didn&apos;t receive email ?{' '}
 											<span className="hover:text-brand underline underline-offset-4 hover:cursor-pointer" onClick={onResendCode}>
 												Send code again.
 											</span>

@@ -19,7 +19,7 @@ import {
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
-import { Model } from 'mongoose'
+import { FilterQuery, Model } from 'mongoose'
 import { FilesService } from '../../files/files.service'
 import { QueuesService } from '../../workers/flow-worker/queues/queues.service'
 import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../workers/flow-worker/queues/types'
@@ -183,10 +183,17 @@ export class FlowRunsService {
 		}
 	}
 
-	async findMany(filter: FlowRunsGetManyQuery) {
-		return this.flowRunModel.find({
-			flowId: filter.flowId,
-		})
+	async findMany(query: FlowRunsGetManyQuery, projectId: Id) {
+		const filter: FilterQuery<FlowRun> = {}
+
+		if (query.flowId) filter.flowId = query.flowId
+
+		if (query.fromDate)
+			filter.createdAt = {
+				$gte: query.fromDate,
+			}
+
+		return this.flowRunModel.find(filter)
 	}
 
 	async getFlowRunOrCreate(params: GetOrCreateParams): Promise<FlowRunDocument> {
