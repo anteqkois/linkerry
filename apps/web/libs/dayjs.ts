@@ -9,9 +9,13 @@ import { useEffect, useState } from 'react'
 dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
 
+const currentDate = dayjs()
+const weekStart = currentDate.subtract(currentDate.day() + 6, 'days').startOf('day')
+
 export const useDayjs = () => {
 	return {
 		dayjs,
+		weekStart,
 	}
 }
 

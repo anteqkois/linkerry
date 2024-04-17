@@ -14,11 +14,11 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
 	return (
-		<div className="min-h-screen bg-background-page">
+		<div className="">
 			<ReactQueryProvider>
 				<UserProvider>
 					<ReachLimitDialogProvider>
-						<div className="fixed top-0 z-40 flex justify-between items-center p-1 py-2 w-full border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+						<div className="fixed h-14 top-0 z-40 flex justify-between items-center p-1 py-2 w-full border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 							<div className="flex items-center gap-1">
 								<MyAccountMenu />
 								<MobileMenu />

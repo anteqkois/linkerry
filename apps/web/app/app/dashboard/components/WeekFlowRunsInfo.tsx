@@ -2,18 +2,16 @@
 
 import { FlowRunStatus } from '@linkerry/shared'
 import { Card, CardContent, CardHeader, CardTitle, Icons } from '@linkerry/ui-components/server'
-import dayjs from 'dayjs'
 import { HTMLAttributes, useMemo } from 'react'
+import { useDayjs } from '../../../../libs/dayjs'
 import { useClientQuery } from '../../../../libs/react-query'
 import { flowRunQueryConfig } from '../../../../modules/flows/flow-runs/query-config'
 import { ErrorInfo, Spinner } from '../../../../shared/components'
 
-export interface TodayFlowRunsInfoProps extends HTMLAttributes<HTMLElement> {}
+export interface WeekFlowRunsInfoProps extends HTMLAttributes<HTMLElement> {}
 
-const currentDate = dayjs()
-const weekStart = currentDate.subtract(currentDate.day() + 6, 'days').startOf('day')
-
-export const TodayFlowRunsInfo = () => {
+export const WeekFlowRunsInfo = () => {
+	const { weekStart } = useDayjs()
 	const { data, status, error } = useClientQuery(flowRunQueryConfig.getMany({ fromDate: weekStart.toISOString() }))
 
 	const flowRunsStatistic = useMemo(() => {

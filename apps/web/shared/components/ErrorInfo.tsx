@@ -9,7 +9,7 @@ export interface ErrorInfoProps extends HTMLAttributes<HTMLElement> {
 	errorObject?: unknown
 }
 
-export const ErrorInfo = ({ message, errorObject, children, className }: ErrorInfoProps) => {
+export const ErrorInfo = ({ message, errorObject, children, className, ...props }: ErrorInfoProps) => {
 	const [errorMessage, setErrorMessage] = useState('Something get wrong, try again later')
 
 	// todo save all error events to db with customer id
@@ -20,7 +20,7 @@ export const ErrorInfo = ({ message, errorObject, children, className }: ErrorIn
 	}, [])
 
 	return (
-		<div className={className}>
+		<div className={className} {...props}>
 			<Small className="text-negative flex-center">{errorMessage}</Small>
 			<div>{children}</div>
 		</div>
