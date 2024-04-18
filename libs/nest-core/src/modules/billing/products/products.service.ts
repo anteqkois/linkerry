@@ -28,7 +28,7 @@ export class ProductsService {
 				productId: product.id,
 			})
 			items.push({
-				...product,
+				...product.toObject(),
 				prices: prices
 			})
 		}

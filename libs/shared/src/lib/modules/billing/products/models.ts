@@ -1,4 +1,4 @@
-import { Id } from '../../../common'
+import { DatabaseTimestamp, Id } from '../../../common'
 import { SubscriptionPeriod } from '../subscription'
 import { PlanProductConfiguration } from './planProductConfiguration'
 export * from './planProductConfiguration'
@@ -12,7 +12,7 @@ export interface StripePrice {
 	id: string
 }
 
-export interface Price {
+export interface Price extends DatabaseTimestamp{
 	_id: string
 	price: number
 	period: SubscriptionPeriod
@@ -28,9 +28,10 @@ export interface StripeProduct {
 	id: string
 }
 
-export interface Product {
+export interface Product extends DatabaseTimestamp  {
 	_id: Id
 	name: string
+	shortDescription: string
 	type: ProductType
 	config: PlanProductConfiguration
 	priority: number

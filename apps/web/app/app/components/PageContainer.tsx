@@ -21,7 +21,7 @@ const buttonVariants = cva('px-2 mt-16 w-screen lg:max-w-none', {
 	defaultVariants: {
 		variant: 'fromTop',
 		padding: 'default',
-		maxScreen: true,
+		maxScreen: false,
 	},
 })
 

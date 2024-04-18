@@ -1,4 +1,4 @@
-import { Id } from '../../../common'
+import { DatabaseTimestamp, Id } from '../../../common'
 import { Product } from '../products'
 
 export enum SubscriptionPeriod {
@@ -21,7 +21,7 @@ export enum PaymentGateway {
 	STRIPE = 'STRIPE',
 }
 
-export interface SubscriptionCommonFields {
+export interface SubscriptionCommonFields extends DatabaseTimestamp {
 	_id: Id
 	projectId: Id
 	products: Id[]

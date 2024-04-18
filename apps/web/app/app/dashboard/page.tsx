@@ -10,7 +10,7 @@ import { WeekFlowRunsInfo } from './components/WeekFlowRunsInfo'
 
 export default function Page() {
 	return (
-		<PageContainer maxScreen={false}>
+		<PageContainer maxScreen={true}>
 			<div className="flex flex-col min-h-screen-no-nav">
 				<div className="sm:flex justify-between mb-3 items-center flex-wrap">
 					<H5 className="mb-2 pl-1">Dashboard</H5>

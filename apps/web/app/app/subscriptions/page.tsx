@@ -1,7 +1,6 @@
 'use client'
 
 import { Price, Product } from '@linkerry/shared'
-import { H4 } from '@linkerry/ui-components/server'
 import { useCallback } from 'react'
 import { Plans } from '../../../modules/billing/components/Plans'
 import { useSubscriptions } from '../../../modules/billing/subscriptions/useSubscriptions'
@@ -21,15 +20,15 @@ export default function Page() {
 
 	return (
 		<PageContainer padding={'large'}>
-			<Plans onSelectPlan={onSelectPlanConfiguration} />
+			<Plans onSelectPlan={onSelectPlanConfiguration} className='mb-4'/>
 
-			<H4 className="mb-2 pl-1">Your Subscription</H4>
+			{/* <H4 className="my-2 text-center pl-1">Your Subscription</H4> */}
 			{subscriptionsStatus === 'error' ? (
 				<ErrorInfo errorObject={subscriptionsError} />
 			) : subscriptionsStatus === 'pending' ? (
 				<Spinner />
 			) : currentSubscription ? (
-				<div key={currentSubscription._id} className="grid grid-cols-2 gap-2">
+				<div key={currentSubscription._id} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
 					<SubscriptionCard subscription={currentSubscription} />
 					<UsageCard usage={usage} subscription={currentSubscription} />
 				</div>

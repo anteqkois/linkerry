@@ -4,7 +4,7 @@ import { TasksUsage } from '../usage'
 export interface PlanProductConfiguration {
 	minimumPollingInterval: number
 	connections: number
-	connectors: number
+	connectors: string
 	tasks: number
 	projectMembers: number
 	flowSteps: number

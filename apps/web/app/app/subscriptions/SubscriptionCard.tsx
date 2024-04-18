@@ -45,7 +45,7 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
 					<div key={product._id}>
 						<div className="my-2" key={product._id}>
 							<H4 className="mb-2">
-								Product: <span className="font-normal">{product.name}</span>
+								Current Plan: <span className="font-normal">{product.name}</span>
 							</H4>
 							{(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => (
 								<ConfigurationItem key={name} label={value.displayName} value={product.config[name]} />

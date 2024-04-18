@@ -12,6 +12,9 @@ export class ProductModel<T> extends TimestampDatabaseModel implements Product {
 	@Prop({ required: true, type: String })
 	name: string
 
+	@Prop({ required: true, type: String })
+	shortDescription: string
+
 	@Prop({ required: true, type: String, enum: ProductType })
 	type: ProductType
 
