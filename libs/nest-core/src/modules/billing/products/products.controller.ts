@@ -1,4 +1,4 @@
-import { Id, Product } from '@linkerry/shared'
+import { FindManyProductsQuery, Id, Product } from '@linkerry/shared'
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
 import { AdminGuard } from '../../../lib/auth/guards/admin.guard'
 import { ProductsService } from './products.service'
@@ -14,8 +14,8 @@ export class ProductsController {
 	}
 
 	@Get()
-	findMany() {
-		return this.productsService.findMany()
+	findMany(@Query() query: FindManyProductsQuery) {
+		return this.productsService.findMany(query)
 	}
 
 	@Get(':id')

@@ -2,7 +2,7 @@ import { Id, StepFile } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { TimestampDatabaseModel } from '../../../../lib/mongodb'
-import { ProjectsModel } from '../../../projects/schemas/projects.schema'
+import { ProjectModel } from '../../../projects/schemas/projects.schema'
 import { FlowModel } from '../../flows/schemas/flow.schema'
 
 export type StepFileDocument = mongoose.HydratedDocument<StepFileModel>
@@ -15,7 +15,7 @@ export class StepFileModel extends TimestampDatabaseModel implements Omit<StepFi
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })
 	flowId: Id
 
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
+	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
 	projectId: Id
 
 	@Prop({ required: true, type: String })

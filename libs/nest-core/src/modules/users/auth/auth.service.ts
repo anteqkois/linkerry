@@ -102,7 +102,7 @@ export class AuthService {
 		const newProject = await this.projectsService.create({
 			displayName: `${user.name}'s project`,
 			notifyStatus: NotificationStatus.ALWAYS,
-			ownerId: user.id,
+			owner: user.id,
 			users: [user.id],
 		})
 

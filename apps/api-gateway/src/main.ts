@@ -21,6 +21,9 @@ async function bootstrap() {
 				level: 'error',
 			},
 		}),
+		{
+			rawBody: true,
+		},
 	)
 
 	const configService = app.get(ConfigService)

@@ -1,4 +1,4 @@
-import { Price, SubscriptionPeriod } from '@linkerry/shared'
+import { Price, StripePrice, SubscriptionPeriod } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { TimestampDatabaseModel } from '../../../../lib/mongodb'
@@ -21,8 +21,8 @@ export class PriceModel<T> extends TimestampDatabaseModel implements Price {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'products' })
 	productId: string
 
-	@Prop({ required: true, type: String })
-	stripeId: string
+	@Prop({ required: true, type: Object })
+	stripe: StripePrice
 
 	@Prop({ required: true, type: String })
 	currencyCode: string

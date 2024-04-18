@@ -1,4 +1,4 @@
-import { PlanProductConfiguration, Product, ProductType } from '@linkerry/shared'
+import { PlanProductConfiguration, Product, ProductType, StripeProduct } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { TimestampDatabaseModel } from '../../../lib/mongodb'
@@ -24,8 +24,8 @@ export class ProductModel<T> extends TimestampDatabaseModel implements Product {
 	@Prop({ required: true, type: Boolean })
 	visible: boolean
 
-	@Prop({ required: true, type: String })
-	stripeProductId: string
+	@Prop({ required: true, type: Object })
+	stripe: StripeProduct
 }
 
 export const ProductSchema = SchemaFactory.createForClass(ProductModel)

@@ -1,6 +1,9 @@
 'use client'
 
+import { Price, Product } from '@linkerry/shared'
 import { H4 } from '@linkerry/ui-components/server'
+import { useCallback } from 'react'
+import { Plans } from '../../../modules/billing/components/Plans'
 import { useSubscriptions } from '../../../modules/billing/subscriptions/useSubscriptions'
 import { useUsage } from '../../../modules/billing/usage/useUsage'
 import { ErrorInfo, Spinner } from '../../../shared/components'
@@ -12,8 +15,14 @@ export default function Page() {
 	const { currentSubscription, subscriptionsError, subscriptionsStatus } = useSubscriptions()
 	const { usage } = useUsage()
 
+	const onSelectPlanConfiguration = useCallback(({ price, productPlan }: { productPlan: Product; price: Price }) => {
+		console.log(price, productPlan)
+	}, [])
+
 	return (
 		<PageContainer padding={'large'}>
+			<Plans onSelectPlan={onSelectPlanConfiguration} />
+
 			<H4 className="mb-2 pl-1">Your Subscription</H4>
 			{subscriptionsStatus === 'error' ? (
 				<ErrorInfo errorObject={subscriptionsError} />

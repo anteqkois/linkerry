@@ -2,7 +2,7 @@ import { AppConnectionEncrypted, AppConnectionStatus, AppConnectionType, Encrypt
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { TimestampDatabaseModel } from '../../../lib/mongodb'
-import { ProjectsModel } from '../../projects/schemas/projects.schema'
+import { ProjectModel } from '../../projects/schemas/projects.schema'
 
 export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncrypted>
 
@@ -10,7 +10,7 @@ export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncr
 export class AppConnectionsModel extends TimestampDatabaseModel implements AppConnectionEncrypted {
 	_id: string
 
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
+	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
 	projectId: Id
 
 	@Prop({ required: true, type: String })

@@ -3,6 +3,7 @@
 // import { Static, Type } from '@sinclair/typebox'
 
 import { DatabaseTimestamp, Id } from '../../common'
+import { User } from '../user'
 
 export enum NotificationStatus {
 	NEVER = 'NEVER',
@@ -15,11 +16,16 @@ export enum NotificationStatus {
 // }
 
 export interface Project extends DatabaseTimestamp {
-	ownerId: Id
+	_id: Id
+	owner: Id
 	users: Id[]
 	displayName: string
 	notifyStatus: NotificationStatus
 	// type: ProjectType,
 	// platformId: Id,
 	// externalId: string,
+}
+
+export interface ProjectOwnerPopulated extends Omit<Project, 'owner'> {
+	owner: User
 }

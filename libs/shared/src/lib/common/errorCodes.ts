@@ -14,6 +14,10 @@ export enum ErrorCodeQuota {
 	QUOTA_EXCEEDED_TRIGGERS_AMOUNT = 'QUOTA_EXCEEDED_TRIGGERS_AMOUNT',
 }
 
+export enum ErrorCodePayments {
+	INVALID_PRODUCT = 'INVALID_PRODUCT',
+}
+
 enum ErrorCodeDefault {
 	INVALID_TYPE = 'INVALID_TYPE',
 	APP_CONNECTION_NOT_FOUND = 'APP_CONNECTION_NOT_FOUND',
@@ -65,5 +69,5 @@ enum ErrorCodeDefault {
 }
 
 /* Merge Error enums */
-export const ErrorCode = { ...ErrorCodeDefault, ...ErrorCodeQuota }
+export const ErrorCode = { ...ErrorCodeDefault, ...ErrorCodeQuota, ...ErrorCodePayments }
 export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode]

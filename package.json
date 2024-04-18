@@ -13,7 +13,8 @@
 		"nx-dev": "npx nx run-many -t serve -p api-gateway web flow-executor",
 		"dev": "concurrently -p \"[{name}]\" -n \"api-gateway,web\" -c \"bgBlue.bold,bgGreen.bold,bgCyan.bold\" \"npm:api-gateway\" \"npm:web\"",
 		"registry": "sleep 3 && make publish-connectors & npx nx local-registry",
-		"ngrok": "ngrok http --domain=fairly-winning-chamois.ngrok-free.app 3001"
+		"ngrok": "ngrok http --domain=fairly-winning-chamois.ngrok-free.app 3001",
+		"stripe": "stripe listen --forward-to localhost:3001/api/v1/stripe/webhook"
 	},
 	"private": true,
 	"devDependencies": {
@@ -83,6 +84,7 @@
 		"@fastify/basic-auth": "^5.1.1",
 		"@fastify/cookie": "^8.3.0",
 		"@fastify/multipart": "^8.2.0",
+		"@golevelup/nestjs-stripe": "^0.7.0",
 		"@hookform/resolvers": "^3.1.1",
 		"@liaoliaots/nestjs-redis": "^9.0.5",
 		"@nestjs-modules/mailer": "^1.11.2",
@@ -173,6 +175,7 @@
 		"semver": "^7.5.4",
 		"socket.io": "^4.7.4",
 		"socket.io-client": "^4.7.4",
+		"stripe": "^15.2.0",
 		"tailwind": "^4.0.0",
 		"tailwind-merge": "^1.14.0",
 		"tailwindcss-animate": "^1.0.6",

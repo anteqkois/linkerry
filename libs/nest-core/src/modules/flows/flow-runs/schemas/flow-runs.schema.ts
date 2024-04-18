@@ -2,7 +2,7 @@ import { Flow, FlowRun, FlowRunStatus, PauseMetadata, Project, RunEnvironment, R
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
 import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../../lib/mongodb'
-import { ProjectsModel } from '../../../projects/schemas/projects.schema'
+import { ProjectModel } from '../../../projects/schemas/projects.schema'
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema'
 import { FlowModel } from '../../flows/schemas/flow.schema'
 
@@ -11,7 +11,7 @@ export type FlowRunWithStepsDocument<T extends keyof FlowRun = never> = mongoose
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow_runs' })
 export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<FlowRun, '_id' | 'projectId' | 'flowId' | 'logsFileId' | 'steps'> {
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectsModel.name })
+	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
 	projectId: IdObjectOrPopulated<T, 'projectId', Project>
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })

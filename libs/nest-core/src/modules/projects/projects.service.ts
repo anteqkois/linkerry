@@ -2,11 +2,11 @@ import { DatabseModelInput, Id, Project } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ProjectsModel } from './schemas/projects.schema'
+import { ProjectModel } from './schemas/projects.schema'
 
 @Injectable()
 export class ProjectsService {
-	constructor(@InjectModel(ProjectsModel.name) private readonly projectsModel: Model<ProjectsModel>) {
+	constructor(@InjectModel(ProjectModel.name) private readonly projectsModel: Model<ProjectModel>) {
 		//
 	}
 
