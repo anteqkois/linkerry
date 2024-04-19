@@ -32,6 +32,7 @@ import {
 	QuestionMarkCircledIcon,
 	QuestionMarkIcon,
 	ReaderIcon,
+	RocketIcon,
 	Share2Icon,
 	StarFilledIcon,
 	StopIcon,
@@ -70,6 +71,7 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	Rocket: (props: RadixIconProps) => <RocketIcon {...defaultRadixProps(props)} />,
 	Info: (props: RadixIconProps) => <InfoCircledIcon {...defaultRadixProps(props)} />,
 	FullScreen: (props: RadixIconProps) => <EnterFullScreenIcon {...defaultRadixProps(props)} />,
 	Stop: (props: RadixIconProps) => <StopIcon {...defaultRadixProps(props)} />,

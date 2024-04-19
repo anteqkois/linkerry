@@ -19,10 +19,7 @@ export default function Page() {
 	}, [])
 
 	return (
-		<PageContainer padding={'large'}>
-			<Plans onSelectPlan={onSelectPlanConfiguration} className='mb-4'/>
-
-			{/* <H4 className="my-2 text-center pl-1">Your Subscription</H4> */}
+		<PageContainer padding={'large'} className="space-y-3">
 			{subscriptionsStatus === 'error' ? (
 				<ErrorInfo errorObject={subscriptionsError} />
 			) : subscriptionsStatus === 'pending' ? (
@@ -35,18 +32,7 @@ export default function Page() {
 			) : (
 				<ErrorInfo message="Can not retrive subscription" />
 			)}
-			{/* {subscriptionsStatus === 'pending' ? (
-				<Spinner />
-			) : subscriptionsStatus === 'error' ? (
-				<ErrorInfo errorObject={subscriptionsError} />
-			) : (
-				subscriptions?.map((subscription) => (
-					<div key={subscription._id} className="grid grid-cols-2 gap-2">
-						<SubscriptionCard subscription={subscription} />
-						<UsageCard usage={usage} subscription={subscription} />
-					</div>
-				))
-			)} */}
+			<Plans onSelectPlan={onSelectPlanConfiguration} />
 		</PageContainer>
 	)
 }

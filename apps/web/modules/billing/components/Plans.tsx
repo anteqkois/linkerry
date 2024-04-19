@@ -1,6 +1,6 @@
-import { PlanProductConfiguration, Price, Product, ProductType, ProductWithPrices, SubscriptionPeriod } from '@linkerry/shared'
+import { PlanName, PlanProductConfiguration, Price, Product, ProductType, ProductWithPrices, SubscriptionPeriod } from '@linkerry/shared'
 import { cn } from '@linkerry/ui-components/utils'
-import { HTMLAttributes, useCallback } from 'react'
+import { HTMLAttributes, ReactNode, useCallback } from 'react'
 import { ErrorInfo, Spinner } from '../../../shared/components'
 import { useProducts } from '../products/useProducts'
 import { PlanCard, PlanCardProps } from './PlanCard'
@@ -20,31 +20,25 @@ export const Plans = ({ onSelectPlan, className }: PlansProps) => {
 	if (plansStatus === 'error') return <ErrorInfo errorObject={plansError} />
 
 	return (
-		<div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3', className)}>
+		<div className={cn('pt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3', className)}>
 			{plans
 				?.filter((plan) => plan.visible)
 				?.map((plan) => {
-					const config = plansConfig[plan.name]
-
+					const config = plansConfig[plan.name as PlanName]
 					return (
-						<PlanCard
-							key={plan.name}
-							price={plan.prices[0]}
-							product={plan}
-							buttonVariant={config.buttonVariant}
-							onSelectPlan={onSelectPlan}
-							popular={config.popular}
-						/>
+						<PlanCard key={plan.name} price={plan.prices[0]} product={plan} config={config} onSelectPlan={onSelectPlan}>
+							{config.children}
+						</PlanCard>
 					)
 				})}
 			<PlanCard
 				key={enterPrisePlan.name}
 				price={enterPrisePlan.prices[0]}
 				product={enterPrisePlan}
-				buttonVariant={'default'}
+				config={plansConfig.Enterprise}
 				onSelectPlan={onSelectEnterPrise}
-				priceSlot={<p className="text-center font-medium text-3xl sm:text-2xl lg:text-xl lg:leading-10 xl:text-3xl ">Contact for pricing</p>}
-			/>
+				priceSlot={<p className="text-center font-medium text-3xl sm:text-2xl lg:text-xl lg:leading-10 xl:text-2xl">Contact for pricing</p>}
+			></PlanCard>
 		</div>
 	)
 }
@@ -94,24 +88,70 @@ const enterPrisePlan: ProductWithPrices = {
 	],
 }
 
-const plansConfig: Record<
-	string,
-	{
-		buttonVariant: PlanCardProps['buttonVariant']
-		popular?: PlanCardProps['popular']
-	}
-> = {
+const plansConfig: Record<PlanName, PlanCardProps['config'] & { children?: ReactNode }> = {
 	Free: {
 		buttonVariant: 'outline',
+		points: [
+			{ point: 'No-code visual flow editor', unfinished: false },
+			{ point: 'Access to all Core Connectors', unfinished: false },
+			{ point: 'Testing flow before publish', unfinished: false },
+			{ point: 'Short Multi-steps flows', unfinished: false },
+			{ point: 'Connectros tiggered by webhook', unfinished: false },
+			{ point: 'Access to Flow veriables', unfinished: false },
+		],
 	},
 	Basic: {
 		buttonVariant: 'default',
+		lowerPlan: 'Free',
+		points: [
+			{ point: 'Pre Acceas to beta Connectors', unfinished: false },
+			{ point: 'Long Multi-steps flows', unfinished: false },
+			{ point: 'Minimum 2 minute pooling interval for Polling Triggers', unfinished: false },
+			{ point: 'Ability to set auto-repeat flow in case of failure', unfinished: true },
+		],
 	},
 	Professional: {
 		buttonVariant: 'default',
-		popular: true,
+		lowerPlan: 'Basic',
+		points: [
+			{ point: 'Pre Access for AI helper & AI generator', unfinished: true },
+			{ point: 'Voting system on the development order of connectors', unfinished: false },
+			{ point: 'Live notifications for Flow Runs and errors', unfinished: true },
+			{ point: 'Access to a Premium closed group', unfinished: false },
+			{ point: 'Up to 25 000 tasks / monthly', unfinished: false },
+		],
+		children: <span className="bg-primary px-4 py-1 text-sm font-medium rounded-lg absolute -top-3 right-6 shadow-2xl">Recommended</span>,
 	},
 	Enterprise: {
 		buttonVariant: 'default',
+		buttonLabel: 'Contact Sales',
+		lowerPlan: 'Professional',
+		points: [
+			{
+				point: 'Unlimited Flows scenarios',
+				unfinished: false,
+			},
+			{
+				point: 'Annual tasks usage',
+				unfinished: false,
+			},
+			{
+				point: 'Enablement of all flows',
+				unfinished: false,
+			},
+			{
+				point: 'Limitless App connections',
+				unfinished: false,
+			},
+			{
+				point: 'Instant Team support',
+				unfinished: false,
+			},
+			{
+				point: 'Possibility to create dedicated Flow Worker',
+				unfinished: false,
+			},
+			{ point: 'Access to all "Coming Soon Features" from all plans', unfinished: true },
+		],
 	},
 }

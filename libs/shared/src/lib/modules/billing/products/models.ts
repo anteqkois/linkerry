@@ -12,7 +12,7 @@ export interface StripePrice {
 	id: string
 }
 
-export interface Price extends DatabaseTimestamp{
+export interface Price extends DatabaseTimestamp {
 	_id: string
 	price: number
 	period: SubscriptionPeriod
@@ -28,7 +28,7 @@ export interface StripeProduct {
 	id: string
 }
 
-export interface Product extends DatabaseTimestamp  {
+export interface Product extends DatabaseTimestamp {
 	_id: Id
 	name: string
 	shortDescription: string
@@ -39,3 +39,5 @@ export interface Product extends DatabaseTimestamp  {
 	//  comparisionId ???
 	stripe: StripeProduct
 }
+
+export type PlanName = 'Free' | 'Basic' | 'Professional' | 'Enterprise'

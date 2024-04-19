@@ -1,8 +1,8 @@
 import { Price, Product } from '@linkerry/shared'
-import { Button, ButtonProps, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@linkerry/ui-components/server'
+import { Button, ButtonProps, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Icons, P } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, useMemo } from 'react'
 
 const planContainerVariants = cva('', {
 	variants: {
@@ -16,19 +16,34 @@ const planContainerVariants = cva('', {
 	},
 })
 
+// Comming features + rocket icon ?
 export interface PlanCardProps extends HTMLAttributes<HTMLElement>, VariantProps<typeof planContainerVariants> {
 	product: Product
 	price: Price
-	buttonVariant?: ButtonProps['variant']
-	popular?: boolean
 	onSelectPlan: (data: { productPlan: Product; price: Price }) => void
 	priceSlot?: JSX.Element
+	config: {
+		buttonLabel?: string
+		lowerPlan?: string
+		buttonVariant: ButtonProps['variant']
+		// popular?: boolean //Recommended -> slot element
+		points: { point: string; unfinished: boolean }[]
+		disclaimer?: string
+	}
 }
 
-export const PlanCard = ({ price, product, className, buttonVariant, popular, onSelectPlan, priceSlot }: PlanCardProps) => {
+export const PlanCard = ({ price, product, className, config, onSelectPlan, priceSlot, children }: PlanCardProps) => {
+	const avaibleFeatures = useMemo(() => {
+		return config.points.filter((entry) => !entry.unfinished)
+	}, [config.points])
+
+	const commingFeatures = useMemo(() => {
+		return config.points.filter((entry) => entry.unfinished)
+	}, [config.points])
+
 	return (
-		<Card className={cn('', className)}>
-			<CardHeader className='h-40 lg:h-44'>
+		<Card className={cn('relative', className)}>
+			<CardHeader className="h-40 lg:h-36">
 				<CardTitle className="text-4xl font-bold">{product.name}</CardTitle>
 				<CardDescription>{product.shortDescription}</CardDescription>
 			</CardHeader>
@@ -38,7 +53,7 @@ export const PlanCard = ({ price, product, className, buttonVariant, popular, on
 						priceSlot
 					) : (
 						<div className="flex-center">
-							<div className='relative'>
+							<div className="relative">
 								<span className="absolute -top-1 -left-14 text-xl">{currencyCodeToSign[price.currencyCode]}</span>
 								<span className="text-4xl -ml-10 font-medium">{price.price}</span>
 								<span className="text-lg absolute bottom-0.5 pl-1 whitespace-nowrap">/ {price.period}</span>
@@ -48,8 +63,8 @@ export const PlanCard = ({ price, product, className, buttonVariant, popular, on
 				</div>
 
 				<Button
-					className="w-full"
-					variant={buttonVariant}
+					className="w-full font-bold"
+					variant={config.buttonVariant}
 					onClick={() =>
 						onSelectPlan({
 							productPlan: product,
@@ -57,10 +72,31 @@ export const PlanCard = ({ price, product, className, buttonVariant, popular, on
 						})
 					}
 				>
-					Choose
+					{config.buttonLabel ?? 'Choose Plan'}
 				</Button>
 			</CardContent>
-			<CardFooter className="flex justify-between"></CardFooter>
+			<CardFooter className="flex flex-col">
+				{config.lowerPlan ? <P className="font-bold mb-2">Everything in {config.lowerPlan}, plus:</P> : null}
+				{avaibleFeatures.map((point, index) => (
+					<div key={index} className="w-full flex space-y-1">
+						<Icons.Check size={'md'} className="min-h-[22px] max-h-[22px] min-w-[22px] max-w-[22px] mr-2 mt-1.5" />
+						<p>{point.point}</p>
+					</div>
+				))}
+				{commingFeatures.length ? (
+					<P className="font-bold mb-2 text-primary-text flex items-center">
+						<Icons.Rocket size={'md'} className="min-h-[15px] max-h-[15px] min-w-[15px] max-w-[15px] ml-1.5 mr-2" />
+						Coming Soon Features
+					</P>
+				) : null}
+				{commingFeatures.map((point, index) => (
+					<div key={index} className="w-full flex space-y-1">
+						<Icons.Check size={'md'} className="min-h-[22px] max-h-[22px] min-w-[22px] max-w-[22px] mr-2 mt-1.5" />
+						<p>{point.point}</p>
+					</div>
+				))}
+			</CardFooter>
+			{children}
 		</Card>
 	)
 }
