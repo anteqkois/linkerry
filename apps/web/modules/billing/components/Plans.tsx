@@ -103,6 +103,7 @@ const plansConfig: Record<PlanName, PlanCardProps['config'] & { children?: React
 	Basic: {
 		buttonVariant: 'default',
 		lowerPlan: 'Free',
+		disclaimer: "*Price will increase upon delivery of the 'Coming Soon Features'. Reduced rate now.",
 		points: [
 			{ point: 'Pre Acceas to beta Connectors', unfinished: false },
 			{ point: 'Long Multi-steps flows', unfinished: false },
@@ -113,6 +114,7 @@ const plansConfig: Record<PlanName, PlanCardProps['config'] & { children?: React
 	Professional: {
 		buttonVariant: 'default',
 		lowerPlan: 'Basic',
+		disclaimer: "*Price will increase upon delivery of the 'Coming Soon Features'. Reduced rate now.",
 		points: [
 			{ point: 'Pre Access for AI helper & AI generator', unfinished: true },
 			{ point: 'Voting system on the development order of connectors', unfinished: false },

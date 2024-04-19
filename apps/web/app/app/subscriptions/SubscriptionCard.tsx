@@ -1,4 +1,9 @@
-import { PlanConfigurationDetailsValue, PlanProductConfiguration, SubscriptionPopulated, planConfigurationDetails } from '@linkerry/shared'
+import {
+	PlanConfigurationDetailsValue,
+	PlanProductConfiguration,
+	SubscriptionPopulated,
+	planConfigurationDetails
+} from '@linkerry/shared'
 import { Separator } from '@linkerry/ui-components/client'
 import { Card, CardContent, H4 } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'
@@ -7,9 +12,28 @@ import { ConfigurationItem } from '../../../modules/billing/components/ConfigIte
 
 export interface SubscriptionCardProps extends HTMLAttributes<HTMLElement> {
 	subscription: SubscriptionPopulated
+	// open?: boolean
 }
 
 export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
+	// const [showDetails, setShowDetails] = useState(open)
+
+	// const currentPlanConfigurationDetails = useMemo(() => {
+	// 	if (showDetails) return planConfigurationDetails
+	// 	else {
+	// 		const pickedPlanConfigurationDetails: Partial<PlanConfigurationDetails> = {}
+
+	// 		let index = 0
+	// 		for (const [key, value] of Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]) {
+	// 			pickedPlanConfigurationDetails[key] = value
+	// 			index++
+	// 			if (index === 5) return pickedPlanConfigurationDetails
+	// 		}
+
+	// 		return planConfigurationDetails
+	// 	}
+	// }, [showDetails])
+
 	return (
 		<Card>
 			<CardContent>
@@ -43,13 +67,15 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
 				<Separator />
 				{subscription.products.map((product) => (
 					<div key={product._id}>
-						<div className="my-2" key={product._id}>
-							<H4 className="mb-2">
+						<div className="mt-2" key={product._id}>
+							<H4 className="">
 								Current Plan: <span className="font-normal">{product.name}</span>
 							</H4>
-							{(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => (
-								<ConfigurationItem key={name} label={value.displayName} value={product.config[name]} />
-							))}
+							{(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(
+								([name, value]) => (
+									<ConfigurationItem key={name} label={value.displayName} value={product.config[name]} />
+								),
+							)}
 						</div>
 					</div>
 				))}

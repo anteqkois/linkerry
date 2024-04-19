@@ -5,7 +5,7 @@ import { cn } from '../../../utils'
 const h2Variants = cva('', {
   variants: {
     variant: {
-      default: 'scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0',
+      default: 'scroll-m-20 pb-1 text-3xl font-semibold tracking-tight transition-colors first:mt-0',
     },
   },
   defaultVariants: {

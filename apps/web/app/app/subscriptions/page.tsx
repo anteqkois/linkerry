@@ -1,6 +1,7 @@
 'use client'
 
 import { Price, Product } from '@linkerry/shared'
+import { H2 } from '@linkerry/ui-components/server'
 import { useCallback } from 'react'
 import { Plans } from '../../../modules/billing/components/Plans'
 import { useSubscriptions } from '../../../modules/billing/subscriptions/useSubscriptions'
@@ -19,7 +20,7 @@ export default function Page() {
 	}, [])
 
 	return (
-		<PageContainer padding={'large'} className="space-y-3">
+		<PageContainer padding={'largeOnlyDesktop'} className="space-y-3">
 			{subscriptionsStatus === 'error' ? (
 				<ErrorInfo errorObject={subscriptionsError} />
 			) : subscriptionsStatus === 'pending' ? (
@@ -32,6 +33,7 @@ export default function Page() {
 			) : (
 				<ErrorInfo message="Can not retrive subscription" />
 			)}
+			<H2 className="text-center lg:hidden">Upgarde Plan</H2>
 			<Plans onSelectPlan={onSelectPlanConfiguration} />
 		</PageContainer>
 	)

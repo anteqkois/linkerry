@@ -1,4 +1,4 @@
-import { PlanProductConfiguration, SubscriptionPopulated, PlanConfigurationDetailsValue, planConfigurationDetails } from '@linkerry/shared'
+import { PlanConfigurationDetailsValue, PlanProductConfiguration, SubscriptionPopulated, planConfigurationDetails } from '@linkerry/shared'
 import { Separator } from '@linkerry/ui-components/client'
 import { Card, CardContent, H4 } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'
@@ -29,11 +29,9 @@ export const UsageCard = ({ usage, subscription }: UsageCardProps) => {
 				</div>
 				<Separator />
 				{usage ? (
-					<div className="my-2">
-						<H4 className="mb-2">Current Usage</H4>
+					<div className="mt-2">
+						<H4 className="">Current Usage</H4>
 						{(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => (
-							// <ConfigurationItem key={name} label={value.displayName} value={usage[name] ?? '-'} />
-							// <ConfigurationItem key={name} label={value.displayName} value={`${usage[name] ?? '_'} / ${subscription.products[0].config[name]}`} />
 							<ConfigurationItem
 								key={name}
 								label={value.displayName}

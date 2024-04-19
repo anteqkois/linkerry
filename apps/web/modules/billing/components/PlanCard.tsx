@@ -1,5 +1,16 @@
 import { Price, Product } from '@linkerry/shared'
-import { Button, ButtonProps, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Icons, P } from '@linkerry/ui-components/server'
+import {
+	Button,
+	ButtonProps,
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+	Icons,
+	P
+} from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HTMLAttributes, useMemo } from 'react'
@@ -29,6 +40,7 @@ export interface PlanCardProps extends HTMLAttributes<HTMLElement>, VariantProps
 		// popular?: boolean //Recommended -> slot element
 		points: { point: string; unfinished: boolean }[]
 		disclaimer?: string
+		priceEarlyAccees?: number
 	}
 }
 
@@ -95,6 +107,8 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
 						<p>{point.point}</p>
 					</div>
 				))}
+				{/* <Muted >{config.disclaimer}</Muted> */}
+				<p className='mt-2 text-muted-foreground text-xs leading-4 pl-5'>{config.disclaimer}</p>
 			</CardFooter>
 			{children}
 		</Card>

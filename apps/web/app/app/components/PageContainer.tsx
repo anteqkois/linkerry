@@ -14,6 +14,7 @@ const buttonVariants = cva('px-2 mt-16 w-screen lg:max-w-none', {
 		},
 		padding: {
 			large: 'px-10 py-2',
+			largeOnlyDesktop: 'lg:px-10 lg:py-2',
 			default: 'px-2',
 			none: 'px-0',
 		},
