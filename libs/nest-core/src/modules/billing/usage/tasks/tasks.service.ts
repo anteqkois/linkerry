@@ -1,4 +1,4 @@
-import { CustomError, ErrorCode, Id, QuotaError, SubscriptionStatus, assertNotNullOrUndefined } from '@linkerry/shared'
+import { Id, QuotaError } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
@@ -14,16 +14,10 @@ export class TasksUsageService {
 	) {}
 
 	async checkTaskLimitAndThrow(projectId: Id) {
-		const projectSubscriptions = await this.subscriptionsService.findMany({
-			projectId,
-		})
-		const activeSubscriptions = projectSubscriptions.filter((subscription) => subscription.status === SubscriptionStatus.ACTIVE)
-		assertNotNullOrUndefined(activeSubscriptions, 'activeSubscriptions')
-		if (activeSubscriptions.length > 1) throw new CustomError(`More than one active subscriptions for project ${projectId}`, ErrorCode.INVALID_TYPE)
-
-		const planProduct = activeSubscriptions[0].products[0]
+		const currentPlan = await this.subscriptionsService.getCurrentPlanOrThrow({ projectId })
 		const currentUsage = await this.getCurrentPeriodUsage(projectId)
-		if (currentUsage >= planProduct.config.tasks) throw new QuotaError('tasks')
+
+		if (currentUsage >= currentPlan.config.tasks) throw new QuotaError('tasks')
 	}
 
 	async getCurrentPeriodUsage(projectId: Id) {

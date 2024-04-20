@@ -11,6 +11,7 @@ import {
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { SubscriptionsService } from '../../../billing/subscriptions/subscriptions.service'
 import { EngineService } from '../../../engine/engine.service'
 import { EngineHelperResponse, EngineHelperTriggerResult } from '../../../engine/types'
 import { WebhookUrlsService } from '../../../webhooks/webhook-urls/webhook-urls.service'
@@ -22,7 +23,7 @@ import { DisableParams, EnableTriggerHookParams, ExecuteHandshakeParams, Execute
 @Injectable()
 export class TriggerHooks {
 	private readonly logger = new Logger(TriggerHooks.name)
-	private POLLING_FREQUENCY_CRON_EXPRESSON: string
+	// private POLLING_FREQUENCY_CRON_EXPRESSON: string
 
 	constructor(
 		private readonly connectorsMetadataService: ConnectorsMetadataService,
@@ -30,8 +31,21 @@ export class TriggerHooks {
 		private readonly configService: ConfigService,
 		private readonly queuesService: QueuesService,
 		private readonly webhookUrlsService: WebhookUrlsService,
+		private readonly subscriptionsService: SubscriptionsService,
 	) {
-		this.POLLING_FREQUENCY_CRON_EXPRESSON = `*/${configService.get('TRIGGER_DEFAULT_POLL_INTERVAL') ?? 5} * * * *`
+		// this.POLLING_FREQUENCY_CRON_EXPRESSON = this._constructEveryXMinuteCron(configService.getOrThrow('TRIGGER_DEFAULT_POLL_INTERVAL'))
+	}
+
+	private _constructEveryXMinuteCron(minute: number): string {
+		return `*/${minute} * * * *`
+		// const edition = getEdition()
+		// switch (edition) {
+		// 	case ApEdition.CLOUD:
+		// 		return `*/${minute} * * * *`
+		// 	case ApEdition.COMMUNITY:
+		// 	case ApEdition.ENTERPRISE:
+		// 		return `*/${system.getNumber(SystemProp.TRIGGER_DEFAULT_POLL_INTERVAL) ?? 5} * * * *`
+		// }
 	}
 
 	private async _sideeffect(connectorTrigger: TriggerBase, projectId: string, flowVersion: FlowVersion): Promise<void> {
@@ -199,20 +213,12 @@ export class TriggerHooks {
 				break
 			}
 			case TriggerStrategy.POLLING: {
+				const planConfiguration = await this.subscriptionsService.getCurrentPlanOrThrow({ projectId })
 				if (isNil(engineHelperResponse.result.scheduleOptions)) {
 					engineHelperResponse.result.scheduleOptions = {
-						cronExpression: this.POLLING_FREQUENCY_CRON_EXPRESSON,
+						cronExpression: this._constructEveryXMinuteCron(planConfiguration.config.minimumPollingInterval),
 						timezone: 'UTC',
 					}
-					// // BEGIN EE
-					// const edition = getEdition()
-					// if (edition === ApEdition.CLOUD) {
-					// 	const plan = await plansService.getOrCreateDefaultPlan({
-					// 		projectId,
-					// 	})
-					// 	engineHelperResponse.result.scheduleOptions.cronExpression = constructEveryXMinuteCron(plan.minimumPollingInterval)
-					// }
-					// // END EE
 				}
 				await this.queuesService.addToQueue({
 					id: flowVersion._id,

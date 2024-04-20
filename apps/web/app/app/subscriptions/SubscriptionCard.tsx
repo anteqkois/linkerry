@@ -18,7 +18,7 @@ export interface SubscriptionCardProps extends HTMLAttributes<HTMLElement> {
 export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
 	// const [showDetails, setShowDetails] = useState(open)
 
-	// const currentPlanConfigurationDetails = useMemo(() => {
+	// const currentPlanDetails = useMemo(() => {
 	// 	if (showDetails) return planConfigurationDetails
 	// 	else {
 	// 		const pickedPlanConfigurationDetails: Partial<PlanConfigurationDetails> = {}
@@ -65,19 +65,19 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
 					<Separator orientation="vertical" className="h-14" /> */}
 				</div>
 				<Separator />
-				{subscription.products.map((product) => (
-					<div key={product._id}>
-						<div className="mt-2" key={product._id}>
+				{subscription.items.map((item) => (
+					// <div key={item.product._id}>
+						<div className="mt-2" key={item.product._id}>
 							<H4 className="">
-								Current Plan: <span className="font-normal">{product.name}</span>
+								Current Plan: <span className="font-normal">{item.product.name}</span>
 							</H4>
 							{(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(
 								([name, value]) => (
-									<ConfigurationItem key={name} label={value.displayName} value={product.config[name]} />
+									<ConfigurationItem key={name} label={value.displayName} value={item.product.config[name]} />
 								),
 							)}
 						</div>
-					</div>
+					// </div>
 				))}
 			</CardContent>
 			{/* <CardFooter className="flex justify-between">

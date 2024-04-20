@@ -16,6 +16,7 @@ export enum ErrorCodeQuota {
 
 export enum ErrorCodePayments {
 	INVALID_PRODUCT = 'INVALID_PRODUCT',
+	INVALID_BILLING = 'INVALID_BILLING',
 }
 
 enum ErrorCodeDefault {
@@ -65,7 +66,7 @@ enum ErrorCodeDefault {
 	INTERNAL_SERVER = 'INTERNAL_SERVER',
 	HTTP = 'HTTP',
 	WEB_SOCKET_ERROR = 'WEB_SOCKET_ERROR',
-	INVALID_BILLING = 'INVALID_BILLING',
+	FEATURE_NOT_IMPLEMENTED = 'FEATURE_NOT_IMPLEMENTED',
 }
 
 /* Merge Error enums */

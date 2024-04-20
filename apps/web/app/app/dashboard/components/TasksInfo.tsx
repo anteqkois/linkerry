@@ -10,11 +10,11 @@ export interface TasksInfoProps extends HTMLAttributes<HTMLElement> {}
 
 export const TasksInfo = () => {
 	const { usage, usageError, usageStatus } = useUsage()
-	const { currentPlanConfiguration, subscriptionsError, subscriptionsStatus } = useSubscriptions()
+	const { currentPlan, subscriptionsError, subscriptionsStatus } = useSubscriptions()
 
 	const tasksPercentUsage = useMemo(() => {
-		if (!usage?.tasks || !currentPlanConfiguration?.tasks) return 0
-		const usagePercent = (usage.tasks * 100) / currentPlanConfiguration.tasks
+		if (!usage?.tasks || !currentPlan?.config.tasks) return 0
+		const usagePercent = (usage.tasks * 100) / currentPlan.config.tasks
 		return Math.round(usagePercent) === usagePercent ? usagePercent : usagePercent.toFixed(1)
 	}, [subscriptionsStatus, usageStatus])
 
@@ -28,7 +28,7 @@ export const TasksInfo = () => {
 				<Icons.Analytics className="h-4 w-4 text-muted-foreground" />
 			</CardHeader>
 			<CardContent>
-				<div className="text-2xl font-bold">{`${usage?.tasks} / ${currentPlanConfiguration?.tasks} `}</div>
+				<div className="text-2xl font-bold">{`${usage?.tasks} / ${currentPlan?.config.tasks} `}</div>
 				<p className="text-xs text-muted-foreground">{tasksPercentUsage}%</p>
 			</CardContent>
 		</Card>

@@ -1,6 +1,6 @@
 'use client'
 
-import { ProductType, SubscriptionStatus } from '@linkerry/shared'
+import { CustomError, ErrorCode, ProductType, SubscriptionStatus } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useMemo } from 'react'
 import { useClientQuery } from '../../../libs/react-query'
@@ -19,15 +19,17 @@ export const useSubscriptions = () => {
 			})
 		} else if (subscriptionsStatus === 'pending') return null
 		else {
-			return subscriptions.find((subscription) => subscription.status === SubscriptionStatus.ACTIVE)
+			const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === SubscriptionStatus.ACTIVE)
+			if (activeSubscriptions.length !== 1) throw new CustomError(`Invalid amount of active subscriptions`, ErrorCode.INVALID_BILLING)
+			return activeSubscriptions[0]
 		}
 	}, [subscriptions, subscriptionsStatus])
 
-	const currentPlanConfiguration = useMemo(() => {
+	const currentPlan = useMemo(() => {
 		if (!currentSubscription) return null
-		const currentPlanProducts = currentSubscription.products.filter((product) => product.type === ProductType.PLAN)
+		const currentPlanProducts = currentSubscription.items.filter((item) => item.product.type === ProductType.PLAN)
 		if (currentPlanProducts.length > 1) console.warn(`More than one product plan`, currentPlanProducts)
-		return currentPlanProducts[0].config
+		return currentPlanProducts[0].product
 	}, [currentSubscription])
 
 	return {
@@ -35,6 +37,6 @@ export const useSubscriptions = () => {
 		subscriptionsError,
 		subscriptionsStatus,
 		currentSubscription,
-		currentPlanConfiguration
+		currentPlan,
 	}
 }

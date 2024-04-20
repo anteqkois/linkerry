@@ -1,5 +1,5 @@
-import { CreatePaidSubscriptionBody, Id, RequestUser } from '@linkerry/shared'
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
+import { ChangeSubscriptionBody, Id, RequestUser } from '@linkerry/shared'
+import { Body, Controller, Get, Put, Query, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { SubscriptionsService } from './subscriptions.service'
@@ -12,7 +12,7 @@ export class SubscriptionsController {
 	@Get()
 	findMany(@ReqJwtUser() user: RequestUser) {
 		return this.subscriptionsService.findMany({
-			projectId: user.projectId,
+			project: user.projectId,
 		})
 	}
 
@@ -23,13 +23,9 @@ export class SubscriptionsController {
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Post()
-	createPaidSubscription(@ReqJwtUser() user: RequestUser, @Body() body: CreatePaidSubscriptionBody) {
+	@Put()
+	change(@ReqJwtUser() user: RequestUser, @Body() body: ChangeSubscriptionBody) {
 		// TODO check if it is owner or if it have privilages to start subscription when project members supported
-
-		return this.subscriptionsService.createPaidSubscription({
-			...body,
-			projectId: user.projectId,
-		})
+		return this.subscriptionsService.change({ ...body, projectId: user.projectId })
 	}
 }

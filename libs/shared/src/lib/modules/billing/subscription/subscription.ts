@@ -1,5 +1,5 @@
 import { DatabaseTimestamp, Id } from '../../../common'
-import { Product } from '../products'
+import { Price, Product } from '../products'
 
 export enum SubscriptionPeriod {
 	MONTHLY = 'monthly',
@@ -11,8 +11,8 @@ export enum SubscriptionPeriod {
 export enum SubscriptionStatus {
 	ACTIVE = 'active',
 	INCOMPLETE = 'incomplete',
-	INCOMPLETE_EXPIRED = 'incomplete_expired',
-	PAST_DUE = 'past_due',
+	// INCOMPLETE_EXPIRED = 'incomplete_expired',
+	// PAST_DUE = 'past_due',
 	CANCELED = 'canceled',
 	UNAPID = 'unpaid',
 }
@@ -21,10 +21,15 @@ export enum PaymentGateway {
 	STRIPE = 'STRIPE',
 }
 
+export interface SubscriptionItem {
+	product: Id
+	price: Id
+}
+
 export interface SubscriptionCommonFields extends DatabaseTimestamp {
 	_id: Id
-	projectId: Id
-	products: Id[]
+	project: Id
+	items: SubscriptionItem[]
 	status: SubscriptionStatus
 	validTo: string
 	currentPeriodEnd: string
@@ -47,8 +52,11 @@ export interface SubscriptionStripe extends SubscriptionCommonFields {
 }
 
 export type Subscription = SubscriptionBlank | SubscriptionStripe
-export type SubscriptionPopulated = Omit<SubscriptionBlank | SubscriptionStripe, 'products'> & {
-	products: Product[]
+export type SubscriptionPopulated = Omit<SubscriptionBlank | SubscriptionStripe, 'items'> & {
+	items: {
+		product: Product
+		price: Price
+	}[]
 }
 
 export interface SubscriptionHistory {

@@ -10,7 +10,7 @@ export class JWTCustomService {
 
 	generateToken({ payload }: { payload: Omit<JwtTokenPayload, 'iss' | 'exp'> }) {
 		const secret = this.configService.get('JWT_SECRET')
-		const expireUnix = dayjs().unix() + Number(this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600))
+		const expireUnix = dayjs().unix() + Number(this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600))
 
 		return this.jwtService.sign({ ...payload, iss: 'linkerry', exp: expireUnix }, { secret })
 	}

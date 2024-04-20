@@ -1,14 +1,15 @@
 import {
-	CreatePaidSubscriptionBody,
+	ChangeSubscriptionBody,
 	CustomError,
 	ErrorCode,
 	Id,
 	PaymentGateway,
 	ProductType,
 	Subscription,
+	SubscriptionBlank,
+	SubscriptionItem,
 	SubscriptionPeriod,
 	SubscriptionStatus,
-	SubscriptionStripe,
 	assertNotNullOrUndefined,
 	isEmpty,
 } from '@linkerry/shared'
@@ -40,52 +41,54 @@ export class SubscriptionsService {
 		this.DEFAULT_PRODUCT_ID = this.configService.getOrThrow('DEFAULT_PRODUCT_ID')
 	}
 
-	async createDefault(projectId: Id) {
-		const createdSubscription = await this.subscriptionModel.create({
-			currentPeriodEnd: this.DEFAULT_VALIDITY_DATE,
-			paymentGateway: PaymentGateway.NONE,
-			period: SubscriptionPeriod.MONTHLY,
-			projectId,
-			status: SubscriptionStatus.ACTIVE,
-			validTo: this.DEFAULT_VALIDITY_DATE,
-			products: [new mongoose.Types.ObjectId(this.DEFAULT_PRODUCT_ID)],
+	private async _getDefaultSubscription(projectId: Id) {
+		const defaultSubscription = await this.subscriptionModel
+			.findOne<SubscriptionDocument<'items'>>({
+				_id: '6616eea2381de823f1da2001',
+			})
+			.populate('items.price')
+			.populate('items.product')
+		assertNotNullOrUndefined(defaultSubscription, 'defaultSubscription')
+
+		defaultSubscription.project = new mongoose.Types.ObjectId(projectId)
+		return defaultSubscription
+	}
+
+	private async _createSubscriptionOrRetriveIncompleted({
+		period,
+		projectId,
+		items,
+	}: {
+		period: SubscriptionPeriod
+		projectId: Id
+		items: SubscriptionItem[]
+	}) {
+		const incompletedSubscription = await this.subscriptionModel.findOne({
+			status: SubscriptionStatus.INCOMPLETE,
+			project: projectId,
+			items: {
+				$in: items,
+			},
 		})
+		if (incompletedSubscription) return incompletedSubscription
 
-		return createdSubscription
-	}
-
-	async create(input: Subscription) {
+		const nowDate = dayjs().toISOString()
+		const input: Omit<SubscriptionBlank, '_id' | 'createdAt' | 'updatedAt'> = {
+			currentPeriodEnd: nowDate,
+			paymentGateway: PaymentGateway.NONE,
+			period,
+			project: projectId,
+			status: SubscriptionStatus.INCOMPLETE,
+			validTo: nowDate,
+			items,
+		}
 		const createdSubscription = await this.subscriptionModel.create(input)
+
 		return createdSubscription
 	}
 
-	async findMany(filter: FilterQuery<Subscription>): Promise<SubscriptionDocument<'products'>[]> {
-		return this.subscriptionModel.find(filter).populate('products')
-	}
-
-	async findOne(filter: FilterQuery<Subscription>) {
-		return this.subscriptionModel.findOne(filter)
-	}
-
-	async getCurrentPlanConfigurationOrThrow({ projectId }: { projectId: Id }) {
-		const subscriptions = await this.subscriptionModel.find<SubscriptionDocument<'products'>>({ projectId }).populate('products')
-		const currentSubscription = subscriptions.filter((subscription) => subscription.status === SubscriptionStatus.ACTIVE)
-		if (currentSubscription.length > 1)
-			throw new CustomError(`More than one active subscription`, ErrorCode.INVALID_BILLING, {
-				projectId,
-			})
-
-		const planProducts = currentSubscription[0].products.filter((product) => product.type === ProductType.PLAN)
-		if (planProducts.length > 1)
-			throw new CustomError(`More than one product plan in subscription`, ErrorCode.INVALID_BILLING, {
-				projectId,
-			})
-		return planProducts[0].config
-	}
-
-	async createPaidSubscription({ items, projectId, period }: CreatePaidSubscriptionParams) {
+	private async _createFirstPaidSubscription({ items, projectId, period }: CreateSubscriptionParams) {
 		// TODO use payment gateway architecture in future -> use paymentGateway.createSubscription() where in the background will be used the right gateway (stripe, crypto etc)
-
 		// TODO? add to productModel fields which will be holds data for payment gateway -> stripeMetadat - in this object will be id of stripe product etc, so i will only pass one object to pay,ent gateway. Use also the same pattern to subscription ?
 
 		const paymentIems: PaymentItem[] = []
@@ -108,40 +111,110 @@ export class SubscriptionsService {
 
 		if (isEmpty(paymentIems)) throw new CustomError(`Can not configure your subscription items`, ErrorCode.INVALID_PRODUCT)
 
-		const project = await this.projectModel.findOne<ProjectDocument<'owner'>>({
-			_id: projectId,
-		}).populate('owner')
+		const project = await this.projectModel
+			.findOne<ProjectDocument<'owner'>>({
+				_id: projectId,
+			})
+			.populate('owner')
 		assertNotNullOrUndefined(project, 'project')
 
+		const createdSubscription = await this._createSubscriptionOrRetriveIncompleted({
+			projectId: project._id.toString(),
+			period,
+			items: paymentIems.map((item) => ({
+				price: item.price._id,
+				product: item.price._id,
+			})),
+		})
+
 		// TODO use payment gateway
-		const stripeCheckoutSession = await this.stripeService.createSubscriptionCheckoutSession({
-			project: project.toObject(),
+		const stripeResponse = await this.stripeService.createFirstSubscription({
+			subscriptionId: createdSubscription.id,
+			project,
 			period,
 			paymentIems,
 		})
 
-		// const nowDate = dayjs().toISOString()
-		// const input: Omit<SubscriptionStripe, '_id'> = {
-		// 	currentPeriodEnd: nowDate,
-		// 	paymentGateway: PaymentGateway.STRIPE,
-		// 	period,
-		// 	projectId,
-		// 	status: SubscriptionStatus.INCOMPLETE,
-		// 	validTo: nowDate,
-		// 	products: paymentIems.map((item) => item.product._id),
-		// 	defaultPaymentMethod: null,
-		// 	stripeSubscriptionId: '',
-		// }
-
-		// const createdSubscription = await this.subscriptionModel.create({})
+		return {
+			checkoutUrl: stripeResponse.paymentUrl,
+		}
 	}
 
-	async getPaymentLinkForSubscription() {
+	private async _upgradePaidSubscription({ items, projectId, period }: CreateSubscriptionParams) {
 		//
+	}
+
+	private async _downgradePaidSubscription() {
+		throw new CustomError(
+			`Downgrade subscription is currently unsupported. If you want to perform this action, contact with our Team`,
+			ErrorCode.FEATURE_NOT_IMPLEMENTED,
+		)
+	}
+
+	async createDefault(projectId: Id) {
+		const createdSubscription = await this.subscriptionModel.create({
+			currentPeriodEnd: this.DEFAULT_VALIDITY_DATE,
+			paymentGateway: PaymentGateway.NONE,
+			period: SubscriptionPeriod.MONTHLY,
+			project: projectId,
+			status: SubscriptionStatus.ACTIVE,
+			validTo: this.DEFAULT_VALIDITY_DATE,
+			products: [new mongoose.Types.ObjectId(this.DEFAULT_PRODUCT_ID)],
+		})
+
+		return createdSubscription
+	}
+
+	async change(input: CreateSubscriptionParams) {
+		if (input.items.length !== 1) throw new CustomError(`Currently only one item for subscription is supported`, ErrorCode.INVALID_PRODUCT)
+		const item = input.items[0]
+
+		const currentProjectSubscription = await this.getCurrentPlanOrThrow({ projectId: input.projectId })
+		const newProductPlan = await this.productModel.findOne({
+			_id: item.productId,
+		})
+		assertNotNullOrUndefined(newProductPlan, 'newProductPlan')
+
+		if (currentProjectSubscription.name === 'Free') return this._createFirstPaidSubscription(input)
+		if (currentProjectSubscription.priority < newProductPlan.priority) return this._upgradePaidSubscription(input)
+		else if (currentProjectSubscription.priority > newProductPlan.priority) return this._downgradePaidSubscription()
+		else throw new CustomError(`New plan is the same as current`, ErrorCode.INVALID_PRODUCT)
+	}
+
+	async findMany(filter: FilterQuery<Subscription>): Promise<SubscriptionDocument<'items'>[]> {
+		const subscriptions = await this.subscriptionModel.find<SubscriptionDocument<'items'>>(filter).populate('items.price').populate('items.product')
+
+		/* no one active subscription */
+		if (!subscriptions.some((subscription) => subscription.status === SubscriptionStatus.ACTIVE))
+			subscriptions.push(await this._getDefaultSubscription(filter.project))
+		return subscriptions
+	}
+
+	async findOne(filter: FilterQuery<Subscription>) {
+		return this.subscriptionModel.findOne(filter)
+	}
+
+	async getCurrentPlanOrThrow({ projectId }: { projectId: Id }) {
+		const subscriptions = await this.findMany({
+			project: projectId,
+		})
+
+		const currentSubscription = subscriptions.filter((subscription) => subscription.status === SubscriptionStatus.ACTIVE)
+		if (currentSubscription.length > 1)
+			throw new CustomError(`More than one active subscription`, ErrorCode.INVALID_BILLING, {
+				projectId,
+			})
+
+		const planProducts = currentSubscription[0].items.filter((item) => item.product.type === ProductType.PLAN)
+		if (planProducts.length > 1)
+			throw new CustomError(`More than one product plan in subscription`, ErrorCode.INVALID_BILLING, {
+				projectId,
+			})
+		return planProducts[0].product
 	}
 }
 
-interface CreatePaidSubscriptionParams extends CreatePaidSubscriptionBody {
+interface CreateSubscriptionParams extends ChangeSubscriptionBody {
 	projectId: Id
 	period: SubscriptionPeriod
 }

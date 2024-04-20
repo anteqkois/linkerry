@@ -8,11 +8,12 @@ import { SubscriptionModelFactory } from './schemas/subscription.schema'
 import { SubscriptionsAdminController } from './subscriptions-admin.controller'
 import { SubscriptionsController } from './subscriptions.controller'
 import { SubscriptionsService } from './subscriptions.service'
+import { SubscriptionsAdminService } from './subscriptions-admin.service'
 
 @Module({
 	imports: [MongooseModule.forFeatureAsync([SubscriptionModelFactory, ProductModelFactory, PriceModelFactory, ProjectModelFactory]), PaymentsModule],
 	controllers: [SubscriptionsController, SubscriptionsAdminController],
-	providers: [SubscriptionsService],
+	providers: [SubscriptionsService, SubscriptionsAdminService],
 	exports: [SubscriptionsService],
 })
 export class SubscriptionsModule {}

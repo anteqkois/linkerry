@@ -9,7 +9,7 @@ import { ErrorInfo, Spinner } from '../../../../shared/components'
 export interface SubscriptionInfoProps extends HTMLAttributes<HTMLElement> {}
 
 export const SubscriptionInfo = () => {
-	const { currentSubscription, subscriptionsError, subscriptionsStatus } = useSubscriptions()
+	const { currentPlan, currentSubscription, subscriptionsError, subscriptionsStatus } = useSubscriptions()
 
 	if (subscriptionsStatus === 'error') return <ErrorInfo errorObject={subscriptionsError} />
 	if (subscriptionsStatus === 'pending') return <Spinner />
@@ -22,8 +22,14 @@ export const SubscriptionInfo = () => {
 			</CardHeader>
 			<CardContent className="flex justify-between items-end">
 				<div>
-					<div className="text-2xl font-bold">{currentSubscription?.products[0].name}</div>
-					<p className="text-xs text-muted-foreground">{currentSubscription?.period}</p>
+					{currentPlan ? (
+						<>
+							<div className="text-2xl font-bold">{currentPlan?.name}</div>
+							<p className="text-xs text-muted-foreground">{currentSubscription?.period}</p>
+						</>
+					) : (
+						'Can not retrive plan'
+					)}
 				</div>
 				<div>
 					<Link href="/app/subscriptions">

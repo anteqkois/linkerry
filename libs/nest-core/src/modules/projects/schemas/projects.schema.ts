@@ -7,9 +7,7 @@ import { UserModel } from '../../users/schemas/user.schema'
 export type ProjectDocument<T extends keyof Project = never> = mongoose.HydratedDocument<ProjectModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'projects' })
-export class ProjectModel<T = ''> extends TimestampDatabaseModel implements Omit<Project, 'owner'> {
-	_id: string
-
+export class ProjectModel<T = ''> extends TimestampDatabaseModel implements Omit<Project, 'owner' | '_id'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })
 	owner: IdObjectOrPopulated<T, 'owner', User>
 

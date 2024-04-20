@@ -1,16 +1,6 @@
 import { Price, Product } from '@linkerry/shared'
-import {
-	Button,
-	ButtonProps,
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-	Icons,
-	P
-} from '@linkerry/ui-components/server'
+import { ButtonClient, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
+import { ButtonProps, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Icons, P } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { VariantProps, cva } from 'class-variance-authority'
 import { HTMLAttributes, useMemo } from 'react'
@@ -33,6 +23,7 @@ export interface PlanCardProps extends HTMLAttributes<HTMLElement>, VariantProps
 	price: Price
 	onSelectPlan: (data: { productPlan: Product; price: Price }) => void
 	priceSlot?: JSX.Element
+	loading?: boolean
 	config: {
 		buttonLabel?: string
 		lowerPlan?: string
@@ -40,11 +31,12 @@ export interface PlanCardProps extends HTMLAttributes<HTMLElement>, VariantProps
 		// popular?: boolean //Recommended -> slot element
 		points: { point: string; unfinished: boolean }[]
 		disclaimer?: string
+		currentPlan?: boolean
 		priceEarlyAccees?: number
 	}
 }
 
-export const PlanCard = ({ price, product, className, config, onSelectPlan, priceSlot, children }: PlanCardProps) => {
+export const PlanCard = ({ price, product, className, config, onSelectPlan, priceSlot, children, loading }: PlanCardProps) => {
 	const avaibleFeatures = useMemo(() => {
 		return config.points.filter((entry) => !entry.unfinished)
 	}, [config.points])
@@ -55,7 +47,7 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
 
 	return (
 		<Card className={cn('relative', className)}>
-			<CardHeader className="h-40 lg:h-36">
+			<CardHeader className="h-32 md:h-40 xl:h-36">
 				<CardTitle className="text-4xl font-bold">{product.name}</CardTitle>
 				<CardDescription>{product.shortDescription}</CardDescription>
 			</CardHeader>
@@ -74,7 +66,34 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
 					)}
 				</div>
 
-				<Button
+				<TooltipProvider delayDuration={200}>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<ButtonClient
+								loading={loading}
+								className="w-full font-bold"
+								variant={config.buttonVariant}
+								onClick={() =>
+									config.currentPlan
+										? null
+										: onSelectPlan({
+												productPlan: product,
+												price,
+										  })
+								}
+							>
+								{config.buttonLabel ?? 'Choose Plan'}
+							</ButtonClient>
+						</TooltipTrigger>
+						{config.currentPlan ? (
+							<TooltipContent>
+								<p>It is your current plan</p>
+							</TooltipContent>
+						) : null}
+					</Tooltip>
+				</TooltipProvider>
+				{/* <Button
+					disabled={config.currentPlan}
 					className="w-full font-bold"
 					variant={config.buttonVariant}
 					onClick={() =>
@@ -85,7 +104,17 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
 					}
 				>
 					{config.buttonLabel ?? 'Choose Plan'}
-				</Button>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button variant="outline">Hover</Button>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Add to library</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
+				</Button> */}
 			</CardContent>
 			<CardFooter className="flex flex-col">
 				{config.lowerPlan ? <P className="font-bold mb-2">Everything in {config.lowerPlan}, plus:</P> : null}
@@ -108,7 +137,7 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
 					</div>
 				))}
 				{/* <Muted >{config.disclaimer}</Muted> */}
-				<p className='mt-2 text-muted-foreground text-xs leading-4 pl-5'>{config.disclaimer}</p>
+				<p className="mt-2 text-muted-foreground text-xs leading-4 pl-5">{config.disclaimer}</p>
 			</CardFooter>
 			{children}
 		</Card>

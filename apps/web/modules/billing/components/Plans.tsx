@@ -7,9 +7,11 @@ import { PlanCard, PlanCardProps } from './PlanCard'
 
 export interface PlansProps extends HTMLAttributes<HTMLElement> {
 	onSelectPlan: (data: { productPlan: Product; price: Price }) => void
+	currentPlanName?: string
+	loading?: boolean
 }
 
-export const Plans = ({ onSelectPlan, className }: PlansProps) => {
+export const Plans = ({ onSelectPlan, className, currentPlanName, loading }: PlansProps) => {
 	const { plans, plansError, plansStatus } = useProducts()
 
 	const onSelectEnterPrise = useCallback(({ price, productPlan }: { productPlan: Product; price: Price }) => {
@@ -25,8 +27,9 @@ export const Plans = ({ onSelectPlan, className }: PlansProps) => {
 				?.filter((plan) => plan.visible)
 				?.map((plan) => {
 					const config = plansConfig[plan.name as PlanName]
+					if (currentPlanName === plan.name) config.currentPlan = true
 					return (
-						<PlanCard key={plan.name} price={plan.prices[0]} product={plan} config={config} onSelectPlan={onSelectPlan}>
+						<PlanCard key={plan.name} price={plan.prices[0]} product={plan} config={config} onSelectPlan={onSelectPlan} loading={loading}>
 							{config.children}
 						</PlanCard>
 					)
@@ -35,9 +38,10 @@ export const Plans = ({ onSelectPlan, className }: PlansProps) => {
 				key={enterPrisePlan.name}
 				price={enterPrisePlan.prices[0]}
 				product={enterPrisePlan}
-				config={plansConfig.Enterprise}
+				config={{ ...plansConfig.Enterprise, currentPlan: currentPlanName === 'Enterprise' }}
 				onSelectPlan={onSelectEnterPrise}
 				priceSlot={<p className="text-center font-medium text-3xl sm:text-2xl lg:text-xl lg:leading-10 xl:text-2xl">Contact for pricing</p>}
+				loading={loading}
 			></PlanCard>
 		</div>
 	)

@@ -35,7 +35,7 @@ export const UsageCard = ({ usage, subscription }: UsageCardProps) => {
 							<ConfigurationItem
 								key={name}
 								label={value.displayName}
-								value={usage[name] ? `${usage[name]} / ${subscription.products[0].config[name]}` : '-'}
+								value={usage[name] ? `${usage[name]} / ${subscription.items[0].product.config[name]}` : '-'}
 							/>
 						))}
 					</div>

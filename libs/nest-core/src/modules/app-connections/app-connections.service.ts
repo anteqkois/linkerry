@@ -173,9 +173,9 @@ export class AppConnectionsService {
 	}
 
 	async upsert(projectId: Id, body: UpsertAppConnectionInput) {
-		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
+		const currentPlan = await this.subscriptionsService.getCurrentPlanOrThrow({ projectId })
 		const appConectionsAmount = await this.appConnectionsModel.count({ projectId })
-		if (appConectionsAmount >= currentPlan.connections) throw new QuotaError('connections')
+		if (appConectionsAmount >= currentPlan.config.connections) throw new QuotaError('connections')
 
 		const validatedConnectionValue = await this._validateConnectionValue({
 			connection: body,

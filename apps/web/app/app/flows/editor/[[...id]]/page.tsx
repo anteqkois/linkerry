@@ -9,7 +9,7 @@ import {
 	TriggerType,
 	assertNotNullOrUndefined,
 	isCustomHttpExceptionAxios,
-	isQuotaErrorCode
+	isQuotaErrorCode,
 } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useRouter } from 'next/navigation'
@@ -117,7 +117,7 @@ export default function Page({ params }: { params: { id: string } }) {
 	const { loadFlow, setFlow, setEdges, setNodes } = useEditor()
 	const { toast } = useToast()
 	const { showDialogBasedOnErrorCode } = useReachLimitDialog()
-	const { currentPlanConfiguration, subscriptionsStatus, subscriptionsError } = useSubscriptions()
+	const { currentPlan, subscriptionsStatus, subscriptionsError } = useSubscriptions()
 	const { push } = useRouter()
 
 	const initEditor = useCallback(async () => {
@@ -166,9 +166,19 @@ export default function Page({ params }: { params: { id: string } }) {
 		})()
 	}, [status])
 
-	if (subscriptionsStatus === 'pending') return <Spinner className='flex-center min-h-screen-no-nav'/>
+	if (subscriptionsStatus === 'pending') return <Spinner className="flex-center min-h-screen-no-nav" />
 	if (subscriptionsStatus === 'error') return <ErrorInfo errorObject={subscriptionsError} />
-	if (!currentPlanConfiguration) return <ErrorInfo message="Can not retrive yor plan configuration" />
+	if (!currentPlan) return <ErrorInfo message="Can not retrive yor plan configuration" />
 
-	return <Editor mode="production" limits={currentPlanConfiguration} cache={{ saveState: undefined }} />
+	return (
+		<Editor
+			mode="production"
+			limits={{
+				connections: currentPlan.config.connections,
+				flowSteps: currentPlan.config.flowSteps,
+				triggersAmount: currentPlan.config.triggersAmount,
+			}}
+			cache={{ saveState: undefined }}
+		/>
+	)
 }

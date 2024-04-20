@@ -174,9 +174,9 @@ export class FlowsService {
 	}
 
 	async createEmpty(projectId: Id, userId: Id) {
-		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
+		const currentPlan = await this.subscriptionsService.getCurrentPlanOrThrow({ projectId })
 		const projectFlowsAmount = await this.flowModel.count({ projectId, deleted: false })
-		if (projectFlowsAmount >= currentPlan.flows) throw new QuotaError('flows')
+		if (projectFlowsAmount >= currentPlan.config.flows) throw new QuotaError('flows')
 
 		const flowId = generateId()
 		const emptyFlowVersion = await this.flowVersionService.createEmpty(flowId.toString(), projectId, userId)
@@ -191,9 +191,9 @@ export class FlowsService {
 	}
 
 	async changeStatus({ newStatus, id, projectId }: UpdateStatusInput) {
-		const currentPlan = await this.subscriptionsService.getCurrentPlanConfigurationOrThrow({ projectId })
+		const currentPlan = await this.subscriptionsService.getCurrentPlanOrThrow({ projectId })
 		const projectFlowsRunningAmount = await this.flowModel.count({ projectId, status: FlowStatus.ENABLED })
-		if (newStatus === FlowStatus.ENABLED && projectFlowsRunningAmount >= currentPlan.maximumActiveFlows) throw new QuotaError('maximumActiveFlows')
+		if (newStatus === FlowStatus.ENABLED && projectFlowsRunningAmount >= currentPlan.config.maximumActiveFlows) throw new QuotaError('maximumActiveFlows')
 
 		const flowToUpdate = await this.flowModel.findOne<FlowDocument<'version'>>({ _id: id, projectId }).populate('version')
 		assertNotNullOrUndefined(flowToUpdate, 'flowToUpdate')

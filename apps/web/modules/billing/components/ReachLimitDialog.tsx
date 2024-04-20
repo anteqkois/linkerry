@@ -16,7 +16,7 @@ export interface ReachLimitDialogProps extends HTMLAttributes<HTMLElement> {}
 export const ReachLimitDialog = () => {
 	const { showDialog, setShowDialog, exceededConfigurationEntry, setCustomConfigurationItemValues, customConfigurationItemValues } =
 		useReachLimitDialog()
-	const { currentSubscription, subscriptionsError, subscriptionsStatus } = useSubscriptions()
+	const { currentSubscription, currentPlan, subscriptionsError, subscriptionsStatus } = useSubscriptions()
 	const { usage, usageError, usageStatus } = useUsage()
 
 	return (
@@ -43,7 +43,7 @@ export const ReachLimitDialog = () => {
 					{usage && currentSubscription ? (
 						(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => {
 							let itemValue = customConfigurationItemValues[name]
-							if (!itemValue) itemValue = usage[name] ? `${usage[name]} / ${currentSubscription.products[0].config[name]}` : '-'
+							if (!itemValue) itemValue = usage[name] ? `${usage[name]} / ${currentPlan?.config[name]}` : '-'
 
 							return (
 								<ConfigurationItem

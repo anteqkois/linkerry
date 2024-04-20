@@ -16,7 +16,7 @@ export class AuthController {
 	@Post('signup')
 	async signup(@Body() signUpDto: SignUpDto, @Response({ passthrough: true }) res: FastifyReply): Promise<IAuthSignUpResponse> {
 		const { access_token, user: userRes } = await this.authService.signUp(signUpDto)
-		const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
+		const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
 
 		res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
 			path: '/',
@@ -36,7 +36,7 @@ export class AuthController {
 	@Post('login')
 	async login(@ReqUser() user: User, @Response({ passthrough: true }) res: FastifyReply): Promise<IAuthLoginResponse> {
 		const { access_token, user: userRes } = await this.authService.login(user)
-		const expireDateUnix = +this.configService.get('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
+		const expireDateUnix = +this.configService.get('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
 
 		res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
 			path: '/',
@@ -82,7 +82,7 @@ export class AuthController {
 	// @Post('refresh')
 	// async login(@ReqUser() user: User, @Response({ passthrough: true }) res: FastifyReply) {
 	//   const { access_token, user: userRes } = await this.authService.login(user)
-	//   const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_UNIX', 3600)
+	//   const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
 
 	//   // @ts-ignore
 	//   res.setCookie('access_token', access_token, {
