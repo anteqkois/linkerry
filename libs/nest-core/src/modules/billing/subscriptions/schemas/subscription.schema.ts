@@ -49,9 +49,6 @@ export class SubscriptionModel<T> extends TimestampDatabaseModel implements Omit
 	validTo: string
 
 	@Prop({ required: false, type: String })
-	currentPeriodEnd: string
-
-	@Prop({ required: false, type: String })
 	canceledAt?: string
 
 	@Prop({ required: false, type: String })

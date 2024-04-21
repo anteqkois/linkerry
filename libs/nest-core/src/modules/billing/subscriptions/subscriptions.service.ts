@@ -15,13 +15,16 @@ import {
 } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { OnEvent } from '@nestjs/event-emitter'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import mongoose, { FilterQuery, Model } from 'mongoose'
+import { EVENT } from '../../configs/events-emitter'
 import { ProjectDocument, ProjectModel } from '../../projects/schemas/projects.schema'
 import { PaymentItem, StripeService } from '../payments/stripe.service'
 import { PriceDocument, PriceModel } from '../products/prices/price.schema'
 import { ProductDocument, ProductModel } from '../products/product.schema'
+import { SubscriptionUpdate } from './events'
 import { SubscriptionDocument, SubscriptionModel } from './schemas/subscription.schema'
 
 @Injectable()
@@ -74,7 +77,6 @@ export class SubscriptionsService {
 
 		const nowDate = dayjs().toISOString()
 		const input: Omit<SubscriptionBlank, '_id' | 'createdAt' | 'updatedAt'> = {
-			currentPeriodEnd: nowDate,
 			paymentGateway: PaymentGateway.NONE,
 			period,
 			project: projectId,
@@ -153,7 +155,6 @@ export class SubscriptionsService {
 
 	async createDefault(projectId: Id) {
 		const createdSubscription = await this.subscriptionModel.create({
-			currentPeriodEnd: this.DEFAULT_VALIDITY_DATE,
 			paymentGateway: PaymentGateway.NONE,
 			period: SubscriptionPeriod.MONTHLY,
 			project: projectId,
@@ -211,6 +212,21 @@ export class SubscriptionsService {
 				projectId,
 			})
 		return planProducts[0].product
+	}
+
+	@OnEvent(EVENT.BILLING.SUBSCRIPTION_UPDATE)
+	async handleOrderCreatedEvent(payload: SubscriptionUpdate) {
+		// const update: UpdateQuery<SubscriptionDocument> = {}
+		// if(payload.data.canceledAt)
+		await this.subscriptionModel.findOneAndUpdate(
+			{
+				_id: payload.id,
+			},
+			{
+				$set: payload.data,
+			},
+		)
+		// handle and process "OrderCreatedEvent" event
 	}
 }
 

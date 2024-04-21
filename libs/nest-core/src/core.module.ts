@@ -1,5 +1,6 @@
 import { FastifyAdapter } from '@bull-board/fastify'
 import { BullBoardModule } from '@bull-board/nestjs'
+import { EventEmitterModule } from '@nestjs/event-emitter'
 // import * as basicAuth from '@fastify/basic-auth';
 // import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis'
 import { BullModule } from '@nestjs/bullmq'
@@ -49,6 +50,16 @@ import { QUEUES } from './modules/workers/flow-worker/queues/types'
 				},
 			},
 		}),
+		EventEmitterModule.forRoot({
+			wildcard: false,
+			delimiter: '.',
+			newListener: false,
+			removeListener: false,
+			// maxListeners: 10,
+			verboseMemoryLeak: true,
+			ignoreErrors: false,
+		})
+
 	],
 	controllers: [],
 	providers: [

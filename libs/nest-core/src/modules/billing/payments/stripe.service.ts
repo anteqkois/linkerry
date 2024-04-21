@@ -1,20 +1,76 @@
 import { InjectStripeClient, StripeWebhookHandler } from '@golevelup/nestjs-stripe'
-import { Id, Price, Product, SubscriptionPeriod, assertNotNullOrUndefined } from '@linkerry/shared'
-import { Injectable } from '@nestjs/common'
+import {
+	CustomError,
+	ErrorCode,
+	Id,
+	PaymentGateway,
+	Price,
+	Product,
+	SubscriptionPeriod,
+	SubscriptionStatus,
+	assertNotNullOrUndefined,
+} from '@linkerry/shared'
+import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { EventEmitter2 } from '@nestjs/event-emitter'
+import dayjs from 'dayjs'
 import { Stripe } from 'stripe'
+import { EVENT } from '../../configs/events-emitter'
 import { ProjectDocument } from '../../projects/schemas/projects.schema'
+import { SubscriptionUpdate } from '../subscriptions/events'
 
 @Injectable()
 export class StripeService {
-	constructor(@InjectStripeClient() private readonly stripeClient: Stripe, private readonly configService: ConfigService) {
+	private readonly logger = new Logger(StripeService.name)
+
+	constructor(
+		@InjectStripeClient() private readonly stripeClient: Stripe,
+		private readonly configService: ConfigService,
+		private readonly eventEmitter: EventEmitter2,
+	) {
 		//
 	}
 
 	@StripeWebhookHandler('customer.subscription.created')
 	customerSubscriptionCreated(event: Stripe.CustomerSubscriptionCreatedEvent) {
-		console.log(event.data.object.customer)
-		// execute your custom business logic
+		// console.log('customer.subscription.created')
+		// console.dir(event, { depth: null })
+		this.logger.log(`#customerSubscriptionCreated event ${event.id} ${event.data.object.metadata}`)
+		const { object } = event.data
+		if (!isSubscriptionMetadata(object.metadata)) throw new CustomError(`Invalid event metadata`, ErrorCode.INVALID_BILLING, object.metadata)
+
+		this.eventEmitter.emit(EVENT.BILLING.SUBSCRIPTION_UPDATE, {
+			id: object.metadata.subscriptionId,
+			data: {
+				paymentGateway: PaymentGateway.STRIPE,
+				validTo: dayjs(object.current_period_end * 1000).toISOString(),
+				status: object.status,
+			},
+		} as SubscriptionUpdate)
+	}
+
+	@StripeWebhookHandler('customer.subscription.updated')
+	async customerSubscriptionUpdated(event: Stripe.CustomerSubscriptionUpdatedEvent) {
+		this.logger.log(`#customer.subscription.updated event ${event.id} ${JSON.stringify(event.data.object.metadata)}`)
+		const { object, previous_attributes } = event.data
+		if (!isSubscriptionMetadata(object.metadata)) throw new CustomError(`Invalid event metadata`, ErrorCode.INVALID_BILLING, object.metadata)
+
+		const customerSubscription = await this.stripeClient.subscriptions.retrieve(object.id)
+		assertNotNullOrUndefined(customerSubscription, 'customerSubscription')
+
+		const update: SubscriptionUpdate['data'] = {
+			paymentGateway: PaymentGateway.STRIPE,
+		}
+		if (previous_attributes?.current_period_end) update.validTo = dayjs(object.current_period_end * 1000).toISOString()
+		if (previous_attributes?.status && Object.values(SubscriptionStatus).includes((previous_attributes?.status ?? '') as SubscriptionStatus))
+			update.status = object.status as SubscriptionStatus
+		else if (previous_attributes?.status)
+			throw new CustomError(`Unknown subscribe status`, ErrorCode.INVALID_BILLING, { status: previous_attributes?.status })
+
+		this.eventEmitter.emit(EVENT.BILLING.SUBSCRIPTION_UPDATE, {
+			id: object.metadata.subscriptionId,
+			data: update,
+		} as SubscriptionUpdate)
 	}
 
 	private async _getCustomerOrCreate({ project }: { project: ProjectDocument<'owner'> }) {
@@ -100,6 +156,11 @@ export class StripeService {
 				paymentUrl: openSessionsForThisPaymentItems.url,
 			}
 
+		const metadata: SubscriptionMetadata & Stripe.MetadataParam = {
+			projectId: project._id.toString(),
+			subscriptionId: subscriptionId.toString(),
+		}
+
 		const session = await this.stripeClient.checkout.sessions.create({
 			customer: customer.id,
 			mode: 'subscription',
@@ -108,23 +169,27 @@ export class StripeService {
 				quantity: 1,
 			})),
 			subscription_data: {
-				metadata: {
-					projectId: project._id.toString(),
-					subscriptionId: subscriptionId.toString(),
-				},
+				metadata,
 			},
 			success_url: `${this.configService.getOrThrow('FRONTEND_HOST')}/app/payments/success`,
 			cancel_url: `${this.configService.getOrThrow('FRONTEND_HOST')}/app/subscriptions`,
-			metadata: {
-				projectId: project._id.toString(),
-				subscriptionId: subscriptionId.toString(),
-			},
+			metadata,
 		})
 
 		assertNotNullOrUndefined(session.url, 'missing payment url')
 
 		return { paymentUrl: session.url }
 	}
+}
+
+const isSubscriptionMetadata = (data: unknown): data is SubscriptionMetadata => {
+	if (data && typeof data === 'object' && 'projectId' in data && 'subscriptionId' in data) return true
+	return false
+}
+
+interface SubscriptionMetadata {
+	projectId: string
+	subscriptionId: string
 }
 
 interface CreateSubscriptionCheckoutSessionProps {

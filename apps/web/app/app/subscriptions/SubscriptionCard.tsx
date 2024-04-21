@@ -50,7 +50,7 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
 					<Separator orientation="vertical" className="h-14" />
 					<div className="flex flex-col">
 						<span className="text-muted-foreground">Next charge</span>
-						<span>{dayjs(subscription.currentPeriodEnd).format(`DD MMMM YYYY`)}</span>
+						<span>{dayjs(subscription.validTo).format(`DD MMMM YYYY`)}</span>
 					</div>
 					<Separator orientation="vertical" className="h-14" />
 					{/* <div className="flex flex-col">

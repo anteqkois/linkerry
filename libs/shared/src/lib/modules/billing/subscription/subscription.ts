@@ -11,8 +11,8 @@ export enum SubscriptionPeriod {
 export enum SubscriptionStatus {
 	ACTIVE = 'active',
 	INCOMPLETE = 'incomplete',
-	// INCOMPLETE_EXPIRED = 'incomplete_expired',
-	// PAST_DUE = 'past_due',
+	INCOMPLETE_EXPIRED = 'incomplete_expired',
+	PAST_DUE = 'past_due',
 	CANCELED = 'canceled',
 	UNAPID = 'unpaid',
 }
@@ -32,7 +32,6 @@ export interface SubscriptionCommonFields extends DatabaseTimestamp {
 	items: SubscriptionItem[]
 	status: SubscriptionStatus
 	validTo: string
-	currentPeriodEnd: string
 	canceledAt?: string
 	trialStartedAt?: string
 	trialEndedAt?: string
@@ -47,7 +46,6 @@ export interface SubscriptionStripe extends SubscriptionCommonFields {
 	paymentGateway: PaymentGateway.STRIPE
 	stripeSubscriptionId: string
 	validTo: string
-	currentPeriodEnd: string
 	defaultPaymentMethod: null
 }
 
