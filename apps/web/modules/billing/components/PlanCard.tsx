@@ -31,7 +31,7 @@ export interface PlanCardProps extends HTMLAttributes<HTMLElement>, VariantProps
 		// popular?: boolean //Recommended -> slot element
 		points: { point: string; unfinished: boolean }[]
 		disclaimer?: string
-		currentPlan?: boolean
+		disabledMessage?: string
 		priceEarlyAccees?: number
 	}
 }
@@ -74,7 +74,7 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
 								className="w-full font-bold"
 								variant={config.buttonVariant}
 								onClick={() =>
-									config.currentPlan
+									config.disabledMessage
 										? null
 										: onSelectPlan({
 												productPlan: product,
@@ -85,9 +85,9 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
 								{config.buttonLabel ?? 'Choose Plan'}
 							</ButtonClient>
 						</TooltipTrigger>
-						{config.currentPlan ? (
+						{config.disabledMessage ? (
 							<TooltipContent>
-								<p>It is your current plan</p>
+								<p>{config.disabledMessage}</p>
 							</TooltipContent>
 						) : null}
 					</Tooltip>

@@ -7,11 +7,11 @@ import { PlanCard, PlanCardProps } from './PlanCard'
 
 export interface PlansProps extends HTMLAttributes<HTMLElement> {
 	onSelectPlan: (data: { productPlan: Product; price: Price }) => void
-	currentPlanName?: string
+	currentPlan?: Product | null
 	loading?: boolean
 }
 
-export const Plans = ({ onSelectPlan, className, currentPlanName, loading }: PlansProps) => {
+export const Plans = ({ onSelectPlan, className, currentPlan, loading }: PlansProps) => {
 	const { plans, plansError, plansStatus } = useProducts()
 
 	const onSelectEnterPrise = useCallback(({ price, productPlan }: { productPlan: Product; price: Price }) => {
@@ -27,7 +27,13 @@ export const Plans = ({ onSelectPlan, className, currentPlanName, loading }: Pla
 				?.filter((plan) => plan.visible)
 				?.map((plan) => {
 					const config = plansConfig[plan.name as PlanName]
-					if (currentPlanName === plan.name) config.currentPlan = true
+					if (currentPlan?.name === plan.name) {
+						config.disabledMessage = 'It is your current plan'
+						config.buttonLabel = 'Current Plan'
+						config.buttonVariant = 'outline'
+					}
+					if ((currentPlan?.priority ?? 0) > plan.priority)
+						config.disabledMessage = 'Downgrade plan is uniplemented. If you want downgrade plan contact with our Team'
 					return (
 						<PlanCard key={plan.name} price={plan.prices[0]} product={plan} config={config} onSelectPlan={onSelectPlan} loading={loading}>
 							{config.children}
@@ -38,7 +44,7 @@ export const Plans = ({ onSelectPlan, className, currentPlanName, loading }: Pla
 				key={enterPrisePlan.name}
 				price={enterPrisePlan.prices[0]}
 				product={enterPrisePlan}
-				config={{ ...plansConfig.Enterprise, currentPlan: currentPlanName === 'Enterprise' }}
+				config={{ ...plansConfig.Enterprise, disabledMessage: currentPlan?.name === 'Enterprise' ? 'It is your current plan' : '' }}
 				onSelectPlan={onSelectEnterPrise}
 				priceSlot={<p className="text-center font-medium text-3xl sm:text-2xl lg:text-xl lg:leading-10 xl:text-2xl">Contact for pricing</p>}
 				loading={loading}

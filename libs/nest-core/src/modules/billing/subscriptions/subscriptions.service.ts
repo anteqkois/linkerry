@@ -125,7 +125,7 @@ export class SubscriptionsService {
 			period,
 			items: paymentIems.map((item) => ({
 				price: item.price._id,
-				product: item.price._id,
+				product: item.product._id,
 			})),
 		})
 

@@ -6,7 +6,7 @@ const buttonVariants = cva('px-2 mt-16 w-screen lg:max-w-none', {
 	variants: {
 		variant: {
 			fromTop: '',
-			centered: 'flex justify-center',
+			centered: 'min-h-screen-no-nav flex-center',
 		},
 		maxScreen: {
 			true: 'max-h-screen-no-nav overflow-y-hidden',
@@ -28,6 +28,6 @@ const buttonVariants = cva('px-2 mt-16 w-screen lg:max-w-none', {
 
 export interface PageProps extends HtmlHTMLAttributes<HTMLElement>, VariantProps<typeof buttonVariants> {}
 
-export const PageContainer = ({ children, padding, maxScreen, className }: PageProps) => {
-	return <main className={cn(buttonVariants({ padding, maxScreen }), className)}>{children}</main>
+export const PageContainer = ({ children, padding, maxScreen, variant, className }: PageProps) => {
+	return <main className={cn(buttonVariants({ padding, maxScreen, variant }), className)}>{children}</main>
 }

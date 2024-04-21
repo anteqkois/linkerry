@@ -73,7 +73,7 @@ export default function Page() {
 				<ErrorInfo message="Can not retrive subscription" />
 			)}
 			<H2 className="text-center lg:hidden">Upgarde Plan</H2>
-			<Plans onSelectPlan={onSelectPlanConfiguration} currentPlanName={currentPlan?.name} loading={loading}/>
+			<Plans onSelectPlan={onSelectPlanConfiguration} currentPlan={currentPlan} loading={loading}/>
 		</PageContainer>
 	)
 }
