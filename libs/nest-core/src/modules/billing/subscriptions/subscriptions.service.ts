@@ -15,7 +15,7 @@ import {
 } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { OnEvent } from '@nestjs/event-emitter'
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
 import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import mongoose, { FilterQuery, Model } from 'mongoose'
@@ -24,7 +24,7 @@ import { ProjectDocument, ProjectModel } from '../../projects/schemas/projects.s
 import { PaymentItem, StripeService } from '../payments/stripe.service'
 import { PriceDocument, PriceModel } from '../products/prices/price.schema'
 import { ProductDocument, ProductModel } from '../products/product.schema'
-import { SubscriptionUpdate } from './events'
+import { SubscriptionPlanUpdate, SubscriptionUpdate } from './events'
 import { SubscriptionDocument, SubscriptionModel } from './schemas/subscription.schema'
 
 @Injectable()
@@ -39,6 +39,7 @@ export class SubscriptionsService {
 		@InjectModel(ProjectModel.name) private readonly projectModel: Model<ProjectDocument>,
 		private readonly configService: ConfigService,
 		private readonly stripeService: StripeService,
+		private readonly eventEmitter: EventEmitter2,
 	) {
 		this.DEFAULT_VALIDITY_DATE = this.configService.getOrThrow('DEFAULT_VALIDITY_DATE')
 		this.DEFAULT_PRODUCT_ID = this.configService.getOrThrow('DEFAULT_PRODUCT_ID')
@@ -196,37 +197,82 @@ export class SubscriptionsService {
 	}
 
 	async getCurrentPlanOrThrow({ projectId }: { projectId: Id }) {
-		const subscriptions = await this.findMany({
+		const activeSubscriptions = await this.findMany({
 			project: projectId,
+			status: SubscriptionStatus.ACTIVE,
 		})
 
-		const currentSubscription = subscriptions.filter((subscription) => subscription.status === SubscriptionStatus.ACTIVE)
-		if (currentSubscription.length > 1)
+		if (activeSubscriptions.length > 1)
 			throw new CustomError(`More than one active subscription`, ErrorCode.INVALID_BILLING, {
 				projectId,
 			})
 
-		const planProducts = currentSubscription[0].items.filter((item) => item.product.type === ProductType.PLAN)
+		/* return default subscription */
+		if (!activeSubscriptions.length) (await this._getDefaultSubscription(projectId)).items[0].product
+
+		const planProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
 		if (planProducts.length > 1)
 			throw new CustomError(`More than one product plan in subscription`, ErrorCode.INVALID_BILLING, {
 				projectId,
+				subscriptionId: activeSubscriptions[0].id,
 			})
 		return planProducts[0].product
 	}
 
-	@OnEvent(EVENT.BILLING.SUBSCRIPTION_UPDATE)
-	async handleOrderCreatedEvent(payload: SubscriptionUpdate) {
-		// const update: UpdateQuery<SubscriptionDocument> = {}
-		// if(payload.data.canceledAt)
-		await this.subscriptionModel.findOneAndUpdate(
-			{
-				_id: payload.id,
-			},
-			{
-				$set: payload.data,
-			},
-		)
-		// handle and process "OrderCreatedEvent" event
+	@OnEvent(EVENT.SUBSCRIPTION.UPDATE)
+	async handleSubscriptionUpdate(payload: SubscriptionUpdate) {
+		/* only retrive subscription to update, becouse we want to get projectId */
+		const newSubscription = await this.subscriptionModel
+			.findOne<SubscriptionDocument<'items'>>(
+				{
+					_id: payload.id,
+				},
+			)
+			.populate('items.price')
+			.populate('items.product')
+		assertNotNullOrUndefined(newSubscription, 'newSubscription')
+
+		/* retrive current data before update using projectId also */
+		const activeSubscriptions = await this.findMany({
+			project: newSubscription.project._id,
+			status: SubscriptionStatus.ACTIVE,
+		})
+
+		if (activeSubscriptions.length > 1)
+			throw new CustomError(`More than one active subscription`, ErrorCode.INVALID_BILLING, {
+				projectId: newSubscription.project._id,
+			})
+
+		/* get default subscription */
+		if (!activeSubscriptions.length) activeSubscriptions[0] = await this._getDefaultSubscription(newSubscription.project._id.toString())
+
+		const oldPlanProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
+		if (oldPlanProducts.length > 1)
+			throw new CustomError(`More than one product plan in old subscription`, ErrorCode.INVALID_BILLING, {
+				projectId: newSubscription.project._id,
+				subscriptionId: activeSubscriptions[0].id,
+			})
+
+		/* save new data */
+		for (const [key, value] of Object.entries(payload.data) as [keyof Subscription, any][]) {
+			(newSubscription[key] as any) = value
+		}
+		await newSubscription.save()
+
+		const newPlanProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
+		if (oldPlanProducts.length > 1)
+			throw new CustomError(`More than one product plan in new subscription`, ErrorCode.INVALID_BILLING, {
+				projectId: newSubscription.project._id,
+				subscriptionId: activeSubscriptions[0].id,
+			})
+
+		/* side effect to update project limits */
+		this.eventEmitter.emit(EVENT.SUBSCRIPTION.PLAN.UPDATE, {
+			oldSubscription: activeSubscriptions[0].toObject(),
+			newSubscription: newSubscription.toObject(),
+			oldPlan: oldPlanProducts[0].toObject(),
+			newPlan: newPlanProducts[0].product.toObject(),
+		} as SubscriptionPlanUpdate)
 	}
 }
 

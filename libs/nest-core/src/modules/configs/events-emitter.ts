@@ -1,5 +1,8 @@
 export const EVENT = {
-	BILLING: {
-		SUBSCRIPTION_UPDATE: 'subscription.update',
+	SUBSCRIPTION: {
+		UPDATE: 'subscription.update',
+		PLAN:{
+			UPDATE: 'subscription.update',
+		}
 	},
 }

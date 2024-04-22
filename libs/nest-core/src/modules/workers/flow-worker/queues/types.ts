@@ -109,3 +109,8 @@ export type AddParams<JT extends JobType> = JT extends JobType.ONE_TIME
 export type RemoveParams = {
 	id: Id
 }
+
+export interface UpdatePoolingTriggersCronParams {
+	flowVersionId: Id
+	scheduleOptions: Pick<ScheduleOptions, 'cronExpression'>
+}

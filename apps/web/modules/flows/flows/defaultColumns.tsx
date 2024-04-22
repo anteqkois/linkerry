@@ -119,7 +119,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 		cell: ({ row, table }) => {
 			const { toast } = useToast()
 
-			const hanleChangeStatus = () => {
+			const hanleChangeStatus = async () => {
 				if (!row.original.publishedVersionId)
 					return toast({
 						title: "Flow isn't published yet",
@@ -131,6 +131,8 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 							</ToastAction>
 						),
 					})
+
+					await (table.options?.meta as any).onChangeFlowStatus(row.original)
 			}
 
 			return (

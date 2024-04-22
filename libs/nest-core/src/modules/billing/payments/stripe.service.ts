@@ -33,13 +33,11 @@ export class StripeService {
 
 	@StripeWebhookHandler('customer.subscription.created')
 	customerSubscriptionCreated(event: Stripe.CustomerSubscriptionCreatedEvent) {
-		// console.log('customer.subscription.created')
-		// console.dir(event, { depth: null })
 		this.logger.log(`#customerSubscriptionCreated event ${event.id} ${event.data.object.metadata}`)
 		const { object } = event.data
 		if (!isSubscriptionMetadata(object.metadata)) throw new CustomError(`Invalid event metadata`, ErrorCode.INVALID_BILLING, object.metadata)
 
-		this.eventEmitter.emit(EVENT.BILLING.SUBSCRIPTION_UPDATE, {
+		this.eventEmitter.emit(EVENT.SUBSCRIPTION.UPDATE, {
 			id: object.metadata.subscriptionId,
 			data: {
 				paymentGateway: PaymentGateway.STRIPE,
@@ -67,7 +65,7 @@ export class StripeService {
 		else if (previous_attributes?.status)
 			throw new CustomError(`Unknown subscribe status`, ErrorCode.INVALID_BILLING, { status: previous_attributes?.status })
 
-		this.eventEmitter.emit(EVENT.BILLING.SUBSCRIPTION_UPDATE, {
+		this.eventEmitter.emit(EVENT.SUBSCRIPTION.UPDATE, {
 			id: object.metadata.subscriptionId,
 			data: update,
 		} as SubscriptionUpdate)

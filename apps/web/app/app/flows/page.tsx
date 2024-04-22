@@ -4,9 +4,8 @@ import { FlowOperationType, FlowPopulated, FlowStatus, isCustomHttpExceptionAxio
 import { useToast } from '@linkerry/ui-components/client'
 import { H5 } from '@linkerry/ui-components/server'
 import { Row } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
-import { useClientQuery } from '../../../libs/react-query'
+import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
 import { useReachLimitDialog } from '../../../modules/billing/useReachLimitDialog'
 import { FlowApi } from '../../../modules/flows'
 import { columns } from '../../../modules/flows/flows/defaultColumns'
@@ -18,7 +17,6 @@ import { PageContainer } from '../components/PageContainer'
 export default function Page() {
 	const { data, error } = useClientQuery(flowQueryConfig.getMany({}))
 	const { toast } = useToast()
-	const { push } = useRouter()
 	const { showDialogBasedOnErrorCode } = useReachLimitDialog()
 	const [runningOperation, setRunningOperation] = useState(false)
 
@@ -30,36 +28,49 @@ export default function Page() {
 	const onChangeFlowStatus = useCallback(async (flow: FlowPopulated) => {
 		setRunningOperation(true)
 		try {
-			switch (flow.status) {
-				case FlowStatus.DISABLED:
-					await FlowApi.operation(flow._id, {
-						type: FlowOperationType.CHANGE_STATUS,
-						flowVersionId: flow.version._id,
-						request: {
-							status: FlowStatus.ENABLED,
-						},
-					})
-					toast({
-						title: 'Flow Enabled',
-						description: 'Your Flow is live. We are in Beta version, so please inform our Team if something get wrong.',
-						variant: 'success',
-					})
-					break
-				case FlowStatus.ENABLED:
-					await FlowApi.operation(flow._id, {
-						type: FlowOperationType.CHANGE_STATUS,
-						flowVersionId: flow.version._id,
-						request: {
-							status: FlowStatus.DISABLED,
-						},
-					})
-					toast({
-						title: 'Flow Disabled',
-						description: 'Your Flow was stoped. We are in Beta version, so please inform our Team if something get wrong.',
-						variant: 'success',
-					})
-					break
-			}
+			const newStatus = flow.status === FlowStatus.DISABLED ? FlowStatus.ENABLED : FlowStatus.DISABLED
+
+			await FlowApi.operation(flow._id, {
+				type: FlowOperationType.CHANGE_STATUS,
+				flowVersionId: flow.version._id,
+				request: {
+					status: newStatus,
+				},
+			})
+
+			const queryClient = getBrowserQueryCllient()
+			console.log(
+				data?.map((entry) => {
+					if (entry._id === flow._id) {
+						console.log('UPDATE', { ...entry, status: newStatus })
+						return { ...entry, status: newStatus }
+					} else return entry
+				}),
+			)
+
+			queryClient.setQueryData<FlowPopulated[]>(['flows'], (oldData) => {
+				if (!oldData) return undefined
+
+				return [
+					...oldData.map((entry) => {
+						if (entry._id === flow._id) return { ...entry, status: newStatus }
+						else return entry
+					}),
+				]
+			})
+
+			if (newStatus === FlowStatus.ENABLED)
+				toast({
+					title: 'Flow Enabled',
+					description: 'Your Flow is live. We are in Beta version, so please inform our Team if something get wrong.',
+					variant: 'success',
+				})
+			else
+				toast({
+					title: 'Flow Disabled',
+					description: 'Your Flow was stoped. We are in Beta version, so please inform our Team if something get wrong.',
+					variant: 'success',
+				})
 		} catch (error) {
 			let errorDescription = 'Unknown error occured, can not update your flow status. Try again and inform our Team.'
 

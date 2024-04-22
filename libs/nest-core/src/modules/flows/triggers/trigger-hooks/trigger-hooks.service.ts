@@ -1,6 +1,7 @@
 import { TriggerBase, WebhookHandshakeStrategy, WebhookRenewStrategy, WebhookResponse } from '@linkerry/connectors-framework'
 import {
 	EngineResponseStatus,
+	FlowStatus,
 	FlowVersion,
 	RunEnvironment,
 	TriggerConnector,
@@ -11,13 +12,19 @@ import {
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { OnEvent } from '@nestjs/event-emitter'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { SubscriptionPlanUpdate } from '../../../billing/subscriptions/events'
 import { SubscriptionsService } from '../../../billing/subscriptions/subscriptions.service'
+import { EVENT } from '../../../configs/events-emitter'
 import { EngineService } from '../../../engine/engine.service'
 import { EngineHelperResponse, EngineHelperTriggerResult } from '../../../engine/types'
 import { WebhookUrlsService } from '../../../webhooks/webhook-urls/webhook-urls.service'
 import { QueuesService } from '../../../workers/flow-worker/queues/queues.service'
 import { JobType, LATEST_JOB_DATA_SCHEMA_VERSION, RepeatableJobType } from '../../../workers/flow-worker/queues/types'
 import { ConnectorsMetadataService } from '../../connectors/connectors-metadata/connectors-metadata.service'
+import { FlowDocument, FlowModel } from '../../flows/schemas/flow.schema'
 import { DisableParams, EnableTriggerHookParams, ExecuteHandshakeParams, ExecuteTrigger, RenewWebhookParams } from './types'
 
 @Injectable()
@@ -26,6 +33,7 @@ export class TriggerHooks {
 	// private POLLING_FREQUENCY_CRON_EXPRESSON: string
 
 	constructor(
+		@InjectModel(FlowModel.name) private readonly flowModel: Model<FlowDocument>,
 		private readonly connectorsMetadataService: ConnectorsMetadataService,
 		private readonly engineService: EngineService,
 		private readonly configService: ConfigService,
@@ -48,7 +56,7 @@ export class TriggerHooks {
 		// }
 	}
 
-	private async _sideeffect(connectorTrigger: TriggerBase, projectId: string, flowVersion: FlowVersion): Promise<void> {
+	private async _disableSideEffect(connectorTrigger: TriggerBase, projectId: string, flowVersion: FlowVersion): Promise<void> {
 		switch (connectorTrigger.type) {
 			// case TriggerStrategy.APP_WEBHOOK:
 			// 	await appEventRoutingService.deleteListeners({
@@ -269,7 +277,7 @@ export class TriggerHooks {
 			}
 			return null
 		} finally {
-			await this._sideeffect(connectorTrigger, projectId, flowVersion)
+			await this._disableSideEffect(connectorTrigger, projectId, flowVersion)
 		}
 	}
 
@@ -325,5 +333,29 @@ export class TriggerHooks {
 		} catch (error: any) {
 			this.logger.error(`Failed to renew webhook for flow ${flowVersion.flow} in project ${projectId}`, error)
 		}
+	}
+
+	@OnEvent(EVENT.SUBSCRIPTION.PLAN.UPDATE)
+	async handleSubscriptionPlanUpdate({ newPlan, oldPlan, newSubscription }: SubscriptionPlanUpdate) {
+		if (oldPlan.config.minimumPollingInterval === newPlan.config.minimumPollingInterval) return
+
+		const projectActiveFlows = await this.flowModel.find({
+			projectId: newSubscription.project,
+			status: FlowStatus.ENABLED,
+			publishedVersionId: {
+				$exists: true,
+			},
+		})
+
+		if (!projectActiveFlows.length) return
+
+		await this.queuesService.updatePoolingTriggerCrons(
+			projectActiveFlows.map((flow) => ({
+				flowVersionId: flow.publishedVersionId!.toString(),
+				scheduleOptions: {
+					cronExpression: this._constructEveryXMinuteCron(newPlan.config.minimumPollingInterval),
+				},
+			})),
+		)
 	}
 }
