@@ -213,16 +213,17 @@ export class FlowWorkerService {
 	}
 
 	private async _finishExecution(params: FinishExecutionParams): Promise<void> {
+		const { flowRunId, logFileId, result } = params
+
 		this.logger.log(`#finishExecution params:`, {
-			logFileId: params.logFileId,
-			flowRunId: params.flowRunId,
-			duration: params.result.duration,
-			tasks: params.result.tasks,
-			tags: params.result.tags,
-			status: params.result.status,
+			logFileId: logFileId,
+			flowRunId: flowRunId,
+			duration: result.duration,
+			tasks: result.tasks,
+			tags: result.tags,
+			status: result.status,
 		})
 
-		const { flowRunId, logFileId, result } = params
 
 		if (result.status === FlowRunStatus.PAUSED) {
 			await this.flowRunsService.pause({

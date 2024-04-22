@@ -61,11 +61,11 @@ export class FlowRunsService {
 	}
 
 	private async _finishSideEffect({ flowRun }: { flowRun: FlowRun }): Promise<void> {
+		// TODO check and refactor in future (timeout logic and also logic related to throwing error)
+		if (flowRun.status === FlowRunStatus.TIMEOUT && (!flowRun.tasks || flowRun.tasks < 10)) flowRun.tasks = 10
 		if (
-			flowRun.status === FlowRunStatus.PAUSED ||
-			flowRun.status === FlowRunStatus.STOPPED ||
-			flowRun.status === FlowRunStatus.SUCCEEDED ||
-			(flowRun.status === FlowRunStatus.TIMEOUT && flowRun.tasks === 0) ||
+			((flowRun.status === FlowRunStatus.PAUSED || flowRun.status === FlowRunStatus.STOPPED || flowRun.status === FlowRunStatus.SUCCEEDED) &&
+				flowRun.tasks === 0) ||
 			typeof flowRun.tasks !== 'number'
 		)
 			throw new CustomError(`Missing tasks amount for flowRun=${flowRun._id}`, ErrorCode.INVALID_TYPE)

@@ -2,6 +2,7 @@ import { Id } from '@linkerry/shared'
 import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
 import { Job, Queue } from 'bullmq'
+import { inspect } from 'util'
 import { FlowWorkerService } from './flow-worker.service'
 import { OneTimeJobData, QUEUES } from './queues/types'
 
@@ -20,7 +21,20 @@ export class OneTimeProcessor extends WorkerHost {
 		try {
 			await this.flowWorkerService.executeFlow(job.data)
 		} catch (error: any) {
-			this.logger.error(`#process error:`, job)
+			this.logger.error(
+				`#process error job=`,
+				inspect(
+					{
+						name: job.name,
+						options: job.opts,
+						id: job.id,
+						data: job.data,
+						processedOn: job.processedOn,
+						failedReason: job.failedReason,
+					},
+					{ depth: null },
+				),
+			)
 			this.logger.error(error.stack)
 			throw error
 			// captureException(e)

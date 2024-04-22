@@ -126,8 +126,14 @@ export class EngineService {
 			})
 
 			/* Returning  sandboxResponse.standardError to frontend can be dangerous, so only log here*/
+
+			// TODO fix this error in engine, now only remove
+			sandboxResponse.standardError = sandboxResponse.standardError.replace(
+				/\(node:\d*\) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.\s+\(Use `node --trace-warnings ...` to show where the warning was created\)/,
+				'',
+			)
+
 			sandboxResponse.standardError.split('\n').forEach((f) => {
-				if (f.includes('NODE_TLS_REJECT_UNAUTHORIZED')) return
 				if (f.trim().length > 0) this.logger.error(`${operation} ${f}`)
 			})
 
