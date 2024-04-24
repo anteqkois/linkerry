@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HashService } from '../../lib/auth/hash.service';
 import { userModelFactory } from './schemas/user.schema';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -10,6 +9,6 @@ import { UsersService } from './users.service';
     MongooseModule.forFeatureAsync([userModelFactory]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, HashService]
+  providers: [UsersService]
 })
 export class UsersModule { }

@@ -1,5 +1,4 @@
 'use client'
-import { useUser } from '../../../modules/user/useUser'
 
 import {
 	DropdownMenu,
@@ -14,9 +13,15 @@ import {
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from '@linkerry/ui-components/client'
-import { Button, Icons } from '@linkerry/ui-components/server'
+import { Button, Icons, Toggle } from '@linkerry/ui-components/server'
 import Link from 'next/link'
+import { useLiveChat } from '../../../libs/Tawk'
+import { useUser } from '../../../modules/user/useUser'
 import { LogoutDropDownMenuItem } from './LogoutDropDownMenuItem'
 
 interface MyAccountMenuProps {
@@ -25,6 +30,7 @@ interface MyAccountMenuProps {
 
 export function MyAccountMenu({ children }: MyAccountMenuProps) {
 	const { user } = useUser()
+	const { open, toggleVisibility, liveChatRef, hidden } = useLiveChat()
 
 	return (
 		<DropdownMenu>
@@ -80,9 +86,22 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
 					</DropdownMenuSub>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem>Support</DropdownMenuItem>
+				<DropdownMenuItem onClick={open}>Support</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<LogoutDropDownMenuItem />
+				<DropdownMenuSeparator />
+				<TooltipProvider delayDuration={200}>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Toggle pressed={!hidden} onPressedChange={toggleVisibility} size={'sm'} className="my-1" variant="outline" aria-label="Toggle italic">
+								<Icons.Chat className="h-4 w-4" />
+							</Toggle>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Toggle Live Chat</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)

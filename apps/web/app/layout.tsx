@@ -5,6 +5,7 @@ import './global.css'
 import { ThemeProvider, Toaster } from '@linkerry/ui-components/client'
 import { TailwindIndicator } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
+import { LiveChatProvider } from '../libs/Tawk'
 import { siteConfig } from './webConfig'
 // import { Analytics } from "@/components/analytics"
 
@@ -71,15 +72,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
+			{/* <Script type="text/javascript" id="tawk-livechat" src={`/tawk-livechat.js`}/> */}
 			<body
 				className={cn('min-h-screen-no-nav bg-background font-sans antialiased', fontSans.variable, fontHeading.variable)}
 				suppressHydrationWarning={true}
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-					{children}
-					{/* <Analytics /> */}
-					<Toaster duration={5_000} />
-					<TailwindIndicator />
+					<LiveChatProvider>
+						{children}
+						{/* <Analytics /> */}
+						<Toaster duration={5_000} />
+						<TailwindIndicator />
+					</LiveChatProvider>
 				</ThemeProvider>
 			</body>
 		</html>

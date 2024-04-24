@@ -1,5 +1,6 @@
 import {
 	CaretSortIcon,
+	ChatBubbleIcon,
 	CheckCircledIcon,
 	CheckIcon,
 	ChevronDownIcon,
@@ -71,6 +72,7 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	Chat: (props: RadixIconProps) => <ChatBubbleIcon {...defaultRadixProps(props)} />,
 	Rocket: (props: RadixIconProps) => <RocketIcon {...defaultRadixProps(props)} />,
 	Info: (props: RadixIconProps) => <InfoCircledIcon {...defaultRadixProps(props)} />,
 	FullScreen: (props: RadixIconProps) => <EnterFullScreenIcon {...defaultRadixProps(props)} />,

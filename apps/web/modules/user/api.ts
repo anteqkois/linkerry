@@ -28,3 +28,12 @@ export class AuthApi {
 		return apiClient.post<User>('/auth/email/resend')
 	}
 }
+
+export class UserApi {
+	static async liveChatHash() {
+		return apiClient.get(
+			'/users/live-chat',
+			// fingerprint: await fingerprint,
+		)
+	}
+}

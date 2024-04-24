@@ -5,6 +5,7 @@ import { ReachLimitDialog } from '../../modules/billing/components/ReachLimitDia
 import { ReachLimitDialogProvider } from '../../modules/billing/useReachLimitDialog'
 import ReactQueryProvider from '../reactQueryProvider'
 import { DesktopMenu } from './components/DesktopMenu'
+import { LiveCharInitializer } from './components/LiveCharInitializer'
 import { MobileMenu } from './components/MobileMenu'
 import { MyAccountMenu } from './components/MyAccountMenu'
 
@@ -29,6 +30,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 							</div>
 						</div>
 						{children}
+						<LiveCharInitializer/>
 						<ReachLimitDialog />
 					</ReachLimitDialogProvider>
 				</UserProvider>

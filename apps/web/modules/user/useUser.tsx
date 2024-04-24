@@ -8,6 +8,7 @@ import { AuthApi } from './api'
 
 type ReturnType = {
 	authStatus: AuthStatus
+	liveChatHash: string
 	setAuthStatus: Dispatch<SetStateAction<AuthStatus>>
 	user: User
 	setUser: Dispatch<SetStateAction<User>>
@@ -24,6 +25,7 @@ const Context = createContext<ReturnType>({} as ReturnType)
 export function UserProvider({ children }: PropsWithChildren) {
 	const [authStatus, setAuthStatus] = useCookie<AuthStatus>(Cookies.AUTH_STATUS, AuthStatus.LOADING)
 	const [user, setUser] = useLocalStorage('user-data', {} as User)
+	const [liveChatHash, setLiveChatHash] = useState('')
 	const [emialVerificationDialog, setEmialVerificationDialog] = useState<boolean>(false)
 	const { push } = useRouter()
 	const { get } = useSearchParams()
@@ -66,6 +68,14 @@ export function UserProvider({ children }: PropsWithChildren) {
 		return response.data
 	}, [])
 
+	// useEffect(() => {
+	// 	if(!user) return
+	// 	;(async () => {
+	// 		const { data } = await UserApi.liveChatHash()
+	// 		setLiveChatHash(data)
+	// 	})()
+	// }, [user])
+
 	return (
 		<Context.Provider
 			value={{
@@ -78,6 +88,7 @@ export function UserProvider({ children }: PropsWithChildren) {
 				logout,
 				emialVerificationDialog,
 				setEmialVerificationDialog,
+				liveChatHash
 			}}
 		>
 			{children}
