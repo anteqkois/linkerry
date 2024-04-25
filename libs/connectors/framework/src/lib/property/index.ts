@@ -11,14 +11,15 @@ export * from './authentication/secret-text'
 export * from './base'
 export * from './input'
 export * from './input/checkbox'
+export * from './input/date-time'
 export * from './input/dynamic-dropdown'
 export * from './input/dynamic-properties'
 export * from './input/file'
+export * from './input/json'
 export * from './input/markdown'
 export * from './input/number'
 export * from './input/static-dropdown'
 export * from './input/text'
-export * from './input/json'
 
 export type ConnectorProperty = InputProperty | ConnectorAuthProperty
 

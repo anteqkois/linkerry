@@ -18,7 +18,7 @@ export enum PropertyType {
 	DYNAMIC_DROPDOWN = 'DYNAMIC_DROPDOWN',
 	DYNAMIC = 'DYNAMIC',
 	CUSTOM_AUTH = 'CUSTOM_AUTH',
-	// DateTime = "DateTime",
+	DATE_TIME = "DATE_TIME",
 	// File = "File"
 }
 

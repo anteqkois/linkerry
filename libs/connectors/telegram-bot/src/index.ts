@@ -1,5 +1,8 @@
-import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
+import { HttpMethod, HttpRequest, createCustomApiCallAction, httpClient } from '@linkerry/connectors-common'
 import { ConnectorAuth, createConnector } from '@linkerry/connectors-framework'
+import { telegramCreateInviteLinkAction } from './actions/create-invite-link'
+import { telegramGetChatMemberAction } from './actions/get-chat-member'
+import { telegramSendMediaAction } from './actions/send-media.action'
 import { telegramSendMessageAction } from './actions/send-text-message'
 import { telegramCommons } from './common'
 import { telegramNewMessage } from './triggers/new-message'
@@ -57,13 +60,13 @@ export const telegramBot = createConnector({
 	auth: telegramBotAuth,
 	actions: [
 		telegramSendMessageAction,
-		// telegramSendMediaAction,
-		// telegramGetChatMemberAction,
-		// telegramCreateInviteLinkAction,
-		// createCustomApiCallAction({
-		// 	baseUrl: (auth) => telegramCommons.getApiUrl(auth as string, ''),
-		// 	auth: telegramBotAuth,
-		// }),
+		telegramSendMediaAction,
+		telegramGetChatMemberAction,
+		telegramCreateInviteLinkAction,
+		createCustomApiCallAction({
+			baseUrl: (auth) => telegramCommons.getApiUrl(auth as string, ''),
+			auth: telegramBotAuth,
+		}),
 	],
 	triggers: [telegramNewMessage],
 })

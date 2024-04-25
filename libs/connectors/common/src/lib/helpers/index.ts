@@ -24,7 +24,7 @@ export function createCustomApiCallAction({
 	return createAction({
 		name: 'custom_api_call',
 		displayName: 'Custom API Call',
-		description: 'Send a custom API call to a specific endpoint',
+		description: 'Send a custom API request to a designated endpoint',
 		auth: auth ? auth : undefined,
 		requireAuth: auth ? true : false,
 		props: {
@@ -37,7 +37,7 @@ export function createCustomApiCallAction({
 					return {
 						url: Property.ShortText({
 							displayName: 'URL',
-							description: 'Add the endpoint to use. For example, /models',
+							description: 'Specify the endpoint to request. For instance, /users',
 							required: true,
 							defaultValue: baseUrl(auth),
 						}),
@@ -59,7 +59,7 @@ export function createCustomApiCallAction({
 			}),
 			headers: Property.Object({
 				displayName: 'Headers',
-				description: 'Authorization headers are injected automatically from your connection.',
+				description: 'Authorization headers are automatically included based on your connection',
 				required: true,
 			}),
 			queryParams: Property.Object({

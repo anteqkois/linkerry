@@ -3,6 +3,7 @@ import { Validators } from '../../validators'
 import { Properties, PropertyType } from '../base'
 import { ArrayProperty } from './array'
 import { CheckboxProperty } from './checkbox'
+import { DateTimeProperty } from './date-time'
 import { DynamicDropdownProperty } from './dynamic-dropdown'
 import { DynamicProperties } from './dynamic-properties'
 import { JsonProperty } from './json'
@@ -24,6 +25,7 @@ export type InputProperty =
 	| JsonProperty<boolean>
 	| ArrayProperty<boolean>
 	| MarkDownProperty
+	| DateTimeProperty
 
 export const Property = {
 	ShortText<R extends boolean>(config: Properties<ShortTextProperty<R>>): R extends true ? ShortTextProperty<true> : ShortTextProperty<false> {
@@ -103,4 +105,17 @@ export const Property = {
 			? DynamicProperties<true>
 			: DynamicProperties<false>
 	},
+	DateTime<R extends boolean>(
+    request: Properties<DateTimeProperty<R>>
+  ): R extends true ? DateTimeProperty<true> : DateTimeProperty<false> {
+    return {
+      ...request,
+      defaultProcessors: [Processors.datetime],
+      defaultValidators: [Validators.datetimeIso],
+      valueSchema: undefined,
+      type: PropertyType.DATE_TIME,
+    } as unknown as R extends true
+      ? DateTimeProperty<true>
+      : DateTimeProperty<false>;
+  },
 }

@@ -6,6 +6,7 @@ import { OAuth2Client } from 'googleapis-common'
 import { nanoid } from 'nanoid'
 import { googleSheetsAuth } from '..'
 import { columnToLabel, googleSheetsCommon } from '../common/common'
+import dayjs from 'dayjs'
 
 export const newRowAdded = createTrigger({
 	auth: googleSheetsAuth,
@@ -127,6 +128,7 @@ async function createFileNotification(auth: ConnectorPropValueSchema<typeof goog
 		fileId: fileId,
 		requestBody: {
 			id: channelId,
+			expiration: (dayjs().add(6, 'day').unix() * 1000).toString(),
 			type: 'web_hook',
 			address: url,
 		},
