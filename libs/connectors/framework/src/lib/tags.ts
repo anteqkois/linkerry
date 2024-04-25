@@ -16,5 +16,6 @@ export const connectorTag = [
 	'data management',
 	'communication',
 	'bots',
+	'community management',
 ] as const
 export type ConnectorTag = typeof connectorTag[number]

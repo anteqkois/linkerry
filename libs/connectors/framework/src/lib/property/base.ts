@@ -24,7 +24,7 @@ export enum PropertyType {
 
 export type BaseProperty = {
 	displayName: string
-	description: string
+	description?: string
 }
 
 export type Properties<T> = Omit<T, 'valueSchema' | 'type' | 'defaultValidators' | 'defaultProcessors'>
