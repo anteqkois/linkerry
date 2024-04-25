@@ -72,6 +72,7 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+	Magic: (props: RadixIconProps) => <MagicWandIcon {...defaultRadixProps(props)} />,
 	Chat: (props: RadixIconProps) => <ChatBubbleIcon {...defaultRadixProps(props)} />,
 	Rocket: (props: RadixIconProps) => <RocketIcon {...defaultRadixProps(props)} />,
 	Info: (props: RadixIconProps) => <InfoCircledIcon {...defaultRadixProps(props)} />,

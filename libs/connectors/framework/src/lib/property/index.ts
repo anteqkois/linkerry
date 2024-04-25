@@ -18,6 +18,7 @@ export * from './input/markdown'
 export * from './input/number'
 export * from './input/static-dropdown'
 export * from './input/text'
+export * from './input/json'
 
 export type ConnectorProperty = InputProperty | ConnectorAuthProperty
 

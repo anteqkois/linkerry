@@ -72,7 +72,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
-			{/* <Script type="text/javascript" id="tawk-livechat" src={`/tawk-livechat.js`}/> */}
 			<body
 				className={cn('min-h-screen-no-nav bg-background font-sans antialiased', fontSans.variable, fontHeading.variable)}
 				suppressHydrationWarning={true}
@@ -81,7 +80,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 					<LiveChatProvider>
 						{children}
 						{/* <Analytics /> */}
-						<Toaster duration={5_000} />
+						{/* <Toaster duration={5_000} viewportClassName='sm:top-0 sm:left-1/2 -translate-x-1/2'/> */}
+						<Toaster duration={5_000}/>
 						<TailwindIndicator />
 					</LiveChatProvider>
 				</ThemeProvider>

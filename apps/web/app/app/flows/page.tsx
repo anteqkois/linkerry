@@ -21,7 +21,7 @@ export default function Page() {
 	const [runningOperation, setRunningOperation] = useState(false)
 
 	const onClickRowHndler = useCallback(async (row: Row<FlowPopulated>) => {
-		console.log('onClickRowHndler', row)
+		// console.log('onClickRowHndler', row)
 		// await push(`/app/flows/editor/${row.original._id}`)
 	}, [])
 

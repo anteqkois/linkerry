@@ -2,7 +2,7 @@
 
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
-import { getBrowserQueryCllient } from '../libs/react-query'
+import { getBrowserQueryCllient } from './react-query'
 
 interface Props {
 	children: React.ReactNode

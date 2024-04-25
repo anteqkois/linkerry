@@ -1,9 +1,9 @@
 import { UserProvider } from '../../modules/user/useUser'
 
 import { ModeToggle } from '@linkerry/ui-components/client'
+import ReactQueryProvider from '../../libs/reactQueryProvider'
 import { ReachLimitDialog } from '../../modules/billing/components/ReachLimitDialog'
 import { ReachLimitDialogProvider } from '../../modules/billing/useReachLimitDialog'
-import ReactQueryProvider from '../reactQueryProvider'
 import { DesktopMenu } from './components/DesktopMenu'
 import { LiveCharInitializer } from './components/LiveCharInitializer'
 import { MobileMenu } from './components/MobileMenu'

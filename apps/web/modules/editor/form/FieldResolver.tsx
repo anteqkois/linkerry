@@ -1,6 +1,7 @@
 import { ConnectorProperty, PropertyType } from '@linkerry/connectors-framework'
 import { CheckboxField } from './Inputs/CheckboxField'
 import { DynamicVirtualizedSelect } from './Inputs/DynamicVirtualizedSelect'
+import { JsonField } from './Inputs/JsonField'
 import { LongTextField } from './Inputs/LongTextField'
 import { MarkdownField } from './Inputs/MarkdownField'
 import { NumberField } from './Inputs/NumberField'
@@ -32,6 +33,8 @@ export const FieldResolver = ({ name, property, refreshedProperties }: DynamicFi
 			return <DynamicVirtualizedSelect name={name} property={property} refreshedProperties={refreshedProperties} />
 		case PropertyType.MARKDOWN:
 			return <MarkdownField name={name} property={property} refreshedProperties={refreshedProperties} />
+		case PropertyType.JSON:
+			return <JsonField name={name} property={property} refreshedProperties={refreshedProperties} />
 
 		default:
 			break

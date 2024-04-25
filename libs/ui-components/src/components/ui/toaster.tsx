@@ -2,7 +2,11 @@ import { ToastProviderProps } from '@radix-ui/react-toast'
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from './toast'
 import { useToast } from './use-toast'
 
-export function Toaster(props: ToastProviderProps) {
+export interface ToasterProps extends ToastProviderProps {
+	viewportClassName?: string
+}
+
+export function Toaster(props: ToasterProps) {
 	const { toasts } = useToast()
 
 	return (
@@ -19,7 +23,7 @@ export function Toaster(props: ToastProviderProps) {
 					</Toast>
 				)
 			})}
-			<ToastViewport />
+			<ToastViewport className={props.viewportClassName} />
 		</ToastProvider>
 	)
 }

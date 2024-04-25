@@ -38,9 +38,9 @@ export interface DrawerProps extends HTMLAttributes<HTMLElement> {
 	position: 'left' | 'right'
 }
 
-export const Drawer = ({ show, setShow, children, title, position }: DrawerProps) => {
+export const Drawer = ({ show, setShow, children, title, position, className }: DrawerProps) => {
 	return (
-		<aside className={cn(variants({ state: show, position }))}>
+		<aside className={cn(variants({ state: show, position }), className)}>
 			<header className="flex justify-between items-center p-2">
 				<H5>{title}</H5>
 				<Button size={'icon'} variant={'ghost'} onClick={() => setShow((prev) => !prev)}>

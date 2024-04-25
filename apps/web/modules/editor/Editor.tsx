@@ -70,7 +70,7 @@ export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) =
 	}, [])
 
 	const EditorRightDrawer = editorDrawers[rightDrawer.name]
-	const EditorLeftrawer = editorDrawers[leftDrawer.name]
+	const EditorLeftDrawer = editorDrawers[leftDrawer.name]
 
 	return (
 		<ReactFlowProvider>
@@ -97,7 +97,7 @@ export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) =
 				<EditorRightDrawer />
 			</Drawer>
 			<Drawer show={showLeftDrawer} setShow={setShowLeftDrawer} position="left" title={leftDrawer.title}>
-				<EditorLeftrawer />
+				<EditorLeftDrawer />
 			</Drawer>
 		</ReactFlowProvider>
 	)
