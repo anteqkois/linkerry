@@ -93,7 +93,7 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
 				<TooltipProvider delayDuration={200}>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Toggle pressed={!hidden} onPressedChange={toggleVisibility} size={'sm'} className="my-1" variant="outline" aria-label="Toggle italic">
+							<Toggle pressed={!hidden} onPressedChange={toggleVisibility} size={'sm'} className="my-1" aria-label="Toggle live chat">
 								<Icons.Chat className="h-4 w-4" />
 							</Toggle>
 						</TooltipTrigger>
