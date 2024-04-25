@@ -107,8 +107,14 @@ export const SecretTextAuth = ({ onCreateAppConnection, auth, connector, setShow
 							</FormItem>
 						)}
 					/>
-					<MarkdownBase className="markdown w-full rounded-md border border-dashed border-input bg-card p-3 text-sm shadow-sm">{auth.description}</MarkdownBase>
-					<SecretTextField property={auth} name={'secretText'} key={'secretText'} refreshedProperties={[]} />
+					{auth.description ? (
+						<MarkdownBase className="markdown w-full rounded-md border border-dashed border-input bg-card p-3 text-sm shadow-sm">
+							{auth.description}
+						</MarkdownBase>
+					) : null}
+					<div className="sm:max-w-[380px]">
+						<SecretTextField property={{ ...auth, description: undefined }} name={'secretText'} key={'secretText'} refreshedProperties={[]} />
+					</div>
 					<div className="h-1">
 						{appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}
 					</div>

@@ -10,9 +10,13 @@ interface MarkdownPropertyProps {
 
 export const MarkdownField = ({ property, refreshedProperties }: MarkdownPropertyProps) => {
 	return (
-		<div className='space-y-1'>
+		<div className="space-y-1">
 			<PropertyLabel property={property} refreshedProperties={refreshedProperties} />
-			<MarkdownBase className="w-full rounded-md border border-dashed border-input bg-card p-3 text-sm shadow-sm">{property.description}</MarkdownBase>
+			{property.description ? (
+				<MarkdownBase className="w-full rounded-md border border-dashed border-input bg-card p-3 text-sm shadow-sm">
+					{property.description}
+				</MarkdownBase>
+			) : null}
 		</div>
 	)
 }

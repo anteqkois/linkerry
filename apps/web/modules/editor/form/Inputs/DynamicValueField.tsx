@@ -14,7 +14,7 @@ import {
 	useToast,
 } from '@linkerry/ui-components/client'
 import { Icons } from '@linkerry/ui-components/server'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useEditor } from '../../useEditor'
 import { PropertyDescription } from '../PropertyDescription'
@@ -29,6 +29,7 @@ interface DynamicValueFieldProps {
 
 export const DynamicValueField = ({ property, name, showDynamicValueButton = false, setUseDynamicValue }: DynamicValueFieldProps) => {
 	const { toast } = useToast()
+	const inputRef = useRef<HTMLInputElement>(null)
 	const { setShowDynamicValueModal } = useEditor()
 	const { control, trigger, setValue, getValues, clearErrors } = useFormContext()
 	const { rules } = useDynamicField({
@@ -54,7 +55,9 @@ export const DynamicValueField = ({ property, name, showDynamicValueButton = fal
 					break
 			}
 			trigger(name)
-		}, 200)
+
+			inputRef.current?.focus()
+		}, 100)
 	}, [])
 
 	const onSelectData = async (tokenString: string, data: any) => {
@@ -100,7 +103,7 @@ export const DynamicValueField = ({ property, name, showDynamicValueButton = fal
 						</div>
 					</FormLabel>
 					<FormControl>
-						<Input {...field} onFocus={() => setShowDynamicValueModal(true, onSelectData)} />
+						<Input {...field} ref={inputRef} onFocus={() => setShowDynamicValueModal(true, onSelectData)} />
 					</FormControl>
 					<PropertyDescription>{property.description}</PropertyDescription>
 					<FormMessage />

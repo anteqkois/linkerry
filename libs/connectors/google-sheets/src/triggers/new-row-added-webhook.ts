@@ -21,7 +21,6 @@ export const newRowAdded = createTrigger({
 		spreadsheet_id: googleSheetsCommon.spreadsheet_id,
 		sheet_id: googleSheetsCommon.sheet_id,
 	},
-	requireAuth: true,
 	type: TriggerStrategy.WEBHOOK,
 	async onEnable(context) {
 		const { spreadsheet_id, sheet_id } = context.propsValue

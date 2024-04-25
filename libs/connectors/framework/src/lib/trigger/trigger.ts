@@ -131,7 +131,7 @@ export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends 
 				params.onDisable,
 				params.run,
 				params.test ?? (() => Promise.resolve([params.sampleData])),
-				params.requireAuth ?? false,
+				typeof params.requireAuth === 'boolean' ? params.requireAuth : true,
 				params.sampleData,
 				params.test ? TriggerTestStrategy.TEST_FUNCTION : TriggerTestStrategy.SIMULATION,
 			)
@@ -150,7 +150,7 @@ export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends 
 				params.onDisable,
 				params.run,
 				params.test ?? (() => Promise.resolve([params.sampleData])),
-				params.requireAuth ?? false,
+				typeof params.requireAuth === 'boolean' ? params.requireAuth : true,
 				params.sampleData,
 				TriggerTestStrategy.TEST_FUNCTION,
 			)
@@ -169,7 +169,7 @@ export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends 
 				params.onDisable,
 				params.run,
 				params.test ?? (() => Promise.resolve([params.sampleData])),
-				params.requireAuth ?? false,
+				typeof params.requireAuth === 'boolean' ? params.requireAuth : true,
 				params.sampleData,
 				TriggerTestStrategy.TEST_FUNCTION,
 			)

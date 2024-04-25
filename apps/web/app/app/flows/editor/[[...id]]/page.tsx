@@ -166,7 +166,7 @@ export default function Page({ params }: { params: { id: string } }) {
 		})()
 	}, [status])
 
-	if (subscriptionsStatus === 'pending') return <Spinner className="flex-center min-h-screen-no-nav" />
+	if (subscriptionsStatus === 'pending') return <Spinner className="flex-center min-h-screen h-screen" />
 	if (subscriptionsStatus === 'error') return <ErrorInfo errorObject={subscriptionsError} />
 	if (!currentPlan) return <ErrorInfo message="Can not retrive yor plan configuration" />
 

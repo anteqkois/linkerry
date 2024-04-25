@@ -6,6 +6,7 @@ export const cronExpressionTrigger = createTrigger({
 	name: 'cron_expression',
 	displayName: 'Cron Expression',
 	description: 'Trigger based on cron expression',
+	requireAuth: false,
 	props: {
 		expression: Property.ShortText({
 			displayName: 'Cron Expression',
@@ -26,7 +27,6 @@ export const cronExpressionTrigger = createTrigger({
 		}),
 	},
 	type: TriggerStrategy.POLLING,
-	requireAuth: false,
 	sampleData: {},
 	onEnable: async (ctx) => {
 		ctx.setSchedule({

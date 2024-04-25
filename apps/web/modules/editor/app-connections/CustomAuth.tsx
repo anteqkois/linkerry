@@ -106,7 +106,7 @@ export const CustomAuth = ({ onCreateAppConnection, auth, connector, setShowDial
 							</FormItem>
 						)}
 					/>
-					<MarkdownBase >{auth.description}</MarkdownBase>
+					{auth.description ? <MarkdownBase>{auth.description}</MarkdownBase> : null}
 					{Object.entries(auth.props).map(([name, property]) => (
 						<FieldResolver property={property} name={name} key={name} refreshedProperties={[]} />
 					))}

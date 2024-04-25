@@ -16,7 +16,7 @@ import { cn } from '@linkerry/ui-components/utils'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 import ReactCodeMirror from '@uiw/react-codemirror'
 import js_beautify from 'js-beautify'
-import { HTMLAttributes, useCallback, useState } from 'react'
+import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import { useClipboard } from '../../hooks/useClicboard'
 
 export interface CodeEditorProps extends Omit<HTMLAttributes<HTMLElement>, 'onChange'> {
@@ -38,6 +38,10 @@ export const CodeEditor = ({ value, title, heightVh, substractPx = 0, style, cla
 	const [errorMessage, setErrorMessage] = useState('')
 	const { copy } = useClipboard()
 	const { toast } = useToast()
+
+	useEffect(()=>{
+		setCode(value)
+	}, [value])
 
 	const onClickBeautify = useCallback((codeString: string) => {
 		const dataJson = parseCodeString(codeString)

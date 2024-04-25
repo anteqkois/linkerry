@@ -163,7 +163,6 @@ export const TriggerConnectorPanel = () => {
 
 	return (
 		<ResizablePanelGroup direction="vertical" className="max-h-screen">
-			Dodać JSON pole oraz failure option
 			<ResizablePanel defaultSize={60} className="px-2 overflow-scroll">
 				<div className="flex items-center justify-center gap-2">
 					<Image width={36} height={36} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />

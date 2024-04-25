@@ -65,7 +65,7 @@ export const createAction = <ConnectorAuth extends ConnectorAuthProperty, Action
 		props,
 		run,
 		test || run,
-		requireAuth || true,
+		typeof requireAuth === 'boolean' ? requireAuth : true,
 		errorHandlingOptions ?? {
 			continueOnFailure: {
 				defaultValue: false,
