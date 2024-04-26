@@ -1,5 +1,6 @@
 import { CustomError, ErrorCode, EventPayload, FlowPopulated, FlowStatus, Id, assertNotNullOrUndefined, isNil, isQuotaError } from '@linkerry/shared'
-import { All, Controller, Logger, Param, Query, Request, Response } from '@nestjs/common'
+import { TypedParam, TypedQuery } from '@nestia/core'
+import { All, Controller, Logger, Request, Response } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { HttpStatusCode } from 'axios'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -25,7 +26,7 @@ export class WebhooksController {
 	// TODO add guard for all types, to get know who post to route, somethinkg like ALL_PRINCIPAL_TYPES
 	// @UseGuards(JwtBearerTokenAuthGuard)
 	@All(':flowId/sync')
-	async sync(@Param('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
+	async sync(@TypedParam('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
 		const flow = await this.getFlowOrThrow(flowId)
 		const payload = await this.webhooksService.convertRequest(request)
 
@@ -55,7 +56,7 @@ export class WebhooksController {
 
 	// @UseGuards(JwtBearerTokenAuthGuard)
 	@All(':flowId')
-	async handleWebhookParams(@Param('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
+	async handleWebhookParams(@TypedParam('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
 		const flow = await this.getFlowOrThrow(flowId)
 		const payload = await this.webhooksService.convertRequest(request)
 
@@ -71,8 +72,8 @@ export class WebhooksController {
 
 	// @UseGuards(JwtBearerTokenAuthGuard)
 	@All()
-	async handleWebhookQuery(@Query('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
-		const flow = await this.getFlowOrThrow(flowId)
+	async handleWebhookQuery(@TypedQuery() query:{flowId: Id}, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
+		const flow = await this.getFlowOrThrow(query.flowId)
 		const payload = await this.webhooksService.convertRequest(request)
 
 		const isHandshake = await this._handshakeHandler(flow.toObject(), payload, false, response)
@@ -87,7 +88,7 @@ export class WebhooksController {
 
 	// @UseGuards(JwtBearerTokenAuthGuard)
 	@All(':flowId/simulate')
-	async simulate(@Param('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
+	async simulate(@TypedParam('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
 		const flow = await this.getFlowOrThrow(flowId)
 		const payload = await this.webhooksService.convertRequest(request)
 

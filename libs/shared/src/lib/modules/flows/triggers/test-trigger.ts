@@ -1,4 +1,5 @@
 import { Id } from '../../../common'
+import { StepNameType } from '../../../common/type-validators'
 
 export enum TriggerTestStrategy {
 	SIMULATION = 'SIMULATION',
@@ -9,5 +10,5 @@ export interface TestTriggerRequestBody {
 	flowId: Id
 	flowVersionId: Id
 	testStrategy: TriggerTestStrategy
-	triggerName: string
+	triggerName: StepNameType
 }

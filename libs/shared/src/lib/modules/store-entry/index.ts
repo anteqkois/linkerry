@@ -1,20 +1,21 @@
 import { DatabaseTimestamp, Id } from '../../common'
+import { ShortStringType } from '../../common/type-validators'
 
 export interface StoreEntry extends DatabaseTimestamp {
-	key: string
+	key: ShortStringType
 	projectId: Id
 	value: unknown
 }
 
 export type PutStoreEntryRequest = {
-	key: string
+	key: ShortStringType
 	value: any
 }
 
 export type GetStoreEntryRequest = {
-	key: string
+	key: ShortStringType
 }
 
 export type DeletStoreEntryRequest = {
-	key: string
+	key: ShortStringType
 }

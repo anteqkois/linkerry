@@ -8,6 +8,7 @@ import { AuthService } from '../../users/auth/auth.service'
 import { FlowRunWatcherService } from './flow-runs-watcher.service'
 import { FlowRunsService } from './flow-runs.service'
 
+// TODO add nestia types
 @WebSocketGateway({
 	cors: {
 		origin: [process.env['FRONTEND_HOST']],

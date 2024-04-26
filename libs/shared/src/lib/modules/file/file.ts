@@ -4,8 +4,7 @@ import { FileType } from './file-type'
 
 export interface File extends DatabaseTimestamp {
 	_id: Id,
-	projectId?: string
-	// platformId?: string
+	projectId?: Id
 	type: FileType
 	compression: FileCompression
 	data: Buffer

@@ -1,5 +1,6 @@
-import { CustomError, ErrorCode, RequestWorker, isNil } from '@linkerry/shared'
-import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import { CustomError, ErrorCode, RequestWorker, ShortStringType, isNil } from '@linkerry/shared'
+import { TypedParam, TypedRoute } from '@nestia/core'
+import { Controller, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
 import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { AppConnectionsService } from './app-connections.service'
@@ -9,8 +10,8 @@ export class WorkerAppConnectionsController {
 	constructor(private readonly appConnectionsService: AppConnectionsService) {}
 
 	@UseGuards(JwtBearerTokenAuthGuard)
-	@Get(':name')
-	async findOne(@ReqJwtWorker() worker: RequestWorker, @Param('name') connectionName: string) {
+	@TypedRoute.Get(':name')
+	async findOne(@ReqJwtWorker() worker: RequestWorker, @TypedParam('name') connectionName: ShortStringType) {
 		const appConnection = await this.appConnectionsService.getOne({ name: connectionName, projectId: worker.projectId })
 
 		if (isNil(appConnection)) {

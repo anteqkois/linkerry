@@ -3,6 +3,7 @@ import { VerificationEmail } from '@linkerry/react-email'
 import {
 	CustomError,
 	ErrorCode,
+	IAuthSignUpInput,
 	Id,
 	JWTPrincipalType,
 	JwtWorkerTokenPayload,
@@ -26,7 +27,6 @@ import { EmailService } from '../../notifications/email/email.service'
 import { ProjectsService } from '../../projects/projects.service'
 import { UserDocument, UserModel } from '../schemas/user.schema'
 import { UsersService } from '../users.service'
-import { SignUpDto } from './dto/sign-up.dto'
 
 @Injectable()
 export class AuthService {
@@ -91,12 +91,12 @@ export class AuthService {
 		})
 	}
 
-	async signUp(signUpDto: SignUpDto) {
-		const hashedPassword = await this.hashService.hash(signUpDto.password)
-		signUpDto.password = hashedPassword
+	async signUp(body: IAuthSignUpInput) {
+		const hashedPassword = await this.hashService.hash(body.password)
+		body.password = hashedPassword
 
-		const user = await this.userModel.create({ ...signUpDto, roles: [UserRole.Customer] })
-		this.logger.debug(`New signUp: ${signUpDto.email}`)
+		const user = await this.userModel.create({ ...body, roles: [UserRole.Customer] })
+		this.logger.debug(`New signUp: ${body.email}`)
 
 		/* create also default project for new user */
 		const newProject = await this.projectsService.create({

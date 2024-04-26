@@ -8,12 +8,9 @@ import { PriceDocument, PriceModel } from './price.schema'
 export class PricesService {
 	constructor(@InjectModel(PriceModel.name) private readonly flowModel: Model<PriceDocument>) {}
 
-	async create(input: Price) {
+	async create(input: Omit<Price, '_id'>) {
 		const createdPrice = await this.flowModel.create(input)
 		return createdPrice
-		// const newPrice = await this.flowModel.findOne({
-		// 	_id: createdPrice.
-		// })
 	}
 
 	async findMany() {

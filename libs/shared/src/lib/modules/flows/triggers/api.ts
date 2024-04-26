@@ -1,16 +1,17 @@
 import { Id } from "../../../common"
+import { StepNameType } from "../../../common/type-validators"
 
 export interface TriggerPoolTestBody {
 	flowId: Id
-	triggerName: string
+	triggerName: StepNameType
 }
 
-export interface GetTriggerEventsQuery {
+export interface GetManyTriggerEventsQuery {
 	flowId: Id
-	triggerName: string
+	triggerName: StepNameType
 }
 
 export interface DeleteTriggerEventsInput {
 	flowId: Id
-	triggerName: string
+	triggerName: StepNameType
 }

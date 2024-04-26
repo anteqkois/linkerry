@@ -1,5 +1,6 @@
 import { Id, RequestUser } from '@linkerry/shared'
-import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import { TypedParam, TypedRoute } from '@nestia/core'
+import { Controller, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowVersionsService } from './flow-versions.service'
@@ -9,8 +10,8 @@ export class FlowVersionsController {
 	constructor(private readonly flowVersionsService: FlowVersionsService) {}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Get(':id')
-	getOne(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
+	@TypedRoute.Get(':id')
+	getOne(@ReqJwtUser() user: RequestUser, @TypedParam('id') id: Id) {
 		return this.flowVersionsService.findOne({
 			filter: {
 				_id: id,

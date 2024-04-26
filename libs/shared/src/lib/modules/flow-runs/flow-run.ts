@@ -1,4 +1,5 @@
 import { DatabaseTimestamp, Id, Nullable } from "../../common"
+import { DateType, ShortStringType } from "../../common/type-validators"
 import { FlowRunStatus, PauseMetadata } from "./execution/flow-execution"
 import { StepOutput } from "./execution/step-output"
 
@@ -10,15 +11,15 @@ export interface FlowRun extends DatabaseTimestamp  {
     _id: Id
     projectId: Id
     flowId: Id
-    tags?: string[]
+    tags?: ShortStringType[]
     flowVersionId: Id
-    flowDisplayName: string
+    flowDisplayName: ShortStringType
     terminationReason?: RunTerminationReason
     logsFileId: Nullable<Id>
     tasks?: number
     status: FlowRunStatus
-    startTime: string
-    finishTime: string
+    startTime: DateType
+    finishTime: DateType
     environment: RunEnvironment
     pauseMetadata?: PauseMetadata
 		steps: Record<string, StepOutput>

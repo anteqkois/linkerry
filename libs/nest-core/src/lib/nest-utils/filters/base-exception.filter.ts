@@ -4,6 +4,20 @@ import { ZodError } from 'zod'
 import { DtoException } from '../pipes'
 import { formatZodIssue } from './format-zod.error'
 
+interface TypiaHttpException {
+	path: string // '$input._id',
+	reason: string // 'Error on typia.assert(): invalid type on $input._id, expect to be (string & Pattern<"^[0-9a-f]{24}$">)',
+	expected: string // '(string & Pattern<"^[0-9a-f]{24}$">)',
+	value: any // undefined,
+	message: string // 'Request body data is not following the promised type.'
+}
+
+const isTypiaExceptionResponse = (exception: any): exception is { response: TypiaHttpException } => {
+	// if (typeof exception === 'object' && 'response' in exception && 'reason' in exception.response && exception.response.reason.includes('typia'))
+	if (exception?.response?.reason?.includes('typia')) return true
+	return false
+}
+
 export class CustomBaseExceptionsFilter {
 	produceFields(exception: unknown) {
 		let status: HttpStatus
@@ -29,6 +43,12 @@ export class CustomBaseExceptionsFilter {
 			humanMessage = formatedError.message
 			fieldPath = formatedError.path
 			errorCode = ErrorCode.VALIDATION
+		} else if (isTypiaExceptionResponse(exception)) {
+			status = HttpStatus.UNPROCESSABLE_ENTITY
+			errorMessage = exception.response.reason
+			humanMessage = exception.response.message
+			errorCode = ErrorCode.VALIDATION
+			fieldPath = exception.response.path
 		} else if (exception instanceof HttpException) {
 			status = exception.getStatus()
 			const errorResponse = exception.getResponse()

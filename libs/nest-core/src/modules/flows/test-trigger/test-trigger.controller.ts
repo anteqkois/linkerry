@@ -1,5 +1,6 @@
 import { RequestUser, TestTriggerRequestBody } from '@linkerry/shared'
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { TypedBody, TypedRoute } from '@nestia/core'
+import { Controller, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { TestTriggerService } from './test-trigger.service'
@@ -9,8 +10,8 @@ export class TestTriggerController {
 	constructor(private readonly testTriggerService: TestTriggerService) {}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Post()
-	test(@ReqJwtUser() user: RequestUser, @Body() body: TestTriggerRequestBody) {
+	@TypedRoute.Post()
+	test(@ReqJwtUser() user: RequestUser, @TypedBody() body: TestTriggerRequestBody) {
 		this.testTriggerService.test({
 			flowId: body.flowId,
 			flowVersionId: body.flowVersionId,

@@ -1,10 +1,8 @@
-import { RequestUser } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
+import { DeleteTriggerEventsInput, GetManyTriggerEventsQuery, RequestUser, TriggerPoolTestBody } from '@linkerry/shared'
+import { TypedBody, TypedQuery, TypedRoute } from '@nestia/core'
+import { Controller, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
-import { DeleteDto } from './dto/delete.dto'
-import { GetManyDto } from './dto/get-many.dto'
-import { TestDto } from './dto/pool-test.dto'
 import { TriggerEventsService } from './trigger-events.service'
 
 @Controller('trigger-events')
@@ -12,20 +10,20 @@ export class TriggerEventsController {
 	constructor(private readonly triggerEventsService: TriggerEventsService) {}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Get('')
-	getTriggerEvents(@ReqJwtUser() user: RequestUser, @Query() query: GetManyDto) {
+	@TypedRoute.Get()
+	getTriggerEvents(@ReqJwtUser() user: RequestUser, @TypedQuery() query: GetManyTriggerEventsQuery) {
 		return this.triggerEventsService.getMany(query, user.projectId)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Delete('')
-	deleteTriggerEvents(@ReqJwtUser() user: RequestUser, @Body() body: DeleteDto) {
+	@TypedRoute.Delete()
+	deleteTriggerEvents(@ReqJwtUser() user: RequestUser, @TypedBody() body: DeleteTriggerEventsInput) {
 		return this.triggerEventsService.deleteMany(body, user.projectId)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Post('/test/pool')
-	create(@ReqJwtUser() user: RequestUser, @Body() poolTestDto: TestDto) {
-		return this.triggerEventsService.test(poolTestDto, user.projectId, user.id)
+	@TypedRoute.Post('/test/pool')
+	create(@ReqJwtUser() user: RequestUser, @TypedBody() body: TriggerPoolTestBody) {
+		return this.triggerEventsService.test(body, user.projectId, user.id)
 	}
 }

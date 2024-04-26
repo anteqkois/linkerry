@@ -1,9 +1,9 @@
-import { ActionType, BaseStep, BaseStepSettings, ConnectorType, PackageType, SampleData, SampleDataSettingsObject, TriggerType } from '@linkerry/shared'
+import { ActionType, BaseStep, BaseStepSettings, ConnectorType, PackageType, SampleDataSettingsObject, TriggerType } from '@linkerry/shared'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Types } from 'mongoose'
 
 @Schema({ _id: false })
-export class SampleDataModel implements SampleData {
+export class SampleDataModel implements SampleDataSettingsObject {
 	@Prop({ required: false, type: Object })
 	currentSelectedData: unknown
 

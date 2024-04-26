@@ -1,4 +1,5 @@
 import { DatabaseTimestamp, Id } from '../../../common'
+import { ShortStringType } from '../../../common/type-validators'
 import { SubscriptionPeriod } from '../subscription'
 import { PlanProductConfiguration } from './planProductConfiguration'
 export * from './planProductConfiguration'
@@ -9,11 +10,11 @@ export enum ProductType {
 }
 
 export interface StripePrice {
-	id: string
+	id: ShortStringType
 }
 
 export interface Price extends DatabaseTimestamp {
-	_id: string
+	_id: Id
 	price: number
 	period: SubscriptionPeriod
 	default: boolean
@@ -21,17 +22,17 @@ export interface Price extends DatabaseTimestamp {
 	priority: number
 	productId: Id
 	stripe: StripePrice
-	currencyCode: string
+	currencyCode: ShortStringType<10>
 }
 
 export interface StripeProduct {
-	id: string
+	id: ShortStringType
 }
 
 export interface Product extends DatabaseTimestamp {
 	_id: Id
-	name: string
-	shortDescription: string
+	name: ShortStringType
+	shortDescription: ShortStringType
 	type: ProductType
 	config: PlanProductConfiguration
 	priority: number

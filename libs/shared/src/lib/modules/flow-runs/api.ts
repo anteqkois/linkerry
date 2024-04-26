@@ -1,4 +1,5 @@
 import { Id } from '../../common'
+import { DateType } from '../../common/type-validators'
 
 export interface FlowRunWSInput {
 	projectId: Id
@@ -7,5 +8,5 @@ export interface FlowRunWSInput {
 
 export interface FlowRunsGetManyQuery {
 	flowId?: Id
-	fromDate?: string
+	fromDate?: DateType
 }

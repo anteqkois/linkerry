@@ -1,8 +1,5 @@
-// import { BaseModelSchema } from '../common/base-model'
-// import { ApId } from '../common/id-generator'
-// import { Static, Type } from '@sinclair/typebox'
-
 import { DatabaseTimestamp, Id } from '../../common'
+import { ShortStringType } from '../../common/type-validators'
 import { User } from '../user'
 
 export enum NotificationStatus {
@@ -19,7 +16,7 @@ export interface Project extends DatabaseTimestamp {
 	_id: Id
 	owner: Id
 	users: Id[]
-	displayName: string
+	displayName: ShortStringType
 	notifyStatus: NotificationStatus
 	// type: ProjectType,
 	// platformId: Id,

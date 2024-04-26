@@ -1,5 +1,6 @@
 import { Nullable } from '../../../common'
 import { DatabaseTimestamp, Id } from '../../../common/database'
+import { ShortStringType } from '../../../common/type-validators'
 import { FlowVersion } from '../flow-versions'
 
 export enum FlowStatus {
@@ -13,8 +14,8 @@ export enum ScheduleType {
 
 export interface FlowScheduleOptions {
 	type: ScheduleType
-	cronExpression: string
-	timezone: string
+	cronExpression:ShortStringType
+	timezone: ShortStringType
 }
 
 export interface Flow extends DatabaseTimestamp {

@@ -7,6 +7,6 @@ export class SubscriptionsApi {
 	}
 
 	static async change(body: ChangeSubscriptionBody) {
-		return apiClient.put<ChangeSubscriptionResponse>(`/subscriptions`, body)
+		return apiClient.post<ChangeSubscriptionResponse>(`/subscriptions`, body)
 	}
 }

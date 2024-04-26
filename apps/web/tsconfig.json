@@ -19,7 +19,8 @@
     "types": [
       "jest",
       "node"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "include": [
     "**/*.ts",

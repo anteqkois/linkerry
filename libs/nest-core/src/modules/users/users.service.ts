@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { createHmac } from 'crypto'
 import { FilterQuery, Model } from 'mongoose'
-import { CreateUserDto } from './dto/create-user.dto'
 import { UserDocument, UserModel } from './schemas/user.schema'
 
 @Injectable()
@@ -12,10 +11,6 @@ export class UsersService {
 	private readonly logger = new Logger(UsersService.name)
 
 	constructor(@InjectModel(UserModel.name) private userModel: Model<UserDocument>, private readonly configService: ConfigService) {}
-
-	async create(createUserDto: CreateUserDto) {
-		return this.userModel.create(createUserDto)
-	}
 
 	async findOne(filter: FilterQuery<User>) {
 		return this.userModel.findOne(filter)

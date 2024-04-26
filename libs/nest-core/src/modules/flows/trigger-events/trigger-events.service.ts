@@ -1,11 +1,14 @@
 import {
 	CustomError,
+	DeleteTriggerEventsInput,
 	ErrorCode,
 	FlowOperationType,
 	FlowPopulated,
+	GetManyTriggerEventsQuery,
 	Id,
 	Trigger,
 	TriggerHookType,
+	TriggerPoolTestBody,
 	TriggerType,
 	WatchTriggerEventsWSInput,
 	WatchTriggerEventsWSResponse,
@@ -26,9 +29,6 @@ import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { FlowDocument, FlowModel } from '../flows/schemas/flow.schema'
 import { StepFilesService } from '../step-files/step-files.service'
-import { TestDto } from '../trigger-events/dto/pool-test.dto'
-import { DeleteDto } from './dto/delete.dto'
-import { GetManyDto } from './dto/get-many.dto'
 import { TriggerEventModel } from './schemas/trigger-events.schema'
 import { InsertNewTrigerEventEvent, SaveTriggerEventInput } from './types'
 
@@ -110,7 +110,7 @@ export class TriggerEventsService {
 		})
 	}
 
-	async deleteMany({ flowId, triggerName }: DeleteDto, projectId: Id) {
+	async deleteMany({ flowId, triggerName }: DeleteTriggerEventsInput, projectId: Id) {
 		const flow = await this.flowModel
 			.findOne<FlowPopulated>({
 				_id: flowId,
@@ -129,7 +129,7 @@ export class TriggerEventsService {
 		})
 	}
 
-	async test(input: TestDto, projectId: Id, userId: Id) {
+	async test(input: TriggerPoolTestBody, projectId: Id, userId: Id) {
 		const flow = await this.flowModel
 			.findOne<FlowPopulated>({
 				_id: input.flowId,
@@ -394,7 +394,7 @@ export class TriggerEventsService {
 		}
 	}
 
-	async getMany(query: GetManyDto, projectId: Id) {
+	async getMany(query: GetManyTriggerEventsQuery, projectId: Id) {
 		const flowVersion = await this.flowVersionModel.findOne({
 			flow: query.flowId,
 			projectId,

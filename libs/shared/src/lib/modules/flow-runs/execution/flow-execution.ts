@@ -35,7 +35,7 @@ export type StopResponse = {
 	headers?: Record<string, string>
 }
 
-type BaseExecutiionResponse = ExecutionState & {
+type BaseExecutionResponse = ExecutionState & {
 	duration: number
 	tasks: number
 	tags?: string[]
@@ -50,7 +50,7 @@ export type FlowRunResponse = (
 	| ({
 			status: FlowRunStatus.PAUSED
 			pauseMetadata?: PauseMetadata
-	  } & BaseExecutiionResponse)
+	  } & BaseExecutionResponse)
 	| ({
 			status:
 				| FlowRunStatus.FAILED
@@ -60,6 +60,6 @@ export type FlowRunResponse = (
 				| FlowRunStatus.TIMEOUT
 				| FlowRunStatus.INTERNAL_ERROR
 				| FlowRunStatus.STOPPED
-	  } & BaseExecutiionResponse)
+	  } & BaseExecutionResponse)
 ) &
 	ExecutionState

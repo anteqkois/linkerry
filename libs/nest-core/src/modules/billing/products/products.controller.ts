@@ -1,25 +1,19 @@
-import { FindManyProductsQuery, Id, Product } from '@linkerry/shared'
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
-import { AdminGuard } from '../../../lib/auth/guards/admin.guard'
+import { FindManyProductsQuery, Id } from '@linkerry/shared'
+import { TypedQuery, TypedRoute } from '@nestia/core'
+import { Controller } from '@nestjs/common'
 import { ProductsService } from './products.service'
 
 @Controller('products')
 export class ProductsController {
 	constructor(private readonly productsService: ProductsService) {}
 
-	@UseGuards(AdminGuard)
-	@Post()
-	create(@Body() body: Product) {
-		return this.productsService.create(body)
-	}
-
-	@Get()
-	findMany(@Query() query: FindManyProductsQuery) {
+	@TypedRoute.Get()
+	findMany(@TypedQuery() query: FindManyProductsQuery) {
 		return this.productsService.findMany(query)
 	}
 
-	@Get(':id')
-	findOne(@Query('id') id: Id) {
-		return this.productsService.findOne(id)
+	@TypedRoute.Get(':id')
+	findOne(@TypedQuery() query: { id: Id }) {
+		return this.productsService.findOne(query.id)
 	}
 }

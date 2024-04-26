@@ -1,4 +1,4 @@
-import { Id } from '../../../common'
+import { Id, ShortStringType, StepNameType } from '../../../common'
 import { Action } from '../actions'
 import { Trigger } from '../triggers'
 import { FlowStatus } from './flow'
@@ -51,11 +51,11 @@ export type LockFlowRequest = {
 // export type ChangeFolderRequest = Static<typeof ChangeFolderRequest>
 
 export type ChangeNameRequest = {
-	displayName: string
+	displayName: ShortStringType
 }
 
 export type DeleteActionRequest = {
-	name: string
+	name: StepNameType
 }
 
 // export const UpdateActionRequest = Type.Union([CodeActionSchema, LoopOnItemsActionSchema, PieceActionSchema, BranchActionSchema])
@@ -75,7 +75,7 @@ export type UpdateActionRequest = Action
 // export type MoveActionRequest = Static<typeof MoveActionRequest>
 
 export type AddActionRequest = {
-	parentStepName: string
+	parentStepName: StepNameType
 	// stepLocationRelativeToParent: StepLocationRelativeToParent
 	action: UpdateActionRequest
 }

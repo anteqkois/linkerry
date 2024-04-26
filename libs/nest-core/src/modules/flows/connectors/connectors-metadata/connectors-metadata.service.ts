@@ -1,6 +1,8 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
 	ConnectorPackage,
+	ConnectorsMetadataGetManyQuery,
+	ConnectorsMetadataGetOneQuery,
 	CustomError,
 	EXACT_VERSION_PATTERN,
 	ErrorCode,
@@ -14,8 +16,6 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
 import { MongoFilter } from '../../../../lib/mongodb/decorators/filter.decorator'
-import { ConnectorMetadataGetManyQueryDto } from './dto/getMany.dto'
-import { ConnectorMetadataGetOneQueryDto } from './dto/getOne.dto'
 import { ConnectorsMetadataModel } from './schemas/connector.schema'
 
 @Injectable()
@@ -33,7 +33,7 @@ export class ConnectorsMetadataService {
 		}
 	}
 
-	async findAllUnique(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
+	async findAllUnique(filter: MongoFilter<ConnectorsMetadataGetManyQuery>, query: ConnectorsMetadataGetManyQuery) {
 		const connectors = (
 			await this.connectorMetadataModel.find(
 				filter,
@@ -61,7 +61,7 @@ export class ConnectorsMetadataService {
 	}
 
 	// TODO handle projectId when custom connectors will be aded
-	async findOne(name: string, query: ConnectorMetadataGetOneQueryDto) {
+	async findOne(name: string, query: ConnectorsMetadataGetOneQuery) {
 		const filter: FilterQuery<ConnectorsMetadataModel> = {
 			name,
 		}

@@ -12,7 +12,7 @@ export class ProductsService {
 		@InjectModel(PriceModel.name) private readonly priceModel: Model<PriceDocument>,
 	) {}
 
-	async create(input: Product) {
+	async create(input: Omit<Product, '_id'>) {
 		const createdProduct = await this.productModel.create(input)
 		return createdProduct
 	}

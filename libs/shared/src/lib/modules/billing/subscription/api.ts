@@ -8,6 +8,7 @@ export interface ChangeSubscriptionBody {
 	}[]
 	period: SubscriptionPeriod
 }
+
 export interface ChangeSubscriptionResponse {
 	checkoutUrl: string
 }

@@ -1,10 +1,12 @@
 import { Id } from '../../../common'
+import { ShortStringType } from '../../../common/type-validators'
+import { ConnectorType } from '../../connectors'
 import { AppConnectionType } from '../app-connection'
 import { OAuth2AuthorizationMethod } from '../oauth2-authorization-method'
 
 interface CommonAuthProps {
-	name: string
-	connectorName: string
+	name: ShortStringType
+	connectorName: ConnectorType
 	projectId: Id
 }
 
@@ -17,7 +19,7 @@ export interface UpsertCustomAuthInput extends CommonAuthProps {
 	type: AppConnectionType.CUSTOM_AUTH
 	value: {
 		type: AppConnectionType.CUSTOM_AUTH
-		props: Record<string, unknown>
+		props: Record<ShortStringType, unknown>
 	}
 }
 
@@ -43,9 +45,9 @@ export interface UpsertCustomAuthInput extends CommonAuthProps {
 export interface UpsertCloudOAuth2Request extends CommonAuthProps {
 	type: AppConnectionType.CLOUD_OAUTH2
 	value: {
-		client_id: string
-		code: string
-		code_challenge?: string
+		client_id: ShortStringType
+		code: ShortStringType
+		code_challenge?: ShortStringType
 		props?: Record<string, string>
 		scope: string
 		type: AppConnectionType.CLOUD_OAUTH2

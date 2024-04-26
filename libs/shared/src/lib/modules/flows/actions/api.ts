@@ -1,9 +1,10 @@
 import { Id } from '../../../common'
+import { StepNameType } from '../../../common/type-validators'
 import { FlowVersion } from '../flow-versions'
 
 export interface RunActionInput {
 	flowVersionId: Id
-	actionName: string
+	actionName: StepNameType
 }
 
 type RunActionBaseResponse = {

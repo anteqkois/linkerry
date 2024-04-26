@@ -1,25 +1,26 @@
 import { EncryptedObject } from '../../../common'
+import { ConnectorNameType, ShortStringType } from '../../../common/type-validators'
 
 export interface OAuth2AppInput {
-	clientId: string
-	clientSecret: string
-	connectorName: string
+	clientId: ShortStringType
+	clientSecret: ShortStringType
+	connectorName: ConnectorNameType
 }
 
 export interface OAuth2AppDecrypted {
-	clientId: string
-	clientSecret: string
-	connectorName: string
+	clientId: ShortStringType
+	clientSecret: ShortStringType
+	connectorName: ConnectorNameType
 }
 
 export interface OAuth2AppEncrypted {
-	clientId: string
+	clientId: ShortStringType
 	clientSecret: EncryptedObject
-	connectorName: string
+	connectorName: ConnectorNameType
 }
 
 export interface OAuth2RedirectQuery {
-	state: string
-	code: string
+	state: ShortStringType
+	code: ShortStringType
 	scope: string
 }

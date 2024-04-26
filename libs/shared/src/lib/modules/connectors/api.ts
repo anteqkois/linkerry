@@ -1,27 +1,28 @@
 import { Id } from '../../common'
+import { ConnectorNameType, ShortStringType, VersionType } from '../../common/type-validators'
 import { ConnectorType, PackageType } from './connector'
 
 export interface ConnectorsMetadataGetManyQuery {
-	displayName?: string
+	displayName?: ShortStringType
 	summary?: boolean
 }
 
 export interface ConnectorsMetadataGetOneQuery {
 	summary?: boolean
-	version?: string
+	version?: VersionType
 }
 
 export interface ConnectorsGetOptionsInput {
 	packageType: PackageType
 	connectorType: ConnectorType
-	connectorVersion: string
-	connectorName: string
-	propertyName: string
-	stepName: string
+	connectorVersion: VersionType
+	connectorName: ConnectorNameType
+	propertyName: ShortStringType
+	stepName: ShortStringType
 	flowId: Id
 	flowVersionId: Id
 	input: any
-	searchValue?: string
+	searchValue?: ShortStringType
 }
 
 export interface ConnectorsGetOptionsResponse {

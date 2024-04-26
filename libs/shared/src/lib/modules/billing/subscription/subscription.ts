@@ -1,5 +1,8 @@
+import { tags } from 'typia'
 import { DatabaseTimestamp, Id } from '../../../common'
 import { Price, Product } from '../products'
+import { StripeSubscriptionId } from '../stripe/type-validators'
+import { DateType } from '../../../common/type-validators'
 
 export enum SubscriptionPeriod {
 	MONTHLY = 'monthly',
@@ -29,12 +32,12 @@ export interface SubscriptionItem {
 export interface SubscriptionCommonFields extends DatabaseTimestamp {
 	_id: Id
 	project: Id
-	items: SubscriptionItem[]
+	items: Array<SubscriptionItem> & tags.MinItems<1> & tags.MaxItems<10>
 	status: SubscriptionStatus
-	validTo: string
-	canceledAt?: string
-	trialStartedAt?: string
-	trialEndedAt?: string
+	validTo: DateType
+	canceledAt?: DateType
+	trialStartedAt?: DateType
+	trialEndedAt?: DateType
 	period: SubscriptionPeriod
 }
 
@@ -44,8 +47,8 @@ export interface SubscriptionBlank extends SubscriptionCommonFields {
 
 export interface SubscriptionStripe extends SubscriptionCommonFields {
 	paymentGateway: PaymentGateway.STRIPE
-	stripeSubscriptionId: string
-	validTo: string
+	stripeSubscriptionId: StripeSubscriptionId
+	validTo: DateType
 	defaultPaymentMethod: null
 }
 

@@ -1,4 +1,6 @@
-import { DatabaseTimestamp } from '../../common'
+import { tags } from 'typia'
+import { DatabaseTimestamp, Id } from '../../common'
+import { ShortStringType } from '../../common/type-validators'
 import { Language } from '../language'
 
 export enum UserRole {
@@ -14,18 +16,18 @@ export enum UserRole {
 // }
 
 export interface User extends DatabaseTimestamp {
-	_id: string
-	name: string
+	_id: Id
+	name: ShortStringType
 	roles: UserRole[]
-	phone?: string
+	phone?: ShortStringType
 	// telegramId?: string  // Move to external collection (notification-channels)
 	// telegramBotConnected?: boolean
-	email: string
+	email: string & tags.Format<'email'>
 	emailVerifiedAtDate?: Date
 	trialExpiredAtDate?: Date
 	trialStartedAtDate?: Date
 	deletedAtDate?: Date
-	cryptoWallet?: string
+	cryptoWallet?: ShortStringType
 	language: Language
 	affiliationPercent: number
 	consents: Record<string, boolean>

@@ -1,5 +1,6 @@
 import { RequestUser } from '@linkerry/shared';
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { TypedRoute } from '@nestia/core';
+import { Controller, UseGuards } from '@nestjs/common';
 import { JwtCookiesAuthGuard } from '../../lib/auth';
 import { ReqJwtUser } from '../users/auth/decorators/req-jwt-user.decorator';
 import { ProjectsService } from './projects.service';
@@ -10,7 +11,7 @@ export class ProjectsController {
 
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Get()
+	@TypedRoute.Get()
 	async findManyUserProject(@ReqJwtUser() user: RequestUser) {
 		return this.projectsService.findManyUserProjects(user.id)
 	}

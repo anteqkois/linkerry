@@ -1,4 +1,5 @@
 import { ErrorCodeQuota } from '../../../common/errorCodes'
+import { ShortStringType } from '../../../common/type-validators'
 import { TasksUsage } from '../usage'
 
 export interface PlanProductConfiguration {
@@ -17,15 +18,15 @@ export interface PlanProductConfiguration {
 }
 
 export interface ProductConfigItem {
-	name: string
-	displayName: string
-	description: string
+	name: ShortStringType
+	displayName: ShortStringType
+	description: ShortStringType
 }
 
 export interface PlanConfigurationDetailsValue {
-	displayName: string
+	displayName: ShortStringType
 	errorCode: ErrorCodeQuota
-	name: string
+	name: ShortStringType
 	// description:''
 }
 

@@ -1,5 +1,6 @@
 import { PutStoreEntryRequest, RequestWorker } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
+import { TypedBody, TypedQuery, TypedRoute } from '@nestia/core'
+import { Controller, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
 import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { StoreEntryService } from './store-entry.service'
@@ -9,20 +10,20 @@ export class StoreEntryController {
 	constructor(private readonly storeEntryService: StoreEntryService) {}
 
 	@UseGuards(JwtBearerTokenAuthGuard)
-	@Get()
-	findOne(@ReqJwtWorker() worker: RequestWorker, @Query('key') key: string) {
-		return this.storeEntryService.findOne(worker.projectId, key)
+	@TypedRoute.Get()
+	findOne(@ReqJwtWorker() worker: RequestWorker, @TypedQuery() query: { key: string }) {
+		return this.storeEntryService.findOne(worker.projectId, query.key)
 	}
 
 	@UseGuards(JwtBearerTokenAuthGuard)
-	@Post()
-	upsert(@ReqJwtWorker() worker: RequestWorker, @Body() body: PutStoreEntryRequest) {
+	@TypedRoute.Post()
+	upsert(@ReqJwtWorker() worker: RequestWorker, @TypedBody() body: PutStoreEntryRequest) {
 		return this.storeEntryService.upsert(worker.projectId, body.key, body.value)
 	}
 
 	@UseGuards(JwtBearerTokenAuthGuard)
-	@Delete()
-	deleteOne(@ReqJwtWorker() worker: RequestWorker, @Query('key') key: string) {
-		return this.storeEntryService.deleteOne(worker.projectId, key)
+	@TypedRoute.Delete()
+	deleteOne(@ReqJwtWorker() worker: RequestWorker, @TypedQuery() query: { key: string }) {
+		return this.storeEntryService.deleteOne(worker.projectId, query.key)
 	}
 }

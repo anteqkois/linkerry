@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { baseStepSchema, baseStepSettingsSchema } from '../steps/base'
+import { ConnectorNameType, ShortStringType, StepNameType } from '../../../common/type-validators'
+import { BaseStep, BaseStepSettings } from '../steps'
 
 export enum ActionType {
 	// Code = 'Code',
@@ -9,78 +9,49 @@ export enum ActionType {
 	LOOP_ON_ITEMS = 'LOOP_ON_ITEMS',
 }
 
-export const actionErrorHandlingOptionsSchema = z.object({
-	continueOnFailure: z
-		.object({
-			value: z.boolean(),
-		})
-		.optional(),
-	retryOnFailure: z
-		.object({
-			value: z.boolean(),
-		})
-		.optional(),
-})
-
-export interface ActionErrorHandlingOptions extends z.infer<typeof actionErrorHandlingOptionsSchema> {}
+export interface ActionErrorHandlingOptions {
+	continueOnFailure?: { value: boolean }
+	retryOnFailure?: { value: boolean }
+}
 
 /* BASE */
-export const baseActionSettingsSchema = baseStepSettingsSchema.merge(
-	z.object({
-		actionName: z.string(), // 'send_xyz'
-		errorHandlingOptions: actionErrorHandlingOptionsSchema.optional(),
-	}),
-)
-export interface BaseAction extends z.infer<typeof baseActionSchema> {}
+export interface BaseActionSettings extends BaseStepSettings {
+	actionName: ShortStringType // 'send_xyz'
+	errorHandlingOptions?: ActionErrorHandlingOptions
+}
 
-export const baseActionSchema = baseStepSchema.merge(
-	z.object({
-		type: z.nativeEnum(ActionType),
-		settings: baseActionSettingsSchema,
-	}),
-)
-export interface BaseAction extends z.infer<typeof baseActionSchema> {}
+export interface BaseAction extends BaseStep {
+	type: ActionType
+	settings: BaseActionSettings
+}
 
 /* CONNECTOR */
-const actionConnectorSettingsSchema = baseActionSettingsSchema
+export type ActionConnectorSettings = BaseActionSettings
 
-export const actionConnectorSchema = baseStepSchema.merge(
-	z.object({
-		type: z.enum([ActionType.CONNECTOR]),
-		settings: actionConnectorSettingsSchema,
-	}),
-)
+export interface ActionConnector extends BaseStep {
+	type: ActionType.CONNECTOR,
+	settings: ActionConnectorSettings,
+}
 
 export const isConnectorAction = (action: Action): action is ActionConnector => {
 	return action.type === ActionType.CONNECTOR
 }
 
-export interface ActionConnector extends z.infer<typeof actionConnectorSchema> {}
-export interface ActionConnectorSettings extends z.infer<typeof actionConnectorSettingsSchema> {}
-
 /* BRANCH */
-const actionBranchSettingsSchema = baseActionSettingsSchema.merge(
-	z.object({
-		conditions: z.array(z.array(z.object({}))),
-	}),
-)
+export interface ActionBranchSettings extends BaseActionSettings{
+	conditions: Array<Array<object>>
+}
 
-export const actionBranchSchema = baseStepSchema.merge(
-	z.object({
-		type: z.enum([ActionType.BRANCH]),
-		settings: actionBranchSettingsSchema,
-		onSuccessActionName: z.string(),
-		onFailureActionName: z.string(),
-	}),
-)
+export interface ActionBranch extends BaseStep{
+	type: ActionType.BRANCH,
+	settings: ActionBranchSettings,
+	onSuccessActionName: StepNameType,
+	onFailureActionName: ConnectorNameType,
+}
 
 export const isBranchAction = (action: Action): action is ActionBranch => {
 	return action.type === ActionType.BRANCH
 }
-
-export interface ActionBranch extends z.infer<typeof actionBranchSchema> {}
-export interface ActionBranchSettings extends z.infer<typeof actionBranchSettingsSchema> {}
-
 /* ACTION */
 export type Action = ActionConnector | ActionBranch
 

@@ -1,37 +1,35 @@
-import { RequestUser } from '@linkerry/shared'
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
+import { ConnectorNameType, ConnectorsGetOptionsInput, ConnectorsMetadataGetManyQuery, ConnectorsMetadataGetOneQuery, RequestUser } from '@linkerry/shared'
+import { TypedBody, TypedParam, TypedQuery, TypedRoute } from '@nestia/core'
+import { Controller, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { MongoFilter, QueryToMongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { ConnectorsMetadataService } from './connectors-metadata/connectors-metadata.service'
-import { ConnectorMetadataGetManyQueryDto } from './connectors-metadata/dto/getMany.dto'
-import { ConnectorMetadataGetOneQueryDto } from './connectors-metadata/dto/getOne.dto'
 import { ConnectorsService } from './connectors.service'
-import { ConnectorsGetOptionsInputDto } from './dto/get-options-input.dto'
 
 @Controller('connectors')
 export class ConnectorsController {
 	constructor(private readonly connectorsMetadataService: ConnectorsMetadataService, private readonly connectorsService: ConnectorsService) {}
 
-	@Get()
+	@TypedRoute.Get()
 	findAll(
 		@QueryToMongoFilter({
 			exclude: ['summary'],
 		})
-		filter: MongoFilter<ConnectorMetadataGetManyQueryDto>,
-		@Query() query: ConnectorMetadataGetManyQueryDto,
+		filter: MongoFilter<ConnectorsMetadataGetManyQuery>,
+		@TypedQuery() query: ConnectorsMetadataGetManyQuery,
 	) {
 		return this.connectorsMetadataService.findAllUnique(filter, query)
 	}
 
-	@Get(':name')
-	findOne(@Param('name') name: string, @Query() query: ConnectorMetadataGetOneQueryDto) {
+	@TypedRoute.Get(':name')
+	findOne(@TypedParam('name') name: ConnectorNameType, @TypedQuery() query: ConnectorsMetadataGetOneQuery) {
 		return this.connectorsMetadataService.findOne(name, query)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Post('/options')
-	getPropertyOptions(@ReqJwtUser() user: RequestUser, @Body() body: ConnectorsGetOptionsInputDto) {
+	@TypedRoute.Post('/options')
+	getPropertyOptions(@ReqJwtUser() user: RequestUser, @TypedBody() body: ConnectorsGetOptionsInput) {
 		return this.connectorsService.getPropertyOptions(user.projectId, body)
 	}
 }
