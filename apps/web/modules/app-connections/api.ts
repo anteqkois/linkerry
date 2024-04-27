@@ -1,4 +1,4 @@
-import { AppConnectionWithoutSensitiveData, OAuth2AppEncrypted, UpsertAppConnectionInput } from '@linkerry/shared'
+import { AppConnectionWithoutSensitiveData, Id, OAuth2AppEncrypted, UpsertAppConnectionInput } from '@linkerry/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class AppConnectionsApi {
@@ -7,6 +7,9 @@ export class AppConnectionsApi {
 	}
 	static async getMany() {
 		return apiClient.get<AppConnectionWithoutSensitiveData[]>(`/app-connections`)
+	}
+	static async delete(appConnectionId: Id) {
+		return apiClient.delete(`/app-connections/${appConnectionId}`)
 	}
 }
 

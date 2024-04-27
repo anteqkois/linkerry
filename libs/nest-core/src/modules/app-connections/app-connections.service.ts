@@ -127,7 +127,7 @@ export class AppConnectionsService {
 		return appConnectionDecrypted
 	}
 
-	_needRefresh(connection: AppConnectionDecrypted): boolean {
+	private _needRefresh(connection: AppConnectionDecrypted): boolean {
 		switch (connection.value.type) {
 			case AppConnectionType.PLATFORM_OAUTH2:
 			case AppConnectionType.CLOUD_OAUTH2:
@@ -153,6 +153,14 @@ export class AppConnectionsService {
 				name,
 			})
 		)?.toObject()
+	}
+
+	async delete(id: Id, projectId: Id) {
+		// TODO check if any active flow use it
+		return await this.appConnectionsModel.deleteOne({
+			_id: id,
+			projectId,
+		})
 	}
 
 	async getOne({ name, projectId }: { projectId: Id; name: string }) {

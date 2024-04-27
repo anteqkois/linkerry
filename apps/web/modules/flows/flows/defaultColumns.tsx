@@ -243,6 +243,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
 					)
 					setConfirmDialog(false)
 					setShowActions(false)
+					setFlowToDelete(undefined)
 				} catch (error) {
 					if (isCustomHttpExceptionAxios(error))
 						return toast({

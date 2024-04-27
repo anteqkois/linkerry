@@ -92,20 +92,6 @@ export default function Page() {
 				columns={columns}
 				onClickRow={onClickRowHndler}
 				meta={{ onChangeFlowStatus, runningOperation }}
-				// filterAccessor="displayName"
-				// chooseFilters={[
-				// 	{
-				// 		accessor: 'tags',
-				// 		title: 'Tags',
-				// 		options: connectorTag.map((tag) => ({
-				// 			label: tag,
-				// 			value: tag,
-				// 		})),
-				// 	},
-				// ]}
-				// mobileColumns={mobileCollumns || defaultMobileColumns}
-				// desktopColumns={desktopCollumns}
-				// onlyColumns={onlyColumns || []}
 			/>
 		</PageContainer>
 	)
