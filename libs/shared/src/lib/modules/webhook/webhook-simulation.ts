@@ -1,19 +1,24 @@
-import { DatabaseTimestamp, Id } from '../../common'
+import { z } from 'zod'
+import { BaseDatabaseFields, Id } from '../../common'
+import { idSchema } from '../../common/zod'
 
-export interface WebhookSimulation extends DatabaseTimestamp {
+export interface WebhookSimulation extends BaseDatabaseFields {
 	_id: Id
 	flowId: Id
 	projectId: Id
 }
 
-export interface GetWebhookSimulationQuery {
-	flowId: Id
-}
+export const getWebhookSimulationQuerySchema = z.object({
+	flowId: idSchema,
+})
+export interface GetWebhookSimulationQuery extends z.infer<typeof getWebhookSimulationQuerySchema> {}
 
-export interface CreateWebhookSimulationInput {
-	flowId: Id
-}
+export const createWebhookSimulationInputSchema = z.object({
+	flowId: idSchema,
+})
+export interface CreateWebhookSimulationInput extends z.infer<typeof createWebhookSimulationInputSchema> {}
 
-export interface DeleteWebhookSimulationInput {
-	flowId: Id
-}
+export const deleteWebhookSimulationInputSchema = z.object({
+	flowId: idSchema,
+})
+export interface DeleteWebhookSimulationInput extends z.infer<typeof deleteWebhookSimulationInputSchema> {}

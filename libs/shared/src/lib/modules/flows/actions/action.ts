@@ -21,7 +21,6 @@ export const actionErrorHandlingOptionsSchema = z.object({
 		})
 		.optional(),
 })
-
 export interface ActionErrorHandlingOptions extends z.infer<typeof actionErrorHandlingOptionsSchema> {}
 
 /* BASE */
@@ -43,6 +42,7 @@ export interface BaseAction extends z.infer<typeof baseActionSchema> {}
 
 /* CONNECTOR */
 const actionConnectorSettingsSchema = baseActionSettingsSchema
+export interface ActionConnectorSettings extends z.infer<typeof actionConnectorSettingsSchema> {}
 
 export const actionConnectorSchema = baseStepSchema.merge(
 	z.object({
@@ -50,13 +50,11 @@ export const actionConnectorSchema = baseStepSchema.merge(
 		settings: actionConnectorSettingsSchema,
 	}),
 )
+export interface ActionConnector extends z.infer<typeof actionConnectorSchema> {}
 
 export const isConnectorAction = (action: Action): action is ActionConnector => {
 	return action.type === ActionType.CONNECTOR
 }
-
-export interface ActionConnector extends z.infer<typeof actionConnectorSchema> {}
-export interface ActionConnectorSettings extends z.infer<typeof actionConnectorSettingsSchema> {}
 
 /* BRANCH */
 const actionBranchSettingsSchema = baseActionSettingsSchema.merge(
@@ -64,6 +62,7 @@ const actionBranchSettingsSchema = baseActionSettingsSchema.merge(
 		conditions: z.array(z.array(z.object({}))),
 	}),
 )
+export interface ActionBranchSettings extends z.infer<typeof actionBranchSettingsSchema> {}
 
 export const actionBranchSchema = baseStepSchema.merge(
 	z.object({
@@ -73,16 +72,15 @@ export const actionBranchSchema = baseStepSchema.merge(
 		onFailureActionName: z.string(),
 	}),
 )
+export interface ActionBranch extends z.infer<typeof actionBranchSchema> {}
 
 export const isBranchAction = (action: Action): action is ActionBranch => {
 	return action.type === ActionType.BRANCH
 }
 
-export interface ActionBranch extends z.infer<typeof actionBranchSchema> {}
-export interface ActionBranchSettings extends z.infer<typeof actionBranchSettingsSchema> {}
-
 /* ACTION */
-export type Action = ActionConnector | ActionBranch
+export const actionSchema = z.union([actionConnectorSchema, actionBranchSchema])
+export type Action =  z.infer<typeof actionSchema>
 
 export function isAction(data: unknown): data is Action {
 	if (data && typeof data === 'object' && 'name' in data && typeof data.name === 'string' && data.name.startsWith('action')) return true

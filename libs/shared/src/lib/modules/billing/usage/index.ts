@@ -1,6 +1,6 @@
-import { DatabaseTimestamp, Id } from "../../../common";
+import { BaseDatabaseFields, Id } from "../../../common";
 
-export interface TasksUsage extends DatabaseTimestamp{
+export interface TasksUsage extends BaseDatabaseFields{
 	projectId: Id
 	tasks: number
 }

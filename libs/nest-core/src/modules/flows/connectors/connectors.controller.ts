@@ -1,37 +1,30 @@
-import { RequestUser } from '@linkerry/shared'
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
+import { ConnectorsGetOptionsInput, ConnectorsMetadataGetManyQuery, ConnectorsMetadataGetOneQuery, RequestUser, connectorsGetOptionsInputSchema, connectorsMetadataGetManyQuerySchema, connectorsMetadataGetOneQuerySchema, stringShortSchema } from '@linkerry/shared'
+import { Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { MongoFilter, QueryToMongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
+import { ParamSchema } from '../../../lib/nest-utils/decorators/zod/param'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { ConnectorsMetadataService } from './connectors-metadata/connectors-metadata.service'
-import { ConnectorMetadataGetManyQueryDto } from './connectors-metadata/dto/getMany.dto'
-import { ConnectorMetadataGetOneQueryDto } from './connectors-metadata/dto/getOne.dto'
 import { ConnectorsService } from './connectors.service'
-import { ConnectorsGetOptionsInputDto } from './dto/get-options-input.dto'
 
 @Controller('connectors')
 export class ConnectorsController {
 	constructor(private readonly connectorsMetadataService: ConnectorsMetadataService, private readonly connectorsService: ConnectorsService) {}
 
 	@Get()
-	findAll(
-		@QueryToMongoFilter({
-			exclude: ['summary'],
-		})
-		filter: MongoFilter<ConnectorMetadataGetManyQueryDto>,
-		@Query() query: ConnectorMetadataGetManyQueryDto,
-	) {
-		return this.connectorsMetadataService.findAllUnique(filter, query)
+	findAll(@QuerySchema(connectorsMetadataGetManyQuerySchema) query: ConnectorsMetadataGetManyQuery) {
+		return this.connectorsMetadataService.findAllUnique(query)
 	}
 
 	@Get(':name')
-	findOne(@Param('name') name: string, @Query() query: ConnectorMetadataGetOneQueryDto) {
+	findOne(@ParamSchema('name', stringShortSchema) name: string, @QuerySchema(connectorsMetadataGetOneQuerySchema) query: ConnectorsMetadataGetOneQuery) {
 		return this.connectorsMetadataService.findOne(name, query)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post('/options')
-	getPropertyOptions(@ReqJwtUser() user: RequestUser, @Body() body: ConnectorsGetOptionsInputDto) {
+	getPropertyOptions(@BodySchema(connectorsGetOptionsInputSchema) body: ConnectorsGetOptionsInput, @ReqJwtUser() user: RequestUser) {
 		return this.connectorsService.getPropertyOptions(user.projectId, body)
 	}
 }

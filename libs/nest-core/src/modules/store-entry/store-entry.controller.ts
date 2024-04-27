@@ -1,6 +1,8 @@
-import { PutStoreEntryRequest, RequestWorker } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
+import { PutStoreEntryRequest, RequestWorker, putStoreEntryRequestSchema, stringShortSchema } from '@linkerry/shared'
+import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
+import { BodySchema } from '../../lib/nest-utils/decorators/zod/body'
+import { QuerySchema } from '../../lib/nest-utils/decorators/zod/query'
 import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { StoreEntryService } from './store-entry.service'
 
@@ -10,19 +12,19 @@ export class StoreEntryController {
 
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Get()
-	findOne(@ReqJwtWorker() worker: RequestWorker, @Query('key') key: string) {
+	findOne(@QuerySchema('key', stringShortSchema) key: string, @ReqJwtWorker() worker: RequestWorker) {
 		return this.storeEntryService.findOne(worker.projectId, key)
 	}
 
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Post()
-	upsert(@ReqJwtWorker() worker: RequestWorker, @Body() body: PutStoreEntryRequest) {
+	upsert(@BodySchema(putStoreEntryRequestSchema) body: PutStoreEntryRequest, @ReqJwtWorker() worker: RequestWorker) {
 		return this.storeEntryService.upsert(worker.projectId, body.key, body.value)
 	}
 
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Delete()
-	deleteOne(@ReqJwtWorker() worker: RequestWorker, @Query('key') key: string) {
+	deleteOne(@QuerySchema('key', stringShortSchema) key: string, @ReqJwtWorker() worker: RequestWorker) {
 		return this.storeEntryService.deleteOne(worker.projectId, key)
 	}
 }

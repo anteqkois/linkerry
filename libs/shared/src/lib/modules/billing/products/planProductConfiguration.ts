@@ -1,20 +1,23 @@
+import { z } from 'zod'
 import { ErrorCodeQuota } from '../../../common/errorCodes'
+import { stringShortSchema } from '../../../common/zod'
 import { TasksUsage } from '../usage'
 
-export interface PlanProductConfiguration {
-	minimumPollingInterval: number
-	connections: number
-	connectors: string
-	tasks: number
-	projectMembers: number
-	flowSteps: number
-	triggersAmount: number
-	flows: number
-	fileUploadsMB: number
-	flowRunIntervalGap: number
-	maximumActiveFlows: number
-	maximumExecutionTime: number
-}
+export const planProductConfigurationSchema = z.object({
+	minimumPollingInterval: z.number(),
+	connections: z.number(),
+	connectors: stringShortSchema,
+	tasks: z.number(),
+	projectMembers: z.number(),
+	flowSteps: z.number(),
+	triggersAmount: z.number(),
+	flows: z.number(),
+	fileUploadsMB: z.number(),
+	flowRunIntervalGap: z.number(),
+	maximumActiveFlows: z.number(),
+	maximumExecutionTime: z.number(),
+})
+export interface PlanProductConfiguration extends z.infer<typeof planProductConfigurationSchema> {}
 
 export interface ProductConfigItem {
 	name: string

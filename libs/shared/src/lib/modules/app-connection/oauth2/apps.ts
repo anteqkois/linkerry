@@ -1,10 +1,13 @@
+import { z } from 'zod'
 import { EncryptedObject } from '../../../common'
+import { stringShortSchema } from '../../../common/zod'
 
-export interface OAuth2AppInput {
-	clientId: string
-	clientSecret: string
-	connectorName: string
-}
+export const oAuth2AppInputSchema = z.object({
+	clientId: stringShortSchema,
+	clientSecret: stringShortSchema,
+	connectorName: stringShortSchema,
+})
+export interface OAuth2AppInput extends z.infer<typeof oAuth2AppInputSchema> {}
 
 export interface OAuth2AppDecrypted {
 	clientId: string

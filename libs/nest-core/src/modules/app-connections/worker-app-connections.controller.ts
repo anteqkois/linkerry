@@ -1,6 +1,7 @@
-import { CustomError, ErrorCode, RequestWorker, isNil } from '@linkerry/shared'
-import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import { CustomError, ErrorCode, RequestWorker, isNil, stringShortSchema } from '@linkerry/shared'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
+import { ParamSchema } from '../../lib/nest-utils/decorators/zod/param'
 import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { AppConnectionsService } from './app-connections.service'
 
@@ -10,7 +11,7 @@ export class WorkerAppConnectionsController {
 
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Get(':name')
-	async findOne(@ReqJwtWorker() worker: RequestWorker, @Param('name') connectionName: string) {
+	async findOne(@ParamSchema('name', stringShortSchema) connectionName: string, @ReqJwtWorker() worker: RequestWorker) {
 		const appConnection = await this.appConnectionsService.getOne({ name: connectionName, projectId: worker.projectId })
 
 		if (isNil(appConnection)) {

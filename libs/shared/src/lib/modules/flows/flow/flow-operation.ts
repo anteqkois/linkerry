@@ -1,6 +1,7 @@
-import { Id } from '../../../common'
-import { Action } from '../actions'
-import { Trigger } from '../triggers'
+import { z } from 'zod'
+import { idSchema, stepNameSchema, stringShortSchema } from '../../../common/zod'
+import { actionSchema } from '../actions'
+import { triggerSchema } from '../triggers'
 import { FlowStatus } from './flow'
 
 export enum FlowOperationType {
@@ -33,9 +34,8 @@ export enum StepLocationRelativeToParent {
 // })
 // export type UseAsDraftRequest = Static<typeof UseAsDraftRequest>
 
-export type LockFlowRequest = {
-	//
-}
+export const lockFlowRequestSchema = z.object({})
+export type LockFlowRequest = z.infer<typeof lockFlowRequestSchema>
 
 // export const ImportFlowRequest = Type.Object({
 //     displayName: Type.String({}),
@@ -50,16 +50,19 @@ export type LockFlowRequest = {
 
 // export type ChangeFolderRequest = Static<typeof ChangeFolderRequest>
 
-export type ChangeNameRequest = {
-	displayName: string
-}
+export const changeNameRequestSchema = z.object({
+	displayName: stringShortSchema,
+})
+export type ChangeNameRequest = z.infer<typeof changeNameRequestSchema>
 
-export type DeleteActionRequest = {
-	name: string
-}
+export const deleteActionRequestSchema = z.object({
+	name: stringShortSchema,
+})
+export type DeleteActionRequest = z.infer<typeof deleteActionRequestSchema>
 
 // export const UpdateActionRequest = Type.Union([CodeActionSchema, LoopOnItemsActionSchema, PieceActionSchema, BranchActionSchema])
-export type UpdateActionRequest = Action
+export const updateActionRequestSchema = actionSchema
+export type UpdateActionRequest = z.infer<typeof updateActionRequestSchema>
 
 // export const DuplicateStepRequest = Type.Object({
 // 	stepName: Type.String(),
@@ -74,37 +77,39 @@ export type UpdateActionRequest = Action
 // })
 // export type MoveActionRequest = Static<typeof MoveActionRequest>
 
-export type AddActionRequest = {
-	parentStepName: string
+export const addActionRequestSchema = z.object({
+	parentStepName: stepNameSchema,
 	// stepLocationRelativeToParent: StepLocationRelativeToParent
-	action: UpdateActionRequest
-}
+	action: updateActionRequestSchema,
+})
+export type AddActionRequest = z.infer<typeof addActionRequestSchema>
 
-export type UpdateTriggerRequest = Trigger
+export const updateTriggerRequestSchema = triggerSchema
+export type UpdateTriggerRequest = z.infer<typeof updateTriggerRequestSchema>
 
-export type UpdateFlowStatusRequest = {
-	status: FlowStatus
-}
+export const updateFlowStatusRequestSchema = z.object({
+	status: z.nativeEnum(FlowStatus),
+})
+export type UpdateFlowStatusRequest = z.infer<typeof updateFlowStatusRequestSchema>
 
-export type ChangePublishedVersionIdRequest = {
-	//
-}
+export const changePublishedVersionIdRequestSchema = z.object({})
+export type ChangePublishedVersionIdRequest = z.infer<typeof changePublishedVersionIdRequestSchema>
 
-export type FlowOperationRequest =
+export const flowOperationRequestSchema = z.union([
 	// | {
 	// 		type: FlowOperationType.MOVE_ACTION
 	// 		request: MoveActionRequest
 	//   }
-	| {
-			flowVersionId: Id
-			type: FlowOperationType.CHANGE_STATUS
-			request: UpdateFlowStatusRequest
-	  }
-	| {
-			flowVersionId: Id
-			type: FlowOperationType.LOCK_AND_PUBLISH
-			request: ChangePublishedVersionIdRequest
-	  }
+	z.object({
+		flowVersionId: idSchema,
+		type: z.enum([FlowOperationType.CHANGE_STATUS]),
+		request: updateFlowStatusRequestSchema,
+	}),
+	z.object({
+		flowVersionId: idSchema,
+		type: z.enum([FlowOperationType.LOCK_AND_PUBLISH]),
+		request: changePublishedVersionIdRequestSchema,
+	}),
 	// | {
 	// 		type: FlowOperationType.USE_AS_DRAFT
 	// 		request: UseAsDraftRequest
@@ -118,36 +123,39 @@ export type FlowOperationRequest =
 	// 		type: FlowOperationType.IMPORT_FLOW
 	// 		request: ImportFlowRequest
 	//   }
-	| {
-			flowVersionId: Id
-			type: FlowOperationType.CHANGE_NAME
-			request: ChangeNameRequest
-	  }
-	| {
-			flowVersionId: Id
-			type: FlowOperationType.DELETE_ACTION
-			request: DeleteActionRequest
-	  }
-	| {
-			flowVersionId: Id
-			type: FlowOperationType.UPDATE_ACTION
-			request: UpdateActionRequest
-	  }
-	| {
-			flowVersionId: Id
-			type: FlowOperationType.ADD_ACTION
-			request: AddActionRequest
-	  }
-	| {
-			flowVersionId: Id
-			type: FlowOperationType.UPDATE_TRIGGER
-			request: UpdateTriggerRequest
-	  }
-// | {
-// 		type: FlowOperationType.CHANGE_FOLDER
-// 		request: ChangeFolderRequest
-//   }
-// | {
-// 		type: FlowOperationType.DUPLICATE_ACTION
-// 		request: DuplicateStepRequest
-//   }
+	z.object({
+		flowVersionId: idSchema,
+		type: z.enum([FlowOperationType.CHANGE_NAME]),
+		request: changeNameRequestSchema,
+	}),
+	z.object({
+		flowVersionId: idSchema,
+		type: z.enum([FlowOperationType.DELETE_ACTION]),
+		request: deleteActionRequestSchema,
+	}),
+	z.object({
+		flowVersionId: idSchema,
+		type: z.enum([FlowOperationType.UPDATE_ACTION]),
+		request: updateActionRequestSchema,
+	}),
+	z.object({
+		flowVersionId: idSchema,
+		type: z.enum([FlowOperationType.ADD_ACTION]),
+		request: addActionRequestSchema,
+	}),
+	z.object({
+		flowVersionId: idSchema,
+		type: z.enum([FlowOperationType.UPDATE_TRIGGER]),
+		request: updateTriggerRequestSchema,
+	}),
+	// | {
+	// 		type: FlowOperationType.CHANGE_FOLDER
+	// 		request: ChangeFolderRequest
+	//   }
+	// | {
+	// 		type: FlowOperationType.DUPLICATE_ACTION
+	// 		request: DuplicateStepRequest
+	//   }
+])
+
+export type FlowOperationRequest = z.infer<typeof flowOperationRequestSchema>

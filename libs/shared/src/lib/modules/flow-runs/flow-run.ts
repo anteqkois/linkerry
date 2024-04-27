@@ -1,4 +1,4 @@
-import { DatabaseTimestamp, Id, Nullable } from "../../common"
+import { BaseDatabaseFields, Id, Nullable } from "../../common"
 import { FlowRunStatus, PauseMetadata } from "./execution/flow-execution"
 import { StepOutput } from "./execution/step-output"
 
@@ -6,7 +6,7 @@ export enum RunTerminationReason {
     STOPPED_BY_HOOK = 'STOPPED_BY_HOOK',
 }
 
-export interface FlowRun extends DatabaseTimestamp  {
+export interface FlowRun extends BaseDatabaseFields  {
     _id: Id
     projectId: Id
     flowId: Id

@@ -1,33 +1,4 @@
-import { Language } from '../modules/language'
-import { User } from '../modules/user'
 import { Id } from './database'
-
-export interface IAuthSignUpInput {
-	email: string
-	password: string
-	name: string
-	language: Language
-	consents: Record<string, boolean>
-}
-
-// TODO refactor this to not use error field, insted server should throw error
-export interface IAuthSignUpResponse {
-	user: any
-	error: string | undefined
-}
-
-export interface IAuthLoginInput {
-	email: string
-	password: string
-}
-
-export interface IAuthLoginResponse {
-	user: User
-}
-
-export interface IAuthLogoutResponse {
-	error: string | undefined
-}
 
 export interface JwtCustomerTokenPayload {
 	sub: string

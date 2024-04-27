@@ -1,10 +1,8 @@
-import { RequestUser } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
+import { DeleteTriggerEventsInput, GetTriggerEventsQuery, RequestUser, TriggerPoolTestBody, deleteTriggerEventsInputSchema, getTriggerEventsQuerySchema, triggerPoolTestBodySchema } from '@linkerry/shared'
+import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
-import { DeleteDto } from './dto/delete.dto'
-import { GetManyDto } from './dto/get-many.dto'
-import { TestDto } from './dto/pool-test.dto'
 import { TriggerEventsService } from './trigger-events.service'
 
 @Controller('trigger-events')
@@ -12,20 +10,20 @@ export class TriggerEventsController {
 	constructor(private readonly triggerEventsService: TriggerEventsService) {}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Get('')
-	getTriggerEvents(@ReqJwtUser() user: RequestUser, @Query() query: GetManyDto) {
+	@Get()
+	getTriggerEvents(@QuerySchema(getTriggerEventsQuerySchema) query: GetTriggerEventsQuery, @ReqJwtUser() user: RequestUser) {
 		return this.triggerEventsService.getMany(query, user.projectId)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
-	@Delete('')
-	deleteTriggerEvents(@ReqJwtUser() user: RequestUser, @Body() body: DeleteDto) {
+	@Delete()
+	deleteTriggerEvents(@Body(deleteTriggerEventsInputSchema) body: DeleteTriggerEventsInput, @ReqJwtUser() user: RequestUser) {
 		return this.triggerEventsService.deleteMany(body, user.projectId)
 	}
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post('/test/pool')
-	create(@ReqJwtUser() user: RequestUser, @Body() poolTestDto: TestDto) {
-		return this.triggerEventsService.test(poolTestDto, user.projectId, user.id)
+	create( @Body(triggerPoolTestBodySchema) body: TriggerPoolTestBody, @ReqJwtUser() user: RequestUser) {
+		return this.triggerEventsService.test(body, user.projectId, user.id)
 	}
 }

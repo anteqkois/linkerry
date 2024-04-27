@@ -1,17 +1,11 @@
-import { Id, Price } from '@linkerry/shared'
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
-import { AdminGuard } from '../../../../lib/auth/guards/admin.guard'
+import { Id } from '@linkerry/shared'
+import { Controller, Get } from '@nestjs/common'
+import { ParamIdSchema } from '../../../../lib/nest-utils/decorators/zod/id'
 import { PricesService } from './prices.service'
 
 @Controller('prices')
 export class PricesController {
 	constructor(private readonly pricesService: PricesService) {}
-
-	@UseGuards(AdminGuard)
-	@Post()
-	create(@Body() body: Price) {
-		return this.pricesService.create(body)
-	}
 
 	@Get()
 	findMany() {
@@ -19,7 +13,7 @@ export class PricesController {
 	}
 
 	@Get(':id')
-	findOne(@Query('id') id: Id) {
+	findOne(@ParamIdSchema() id: Id) {
 		return this.pricesService.findOne(id)
 	}
 }

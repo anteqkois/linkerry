@@ -1,6 +1,8 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
 	ConnectorPackage,
+	ConnectorsMetadataGetManyQuery,
+	ConnectorsMetadataGetOneQuery,
 	CustomError,
 	EXACT_VERSION_PATTERN,
 	ErrorCode,
@@ -13,9 +15,6 @@ import {
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
-import { MongoFilter } from '../../../../lib/mongodb/decorators/filter.decorator'
-import { ConnectorMetadataGetManyQueryDto } from './dto/getMany.dto'
-import { ConnectorMetadataGetOneQueryDto } from './dto/getOne.dto'
 import { ConnectorsMetadataModel } from './schemas/connector.schema'
 
 @Injectable()
@@ -33,12 +32,21 @@ export class ConnectorsMetadataService {
 		}
 	}
 
-	async findAllUnique(filter: MongoFilter<ConnectorMetadataGetManyQueryDto>, query: ConnectorMetadataGetManyQueryDto) {
+	async findAllUnique(query: ConnectorsMetadataGetManyQuery) {
+		const filter: FilterQuery<ConnectorMetadata> = {}
+
+		if (query.displayName)
+			filter.displayName = {
+				$regex: new RegExp(query.displayName, 'i'),
+			}
+
 		const connectors = (
 			await this.connectorMetadataModel.find(
 				filter,
 				{},
 				{
+					limit: query.limit,
+					skip: query.offset,
 					sort: {
 						name: 'asc',
 						version: 'desc',
@@ -61,7 +69,7 @@ export class ConnectorsMetadataService {
 	}
 
 	// TODO handle projectId when custom connectors will be aded
-	async findOne(name: string, query: ConnectorMetadataGetOneQueryDto) {
+	async findOne(name: string, query: ConnectorsMetadataGetOneQuery) {
 		const filter: FilterQuery<ConnectorsMetadataModel> = {
 			name,
 		}
@@ -100,7 +108,7 @@ export class ConnectorsMetadataService {
 		// TODO implement filter based on projectId like in ac /Users/anteqkois/Code/Projects/me/activepieces/packages/server/api/src/app/pieces/piece-metadata-service/db-piece-metadata-service.ts constructPieceFilters
 
 		const pieceMetadata = await this.findOne(name, {
-			version,
+			version
 		})
 
 		return pieceMetadata.version

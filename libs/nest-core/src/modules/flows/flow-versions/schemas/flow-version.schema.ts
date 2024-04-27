@@ -1,12 +1,12 @@
 import { ActionConnector, Flow, FlowVersion, FlowVersionState, TriggerConnector, TriggerEmpty } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { IdObjectOrPopulated, ObjectId, TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { BaseDatabaseModel, IdObjectOrPopulated, ObjectId } from '../../../../lib/mongodb'
 
 export type FlowVersionDocument<T extends keyof FlowVersion = never> = mongoose.HydratedDocument<FlowVersionModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow_versions', minimize: false })
-export class FlowVersionModel<T> extends TimestampDatabaseModel implements Omit<FlowVersion, '_id' | 'flow' | 'projectId' | 'updatedBy'> {
+export class FlowVersionModel<T> extends BaseDatabaseModel implements Omit<FlowVersion, '_id' | 'flow' | 'projectId' | 'updatedBy'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flow' })
 	flow: IdObjectOrPopulated<T, 'projectId', Flow>
 

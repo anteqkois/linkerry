@@ -1,6 +1,7 @@
-import { RequestUser, TestTriggerRequestBody } from '@linkerry/shared'
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { RequestUser, TestTriggerRequestBody, testTriggerRequestBodySchema } from '@linkerry/shared'
+import { Controller, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { TestTriggerService } from './test-trigger.service'
 
@@ -10,7 +11,7 @@ export class TestTriggerController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
-	test(@ReqJwtUser() user: RequestUser, @Body() body: TestTriggerRequestBody) {
+	test(@BodySchema(testTriggerRequestBodySchema) body: TestTriggerRequestBody, @ReqJwtUser() user: RequestUser) {
 		this.testTriggerService.test({
 			flowId: body.flowId,
 			flowVersionId: body.flowVersionId,

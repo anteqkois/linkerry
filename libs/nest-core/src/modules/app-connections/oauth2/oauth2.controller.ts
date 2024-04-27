@@ -1,8 +1,7 @@
-import { OAuth2AppInput, OAuth2RedirectQuery } from '@linkerry/shared'
-import { Body, Controller, Get, Post, Query, Response, UnprocessableEntityException, UseGuards } from '@nestjs/common'
+import { OAuth2RedirectQuery } from '@linkerry/shared'
+import { Body, Controller, Get, Query, Response, UnprocessableEntityException, UseGuards } from '@nestjs/common'
 import { FastifyReply } from 'fastify'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { AdminGuard } from '../../../lib/auth/guards/admin.guard'
 import { OAuth2Service } from './oauth2.service'
 
 @Controller('oauth2')
@@ -29,11 +28,5 @@ export class Oauth2Controller {
 					params.code,
 				)}' },'*')}</script> <html>Redirect succuesfully, this window should close now</html>`,
 			)
-	}
-
-	@UseGuards(AdminGuard)
-	@Post()
-	async create(@Body() body: OAuth2AppInput) {
-		await this.oAuth2Service.create(body)
 	}
 }

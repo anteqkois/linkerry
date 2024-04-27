@@ -1,4 +1,5 @@
 import {
+	ConnectorsGetOptionsInput,
 	CustomError,
 	ErrorCode,
 	Id,
@@ -10,7 +11,6 @@ import { Model } from 'mongoose'
 import { EngineService } from '../../engine/engine.service'
 import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { ConnectorsMetadataService } from './connectors-metadata/connectors-metadata.service'
-import { ConnectorsGetOptionsInputDto } from './dto/get-options-input.dto'
 
 @Injectable()
 export class ConnectorsService {
@@ -20,7 +20,7 @@ export class ConnectorsService {
 		private readonly connectorsMetadataService: ConnectorsMetadataService,
 	) {}
 
-	async getPropertyOptions(projectId: Id, body: ConnectorsGetOptionsInputDto) {
+	async getPropertyOptions(projectId: Id, body: ConnectorsGetOptionsInput) {
 		const flowVersion = await this.flowVersionModel.findOne({
 			_id: body.flowVersionId,
 			flow: body.flowId,

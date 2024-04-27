@@ -1,12 +1,14 @@
-import { DatabaseTimestamp } from "@linkerry/shared";
+import { BaseDatabaseFields } from "@linkerry/shared";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 @Schema({ _id: false })
-export class TimestampDatabaseModel implements DatabaseTimestamp {
+export class BaseDatabaseModel implements BaseDatabaseFields {
+	_id: string;
+
 	@Prop({ required: false, type: Date })
 	createdAt: string;
 
 	@Prop({ required: false, type: Date })
 	updatedAt: string;
 }
-export const TimestampDatabaseSchema = SchemaFactory.createForClass(TimestampDatabaseModel)
+export const BaseDatabaseSchema = SchemaFactory.createForClass(BaseDatabaseModel)

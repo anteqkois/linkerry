@@ -1,12 +1,12 @@
 import { WebhookSimulation } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { BaseDatabaseModel } from '../../../../lib/mongodb'
 
 export type WebhookSimulationDocument = mongoose.HydratedDocument<WebhookSimulationModel>
 
 @Schema({ timestamps: true, collection: 'webhook_simulations' })
-export class WebhookSimulationModel extends TimestampDatabaseModel implements WebhookSimulation {
+export class WebhookSimulationModel extends BaseDatabaseModel implements WebhookSimulation {
 	_id: string
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flows' })

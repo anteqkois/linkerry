@@ -1,15 +1,13 @@
 import { Common, PaymentGateway, Project, Subscription, SubscriptionPeriod, SubscriptionStatus, TypeOrDefaultType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { BaseDatabaseModel, IdObjectOrPopulated } from '../../../../lib/mongodb'
 import { SubscriptionItemDocument, SubscriptionItemSchema } from './subscription-item.schema'
 
 export type SubscriptionDocument<T extends keyof Subscription = never> = mongoose.HydratedDocument<SubscriptionModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'subscriptions' })
-export class SubscriptionModel<T> extends TimestampDatabaseModel implements Omit<Common<Subscription>, 'items' | 'project'> {
-	_id: string
-
+export class SubscriptionModel<T> extends BaseDatabaseModel implements Omit<Common<Subscription>, 'items' | 'project'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'projects' })
 	project: IdObjectOrPopulated<T, 'project', Project>
 

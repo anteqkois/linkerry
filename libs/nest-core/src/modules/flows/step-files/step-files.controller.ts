@@ -1,9 +1,11 @@
-import { RequestWorker } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Header, Param, Post, Query, Request, Response, UseGuards } from '@nestjs/common'
+import { RequestWorker, StepFileUpsertInput, stepFileUpsertInputSchema, stringShortSchema } from '@linkerry/shared'
+import { Controller, Delete, Get, Header, Post, Request, Response, UseGuards } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { JwtBearerTokenAuthGuard } from '../../../lib/auth'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
+import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
 import { ReqJwtWorker } from '../../users/auth/decorators/req-jwt-worker.decorator'
-import { CreateDto } from './dto/create.dto'
 import { StepFilesService } from './step-files.service'
 
 @Controller('step-files')
@@ -12,7 +14,7 @@ export class StepFilesController {
 
 	@Header('Content-Type', 'application/octet-stream')
 	@Get('/signed')
-	async getByToken(@Query('token') token: string, @Response({ passthrough: true }) response: FastifyReply) {
+	async getByToken(@QuerySchema('token', stringShortSchema) token: string, @Response({ passthrough: true }) response: FastifyReply) {
 		const stepFile = await this.stepFilesService.getByToken(token)
 
 		response.header('Content-Disposition', `attachment; filename="${stepFile?.name}"`)
@@ -23,7 +25,7 @@ export class StepFilesController {
 	@Header('Content-Type', 'application/octet-stream')
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Get(':id')
-	async findOne(@ReqJwtWorker() worker: RequestWorker, @Param('id') id: string, @Response({ passthrough: true }) response: FastifyReply) {
+	async findOne(@ParamIdSchema() id: string, @ReqJwtWorker() worker: RequestWorker, @Response({ passthrough: true }) response: FastifyReply) {
 		const stepFile = await this.stepFilesService.get({
 			id,
 			projectId: worker.projectId,
@@ -36,7 +38,11 @@ export class StepFilesController {
 
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Post()
-	async create(@ReqJwtWorker() worker: RequestWorker, @Body() body: CreateDto, @Request() request: FastifyRequest) {
+	async create(
+		@BodySchema(stepFileUpsertInputSchema) body: StepFileUpsertInput,
+		@ReqJwtWorker() worker: RequestWorker,
+		@Request() request: FastifyRequest,
+	) {
 		return this.stepFilesService.upsert({
 			projectId: worker.projectId,
 			request: body,
@@ -46,7 +52,7 @@ export class StepFilesController {
 
 	@UseGuards(JwtBearerTokenAuthGuard)
 	@Delete(':id')
-	async delete(@ReqJwtWorker() worker: RequestWorker, @Param('id') id: string) {
+	async delete(@ParamIdSchema() id: string, @ReqJwtWorker() worker: RequestWorker) {
 		return this.stepFilesService.delete({
 			id,
 			projectId: worker.projectId,

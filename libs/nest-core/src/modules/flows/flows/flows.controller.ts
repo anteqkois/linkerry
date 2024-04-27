@@ -1,6 +1,9 @@
-import { FlowGetManyQuery, FlowOperationRequest, Id, RequestUser } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common'
+import { FlowGetManyQuery, FlowOperationRequest, Id, RequestUser, flowGetManyQuerySchema, flowOperationRequestSchema } from '@linkerry/shared'
+import { Controller, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
+import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowsService } from './flows.service'
 
@@ -10,7 +13,7 @@ export class FlowsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get(':id')
-	getFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
+	getFlow(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
 		return this.flowsService.findOne({
 			filter: {
 				_id: id,
@@ -21,7 +24,7 @@ export class FlowsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get()
-	getFlows(@ReqJwtUser() user: RequestUser, @Query() query: FlowGetManyQuery) {
+	getFlows(@QuerySchema(flowGetManyQuerySchema) query: FlowGetManyQuery, @ReqJwtUser() user: RequestUser) {
 		return this.flowsService.findMany({
 			filter: {
 				projectId: user.projectId,
@@ -32,7 +35,7 @@ export class FlowsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Patch(':id')
-	patch(@ReqJwtUser() user: RequestUser, @Param('id') id: Id, @Body() body: FlowOperationRequest) {
+	patch(@ParamIdSchema() id: Id, @BodySchema(flowOperationRequestSchema) body: FlowOperationRequest, @ReqJwtUser() user: RequestUser) {
 		return this.flowsService.update({
 			id,
 			projectId: user.projectId,
@@ -43,7 +46,7 @@ export class FlowsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Delete(':id')
-	delteFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
+	delteFlow(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
 		return this.flowsService.deleteOne(id, user.projectId)
 	}
 

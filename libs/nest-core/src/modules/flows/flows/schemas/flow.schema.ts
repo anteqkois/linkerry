@@ -1,14 +1,14 @@
 import { Flow, FlowScheduleOptions, FlowStatus, FlowVersion, Nullable } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { IdObjectOrPopulated, ObjectId, TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { BaseDatabaseModel, IdObjectOrPopulated, ObjectId } from '../../../../lib/mongodb'
 import { ProjectModel } from '../../../projects/schemas/projects.schema'
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema'
 
 export type FlowDocument<T extends keyof Flow = never> = mongoose.HydratedDocument<FlowModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flows' })
-export class FlowModel<T = ''> extends TimestampDatabaseModel implements Omit<Flow, '_id' | 'version' | 'projectId' | 'publishedVersionId'> {
+export class FlowModel<T = ''> extends BaseDatabaseModel implements Omit<Flow, '_id' | 'version' | 'projectId' | 'publishedVersionId'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
 	projectId: ObjectId
 

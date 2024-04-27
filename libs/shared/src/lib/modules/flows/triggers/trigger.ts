@@ -28,10 +28,11 @@ export const triggerEmptySchema = baseStepSchema.merge(
 		settings: z.any(),
 	}),
 )
+export interface TriggerEmpty extends z.infer<typeof triggerEmptySchema> {}
+
 export const isEmptyTrigger = (trigger: Trigger): trigger is TriggerEmpty => {
 	return trigger.type === TriggerType.EMPTY
 }
-export interface TriggerEmpty extends z.infer<typeof triggerEmptySchema> {}
 
 /* CONNECTOR */
 const triggerConnectorSettingsSchema = baseStepSettingsSchema.merge(
@@ -39,6 +40,7 @@ const triggerConnectorSettingsSchema = baseStepSettingsSchema.merge(
 		triggerName: z.string(), // 'new_row'
 	}),
 )
+export interface TriggerConnectorSettings extends z.infer<typeof triggerConnectorSettingsSchema> {}
 
 export const triggerConnectorSchema = baseStepSchema.merge(
 	z.object({
@@ -46,16 +48,16 @@ export const triggerConnectorSchema = baseStepSchema.merge(
 		settings: triggerConnectorSettingsSchema,
 	}),
 )
+export interface TriggerConnector extends z.infer<typeof triggerConnectorSchema> {}
 
 export const isConnectorTrigger = (trigger: any): trigger is TriggerConnector => {
 	return trigger?.type === TriggerType.CONNECTOR
 }
 
-export interface TriggerConnector extends z.infer<typeof triggerConnectorSchema> {}
-export interface TriggerConnectorSettings extends z.infer<typeof triggerConnectorSettingsSchema> {}
-
 /* TRIGGER */
-export type Trigger = TriggerEmpty | TriggerConnector
+export const triggerSchema = z.union([triggerEmptySchema, triggerConnectorSchema])
+export const triggerSchemaPartial = z.union([triggerEmptySchema.partial(), triggerConnectorSchema.partial()])
+export type Trigger = z.infer<typeof triggerSchema>
 export type TriggerNotEmpty = TriggerConnector
 
 export function isTrigger(data: unknown): data is Trigger {

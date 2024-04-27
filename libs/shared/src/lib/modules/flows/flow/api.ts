@@ -1,12 +1,16 @@
+import { z } from 'zod'
 import { Id } from '../../../common'
-import { Trigger } from '../triggers/trigger'
+import { triggerSchemaPartial } from '../triggers/trigger'
 import { FlowStatus } from './flow'
 
-export interface FlowGetManyQuery {}
+export const flowGetManyQuerySchema = z.object({})
+export interface FlowGetManyQuery extends z.infer<typeof flowGetManyQuerySchema> {}
 
-export interface FlowGetOneQuery {}
+export const flowGetOneQuerySchema =z.object({})
+export interface FlowGetOneQuery extends z.infer<typeof flowGetOneQuerySchema>{}
 
-export type FlowUpdateTreiggerBody = Partial<Trigger>
+export const flowUpdateTreiggerBodySchema = triggerSchemaPartial
+export type FlowUpdateTreiggerBody = z.infer<typeof flowUpdateTreiggerBodySchema>
 
 export interface FlowPublishInput {
 	flowVersionId: Id

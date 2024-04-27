@@ -1,15 +1,14 @@
-import { FlowOperationType, FlowVersion, Id, assertNotNullOrUndefined, flowHelper } from '@linkerry/shared'
+import { FlowOperationType, FlowVersion, Id, RunActionInput, assertNotNullOrUndefined, flowHelper } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
 import { EngineService } from '../../engine/engine.service'
 import { FlowVersionsService } from '../flow-versions/flow-versions.service'
-import { RunActionDto } from './dto/run.dto'
 
 @Injectable()
 export class ActionsService {
 	constructor(private readonly engineService: EngineService, private readonly flowVersionsService: FlowVersionsService) {}
 
-	async run(projectId: Id, userId: Id, body: RunActionDto) {
+	async run(projectId: Id, userId: Id, body: RunActionInput) {
 		let flowVersion = (
 			await this.flowVersionsService.findOne({
 				filter: {

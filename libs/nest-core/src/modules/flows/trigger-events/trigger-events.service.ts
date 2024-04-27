@@ -6,6 +6,7 @@ import {
 	Id,
 	Trigger,
 	TriggerHookType,
+	TriggerPoolTestBody,
 	TriggerType,
 	WatchTriggerEventsWSInput,
 	WatchTriggerEventsWSResponse,
@@ -26,7 +27,6 @@ import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { FlowVersionDocument, FlowVersionModel } from '../flow-versions/schemas/flow-version.schema'
 import { FlowDocument, FlowModel } from '../flows/schemas/flow.schema'
 import { StepFilesService } from '../step-files/step-files.service'
-import { TestDto } from '../trigger-events/dto/pool-test.dto'
 import { DeleteDto } from './dto/delete.dto'
 import { GetManyDto } from './dto/get-many.dto'
 import { TriggerEventModel } from './schemas/trigger-events.schema'
@@ -129,7 +129,7 @@ export class TriggerEventsService {
 		})
 	}
 
-	async test(input: TestDto, projectId: Id, userId: Id) {
+	async test(input: TriggerPoolTestBody, projectId: Id, userId: Id) {
 		const flow = await this.flowModel
 			.findOne<FlowPopulated>({
 				_id: input.flowId,

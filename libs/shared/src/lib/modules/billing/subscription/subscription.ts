@@ -1,4 +1,6 @@
-import { DatabaseTimestamp, Id } from '../../../common'
+import { z } from 'zod'
+import { BaseDatabaseFields } from '../../../common'
+import { idSchema, stringDateSchema, stringShortSchema } from '../../../common/zod'
 import { Price, Product } from '../products'
 
 export enum SubscriptionPeriod {
@@ -21,46 +23,54 @@ export enum PaymentGateway {
 	STRIPE = 'STRIPE',
 }
 
-export interface SubscriptionItem {
-	product: Id
-	price: Id
-}
+const subscriptionItemSchema = z.object({
+	product: idSchema,
+	price: idSchema,
+})
+export interface SubscriptionItem extends z.infer<typeof subscriptionItemSchema> {}
 
-export interface SubscriptionCommonFields extends DatabaseTimestamp {
-	_id: Id
-	project: Id
-	items: SubscriptionItem[]
-	status: SubscriptionStatus
-	validTo: string
-	canceledAt?: string
-	trialStartedAt?: string
-	trialEndedAt?: string
-	period: SubscriptionPeriod
-}
+export const testSchema = z.object({
+	stringShortSchema: z.string().max(255),
+	stringDateSchema: z.string().datetime({ offset: true }),
+	connectorNameSchema: z.string().regex(/^@linkerry\/.*/),
+	versionSchema: z.string().regex(/^([~^])?[0-9]+\.[0-9]+\.[0-9]+$/),
+	stepNameSchema: z.string().regex(/^([a-zA-Z]+)_(\d+)$/),
+	idSchema: z.string().regex(/^[0-9a-f]{24}$/),
+})
+const subscriptionCommonFieldsSchema = z.object({
+	project: idSchema,
+	items: z.array(subscriptionItemSchema).min(1).max(10),
+	status: z.nativeEnum(SubscriptionStatus),
+	validTo: stringDateSchema,
+	canceledAt: stringDateSchema.optional(),
+	trialStartedAt: stringDateSchema.optional(),
+	trialEndedAt: stringDateSchema.optional(),
+	period: z.nativeEnum(SubscriptionPeriod),
+})
+export interface SubscriptionCommonFields extends BaseDatabaseFields, z.infer<typeof subscriptionCommonFieldsSchema> {}
 
-export interface SubscriptionBlank extends SubscriptionCommonFields {
-	paymentGateway: PaymentGateway.NONE
-}
+const subscriptionBlankSchema = subscriptionCommonFieldsSchema.merge(
+	z.object({
+		paymentGateway: z.enum([PaymentGateway.NONE]),
+	}),
+)
+export interface SubscriptionBlank extends BaseDatabaseFields, z.infer<typeof subscriptionBlankSchema> {}
 
-export interface SubscriptionStripe extends SubscriptionCommonFields {
-	paymentGateway: PaymentGateway.STRIPE
-	stripeSubscriptionId: string
-	validTo: string
-	defaultPaymentMethod: null
-}
+const subscriptionStripeSchema = subscriptionCommonFieldsSchema.merge(
+	z.object({
+		paymentGateway: z.enum([PaymentGateway.STRIPE]),
+		stripeSubscriptionId: stringShortSchema,
+		validTo: stringDateSchema,
+		defaultPaymentMethod: z.null().optional(),
+	}),
+)
+export interface SubscriptionStripe extends BaseDatabaseFields, z.infer<typeof subscriptionStripeSchema> {}
 
-export type Subscription = SubscriptionBlank | SubscriptionStripe
+export const subscriptionSchema = z.union([subscriptionBlankSchema, subscriptionStripeSchema])
+export type Subscription = z.infer<typeof subscriptionSchema>
 export type SubscriptionPopulated = Omit<SubscriptionBlank | SubscriptionStripe, 'items'> & {
 	items: {
 		product: Product
 		price: Price
 	}[]
-}
-
-export interface SubscriptionHistory {
-	_id: Id
-	subscriptionId: Id
-	products: Id[]
-	startedAt: string
-	endedAt?: string
 }

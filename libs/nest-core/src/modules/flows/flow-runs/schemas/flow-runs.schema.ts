@@ -1,7 +1,7 @@
 import { Flow, FlowRun, FlowRunStatus, PauseMetadata, Project, RunEnvironment, RunTerminationReason, StepOutput } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { BaseDatabaseModel, IdObjectOrPopulated } from '../../../../lib/mongodb'
 import { ProjectModel } from '../../../projects/schemas/projects.schema'
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema'
 import { FlowModel } from '../../flows/schemas/flow.schema'
@@ -10,7 +10,7 @@ export type FlowRunDocument<T extends keyof FlowRun = never> = mongoose.Hydrated
 export type FlowRunWithStepsDocument<T extends keyof FlowRun = never> = mongoose.HydratedDocument<FlowRunModel<T> & { steps: FlowRun }>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'flow_runs' })
-export class FlowRunModel<T> extends TimestampDatabaseModel implements Omit<FlowRun, '_id' | 'projectId' | 'flowId' | 'logsFileId' | 'steps'> {
+export class FlowRunModel<T> extends BaseDatabaseModel implements Omit<FlowRun, '_id' | 'projectId' | 'flowId' | 'logsFileId' | 'steps'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
 	projectId: IdObjectOrPopulated<T, 'projectId', Project>
 

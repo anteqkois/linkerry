@@ -1,6 +1,7 @@
-import { RequestUser, UpsertAppConnectionInput } from '@linkerry/shared'
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { RequestUser, UpsertAppConnectionInput, upsertAppConnectionInputSchema } from '@linkerry/shared'
+import { Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../lib/auth'
+import { BodySchema } from '../../lib/nest-utils/decorators/zod/body'
 import { ReqJwtUser } from '../users/auth/decorators/req-jwt-user.decorator'
 import { AppConnectionsService } from './app-connections.service'
 
@@ -17,7 +18,7 @@ export class AppConnectionsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
-	async upsert(@ReqJwtUser() user: RequestUser, @Body() body: UpsertAppConnectionInput) {
+	async upsert(@BodySchema(upsertAppConnectionInputSchema) body: UpsertAppConnectionInput, @ReqJwtUser() user: RequestUser) {
 		const appConnection = await this.appConnectionsService.upsert(user.projectId, body)
 		return this.appConnectionsService.removeSensitiveData(appConnection)
 	}

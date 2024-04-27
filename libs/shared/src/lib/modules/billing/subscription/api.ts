@@ -1,13 +1,17 @@
-import { Id } from '../../../common'
+import { z } from 'zod'
+import { idSchema } from '../../../common/zod'
 import { SubscriptionPeriod } from './subscription'
 
-export interface ChangeSubscriptionBody {
-	items: {
-		productId: Id
-		priceId: Id
-	}[]
-	period: SubscriptionPeriod
-}
+export const changeSubscriptionBodySchema = z.object({
+	items: z.array(
+		z.object({
+			productId: idSchema,
+			priceId: idSchema,
+		}),
+	),
+	period: z.nativeEnum(SubscriptionPeriod),
+})
+export interface ChangeSubscriptionBody  extends z.infer<typeof changeSubscriptionBodySchema>{}
 export interface ChangeSubscriptionResponse {
 	checkoutUrl: string
 }

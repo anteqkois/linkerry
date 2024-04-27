@@ -1,12 +1,12 @@
 import { PlanProductConfiguration, Product, ProductType, StripeProduct } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { TimestampDatabaseModel } from '../../../lib/mongodb'
+import { BaseDatabaseModel } from '../../../lib/mongodb'
 
 export type ProductDocument<T extends keyof Product = never> = mongoose.HydratedDocument<ProductModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'products' })
-export class ProductModel<T> extends TimestampDatabaseModel implements Product {
+export class ProductModel<T> extends BaseDatabaseModel implements Product {
 	_id: string
 
 	@Prop({ required: true, type: String })

@@ -1,13 +1,13 @@
 import { Id, NotificationStatus, Project, User } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { IdObjectOrPopulated, TimestampDatabaseModel } from '../../../lib/mongodb'
+import { BaseDatabaseModel, IdObjectOrPopulated } from '../../../lib/mongodb'
 import { UserModel } from '../../users/schemas/user.schema'
 
 export type ProjectDocument<T extends keyof Project = never> = mongoose.HydratedDocument<ProjectModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'projects' })
-export class ProjectModel<T = ''> extends TimestampDatabaseModel implements Omit<Project, 'owner' | '_id'> {
+export class ProjectModel<T = ''> extends BaseDatabaseModel implements Omit<Project, 'owner' | '_id'> {
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })
 	owner: IdObjectOrPopulated<T, 'owner', User>
 

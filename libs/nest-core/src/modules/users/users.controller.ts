@@ -19,11 +19,4 @@ export class UsersController {
 	// getLiveChatHash(@ReqJwtUser() user: RequestUser) {
 	// 	return this.usersService.getLiveChatUserHash(user.id)
 	// }
-
-	/* handled by authModule */
-	// // It should be avaible only for admin
-	// @Post()
-	// createUser(@Body() createUserDto: CreateUserDto) {
-	//   return this.usersService.create(createUserDto)
-	// }
 }

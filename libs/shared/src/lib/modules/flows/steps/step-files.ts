@@ -1,26 +1,28 @@
 import { z } from 'zod'
-import { DatabaseTimestamp, idStringSchema } from '../../../common'
+import { BaseDatabaseFields } from '../../../common'
+import { idSchema, stepNameSchema, stringShortSchema } from '../../../common/zod'
 
 export const stepFileSchema = z.object({
 	_id: z.string(),
-	flowId: idStringSchema,
-	projectId: idStringSchema,
+	flowId: idSchema,
+	projectId: idSchema,
 	name: z.string(),
 	size: z.number(),
 	stepName: z.string(),
 	data: z.any(),
 })
+export interface StepFile extends BaseDatabaseFields, z.infer<typeof stepFileSchema> {}
 
-export interface StepFile extends z.infer<typeof stepFileSchema>, DatabaseTimestamp {}
+export const stepFileUpsertInputSchema = z.object({
+	name: stringShortSchema,
+	flowId: idSchema,
+	stepName: stepNameSchema,
+	file: z.unknown()
+})
+export interface StepFileUpsertInput extends z.infer<typeof stepFileUpsertInputSchema> {}
 
-export interface StepFileUpsertInput {
-	name: string
-	flowId: string
-	stepName: string
-	file: unknown
-}
-
-export interface StepFileGet {
-	id: string
-	projectId: string
-}
+export const stepFileGetSchema = z.object({
+	id: stringShortSchema,
+	projectId: idSchema
+})
+export interface StepFileGet extends z.infer<typeof stepFileGetSchema>{}

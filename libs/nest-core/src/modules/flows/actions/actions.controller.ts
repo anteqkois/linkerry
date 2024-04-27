@@ -1,9 +1,9 @@
-import { RequestUser } from '@linkerry/shared'
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { RequestUser, RunActionInput, runActionInputSchema } from '@linkerry/shared'
+import { Controller, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { ActionsService } from './actions.service'
-import { RunActionDto } from './dto/run.dto'
 
 @Controller('actions')
 export class ActionsController {
@@ -11,7 +11,7 @@ export class ActionsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post('/run')
-	create(@ReqJwtUser() user: RequestUser, @Body() runDto: RunActionDto) {
-		return this.actionsService.run(user.projectId, user.id, runDto)
+	create(@BodySchema(runActionInputSchema) body: RunActionInput, @ReqJwtUser() user: RequestUser) {
+		return this.actionsService.run(user.projectId, user.id, body)
 	}
 }

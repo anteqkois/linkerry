@@ -1,6 +1,8 @@
-import { FlowRunsGetManyQuery, Id, RequestUser } from '@linkerry/shared'
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
+import { FlowRunsGetManyQuery, Id, RequestUser, flowRunsGetManyQuerySchema } from '@linkerry/shared'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
+import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowRunsService } from './flow-runs.service'
 
@@ -11,7 +13,7 @@ export class FlowRunsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get(':id')
-	getOne(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
+	getOne(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
 		return this.flowRunsService.findOneWithSteps({
 			id,
 			projectId: user.projectId,
@@ -20,7 +22,7 @@ export class FlowRunsController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get()
-	getMany(@ReqJwtUser() user: RequestUser, @Query() query: FlowRunsGetManyQuery) {
+	getMany(@QuerySchema(flowRunsGetManyQuerySchema) query: FlowRunsGetManyQuery, @ReqJwtUser() user: RequestUser) {
 		return this.flowRunsService.findMany(query, user.projectId)
 	}
 }

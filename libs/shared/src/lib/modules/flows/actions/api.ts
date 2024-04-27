@@ -1,10 +1,12 @@
-import { Id } from '../../../common'
+import { z } from 'zod'
+import { idSchema, stepNameSchema } from '../../../common/zod'
 import { FlowVersion } from '../flow-versions'
 
-export interface RunActionInput {
-	flowVersionId: Id
-	actionName: string
-}
+export const runActionInputSchema = z.object({
+	flowVersionId: idSchema,
+	actionName: stepNameSchema,
+})
+export interface RunActionInput extends z.infer<typeof runActionInputSchema>{}
 
 type RunActionBaseResponse = {
 	success: boolean

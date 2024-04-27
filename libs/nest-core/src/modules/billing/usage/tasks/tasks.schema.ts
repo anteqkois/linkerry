@@ -1,12 +1,12 @@
 import { Id, TasksUsage } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { BaseDatabaseModel } from '../../../../lib/mongodb'
 
 export type TasksUsageDocument<T extends keyof TasksUsage = never> = mongoose.HydratedDocument<TasksUsageModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'tasks_usage' })
-export class TasksUsageModel<T> extends TimestampDatabaseModel implements TasksUsage {
+export class TasksUsageModel<T> extends BaseDatabaseModel implements TasksUsage {
 	_id: string
 
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'projects' })

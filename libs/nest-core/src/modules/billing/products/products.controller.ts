@@ -1,25 +1,20 @@
-import { FindManyProductsQuery, Id, Product } from '@linkerry/shared'
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
-import { AdminGuard } from '../../../lib/auth/guards/admin.guard'
+import { FindManyProductsQuery, Id, findManyProductsQuerySchema } from '@linkerry/shared'
+import { Controller, Get } from '@nestjs/common'
+import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
 import { ProductsService } from './products.service'
 
 @Controller('products')
 export class ProductsController {
 	constructor(private readonly productsService: ProductsService) {}
 
-	@UseGuards(AdminGuard)
-	@Post()
-	create(@Body() body: Product) {
-		return this.productsService.create(body)
-	}
-
 	@Get()
-	findMany(@Query() query: FindManyProductsQuery) {
+	findMany(@QuerySchema(findManyProductsQuerySchema) query: FindManyProductsQuery) {
 		return this.productsService.findMany(query)
 	}
 
 	@Get(':id')
-	findOne(@Query('id') id: Id) {
+	findOne(@ParamIdSchema() id: Id) {
 		return this.productsService.findOne(id)
 	}
 }

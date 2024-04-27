@@ -1,12 +1,12 @@
 import { Price, StripePrice, SubscriptionPeriod } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
-import { TimestampDatabaseModel } from '../../../../lib/mongodb'
+import { BaseDatabaseModel } from '../../../../lib/mongodb'
 
 export type PriceDocument<T extends keyof Price = never> = mongoose.HydratedDocument<PriceModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'prices' })
-export class PriceModel<T> extends TimestampDatabaseModel implements Price {
+export class PriceModel<T> extends BaseDatabaseModel implements Price {
 	_id: string
 
 	@Prop({ required: true, type: Number })

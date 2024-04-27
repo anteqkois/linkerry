@@ -1,34 +1,31 @@
-import { isNil } from '@linkerry/shared';
-import { Store } from '../context';
+import { isNil } from '@linkerry/shared'
+import { Store } from '../context'
 
+type TimebasedPollingReturn = {
+	epochMilliSeconds: number
+	data: unknown
+}[]
 interface TimebasedPolling<AuthValue, PropsValue> {
 	strategy: DedupeStrategy.TIMEBASED
-	items: (params: { auth: AuthValue; store: Store; propsValue: PropsValue; lastFetchEpochMS: number }) => Promise<
-		{
-			epochMilliSeconds: number
-			data: unknown
-		}[]
-	>
+	items: (params: { auth: AuthValue; store: Store; propsValue: PropsValue; lastFetchEpochMS: number }) => Promise<TimebasedPollingReturn>
 }
 
+type LastItemPollingReturn = {
+	id: unknown
+	data: unknown
+}[]
 interface LastItemPolling<AuthValue, PropsValue> {
 	strategy: DedupeStrategy.LAST_ITEM
-	items: (params: { auth: AuthValue; store: Store; propsValue: PropsValue; lastItemId: unknown }) => Promise<
-		{
-			id: unknown
-			data: unknown
-		}[]
-	>
+	items: (params: { auth: AuthValue; store: Store; propsValue: PropsValue; lastItemId: unknown }) => Promise<LastItemPollingReturn>
 }
 
+type NewItemsPollingReturn = {
+	id: unknown
+	data: unknown
+}[]
 interface NewItemsPolling<AuthValue, PropsValue> {
 	strategy: DedupeStrategy.NEW_ITEMS
-	items: (params: { auth: AuthValue; store: Store; propsValue: PropsValue; lastItemsIds: unknown }) => Promise<
-		{
-			id: unknown
-			data: unknown
-		}[]
-	>
+	items: (params: { auth: AuthValue; store: Store; propsValue: PropsValue; lastItemsIds: unknown }) => Promise<NewItemsPollingReturn>
 }
 
 export enum DedupeStrategy {
@@ -60,7 +57,10 @@ export const pollingHelper = {
 				const items = await polling.items({ store, auth, propsValue, lastItemId })
 
 				const lastItemIndex = items.findIndex((f) => f.id === lastItemId)
-				let newItems = []
+				let newItems: {
+					id: unknown
+					data: unknown
+				}[] = []
 				if (isNil(lastItemId) || lastItemIndex == -1) {
 					newItems = items ?? []
 				} else {
@@ -148,7 +148,7 @@ export const pollingHelper = {
 		polling: Polling<AuthValue, PropsValue>,
 		{ auth, propsValue, store }: { store: Store; auth: AuthValue; propsValue: PropsValue },
 	): Promise<unknown[]> {
-		let items = []
+		let items: TimebasedPollingReturn | LastItemPollingReturn | NewItemsPollingReturn = []
 		switch (polling.strategy) {
 			case DedupeStrategy.TIMEBASED: {
 				items = await polling.items({ store, auth, propsValue, lastFetchEpochMS: 0 })

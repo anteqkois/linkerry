@@ -1,20 +1,26 @@
-import { DatabaseTimestamp, Id } from '../../common'
+import { z } from 'zod'
+import { BaseDatabaseFields } from '../../common'
+import { idSchema, stringShortSchema } from '../../common/zod'
 
-export interface StoreEntry extends DatabaseTimestamp {
-	key: string
-	projectId: Id
-	value: unknown
-}
+export const storeEntrySchema = z.object({
+	key: stringShortSchema,
+	projectId: idSchema,
+	value: z.unknown(),
+})
+export interface StoreEntry extends BaseDatabaseFields, z.infer<typeof storeEntrySchema> {}
 
-export type PutStoreEntryRequest = {
-	key: string
-	value: any
-}
+export const putStoreEntryRequestSchema = z.object({
+	key: stringShortSchema,
+	value: z.any(),
+})
+export type PutStoreEntryRequest = z.infer<typeof putStoreEntryRequestSchema>
 
-export type GetStoreEntryRequest = {
-	key: string
-}
+export const getStoreEntryRequestSchema = z.object({
+	key: stringShortSchema,
+})
+export type GetStoreEntryRequest = z.infer<typeof getStoreEntryRequestSchema>
 
-export type DeletStoreEntryRequest = {
-	key: string
-}
+export const deletStoreEntryRequestSchema = z.object({
+	key: stringShortSchema,
+})
+export type DeletStoreEntryRequest = z.infer<typeof deletStoreEntryRequestSchema>

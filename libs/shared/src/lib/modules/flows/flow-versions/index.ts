@@ -1,4 +1,4 @@
-import { DatabaseTimestamp, Id } from '../../../common'
+import { BaseDatabaseFields, Id } from '../../../common'
 import { Action } from '../actions'
 import { Trigger } from '../triggers'
 
@@ -7,7 +7,7 @@ export enum FlowVersionState {
 	LOCKED = 'LOCKED',
 }
 
-export interface FlowVersion extends DatabaseTimestamp {
+export interface FlowVersion extends BaseDatabaseFields {
 	_id: Id
 	flow: Id
 	projectId: Id

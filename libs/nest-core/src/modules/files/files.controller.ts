@@ -1,6 +1,7 @@
 import { Id, RequestUser } from '@linkerry/shared';
-import { Controller, Get, Header, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, UseGuards } from '@nestjs/common';
 import { JwtCookiesAuthGuard } from '../../lib/auth';
+import { ParamIdSchema } from '../../lib/nest-utils/decorators/zod/id';
 import { ReqJwtUser } from '../users/auth/decorators/req-jwt-user.decorator';
 import { FilesService } from './files.service';
 
@@ -11,7 +12,7 @@ export class FilesController {
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get(':id')
 	@Header('Content-Type', 'application/zip')
-	getFlow(@ReqJwtUser() user: RequestUser, @Param('id') id: Id) {
+	getFlow(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
 		return this.filesService.findOne({
 			projectId: user.projectId,
 			fileId: id,

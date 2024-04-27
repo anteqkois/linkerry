@@ -12,6 +12,7 @@
 		"target": "es2015",
 		"module": "esnext",
 		"lib": ["es2023", "dom"],
+		"strictNullChecks": true,
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",

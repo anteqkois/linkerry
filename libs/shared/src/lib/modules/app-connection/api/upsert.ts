@@ -1,25 +1,30 @@
-import { Id } from '../../../common'
+import { z } from 'zod'
+import { connectorNameSchema, idSchema, stringShortSchema } from '../../../common/zod'
 import { AppConnectionType } from '../app-connection'
 import { OAuth2AuthorizationMethod } from '../oauth2-authorization-method'
 
-interface CommonAuthProps {
-	name: string
-	connectorName: string
-	projectId: Id
-}
+const commonAuthPropsSchema = z.object({
+	name: stringShortSchema,
+	connectorName: connectorNameSchema,
+	projectId: idSchema,
+})
+interface CommonAuthProps extends z.infer<typeof commonAuthPropsSchema> {}
 
 export enum OAuth2GrantType {
 	AUTHORIZATION_CODE = 'authorization_code',
 	CLIENT_CREDENTIALS = 'client_credentials',
 }
 
-export interface UpsertCustomAuthInput extends CommonAuthProps {
-	type: AppConnectionType.CUSTOM_AUTH
-	value: {
-		type: AppConnectionType.CUSTOM_AUTH
-		props: Record<string, unknown>
-	}
-}
+export const upsertCustomAuthInputSchema = commonAuthPropsSchema.merge(
+	z.object({
+		type: z.enum([AppConnectionType.CUSTOM_AUTH]),
+		value: z.object({
+			type: z.enum([AppConnectionType.CUSTOM_AUTH]),
+			props: z.record(z.unknown()),
+		}),
+	}),
+)
+export interface UpsertCustomAuthInput extends z.infer<typeof upsertCustomAuthInputSchema> {}
 
 // export const UpsertPlatformOAuth2Request = Type.Object({
 //     ...commonAuthProps,
@@ -40,28 +45,34 @@ export interface UpsertCustomAuthInput extends CommonAuthProps {
 //     description: 'Platform OAuth2',
 // })
 
-export interface UpsertCloudOAuth2Request extends CommonAuthProps {
-	type: AppConnectionType.CLOUD_OAUTH2
-	value: {
-		client_id: string
-		code: string
-		code_challenge?: string
-		props?: Record<string, string>
-		scope: string
-		type: AppConnectionType.CLOUD_OAUTH2
-		authorization_method: OAuth2AuthorizationMethod
-		// retrived on the backend
-		// token_url?: string
-	}
-}
+export const upsertCloudOAuth2RequestSchema = commonAuthPropsSchema.merge(
+	z.object({
+		type: z.enum([AppConnectionType.CLOUD_OAUTH2]),
+		value: z.object({
+			client_id: stringShortSchema,
+			code: stringShortSchema,
+			code_challenge: stringShortSchema.optional(),
+			props: z.record(z.string()).optional(),
+			scope: stringShortSchema,
+			type: z.enum([AppConnectionType.CLOUD_OAUTH2]),
+			authorization_method: z.nativeEnum(OAuth2AuthorizationMethod),
+			// retrived on the backend
+			// token_url?: string
+		}),
+	}),
+)
+export interface UpsertCloudOAuth2Request extends z.infer<typeof upsertCloudOAuth2RequestSchema> {}
 
-export interface UpsertSecretTextInput extends CommonAuthProps {
-	type: AppConnectionType.SECRET_TEXT
-	value: {
-		type: AppConnectionType.SECRET_TEXT
-		secret_text: string
-	}
-}
+export const upsertSecretTextInputSchema = commonAuthPropsSchema.merge(
+	z.object({
+		type: z.enum([AppConnectionType.SECRET_TEXT]),
+		value: z.object({
+			type: z.enum([AppConnectionType.SECRET_TEXT]),
+			secret_text: stringShortSchema,
+		}),
+	}),
+)
+export interface UpsertSecretTextInput extends z.infer<typeof upsertSecretTextInputSchema> {}
 
 // export const UpsertOAuth2Request = Type.Object({
 //     ...commonAuthProps,
@@ -106,13 +117,10 @@ export interface UpsertSecretTextInput extends CommonAuthProps {
 //     UpsertCustomAuthRequest,
 // ])
 
-export type UpsertAppConnectionInput =
-	| Omit<UpsertCustomAuthInput, 'projectId'>
-	| Omit<UpsertSecretTextInput, 'projectId'>
-	| Omit<UpsertCloudOAuth2Request, 'projectId'>
+export const upsertAppConnectionInputSchema = z.union([upsertCustomAuthInputSchema, upsertSecretTextInputSchema, upsertCloudOAuth2RequestSchema])
+export type UpsertAppConnectionInput = z.infer<typeof upsertAppConnectionInputSchema>
 
 // export interface UpsertAppConnectionInput extends CommonAuthProps {
 // 	type: AppConnectionType
 // 	value: any
 // }
-

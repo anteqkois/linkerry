@@ -1,6 +1,16 @@
-import { CreateWebhookSimulationInput, DeleteWebhookSimulationInput, GetWebhookSimulationQuery, RequestUser } from '@linkerry/shared'
-import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common'
+import {
+	CreateWebhookSimulationInput,
+	DeleteWebhookSimulationInput,
+	GetWebhookSimulationQuery,
+	RequestUser,
+	createWebhookSimulationInputSchema,
+	deleteWebhookSimulationInputSchema,
+	getWebhookSimulationQuerySchema,
+} from '@linkerry/shared'
+import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { WebhookSimulationService } from './webhook-simulation.service'
 
@@ -10,7 +20,7 @@ export class WebhookSimulationController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Get()
-	findOne(@ReqJwtUser() user: RequestUser, @Query() query: GetWebhookSimulationQuery) {
+	findOne(@QuerySchema(getWebhookSimulationQuerySchema) query: GetWebhookSimulationQuery, @ReqJwtUser() user: RequestUser) {
 		this.webhookSimulationService.get({
 			flowId: query.flowId,
 			projectId: user.projectId,
@@ -19,7 +29,7 @@ export class WebhookSimulationController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
-	create(@ReqJwtUser() user: RequestUser, @Body() body: CreateWebhookSimulationInput) {
+	create(@BodySchema(createWebhookSimulationInputSchema) body: CreateWebhookSimulationInput, @ReqJwtUser() user: RequestUser) {
 		this.webhookSimulationService.create({
 			flowId: body.flowId,
 			projectId: user.projectId,
@@ -28,7 +38,7 @@ export class WebhookSimulationController {
 
 	@UseGuards(JwtCookiesAuthGuard)
 	@Delete()
-	delete(@ReqJwtUser() user: RequestUser, @Body() body: DeleteWebhookSimulationInput) {
+	delete(@BodySchema(deleteWebhookSimulationInputSchema) body: DeleteWebhookSimulationInput, @ReqJwtUser() user: RequestUser) {
 		this.webhookSimulationService.delete({
 			flowId: body.flowId,
 			projectId: user.projectId,

@@ -1,4 +1,4 @@
-import { DatabaseTimestamp } from '../../common'
+import { BaseDatabaseFields } from '../../common'
 import { Language } from '../language'
 
 export enum UserRole {
@@ -13,7 +13,7 @@ export enum UserRole {
 //   TESTER = 'tester',
 // }
 
-export interface User extends DatabaseTimestamp {
+export interface User extends BaseDatabaseFields {
 	_id: string
 	name: string
 	roles: UserRole[]
