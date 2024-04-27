@@ -4,9 +4,7 @@ import { ErrorMessages } from './errors'
 import { TypedValidatorFn, ValidationInputType } from './types'
 import { formatErrorMessage } from './utils'
 
-// todo use zod to more specific validations?
-// const response = z.string({description:'Except string'}).safeParse(1)
-// if(response.success === false) console.log(response.error.formErrors.formErrors)
+// TODO use zod to more specific validations?
 
 export class Validators {
 	static pattern(regex: string | RegExp): TypedValidatorFn<ValidationInputType.STRING> {

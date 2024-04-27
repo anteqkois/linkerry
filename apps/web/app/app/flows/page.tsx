@@ -15,13 +15,13 @@ import { DataTable } from '../../../shared/components/Table/Table'
 import { PageContainer } from '../components/PageContainer'
 
 export default function Page() {
-	const { data, error } = useClientQuery(flowQueryConfig.getMany({}))
+	const { data, error, status } = useClientQuery(flowQueryConfig.getMany({}))
 	const { toast } = useToast()
 	const { showDialogBasedOnErrorCode } = useReachLimitDialog()
 	const [runningOperation, setRunningOperation] = useState(false)
 
 	const onClickRowHndler = useCallback(async (row: Row<FlowPopulated>) => {
-		// console.log('onClickRowHndler', row)
+		// console.debug('onClickRowHndler', row)
 		// await push(`/app/flows/editor/${row.original._id}`)
 	}, [])
 
@@ -39,14 +39,6 @@ export default function Page() {
 			})
 
 			const queryClient = getBrowserQueryCllient()
-			console.log(
-				data?.map((entry) => {
-					if (entry._id === flow._id) {
-						console.log('UPDATE', { ...entry, status: newStatus })
-						return { ...entry, status: newStatus }
-					} else return entry
-				}),
-			)
 
 			queryClient.setQueryData<FlowPopulated[]>(['flows'], (oldData) => {
 				if (!oldData) return undefined
@@ -95,6 +87,7 @@ export default function Page() {
 		<PageContainer>
 			<H5 className="mb-2 pl-1">Your flows&apos;s</H5>
 			<DataTable
+				loading={status === 'pending'}
 				data={data}
 				columns={columns}
 				onClickRow={onClickRowHndler}

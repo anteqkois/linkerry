@@ -15,7 +15,8 @@ export const Plans = ({ onSelectPlan, className, currentPlan, loading }: PlansPr
 	const { plans, plansError, plansStatus } = useProducts()
 
 	const onSelectEnterPrise = useCallback(({ price, productPlan }: { productPlan: Product; price: Price }) => {
-		console.log(price, productPlan)
+		// TODO
+		console.debug(price, productPlan)
 	}, [])
 
 	if (plansStatus === 'pending') return <Spinner />

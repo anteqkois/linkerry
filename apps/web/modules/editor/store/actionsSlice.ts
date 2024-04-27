@@ -125,7 +125,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		assertNotNullOrUndefined(editedAction, 'editedAction')
 
 		const newAction = deepMerge<Action>(editedAction, update)
-		if (JSON.stringify(newAction) === JSON.stringify(editedAction)) return console.log('Skip action update, data after merge is the same')
+		if (JSON.stringify(newAction) === JSON.stringify(editedAction)) return console.debug('Skip action update, data after merge is the same')
 		set({
 			flowOperationRunning: true,
 		})

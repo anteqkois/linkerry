@@ -44,18 +44,6 @@ export default function Page() {
 		} finally {
 			setLoading(false)
 		}
-		// try {
-		// 	/* Open first paid subscription */
-		// 	if (currentSubscription?.products[0].name === 'Free') {
-		// 		const response = await
-		// 	} else {
-		// 	}
-
-		// 	/* Change paid subscription */
-		// } catch (error) {}
-		// // const
-
-		// console.log(price, productPlan)
 	}, [])
 
 	return (

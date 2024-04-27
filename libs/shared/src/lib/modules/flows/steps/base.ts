@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { booleanOrBooleanStringSchema, flowStepNameSchema } from '../../../common/zod'
 import { ConnectorType, PackageType } from '../../connectors'
 
 export const sampleDataSchema = z.object({
@@ -7,14 +8,12 @@ export const sampleDataSchema = z.object({
 	lastTestDate: z.date(),
 })
 
-const stepNameSchema = z.string().regex(/^([a-zA-Z]+)_(\d+)$/)
 export const baseStepSchema = z.object({
-	name: stepNameSchema,
+	name: flowStepNameSchema,
 	displayName: z.string(),
-	valid: z.boolean(),
+	valid: booleanOrBooleanStringSchema,
 	// type: z.nativeEnum(ActionType).or(z.nativeEnum(TriggerType)),
-	// nextActionName: z.string().optional(),
-	nextActionName: z.string(),
+	nextActionName: flowStepNameSchema.or(z.string().max(0)),
 })
 
 export const sampleDataSettingsObjectSchema = z.object({

@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { Price, Product, ProductType } from '.'
+import { z } from 'zod';
+import { Price, Product, ProductType } from './models';
 
 export const findManyProductsQuerySchema = z.object({
 	include: z.array(z.enum(['price'])).optional(),

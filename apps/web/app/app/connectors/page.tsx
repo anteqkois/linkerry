@@ -10,9 +10,7 @@ export default async function Page() {
   return (
     <PageContainer>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <div className="w-full max-w-7xl">
           <ConnectorsTable />
-        </div>
       </HydrationBoundary>
     </PageContainer>
   )

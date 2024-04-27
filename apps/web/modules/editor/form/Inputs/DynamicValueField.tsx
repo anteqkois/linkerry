@@ -37,27 +37,25 @@ export const DynamicValueField = ({ property, name, showDynamicValueButton = fal
 	})
 
 	useEffect(() => {
-		setTimeout(() => {
-			switch (property.type) {
-				case PropertyType.DYNAMIC_DROPDOWN:
-					/* set all refreshers as not required */
-					// TODO handle disablind validations
-					property.refreshers.forEach((refresher) => {
-						clearErrors(refresher)
-						// unregister(refresher)
-					})
-					break
-				case PropertyType.CHECKBOX:
-					setValue(name, '')
-					break
+		switch (property.type) {
+			case PropertyType.DYNAMIC_DROPDOWN:
+				/* set all refreshers as not required */
+				// TODO handle disablind validations
+				property.refreshers.forEach((refresher) => {
+					clearErrors(refresher)
+					// unregister(refresher)
+				})
+				break
+			case PropertyType.CHECKBOX:
+				setValue(name, '')
+				break
 
-				default:
-					break
-			}
-			trigger(name)
+			default:
+				break
+		}
+		trigger(name)
 
-			inputRef.current?.focus()
-		}, 100)
+		inputRef.current?.focus()
 	}, [])
 
 	const onSelectData = async (tokenString: string, data: any) => {

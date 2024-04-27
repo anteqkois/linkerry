@@ -11,18 +11,14 @@ export class AllExceptionsWebsocketFilter extends CustomBaseExceptionsFilter imp
 	private readonly logger = new Logger(AllExceptionsWebsocketFilter.name)
 
 	handleError<TClient extends { emit: Function }>(client: TClient, exception: any): void {
-		// console.log('handleError exception')
-		// console.log(exception)
+		//
 	}
 
 	handleUnknownError<TClient extends { emit: Function }>(exception: any, client: TClient): void {
-		// console.log('handleUnknownError exception')
-		// console.log(exception)
+		//
 	}
 
 	isExceptionObject(err: any): err is Error {
-		console.log('isExceptionObject')
-		console.log(err)
 		return true
 	}
 

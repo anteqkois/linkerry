@@ -110,7 +110,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 					variant: 'destructive',
 				})
 			else {
-				console.log(error)
+				console.error(error)
 				toast({
 					title: 'Test Trigger Webhook Error',
 					description: 'Unknwon error occurred',
@@ -131,7 +131,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 					variant: 'destructive',
 				})
 			else {
-				console.log(error)
+				console.error(error)
 				toast({
 					title: 'Test Trigger Webhook Error',
 					description: 'Unknwon error occurred. We forced a cancellation',

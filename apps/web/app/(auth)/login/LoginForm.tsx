@@ -39,7 +39,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 			setIsLoading(false)
 			const serverError = retriveServerHttpException(error)
 			if (serverError) return setError('root', { message: serverError.message, type: 'manual' })
-			console.log(error)
+			console.error(error)
 			return setError('root', { message: 'Your sign in request failed. Please try again.', type: 'manual' })
 		}
 	}

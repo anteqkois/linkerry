@@ -16,22 +16,18 @@ export const createWebSocketSlice: CreateSlice<WebSocketSlice> = (set, get) => (
 		})
 
 		socket.on('connect', () => {
-			console.log('Connected to server')
+			console.debug('Connected to server')
 		})
 
 		socket.on('connect_error', (err: any) => {
-			console.log('connect_error', err)
+			console.error('connect_error', err)
 		})
 		socket.on('connect_failed', (err) => (err: any) => {
-			console.log('connect_failed', err)
+			console.error('connect_failed', err)
 		})
 		socket.on('disconnect', (err) => (err: any) => {
-			console.log('disconnect', err)
+			console.error('disconnect', err)
 		})
-
-		// socket.onAny((eventName, ...args) => {
-		// 	console.log('UNKNOWN EVENT', eventName, ...args)
-		// })
 
 		set({ socket })
 		return socket

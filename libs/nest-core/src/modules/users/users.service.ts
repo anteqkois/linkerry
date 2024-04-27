@@ -26,7 +26,6 @@ export class UsersService {
 			_id: userId,
 		})
 		assertNotNullOrUndefined(user, 'user')
-		console.log('this.configService.getOrThrow("TAWK_API_KEY")', this.configService.getOrThrow('TAWK_API_KEY'));
 		const hmac = createHmac('sha256', this.configService.getOrThrow('TAWK_API_KEY'))
 		hmac.update(user.email)
 		const hash = hmac.digest('hex')

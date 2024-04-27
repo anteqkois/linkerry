@@ -1,7 +1,7 @@
-import { CustomError, ErrorCode } from '@linkerry/shared'
-import { Query } from '@nestjs/common'
-import { ZodSchema } from 'zod'
-import { ZodValidationPipe } from '../../pipes/zod-validation.pipe'
+import { CustomError, ErrorCode } from '@linkerry/shared';
+import { Query } from '@nestjs/common';
+import { ZodSchema } from 'zod';
+import { ZodValidationPipe } from '../../pipes/zod-validation.pipe';
 
 export function QuerySchema(schemaOrName: ZodSchema): ParameterDecorator
 export function QuerySchema(schemaOrName: string, schema: ZodSchema): ParameterDecorator

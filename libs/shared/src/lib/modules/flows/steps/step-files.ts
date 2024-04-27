@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { BaseDatabaseFields } from '../../../common'
-import { idSchema, stepNameSchema, stringShortSchema } from '../../../common/zod'
+import { idSchema, stringShortSchema } from '../../../common/zod'
 
 export const stepFileSchema = z.object({
 	_id: z.string(),
@@ -16,7 +16,7 @@ export interface StepFile extends BaseDatabaseFields, z.infer<typeof stepFileSch
 export const stepFileUpsertInputSchema = z.object({
 	name: stringShortSchema,
 	flowId: idSchema,
-	stepName: stepNameSchema,
+	stepName: stringShortSchema,
 	file: z.unknown()
 })
 export interface StepFileUpsertInput extends z.infer<typeof stepFileUpsertInputSchema> {}

@@ -23,7 +23,6 @@ export class CustomBaseExceptionsFilter {
 		} else if (exception instanceof ZodError) {
 			// TODO handle all errors, not only one
 			status = HttpStatus.UNPROCESSABLE_ENTITY
-			console.dir(exception.format(), { depth: null })
 			const formatedError = formatZodIssue(exception.errors[0])
 			errorMessage = formatedError.message
 			humanMessage = formatedError.message
@@ -52,7 +51,7 @@ export class CustomBaseExceptionsFilter {
 			metadata = exception.metadata
 			errorCode = exception.code
 		} else {
-			console.log(exception)
+			console.error(exception)
 			status = HttpStatus.INTERNAL_SERVER_ERROR
 			errorMessage = 'Critical internal server error occurred!'
 			humanMessage = 'Internal server error occurred'

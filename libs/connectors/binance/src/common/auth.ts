@@ -27,7 +27,7 @@ export const binanceAuth = ConnectorAuth.CustomAuth({
 		try {
 			BinanceClient.exchange.checkRequiredCredentials()
 		} catch (error) {
-			console.log(error)
+			console.error(error)
 			return {
 				valid: false,
 				error: 'Missing API keys',

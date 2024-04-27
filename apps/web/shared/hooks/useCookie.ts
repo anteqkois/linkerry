@@ -57,7 +57,7 @@ const setCookie = <S,>(key: string, value: S, options?: Options) => {
       window.document.cookie = cookie;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -74,12 +74,11 @@ function useCookie<S = undefined>(
 function useCookie<S>(key: string, initialValue?: S, options?: Options) {
   const [storedValue, setStoredValue] = useState<S | undefined>(() => {
     try {
-      // console.log('coookie', getCookie(key));
       const cookie = getCookie<S>(key);
       !cookie && initialValue && setCookie(key, initialValue, options);
       return cookie ?? initialValue;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return initialValue;
     }
   });

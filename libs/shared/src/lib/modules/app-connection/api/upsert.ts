@@ -117,7 +117,17 @@ export interface UpsertSecretTextInput extends z.infer<typeof upsertSecretTextIn
 //     UpsertCustomAuthRequest,
 // ])
 
-export const upsertAppConnectionInputSchema = z.union([upsertCustomAuthInputSchema, upsertSecretTextInputSchema, upsertCloudOAuth2RequestSchema])
+export const upsertAppConnectionInputSchema = z.union([
+	upsertCustomAuthInputSchema.omit({
+		projectId: true,
+	}),
+	upsertSecretTextInputSchema.omit({
+		projectId: true,
+	}),
+	upsertCloudOAuth2RequestSchema.omit({
+		projectId: true,
+	}),
+])
 export type UpsertAppConnectionInput = z.infer<typeof upsertAppConnectionInputSchema>
 
 // export interface UpsertAppConnectionInput extends CommonAuthProps {

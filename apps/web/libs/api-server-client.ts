@@ -44,8 +44,8 @@ apiServerClient.interceptors.response.use(
         if (response.data.success) return apiServerClient.request(originalRequest)
         // Move user to login page, tell that session expired
         await redirect('/login')
-      } catch (e) {
-        console.log({ e })
+      } catch (error) {
+        console.error({ e: error })
         await redirect('/login')
       }
     }

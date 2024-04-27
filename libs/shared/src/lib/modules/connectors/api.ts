@@ -1,18 +1,18 @@
 import { z } from 'zod'
 import { paginationQuerySchema } from '../../common'
-import { connectorNameSchema, idSchema, stepNameSchema, stringShortSchema, versionSchema } from '../../common/zod'
+import { booleanOrBooleanStringSchema, connectorNameSchema, idSchema, stringShortSchema, versionSchema } from '../../common/zod'
 import { ConnectorType, PackageType } from './connector'
 
 export const connectorsMetadataGetManyQuerySchema = paginationQuerySchema.merge(
 	z.object({
 		displayName: stringShortSchema.optional(),
-		summary: z.boolean().optional(),
+		summary: booleanOrBooleanStringSchema.default(true).optional(),
 	}),
 )
 export interface ConnectorsMetadataGetManyQuery extends z.infer<typeof connectorsMetadataGetManyQuerySchema> {}
 
 export const connectorsMetadataGetOneQuerySchema = z.object({
-	summary: z.boolean().default(true).optional(),
+	summary: booleanOrBooleanStringSchema.default(true).optional(),
 	version: versionSchema.optional(),
 })
 export interface ConnectorsMetadataGetOneQuery extends z.infer<typeof connectorsMetadataGetOneQuerySchema> {}
@@ -23,7 +23,7 @@ export const connectorsGetOptionsInputSchema = z.object({
 	connectorVersion: versionSchema,
 	connectorName: connectorNameSchema,
 	propertyName: stringShortSchema,
-	stepName: stepNameSchema,
+	stepName: stringShortSchema,
 	flowId: idSchema,
 	flowVersionId: idSchema,
 	input: z.any(),

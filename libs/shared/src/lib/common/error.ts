@@ -82,7 +82,6 @@ export class QuotaError extends CustomError {
 }
 
 export const isQuotaError = (object: unknown): object is QuotaError & { code: ErrorCodeQuota } => {
-	console.log(object instanceof CustomError)
 	if (object instanceof CustomError && object.code.includes('QUOTA_EXCEEDED')) return true
 	return false
 }

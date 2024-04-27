@@ -93,7 +93,6 @@ export const FlowRunPanel = () => {
 				}
 			} else throw new CustomError(`Can not infer step type`, ErrorCode.INVALID_TYPE, steps)
 		})
-		// console.log('FETCHED')
 	}, [isLoadingFlowRun, isLoadingFlowVersion, connectorsMetadata.some((result) => result.isLoading)])
 
 	const onSelectStep = useCallback(

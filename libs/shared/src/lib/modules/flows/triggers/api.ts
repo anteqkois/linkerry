@@ -1,15 +1,15 @@
 import { z } from 'zod'
-import { idSchema, stepNameSchema, stringShortSchema } from '../../../common/zod'
+import { idSchema, stringShortSchema } from '../../../common/zod'
 
 export const triggerPoolTestBodySchema = z.object({
 	flowId: idSchema,
-	triggerName: stepNameSchema,
+	triggerName: stringShortSchema,
 })
 export interface TriggerPoolTestBody extends z.infer<typeof triggerPoolTestBodySchema> {}
 
 export const getTriggerEventsQuerySchema = z.object({
 	flowId: idSchema,
-	triggerName: stepNameSchema,
+	triggerName: stringShortSchema,
 })
 export interface GetTriggerEventsQuery extends z.infer<typeof getTriggerEventsQuerySchema> {}
 

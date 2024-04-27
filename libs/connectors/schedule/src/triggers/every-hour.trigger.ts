@@ -34,6 +34,6 @@ export const everyHourTrigger = createTrigger({
 		])
 	},
 	onDisable: async () => {
-		console.log('onDisable')
+		console.info('onDisable')
 	},
 })

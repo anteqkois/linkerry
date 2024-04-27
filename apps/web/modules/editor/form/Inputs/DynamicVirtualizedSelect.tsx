@@ -79,7 +79,7 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 					title: `Something got wrong, inform our IT tem and try again later`,
 					variant: 'destructive',
 				})
-				console.log(error)
+				console.error(error)
 			}
 			setError(`__temp__${name}`, {
 				message: 'Can not retive options',
@@ -107,15 +107,15 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 	useEffect(() => {
 		const isEditedTrigger = isNil(editedAction)
 		const editedStep = isEditedTrigger ? editedTrigger : editedAction
-		if (isNil(editedStep)) return console.log(`editedStep empty`)
+		if (isNil(editedStep)) return console.debug(`editedStep empty`)
 
 		/* to prevent triggering options endpoint when selected edited action changed, not all veriables changed at once */
 		const editedStepName: string | undefined = isEditedTrigger ? editedStep.settings.triggerName : editedStep.settings.actionName
-		if (isNil(editedStepName)) return console.log(`stepName empty`)
-		if (!isStepBaseSettings(editedStep.settings)) return console.log(`editedStep.settings ins't baseSettings`)
+		if (isNil(editedStepName)) return console.debug(`stepName empty`)
+		if (!isStepBaseSettings(editedStep.settings)) return console.debug(`editedStep.settings ins't baseSettings`)
 
 		if (editedStep.settings.connectorName !== editedConnectorMetadata?.name)
-			return console.log(`connectors different; editedStep.name=${editedStep.name}, editedConnectorMetadata.name=${editedConnectorMetadata?.name}`)
+			return console.debug(`connectors different; editedStep.name=${editedStep.name}, editedConnectorMetadata.name=${editedConnectorMetadata?.name}`)
 
 		/* Check id user used dynamic value */
 		const currentValue = editedStep?.settings.input[name]
@@ -133,7 +133,7 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 		const selectedStepProps = Object.values(isEditedTrigger ? editedConnectorMetadata.triggers : editedConnectorMetadata.actions).find(
 			(step) => step.name === editedStepName,
 		)?.props
-		if (isNil(selectedStepProps)) return console.log(`selectedStepProps empty`)
+		if (isNil(selectedStepProps)) return console.debug(`selectedStepProps empty`)
 		const stepProperties = Object.keys(selectedStepProps)
 		/* In property.refreshers can be propeerties which aren't showing to user, and then missingRefreshers will be empty */
 		property.refreshers = property.refreshers.filter((refresher) => stepProperties.includes(refresher))
@@ -178,7 +178,7 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 						placeholder: undefined,
 					}))
 				})
-				.catch((error) => console.log(error))
+				.catch((error) => console.error(error))
 		}
 
 		/* triggered at  VirtualizedSelect */

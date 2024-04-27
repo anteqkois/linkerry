@@ -21,13 +21,14 @@ export interface ConnectorsTableProps extends HTMLAttributes<HTMLElement> {
 const defaultMobileColumns: ColumnKey[] = ['logoUrl', 'displayName', 'tags']
 
 export const ConnectorsTable = ({ onlyColumns, mobileCollumns, desktopCollumns, customColums }: ConnectorsTableProps) => {
-	const { data, error } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
+	const { data, error, status } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
 
 	if (error) return <ErrorInfo errorObject={error} />
 
 	return (
 		<DataTable
 			data={data}
+			loading={status === 'pending'}
 			columns={columns.concat(customColums || [])}
 			filterAccessor="displayName"
 			chooseFilters={[

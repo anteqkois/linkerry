@@ -16,7 +16,7 @@ import {
 	useReactTable,
 } from '@tanstack/react-table'
 
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@linkerry/ui-components/server'
+import { Button, Icons, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { useEffect, useState } from 'react'
 import { usePredefinedMediaQuery } from '../../hooks/usePredefinedMediaQuery'
@@ -32,6 +32,7 @@ export interface DataTableProps<TData, TValue> extends Omit<TableOptions<TData>,
 	desktopColumns?: (keyof TData | 'buttons')[]
 	onClickRow?: (row: Row<TData>) => any
 	clickable?: boolean
+	loading?: boolean
 }
 
 const getInitialCollumns = (onlyColumns: any[], allColumns: any[]): VisibilityState => {
@@ -59,6 +60,7 @@ export function DataTable<TData, TValue>({
 	mobileColumns = [],
 	onClickRow,
 	clickable,
+	loading,
 	...rest
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([])
@@ -156,7 +158,16 @@ export function DataTable<TData, TValue>({
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{loading ? (
+							<TableRow>
+								<TableCell colSpan={columns.length} className="h-12 text-center">
+									<div className="flex-center gap-2">
+										<Icons.Spinner />
+										Loading...
+									</div>
+								</TableCell>
+							</TableRow>
+						) : table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									className={clickable ? 'cursor-pointer' : ''}
@@ -171,12 +182,42 @@ export function DataTable<TData, TValue>({
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={columns.length} className="h-16 text-center">
+								<TableCell colSpan={columns.length} className="h-12 text-center">
 									No results.
 								</TableCell>
 							</TableRow>
 						)}
 					</TableBody>
+					{/* {loading ? (
+						<TableRow>
+							<TableCell colSpan={columns.length} className="h-16 text-center">
+								Loading...
+							</TableCell>
+						</TableRow>
+					) : (
+						<TableBody>
+							{table.getRowModel().rows?.length ? (
+								table.getRowModel().rows.map((row) => (
+									<TableRow
+										className={clickable ? 'cursor-pointer' : ''}
+										onClick={() => onClickRow?.(row)}
+										key={row.id}
+										data-state={row.getIsSelected() && 'selected'}
+									>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+										))}
+									</TableRow>
+								))
+							) : (
+								<TableRow>
+									<TableCell colSpan={columns.length} className="h-16 text-center">
+										No results.
+									</TableCell>
+								</TableRow>
+							)}
+						</TableBody>
+					)} */}
 				</Table>
 			</div>
 			<div className="flex items-center justify-end space-x-2 py-4">

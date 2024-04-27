@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { idSchema, stepNameSchema } from '../../../common/zod'
+import { idSchema, stringShortSchema } from '../../../common/zod'
 
 export enum TriggerTestStrategy {
 	SIMULATION = 'SIMULATION',
@@ -10,6 +10,6 @@ export const testTriggerRequestBodySchema = z.object({
 	flowId: idSchema,
 	flowVersionId: idSchema,
 	testStrategy: z.nativeEnum(TriggerTestStrategy),
-	triggerName: stepNameSchema,
+	triggerName: stringShortSchema,
 })
 export interface TestTriggerRequestBody extends z.infer<typeof testTriggerRequestBodySchema> {}

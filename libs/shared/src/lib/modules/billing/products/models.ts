@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { BaseDatabaseFields } from '../../../common'
-import { idSchema, stringShortSchema } from '../../../common/zod'
+import { booleanOrBooleanStringSchema, idSchema, stringShortSchema } from '../../../common/zod'
 import { SubscriptionPeriod } from '../subscription'
 import { planProductConfigurationSchema } from './planProductConfiguration'
 export * from './planProductConfiguration'
@@ -18,8 +18,8 @@ export interface StripePrice extends z.infer<typeof stripePriceSchema> {}
 export const priceSchema = z.object({
 	price: z.number(),
 	period: z.nativeEnum(SubscriptionPeriod),
-	default: z.boolean(),
-	visible: z.boolean(),
+	default: booleanOrBooleanStringSchema,
+	visible: booleanOrBooleanStringSchema,
 	priority: z.number(),
 	productId: idSchema,
 	stripe: stripePriceSchema,
@@ -38,7 +38,7 @@ export const productSchema = z.object({
 	type: z.nativeEnum(ProductType),
 	config: planProductConfigurationSchema,
 	priority: z.number(),
-	visible: z.boolean(),
+	visible: booleanOrBooleanStringSchema,
 	//  comparisionId ???
 	stripe: stripeProductSchema,
 })

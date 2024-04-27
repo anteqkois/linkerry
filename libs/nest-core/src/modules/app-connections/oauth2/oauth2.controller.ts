@@ -14,7 +14,7 @@ export class Oauth2Controller {
 		return this.oAuth2Service.getMany()
 	}
 
-	// TODO add DTO parser to prevent unecessary data
+	// TODO validation to prevent unecessary data
 	@Get('redirect')
 	redirect(@Body() body: any, @Query() query: OAuth2RedirectQuery, @Response() response: FastifyReply) {
 		const params = {

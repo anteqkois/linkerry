@@ -29,7 +29,7 @@ function useLocalStorage<S = undefined>(key: string, initialValue?: S | (() => S
         window.localStorage.setItem(key, JSON.stringify(valueToStore))
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

@@ -1,10 +1,10 @@
 import { z } from 'zod'
-import { idSchema, stepNameSchema } from '../../../common/zod'
+import { idSchema, stringShortSchema } from '../../../common/zod'
 import { FlowVersion } from '../flow-versions'
 
 export const runActionInputSchema = z.object({
 	flowVersionId: idSchema,
-	actionName: stepNameSchema,
+	actionName: stringShortSchema,
 })
 export interface RunActionInput extends z.infer<typeof runActionInputSchema>{}
 

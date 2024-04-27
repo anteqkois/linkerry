@@ -29,14 +29,6 @@ const subscriptionItemSchema = z.object({
 })
 export interface SubscriptionItem extends z.infer<typeof subscriptionItemSchema> {}
 
-export const testSchema = z.object({
-	stringShortSchema: z.string().max(255),
-	stringDateSchema: z.string().datetime({ offset: true }),
-	connectorNameSchema: z.string().regex(/^@linkerry\/.*/),
-	versionSchema: z.string().regex(/^([~^])?[0-9]+\.[0-9]+\.[0-9]+$/),
-	stepNameSchema: z.string().regex(/^([a-zA-Z]+)_(\d+)$/),
-	idSchema: z.string().regex(/^[0-9a-f]{24}$/),
-})
 const subscriptionCommonFieldsSchema = z.object({
 	project: idSchema,
 	items: z.array(subscriptionItemSchema).min(1).max(10),

@@ -1,5 +1,6 @@
 import { HttpMethod, HttpRequest, createCustomApiCallAction, httpClient } from '@linkerry/connectors-common'
 import { ConnectorAuth, createConnector } from '@linkerry/connectors-framework'
+import { HttpStatusCode, isAxiosError } from 'axios'
 import { telegramCreateInviteLinkAction } from './actions/create-invite-link'
 import { telegramGetChatMemberAction } from './actions/get-chat-member'
 import { telegramSendMediaAction } from './actions/send-media.action'
@@ -40,6 +41,19 @@ export const telegramBotAuth = ConnectorAuth.SecretText({
 					error: 'Invalid Bot Token',
 				}
 		} catch (error: any) {
+			if (isAxiosError(error)) {
+				if (error.status === HttpStatusCode.NotFound)
+					return {
+						valid: false,
+						error: 'Invalid Bot Token, bot not found',
+					}
+				else
+					return {
+						valid: false,
+						error: error.response?.data?.description,
+					}
+			}
+
 			return {
 				valid: false,
 				error: error?.message,

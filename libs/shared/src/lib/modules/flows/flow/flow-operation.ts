@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { idSchema, stepNameSchema, stringShortSchema } from '../../../common/zod'
+import { flowStepNameSchema, idSchema, stringShortSchema } from '../../../common/zod'
 import { actionSchema } from '../actions'
 import { triggerSchema } from '../triggers'
 import { FlowStatus } from './flow'
@@ -78,7 +78,7 @@ export type UpdateActionRequest = z.infer<typeof updateActionRequestSchema>
 // export type MoveActionRequest = Static<typeof MoveActionRequest>
 
 export const addActionRequestSchema = z.object({
-	parentStepName: stepNameSchema,
+	parentStepName: flowStepNameSchema,
 	// stepLocationRelativeToParent: StepLocationRelativeToParent
 	action: updateActionRequestSchema,
 })

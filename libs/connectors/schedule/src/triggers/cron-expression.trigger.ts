@@ -1,6 +1,6 @@
 import { Property, createTrigger } from '@linkerry/connectors-framework'
-import { timezoneOptions } from '../common'
 import { TriggerStrategy } from '@linkerry/shared'
+import { timezoneOptions } from '../common'
 
 export const cronExpressionTrigger = createTrigger({
 	name: 'cron_expression',
@@ -38,6 +38,6 @@ export const cronExpressionTrigger = createTrigger({
 		return Promise.resolve([{}])
 	},
 	onDisable: async () => {
-		console.log('onDisable')
+		console.info('onDisable')
 	},
 })

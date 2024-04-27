@@ -43,6 +43,7 @@ const emptyFlow: FlowPopulated = {
 	},
 	publishedVersionId: null,
 	schedule: null,
+	deleted: false,
 	createdAt: '',
 	updatedAt: '',
 }
@@ -138,7 +139,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 				})
 
 				closeWebSocketConnection()
-				console.log(error.message)
+				console.error(error.message)
 				return reject(error.message)
 			})
 

@@ -1,10 +1,11 @@
 import { CustomError, ErrorCode, EventPayload, FlowPopulated, FlowStatus, Id, assertNotNullOrUndefined, idSchema, isNil, isQuotaError } from '@linkerry/shared'
-import { All, Controller, Logger, Param, Query, Request, Response } from '@nestjs/common'
+import { All, Controller, Logger, Request, Response } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { HttpStatusCode } from 'axios'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { Model } from 'mongoose'
 import { ParamSchema } from '../../lib/nest-utils/decorators/zod/param'
+import { QuerySchema } from '../../lib/nest-utils/decorators/zod/query'
 import { TasksUsageService } from '../billing/usage/tasks/tasks.service'
 import { FlowRunWatcherService } from '../flows/flow-runs/flow-runs-watcher.service'
 import { FlowsService } from '../flows/flows/flows.service'
@@ -72,7 +73,7 @@ export class WebhooksController {
 
 	// @UseGuards(JwtBearerTokenAuthGuard)
 	@All()
-	async handleWebhookQuery(@Query('flowId') flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
+	async handleWebhookQuery(@QuerySchema('flowId', idSchema) flowId: Id, @Request() request: FastifyRequest, @Response() response: FastifyReply) {
 		const flow = await this.getFlowOrThrow(flowId)
 		const payload = await this.webhooksService.convertRequest(request)
 

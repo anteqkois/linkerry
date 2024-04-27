@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { baseStepSchema, baseStepSettingsSchema } from '../steps/base'
+import { booleanOrBooleanStringSchema } from '../../../common/zod'
 
 export enum ActionType {
 	// Code = 'Code',
@@ -12,12 +13,12 @@ export enum ActionType {
 export const actionErrorHandlingOptionsSchema = z.object({
 	continueOnFailure: z
 		.object({
-			value: z.boolean(),
+			value: booleanOrBooleanStringSchema,
 		})
 		.optional(),
 	retryOnFailure: z
 		.object({
-			value: z.boolean(),
+			value: booleanOrBooleanStringSchema,
 		})
 		.optional(),
 })

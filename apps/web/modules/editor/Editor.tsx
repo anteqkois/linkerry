@@ -65,7 +65,7 @@ export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) =
 	const reactFlowWrapper = useRef(null)
 
 	useEffect(() => {
-		console.log(`Editor mode: ${mode}`)
+		console.debug(`Editor mode: ${mode}`)
 		setLimits(limits)
 	}, [])
 

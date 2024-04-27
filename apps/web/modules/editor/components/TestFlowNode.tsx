@@ -44,7 +44,7 @@ export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
 					variant: 'destructive',
 				})
 			else {
-				console.log(error)
+				console.error(error)
 				toast({
 					title: 'Test Flow Error',
 					description: 'Unknwon error occurred',
