@@ -1,9 +1,9 @@
 import { FlowGetManyQuery, FlowOperationRequest, Id, RequestUser, flowGetManyQuerySchema, flowOperationRequestSchema } from '@linkerry/shared'
 import { Controller, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
-import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id'
-import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body.decorator'
+import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id.decorator'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query.decorator'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowsService } from './flows.service'
 

@@ -1,7 +1,7 @@
 import { Price, priceSchema } from '@linkerry/shared'
 import { Controller, Post, UseGuards } from '@nestjs/common'
 import { AdminGuard } from '../../../../lib/auth/guards/admin.guard'
-import { BodySchema } from '../../../../lib/nest-utils/decorators/zod/body'
+import { BodySchema } from '../../../../lib/nest-utils/decorators/zod/body.decorator'
 import { PricesService } from './prices.service'
 
 @Controller('admin/prices')

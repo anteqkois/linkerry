@@ -21,5 +21,5 @@ export type ApLock = {
 
 export interface AcquireLockParams {
 	key: string
-	timeout: number
+	timeoutMs: number
 }

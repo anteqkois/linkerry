@@ -115,7 +115,7 @@ export class WebhookSimulationService {
 
 	async createLock({ flowId }: AcquireLockParams): Promise<ApLock> {
 		const key = `${flowId}-webhook-simulation`
-		return this.redisLockService.acquireLock({ key, timeout: 5_000 })
+		return this.redisLockService.acquireLock({ key, timeoutMs: 5_000 })
 	}
 
 	async create(params: CreateParams): Promise<WebhookSimulation> {

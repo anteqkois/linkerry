@@ -1,8 +1,9 @@
 import { DeleteTriggerEventsInput, GetTriggerEventsQuery, RequestUser, TriggerPoolTestBody, deleteTriggerEventsInputSchema, getTriggerEventsQuerySchema, triggerPoolTestBodySchema } from '@linkerry/shared'
 import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
-import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
+import { StrictRateLimit } from '../../../lib/nest-utils/decorators/stricy-rate-limit.decorator'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body.decorator'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query.decorator'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { TriggerEventsService } from './trigger-events.service'
 
@@ -22,6 +23,7 @@ export class TriggerEventsController {
 		return this.triggerEventsService.deleteMany(body, user.projectId)
 	}
 
+	@StrictRateLimit()
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post('/test/pool')
 	create(@BodySchema(triggerPoolTestBodySchema) body: TriggerPoolTestBody, @ReqJwtUser() user: RequestUser) {

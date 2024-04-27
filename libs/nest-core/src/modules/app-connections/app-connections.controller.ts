@@ -1,10 +1,11 @@
 import { Id, RequestUser, UpsertAppConnectionInput, upsertAppConnectionInputSchema } from '@linkerry/shared'
 import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../lib/auth'
-import { BodySchema } from '../../lib/nest-utils/decorators/zod/body'
-import { ParamIdSchema } from '../../lib/nest-utils/decorators/zod/id'
+import { BodySchema } from '../../lib/nest-utils/decorators/zod/body.decorator'
+import { ParamIdSchema } from '../../lib/nest-utils/decorators/zod/id.decorator'
 import { ReqJwtUser } from '../users/auth/decorators/req-jwt-user.decorator'
 import { AppConnectionsService } from './app-connections.service'
+import { StrictRateLimit } from '../../lib/nest-utils/decorators/stricy-rate-limit.decorator'
 
 @Controller('app-connections')
 export class AppConnectionsController {
@@ -17,6 +18,7 @@ export class AppConnectionsController {
 		return appConnections.map((connection) => this.appConnectionsService.removeSensitiveData(connection))
 	}
 
+	@StrictRateLimit()
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
 	async upsert(@BodySchema(upsertAppConnectionInputSchema) body: UpsertAppConnectionInput, @ReqJwtUser() user: RequestUser) {

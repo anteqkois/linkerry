@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { FastifyReply } from 'fastify'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { LocalAuthGuard } from '../../../lib/auth/guards/local-auth.guard'
-import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body.decorator'
 import { AuthService } from './auth.service'
 import { ReqUser } from './decorators/req-user.decorator'
 

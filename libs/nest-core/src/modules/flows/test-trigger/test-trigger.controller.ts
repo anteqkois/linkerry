@@ -1,7 +1,8 @@
 import { RequestUser, TestTriggerRequestBody, testTriggerRequestBodySchema } from '@linkerry/shared'
 import { Controller, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
+import { StrictRateLimit } from '../../../lib/nest-utils/decorators/stricy-rate-limit.decorator'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body.decorator'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { TestTriggerService } from './test-trigger.service'
 
@@ -9,6 +10,7 @@ import { TestTriggerService } from './test-trigger.service'
 export class TestTriggerController {
 	constructor(private readonly testTriggerService: TestTriggerService) {}
 
+	@StrictRateLimit()
 	@UseGuards(JwtCookiesAuthGuard)
 	@Post()
 	test(@BodySchema(testTriggerRequestBodySchema) body: TestTriggerRequestBody, @ReqJwtUser() user: RequestUser) {

@@ -1,7 +1,7 @@
 import { CustomError, ErrorCode, RequestWorker, isNil, stringShortSchema } from '@linkerry/shared'
 import { Controller, Get, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
-import { ParamSchema } from '../../lib/nest-utils/decorators/zod/param'
+import { ParamSchema } from '../../lib/nest-utils/decorators/zod/param.decorator'
 import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { AppConnectionsService } from './app-connections.service'
 

@@ -55,7 +55,7 @@ export class FlowsService {
 	async deleteOne(id: Id, projectId: Id) {
 		const lock = await this.redisLockService.acquireLock({
 			key: id,
-			timeout: 10000,
+			timeoutMs: 10000,
 		})
 
 		try {
@@ -98,7 +98,7 @@ export class FlowsService {
 	async update({ id, userId, projectId, operation }: UpdateParams) {
 		const flowLock = await this.redisLockService.acquireLock({
 			key: id,
-			timeout: 30000,
+			timeoutMs: 30000,
 		})
 
 		try {

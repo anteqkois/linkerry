@@ -101,6 +101,7 @@
 		"@nestjs/platform-express": "^10.0.2",
 		"@nestjs/platform-fastify": "^10.1.0",
 		"@nestjs/platform-socket.io": "^10.3.3",
+		"@nestjs/throttler": "^5.1.2",
 		"@nestjs/websockets": "^10.3.3",
 		"@nx/devkit": "^17.2.8",
 		"@radix-ui/react-alert-dialog": "^1.0.4",

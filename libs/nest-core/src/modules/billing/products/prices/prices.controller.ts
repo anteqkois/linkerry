@@ -1,6 +1,6 @@
 import { Id } from '@linkerry/shared'
 import { Controller, Get } from '@nestjs/common'
-import { ParamIdSchema } from '../../../../lib/nest-utils/decorators/zod/id'
+import { ParamIdSchema } from '../../../../lib/nest-utils/decorators/zod/id.decorator'
 import { PricesService } from './prices.service'
 
 @Controller('prices')

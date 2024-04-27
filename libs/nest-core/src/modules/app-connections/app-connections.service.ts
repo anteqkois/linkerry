@@ -81,7 +81,7 @@ export class AppConnectionsService {
 	async _lockAndRefreshConnection({ projectId, name }: { projectId: Id; name: string }) {
 		const refreshLock = await this.redisLockService.acquireLock({
 			key: `${projectId}_${name}`,
-			timeout: 20000,
+			timeoutMs: 20000,
 		})
 
 		let appConnectionDecrypted: AppConnectionDecrypted | null = null

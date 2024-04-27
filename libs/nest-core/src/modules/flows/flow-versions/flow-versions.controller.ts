@@ -1,7 +1,7 @@
 import { Id, RequestUser } from '@linkerry/shared'
 import { Controller, Get, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id'
+import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id.decorator'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { FlowVersionsService } from './flow-versions.service'
 

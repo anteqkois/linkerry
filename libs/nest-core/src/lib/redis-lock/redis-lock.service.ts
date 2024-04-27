@@ -9,10 +9,10 @@ export class RedisLockService {
 
 	constructor(@Inject(REDIS_LOCK_CLIENT) private readonly redisClient: RedisLockClient) {}
 
-	async acquireLock({ key, timeout }: AcquireLockParams) {
+	async acquireLock({ key, timeoutMs }: AcquireLockParams) {
 		try {
-			return await this.redisClient.redLockClient.acquire([key], timeout, {
-				retryCount: Math.ceil(timeout / 2000) * 2,
+			return await this.redisClient.redLockClient.acquire([key], timeoutMs, {
+				retryCount: Math.ceil(timeoutMs / 2000 * 1.5),
 				retryDelay: 2000,
 			})
 		} catch (e) {

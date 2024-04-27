@@ -1,8 +1,8 @@
 import { PutStoreEntryRequest, RequestWorker, putStoreEntryRequestSchema, stringShortSchema } from '@linkerry/shared'
 import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtBearerTokenAuthGuard } from '../../lib/auth'
-import { BodySchema } from '../../lib/nest-utils/decorators/zod/body'
-import { QuerySchema } from '../../lib/nest-utils/decorators/zod/query'
+import { BodySchema } from '../../lib/nest-utils/decorators/zod/body.decorator'
+import { QuerySchema } from '../../lib/nest-utils/decorators/zod/query.decorator'
 import { ReqJwtWorker } from '../users/auth/decorators/req-jwt-worker.decorator'
 import { StoreEntryService } from './store-entry.service'
 

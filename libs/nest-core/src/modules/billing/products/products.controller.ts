@@ -1,7 +1,7 @@
 import { FindManyProductsQuery, Id, findManyProductsQuerySchema } from '@linkerry/shared'
 import { Controller, Get } from '@nestjs/common'
-import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id'
-import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
+import { ParamIdSchema } from '../../../lib/nest-utils/decorators/zod/id.decorator'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query.decorator'
 import { ProductsService } from './products.service'
 
 @Controller('products')

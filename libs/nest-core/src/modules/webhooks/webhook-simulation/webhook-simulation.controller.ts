@@ -9,8 +9,8 @@ import {
 } from '@linkerry/shared'
 import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
-import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body'
-import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query'
+import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body.decorator'
+import { QuerySchema } from '../../../lib/nest-utils/decorators/zod/query.decorator'
 import { ReqJwtUser } from '../../users/auth/decorators/req-jwt-user.decorator'
 import { WebhookSimulationService } from './webhook-simulation.service'
 

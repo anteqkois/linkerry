@@ -1,12 +1,13 @@
 import { FastifyAdapter } from '@bull-board/fastify'
 import { BullBoardModule } from '@bull-board/nestjs'
 import { EventEmitterModule } from '@nestjs/event-emitter'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 // import * as basicAuth from '@fastify/basic-auth';
 // import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis'
 import { BullModule } from '@nestjs/bullmq'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { APP_FILTER } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { MongodbModule } from './lib/mongodb'
 import { AllExceptionsFilter, RequestLoggerMiddleware } from './lib/nest-utils'
 import { RedisLockModule } from './lib/redis-lock'
@@ -58,8 +59,17 @@ import { QUEUES } from './modules/workers/flow-worker/queues/types'
 			// maxListeners: 10,
 			verboseMemoryLeak: true,
 			ignoreErrors: false,
-		})
-
+		}),
+		ThrottlerModule.forRootAsync({
+			imports: [ConfigModule],
+			inject: [ConfigService],
+			useFactory: (config: ConfigService) => [
+				{
+					ttl: config.getOrThrow('GLOBAL_THROTTLE_TTL'),
+					limit: config.getOrThrow('GLOBAL_THROTTLE_LIMIT'),
+				},
+			],
+		}),
 	],
 	controllers: [],
 	providers: [
@@ -67,7 +77,10 @@ import { QUEUES } from './modules/workers/flow-worker/queues/types'
 			provide: APP_FILTER,
 			useClass: AllExceptionsFilter,
 		},
-		// To register as a global guard
+		{
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
 		// {
 		//   provide: APP_GUARD,
 		//   useClass: JwtCookiesAuthGuard,
