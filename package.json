@@ -1,7 +1,7 @@
 {
 	"name": "@linkerry/source",
-	"version": "0.0.0",
-	"packageManager": "pnpm@7.15.0",
+	"version": "0.0.1",
+	"packageManager": "pnpm@9.0.6",
 	"license": "MIT",
 	"scripts": {
 		"commit": "cz",
@@ -17,7 +17,6 @@
 	},
 	"private": true,
 	"devDependencies": {
-		"@nestjs/schedule": "^3.0.1",
 		"@nestjs/schematics": "^10.0.1",
 		"@nestjs/testing": "^10.0.2",
 		"@nx/cypress": "16.5.4",
@@ -101,6 +100,7 @@
 		"@nestjs/platform-express": "^10.0.2",
 		"@nestjs/platform-fastify": "^10.1.0",
 		"@nestjs/platform-socket.io": "^10.3.3",
+		"@nestjs/schedule": "^4.0.2",
 		"@nestjs/throttler": "^5.1.2",
 		"@nestjs/websockets": "^10.3.3",
 		"@nx/devkit": "^17.2.8",

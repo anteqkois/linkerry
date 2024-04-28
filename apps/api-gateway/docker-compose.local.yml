@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./
+      cache_from:
+        - linkerry-base:base
+      dockerfile: ./Dockerfile
+      args:
+        NODE_ENV: 'production'
+        BUILD_FLAG: ''
+    image: api-gateway:latest
+    env_file:
+      - ../../.env
+    ports:
+      - 3001:3001
+    environment:
+      NODE_ENV: 'production'
+      PORT: 3001
+      # overwrite default dev veriables
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
+    # networks:
+    #   - proxy
+    restart: on-failure
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
+    container_name: redis
+    env_file:
+      - ../../.env
+    # command: redis-server --appendonly yes --replica-read-only no --requirepass ${REDIS_PASSWORD}
+    command:
+      - /bin/sh
+      - -c
+      # - Double dollars, so that the variable is not expanded by Docker Compose
+      # - Surround by quotes, so that the shell does not split the password
+      # - The ${variable:?message} syntax causes shell to exit with a non-zero
+      #   code and print a message, when the variable is not set or empty
+      - redis-server --appendonly yes --replica-read-only no --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    restart: always
+    ports:
+      - 4004:6379
+    # networks:
+    #   - proxy
+    volumes:
+      - redis:/data
+
+volumes:
+  redis:
+    driver: local
+
+# networks:
+#   proxy:
+#     driver: bridge

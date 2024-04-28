@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./
+      cache_from:
+        - linkerry-base:base
+      dockerfile: ./Dockerfile
+      args:
+        NODE_ENV: 'production'
+        BUILD_FLAG: ''
+    image: api-gateway:latest
+    env_file:
+      - ../../.env
+    ports:
+      - 3001:3001
+    environment:
+      NODE_ENV: 'production'
+      PORT: 3001
+    restart: on-failure
+  redis:
+    image: redis:alpine
+    container_name: redis
+    env_file:
+      - ../../.env
+    command: redis-server --appendonly yes --replica-read-only no --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    restart: always
+    ports:
+      - 4004:6379
+    volumes:
+      - redis:/data
+
+volumes:
+  redis:
+    driver: local
+
+networks:
+  default:
+    external:
+      name: ${NETWORK:-proxy}
