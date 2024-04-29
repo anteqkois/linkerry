@@ -1,8 +1,8 @@
-import { IAuthLoginInput, IAuthLoginResponse, IAuthLogoutResponse, IAuthSignUpInput, IAuthSignUpResponse, User } from '@linkerry/shared'
+import { IAuthLoginResponse, IAuthLogoutResponse, LoginInput, SignUpInput, SignUpResponse, User } from '@linkerry/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class AuthApi {
-	static async login(input: IAuthLoginInput) {
+	static async login(input: LoginInput) {
 		return apiClient.post<IAuthLoginResponse>(
 			'/auth/login',
 			input,
@@ -10,8 +10,8 @@ export class AuthApi {
 		)
 	}
 
-	static async signUp(input: IAuthSignUpInput) {
-		return apiClient.post<IAuthSignUpResponse>('/auth/signup', input)
+	static async signUp(input: SignUpInput) {
+		return apiClient.post<SignUpResponse>('/auth/signup', input)
 	}
 
 	static async logout() {

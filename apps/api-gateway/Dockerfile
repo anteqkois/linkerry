@@ -7,7 +7,7 @@ WORKDIR /app/builder
 
 COPY . .
 
-RUN npx nx build api-gateway ${BUILD_FLAG}
+RUN npx nx run api-gateway:build ${BUILD_FLAG}
 
 FROM linkerry-base:base
 

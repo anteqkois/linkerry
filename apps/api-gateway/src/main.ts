@@ -1,7 +1,6 @@
 import fastifyCookie from '@fastify/cookie'
 import fastifyMultipart from '@fastify/multipart'
-import { exceptionFactoryDto } from '@linkerry/nest-core'
-import { Logger, ValidationPipe } from '@nestjs/common'
+import { Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
@@ -51,14 +50,6 @@ async function bootstrap() {
 	app.setGlobalPrefix(globalPrefix)
 
 	const port = process.env.PORT_API_GATEWAY || 3001
-
-	app.useGlobalPipes(
-		new ValidationPipe({
-			transform: true,
-			exceptionFactory: exceptionFactoryDto,
-			whitelist: true,
-		}),
-	)
 
 	await app.listen(port)
 	Logger.log(`🚀 Api service is running on: http://localhost:${port}${globalPrefix}`)

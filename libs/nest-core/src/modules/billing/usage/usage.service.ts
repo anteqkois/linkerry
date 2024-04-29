@@ -18,14 +18,14 @@ export class UsageService {
 		// TODO retrive app connections
 		const tasks = await this.tasksUsageService.getCurrentPeriodUsage(projectId)
 		const tasksPastSevenDays = await this.tasksUsageService.getPastSevenDaysUsage(projectId)
-		const projectAppConnections = await this.appConnectionsModel.count({
+		const projectAppConnections = await this.appConnectionsModel.countDocuments({
 			projectId,
 		})
-		const projectFlows = await this.flowModel.count({
+		const projectFlows = await this.flowModel.countDocuments({
 			projectId,
 			deleted: false,
 		})
-		const projectRunningFlows = await this.flowModel.count({
+		const projectRunningFlows = await this.flowModel.countDocuments({
 			projectId,
 			status: FlowStatus.ENABLED,
 			deleted: false,

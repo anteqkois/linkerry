@@ -18,7 +18,7 @@ const spinnerVariants = cva('', {
 
 export interface SpinnerProps extends HTMLAttributes<HTMLElement>, VariantProps<typeof spinnerVariants> {}
 
-export const Spinner = ({ size, className, ...props }: SpinnerProps) => {
+export const Spinner = ({ size, className, ...props }: SpinnerProps = {}) => {
 	return (
 		<div className={cn('flex-grow h-full w-full flex-center', className)} {...props}>
 			<Icons.Spinner className={cn(spinnerVariants({ size }))} />

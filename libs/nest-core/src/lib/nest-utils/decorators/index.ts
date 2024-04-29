@@ -1,3 +1,2 @@
-export * from './jwt-auth-guard.decorator'
-export * from './paginated-resource-interceptor.decorator'
+export * from './jwt-auth-guard.decorator';
 

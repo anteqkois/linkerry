@@ -1,18 +1,18 @@
 import { ConnectorAuthProperty, ConnectorMetadata, PropertyType } from '@linkerry/connectors-framework'
 import { AppConnectionWithoutSensitiveData } from '@linkerry/shared'
 import {
-	Dialog,
-	DialogContent,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Dialog,
+  DialogContent,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@linkerry/ui-components/client'
 import { HTMLAttributes, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'

@@ -1,20 +1,20 @@
 import { TriggerBase, getRefreshersToRefreshedProperties } from '@linkerry/connectors-framework'
 import { ConnectorGroup, TriggerTestStrategy, TriggerType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@linkerry/ui-components/client'
 import { H5 } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
@@ -151,8 +151,6 @@ export const TriggerConnectorPanel = () => {
 
 		// must be after updateEditedTrigger becouse form fields uses data form editor store and generate form based on it
 		triggerForm.reset({
-			// TODO
-			// @ts-ignore
 			__temp__trigger: selectedTrigger,
 			triggerName,
 			...input,

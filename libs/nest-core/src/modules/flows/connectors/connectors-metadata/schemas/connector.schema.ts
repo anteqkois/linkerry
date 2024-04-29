@@ -2,12 +2,13 @@ import { ActionBase, ConnectorAuthProperty, ConnectorMetadata, ConnectorTag, Tri
 import { ConnectorGroup, ConnectorType, PackageType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 
 export type ConnectorsMetadataDocument = mongoose.HydratedDocument<ConnectorMetadata>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'connectors_metadata' })
 export class ConnectorsMetadataModel implements ConnectorMetadata {
-	_id: string
+  _id: string
 
 	@Prop({ required: true, type: String })
 	name: string
@@ -67,7 +68,7 @@ export const ConnectorsMetadataModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = ConnectorsMetadataSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

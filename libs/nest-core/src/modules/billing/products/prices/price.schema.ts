@@ -1,14 +1,13 @@
 import { Price, StripePrice, SubscriptionPeriod } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel } from '../../../../lib/mongodb'
 
 export type PriceDocument<T extends keyof Price = never> = mongoose.HydratedDocument<PriceModel<T>>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'prices' })
 export class PriceModel<T> extends BaseDatabaseModel implements Price {
-	_id: string
-
 	@Prop({ required: true, type: Number })
 	price: number
 
@@ -41,7 +40,7 @@ export const PriceModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = PriceSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

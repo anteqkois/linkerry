@@ -1,6 +1,7 @@
 import { Id, NotificationStatus, Project, User } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel, IdObjectOrPopulated } from '../../../lib/mongodb'
 import { UserModel } from '../../users/schemas/user.schema'
 
@@ -28,7 +29,7 @@ export const ProjectModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = ProjectsSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

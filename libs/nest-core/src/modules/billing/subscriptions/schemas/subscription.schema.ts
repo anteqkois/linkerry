@@ -1,6 +1,7 @@
 import { Common, PaymentGateway, Project, Subscription, SubscriptionPeriod, SubscriptionStatus, TypeOrDefaultType } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel, IdObjectOrPopulated } from '../../../../lib/mongodb'
 import { SubscriptionItemDocument, SubscriptionItemSchema } from './subscription-item.schema'
 
@@ -60,7 +61,7 @@ export const SubscriptionModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = SubscriptionSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

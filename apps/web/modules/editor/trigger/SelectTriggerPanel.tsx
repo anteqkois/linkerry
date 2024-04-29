@@ -7,7 +7,7 @@ import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-
 import { columns } from '../../flows/connectors/table/defaultColumns'
 import { useEditor } from '../useEditor'
 
-export interface SelectTriggerProps extends HTMLAttributes<HTMLElement> {}
+export type SelectTriggerProps = HTMLAttributes<HTMLElement>
 
 export const SelectTriggerPanel = () => {
 	const { data } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())

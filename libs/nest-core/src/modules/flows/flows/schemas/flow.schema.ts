@@ -1,6 +1,7 @@
 import { Flow, FlowScheduleOptions, FlowStatus, FlowVersion, Nullable } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel, IdObjectOrPopulated, ObjectId } from '../../../../lib/mongodb'
 import { ProjectModel } from '../../../projects/schemas/projects.schema'
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema'
@@ -35,7 +36,7 @@ export const FlowModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = FlowSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

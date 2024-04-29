@@ -1,16 +1,16 @@
-import { ConnectorProperty, DropdownOption, PropertyType, StaticDropdownProperty } from '@linkerry/connectors-framework'
 import { hasVariableToken } from '@linkerry/shared'
 import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@linkerry/ui-components/client'
+import { ConnectorProperty, DropdownOption, PropertyType, StaticDropdownProperty } from '@linkerry/connectors-framework'
 import { HTMLAttributes, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { VList } from 'virtua'

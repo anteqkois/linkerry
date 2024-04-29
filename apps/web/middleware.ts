@@ -1,4 +1,5 @@
-import { AuthStatus, Cookies } from '@linkerry/shared'
+import { AuthStatus } from '@linkerry/shared/lib/common/auth'
+import { Cookies } from '@linkerry/shared/lib/constants/cookies'
 import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(req: NextRequest) {

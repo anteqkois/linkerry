@@ -1,6 +1,7 @@
 import { ActionConnector, Flow, FlowVersion, FlowVersionState, TriggerConnector, TriggerEmpty } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel, IdObjectOrPopulated, ObjectId } from '../../../../lib/mongodb'
 
 export type FlowVersionDocument<T extends keyof FlowVersion = never> = mongoose.HydratedDocument<FlowVersionModel<T>>
@@ -44,7 +45,7 @@ export const flowVersionModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = FlowVersionSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

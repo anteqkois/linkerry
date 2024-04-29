@@ -1,17 +1,17 @@
 import { ConnectorProperty, PropertyType } from '@linkerry/connectors-framework'
 import { waitMs } from '@linkerry/shared'
 import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	Input,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-	useToast,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  useToast,
 } from '@linkerry/ui-components/client'
 import { Icons } from '@linkerry/ui-components/server'
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react'

@@ -28,6 +28,6 @@ export class SubscriptionsController {
 	@Put()
 	change(@BodySchema(changeSubscriptionBodySchema) body: ChangeSubscriptionBody, @ReqJwtUser() user: RequestUser) {
 		// TODO check if it is owner or if it have privilages to start subscription when project members supported
-		return this.subscriptionsService.change({ ...body, projectId: user.projectId })
+		return this.subscriptionsService.change({ items: body.items, period: body.period, projectId: user.projectId })
 	}
 }

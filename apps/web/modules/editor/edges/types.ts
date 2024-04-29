@@ -1,5 +1,5 @@
 import { Edge, EdgeProps } from 'reactflow'
-import { CustomNodeId } from '../nodes'
+import { CustomNodeId } from '../types'
 
 export type ICustomEdge<I extends string, D = undefined> = {
   type: `${I}Edge`

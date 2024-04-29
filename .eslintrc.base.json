@@ -1,5 +1,7 @@
 {
+  "root": true,
   "ignorePatterns": ["**/*"],
+  "plugins": ["@nx"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -21,16 +23,12 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "@typescript-eslint/no-empty-interface": "off",
-        "@typescript-eslint/no-var-requires": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/no-case-declarations": "off"
-      }
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {}
     },
     {
       "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
       "rules": {}
     },
     {
@@ -40,6 +38,5 @@
       },
       "rules": {}
     }
-  ],
-  "extends": ["./.eslintrc.base.json"]
+  ]
 }

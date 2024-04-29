@@ -14,11 +14,10 @@ export interface ICustomNode<T extends string, D extends object = any> extends R
 	width: number
 }
 
-export interface SelectTriggerNodeProps extends ICustomNode<'SelectTrigger', { trigger: Trigger }> {}
-export interface TriggerNodeProps extends ICustomNode<'Trigger', { trigger: Trigger; connectorMetadata: ConnectorMetadataSummary }> {}
-export interface ActionNodeProps
-	extends ICustomNode<'Action', { action: Action; connectorMetadata: ConnectorMetadataSummary; position: ReactFlowNode['position'] }> {}
-export interface TestFlowNodeProps extends ICustomNode<'TestFlow', { position: ReactFlowNode['position'] }> {}
+export type SelectTriggerNodeProps = ICustomNode<'SelectTrigger', { trigger: Trigger }>
+export type TriggerNodeProps = ICustomNode<'Trigger', { trigger: Trigger; connectorMetadata: ConnectorMetadataSummary }>
+export type ActionNodeProps = ICustomNode<'Action', { action: Action; connectorMetadata: ConnectorMetadataSummary; position: ReactFlowNode['position'] }>
+export type TestFlowNodeProps = ICustomNode<'TestFlow', { position: ReactFlowNode['position'] }>
 
 export type CustomNode = TriggerNodeProps | SelectTriggerNodeProps | ActionNodeProps | TestFlowNodeProps
 // export type CustomNodeType = NonNullable<CustomNode['type']>

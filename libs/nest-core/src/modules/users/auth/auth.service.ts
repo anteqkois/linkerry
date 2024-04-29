@@ -1,16 +1,16 @@
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { VerificationEmail } from '@linkerry/react-email'
 import {
-	CustomError,
-	ErrorCode,
-	Id,
-	JWTPrincipalType,
-	JwtWorkerTokenPayload,
-	NotificationStatus,
-	SignUpInput,
-	User,
-	UserRole,
-	assertNotNullOrUndefined,
+  CustomError,
+  ErrorCode,
+  Id,
+  JWTPrincipalType,
+  JwtWorkerTokenPayload,
+  NotificationStatus,
+  SignUpInput,
+  User,
+  UserRole,
+  assertNotNullOrUndefined,
 } from '@linkerry/shared'
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'

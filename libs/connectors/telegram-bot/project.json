@@ -1,27 +1,19 @@
 {
-	"name": "connectors-telegram-bot",
-	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/connectors/telegram-bot/src",
-	"projectType": "library",
-	"targets": {
-		"build": {
-			"executor": "@nx/esbuild:esbuild",
-			"outputs": ["{options.outputPath}"],
-			"options": {
-				"outputPath": "dist/libs/connectors/telegram-bot",
-				"main": "libs/connectors/telegram-bot/src/index.ts",
-				"tsConfig": "libs/connectors/telegram-bot/tsconfig.lib.json",
-				"assets": ["libs/connectors/telegram-bot/*.md"],
-				"generatePackageJson": true
-			}
-		},
-		"lint": {
-			"executor": "@nx/linter:eslint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": ["libs/connectors/telegram-bot/**/*.ts"]
-			}
-		}
-	},
-	"tags": []
+  "name": "connectors-telegram-bot",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/telegram-bot/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/telegram-bot",
+        "main": "libs/connectors/telegram-bot/src/index.ts",
+        "tsConfig": "libs/connectors/telegram-bot/tsconfig.lib.json",
+        "assets": ["libs/connectors/telegram-bot/*.md"]
+      }
+    }
+  }
 }

@@ -3,28 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/nest-core/src",
   "projectType": "library",
-  "targets": {
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/nest-core/**/*.ts"]
-      }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "libs/nest-core/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
-      }
-    }
-  },
-  "tags": []
+  "tags": [],
+  "// targets": "to see all targets run: nx show project nest-core --web",
+  "targets": {}
 }

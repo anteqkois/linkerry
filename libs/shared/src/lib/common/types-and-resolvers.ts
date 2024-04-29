@@ -59,7 +59,7 @@ export type DeepPartial<Thing> = Thing extends Function
 	? DeepPartialObject<Thing>
 	: Thing | undefined
 
-export interface DeepPartialArray<Thing> extends Array<DeepPartial<Thing>> {}
+export type DeepPartialArray<Thing> = Array<DeepPartial<Thing>>
 
 export type DeepPartialObject<Thing> = {
 	[Key in keyof Thing]?: DeepPartial<Thing[Key]>

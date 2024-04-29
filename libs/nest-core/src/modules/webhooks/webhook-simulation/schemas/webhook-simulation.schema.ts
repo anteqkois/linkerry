@@ -1,14 +1,13 @@
 import { WebhookSimulation } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel } from '../../../../lib/mongodb'
 
 export type WebhookSimulationDocument = mongoose.HydratedDocument<WebhookSimulationModel>
 
 @Schema({ timestamps: true, collection: 'webhook_simulations' })
 export class WebhookSimulationModel extends BaseDatabaseModel implements WebhookSimulation {
-	_id: string
-
 	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'flows' })
 	flowId: string
 
@@ -23,7 +22,7 @@ export const WebhookSimulationModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = WebhookSimulationSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

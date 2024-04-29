@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'core',
+  displayName: 'nest-core',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

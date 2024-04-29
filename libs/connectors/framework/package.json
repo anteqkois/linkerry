@@ -1,5 +1,8 @@
 {
-	"name": "@linkerry/connectors-framework",
-	"version": "0.0.1",
-	"type": "commonjs"
+  "name": "@linkerry/connectors-framework",
+  "version": "0.0.1",
+  "dependencies": {},
+  "type": "commonjs",
+  "main": "./index.cjs",
+  "private": true
 }

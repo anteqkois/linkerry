@@ -1,5 +1,5 @@
 'use client'
-import { AuthStatus, Cookies, IAuthLoginInput, IAuthLogoutResponse, IAuthSignUpInput, IAuthSignUpResponse, User } from '@linkerry/shared'
+import { AuthStatus, Cookies, IAuthLogoutResponse, LoginInput, SignUpInput, SignUpResponse, User } from '@linkerry/shared'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react'
 import { useCookie } from '../../shared/hooks/useCookie'
@@ -12,8 +12,8 @@ type ReturnType = {
 	setAuthStatus: Dispatch<SetStateAction<AuthStatus>>
 	user: User
 	setUser: Dispatch<SetStateAction<User>>
-	signUp: (data: IAuthSignUpInput) => Promise<IAuthSignUpResponse>
-	login: (data: IAuthLoginInput) => Promise<void>
+	signUp: (data: SignUpInput) => Promise<SignUpResponse>
+	login: (data: LoginInput) => Promise<void>
 	logout: () => Promise<IAuthLogoutResponse>
 	/* emial verification */
 	emialVerificationDialog: boolean
@@ -30,7 +30,7 @@ export function UserProvider({ children }: PropsWithChildren) {
 	const { push } = useRouter()
 	const { get } = useSearchParams()
 
-	const signUp = useCallback(async (data: IAuthSignUpInput) => {
+	const signUp = useCallback(async (data: SignUpInput) => {
 		const response = await AuthApi.signUp(data)
 
 		setUser(response.data.user)
@@ -38,7 +38,7 @@ export function UserProvider({ children }: PropsWithChildren) {
 		return response.data
 	}, [])
 
-	const login = useCallback(async (input: IAuthLoginInput) => {
+	const login = useCallback(async (input: LoginInput) => {
 		const { data } = await AuthApi.login({
 			email: input.email,
 			password: input.password,

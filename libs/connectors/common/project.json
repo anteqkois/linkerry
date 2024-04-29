@@ -1,27 +1,19 @@
 {
-	"name": "connectors-common",
-	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/connectors/common/src",
-	"projectType": "library",
-	"targets": {
-		"build": {
-			"executor": "@nx/esbuild:esbuild",
-			"outputs": ["{options.outputPath}"],
-			"options": {
-				"outputPath": "dist/libs/connectors/common",
-				"main": "libs/connectors/common/src/index.ts",
-				"tsConfig": "libs/connectors/common/tsconfig.lib.json",
-				"assets": ["libs/connectors/common/*.md"],
-				"generatePackageJson": true
-			}
-		},
-		"lint": {
-			"executor": "@nx/linter:eslint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": ["libs/connectors/common/**/*.ts"]
-			}
-		}
-	},
-	"tags": []
+  "name": "connectors-common",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/common/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/common",
+        "main": "libs/connectors/common/src/index.ts",
+        "tsConfig": "libs/connectors/common/tsconfig.lib.json",
+        "assets": ["libs/connectors/common/*.md"]
+      }
+    }
+  }
 }

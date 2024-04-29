@@ -1,19 +1,19 @@
 import { ConnectorMetadata, CustomAuthProperty } from '@linkerry/connectors-framework'
 import { AppConnectionType, AppConnectionWithoutSensitiveData, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import {
-	ButtonClient,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	Input,
-	useToast,
+  ButtonClient,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  useToast,
 } from '@linkerry/ui-components/client'
 import { Button } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'

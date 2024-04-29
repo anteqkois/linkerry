@@ -3,10 +3,10 @@ import { hasVariableToken, isNil } from '@linkerry/shared'
 import { FormControl, FormField, FormItem, FormMessage, Input } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
+import { PropertyDescription } from '../PropertyDescription'
 import { PropertyLabel } from '../PropertyLabel'
 import { useDynamicField } from '../useFieldCustomValidation'
 import { DynamicValueField } from './DynamicValueField'
-import { PropertyDescription } from '../PropertyDescription'
 
 interface NumberFieldProps {
 	property: NumberProperty

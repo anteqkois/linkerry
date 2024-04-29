@@ -1,6 +1,7 @@
 import { Flow, FlowRun, FlowRunStatus, PauseMetadata, Project, RunEnvironment, RunTerminationReason, StepOutput } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel, IdObjectOrPopulated } from '../../../../lib/mongodb'
 import { ProjectModel } from '../../../projects/schemas/projects.schema'
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema'
@@ -45,7 +46,6 @@ export class FlowRunModel<T> extends BaseDatabaseModel implements Omit<FlowRun, 
 	pauseMetadata?: PauseMetadata | undefined
 
 	// this field is 'virtual', it is added retriving file from other collection if neccesery
-	// @Prop({ required: false, type: Object })
 	steps: 'steps' extends T ? Record<string, StepOutput> : never
 
 	@Prop({ required: true, type: String, enum: RunEnvironment })
@@ -59,7 +59,7 @@ export const FlowRunModelFactory: AsyncModelFactory = {
 	imports: [],
 	useFactory: () => {
 		const schema = FlowRunSchema
-		schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
 		return schema
 	},
 	inject: [],

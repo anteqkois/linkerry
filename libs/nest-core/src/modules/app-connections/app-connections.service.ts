@@ -1,20 +1,20 @@
 import { PropertyType } from '@linkerry/connectors-framework'
 import {
-	AppConnectionDecrypted,
-	AppConnectionEncrypted,
-	AppConnectionStatus,
-	AppConnectionType,
-	AppConnectionValue,
-	AppConnectionWithoutSensitiveData,
-	CustomError,
-	EngineResponseStatus,
-	ErrorCode,
-	Id,
-	OAuth2GrantType,
-	QuotaError,
-	UpsertAppConnectionInput,
-	assertNotNullOrUndefined,
-	isNil,
+  AppConnectionDecrypted,
+  AppConnectionEncrypted,
+  AppConnectionStatus,
+  AppConnectionType,
+  AppConnectionValue,
+  AppConnectionWithoutSensitiveData,
+  CustomError,
+  EngineResponseStatus,
+  ErrorCode,
+  Id,
+  OAuth2GrantType,
+  QuotaError,
+  UpsertAppConnectionInput,
+  assertNotNullOrUndefined,
+  isNil,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -155,9 +155,9 @@ export class AppConnectionsService {
 		)?.toObject()
 	}
 
-	async delete(id: Id, projectId: Id) {
+	async delete(id: Id, projectId: Id){
 		// TODO check if any active flow use it
-		return await this.appConnectionsModel.deleteOne({
+		await this.appConnectionsModel.deleteOne({
 			_id: id,
 			projectId,
 		})
@@ -182,7 +182,7 @@ export class AppConnectionsService {
 
 	async upsert(projectId: Id, body: UpsertAppConnectionInput) {
 		const currentPlan = await this.subscriptionsService.getCurrentPlanOrThrow({ projectId })
-		const appConectionsAmount = await this.appConnectionsModel.count({ projectId })
+		const appConectionsAmount = await this.appConnectionsModel.countDocuments({ projectId })
 		if (appConectionsAmount >= currentPlan.config.connections) throw new QuotaError('connections')
 
 		const validatedConnectionValue = await this._validateConnectionValue({
@@ -275,11 +275,9 @@ export class AppConnectionsService {
 
 			// TODO fix TS
 			case AppConnectionType.CUSTOM_AUTH:
-			// @ts-ignore
+			// @ts-expect-error fix in future
 			// eslint-disable-next-line no-fallthrough
 			case AppConnectionType.BASIC_AUTH:
-			// @ts-ignore
-			// eslint-disable-next-line no-fallthrough
 			case AppConnectionType.SECRET_TEXT:
 				await this._engineValidateAuth({
 					connectorName: connection.connectorName,

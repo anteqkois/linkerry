@@ -1,17 +1,16 @@
-import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-	Action,
-	ConnectorsGetOptionsResponse,
-	DeepPartial,
-	FlowPopulated,
-	FlowRun,
-	FlowStatus,
-	Id,
-	RunActionResponse,
-	Trigger,
-	TriggerConnector,
-	TriggerEvent,
-	WEBSOCKET_NAMESPACE,
+    Action,
+    ConnectorsGetOptionsResponse,
+    DeepPartial,
+    FlowPopulated,
+    FlowRun,
+    FlowStatus,
+    Id,
+    RunActionResponse,
+    Trigger,
+    TriggerConnector,
+    TriggerEvent,
+    WEBSOCKET_NAMESPACE,
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
@@ -19,6 +18,7 @@ import { Socket } from 'socket.io-client'
 import { StoreApi } from 'zustand'
 import { CustomEdge, CustomEdgeId } from '../edges/types'
 import { CustomNode, CustomNodeId, EditorDrawer, EditorLimits } from '../types'
+import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 
 // type EditorNode = Node | CustomNode
 type EditorNode = CustomNode

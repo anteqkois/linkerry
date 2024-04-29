@@ -10,7 +10,7 @@ export const useDynamicField = ({ property }: { property: ConnectorProperty }) =
 		for (const validator of property.validators?.concat(...(property.defaultValidators ?? [])) ?? []) {
 			if (!validator.validatorName) continue
 			output[validator.validatorName] = (value) => {
-				// @ts-ignore
+				// @ts-expect-error fix in future
 				const validatorEntry = Validators[validator.validatorName]
 				if (typeof validatorEntry === 'function') return validatorEntry(...(validator.args ?? [])).fn(property, value, value)
 				return validatorEntry.fn(property, value, value)

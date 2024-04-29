@@ -11,7 +11,7 @@ export const changeSubscriptionBodySchema = z.object({
 	),
 	period: z.nativeEnum(SubscriptionPeriod),
 })
-export interface ChangeSubscriptionBody  extends z.infer<typeof changeSubscriptionBodySchema>{}
+export type ChangeSubscriptionBody = z.infer<typeof changeSubscriptionBodySchema>
 export interface ChangeSubscriptionResponse {
 	checkoutUrl: string
 }

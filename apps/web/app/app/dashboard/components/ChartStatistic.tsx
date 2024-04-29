@@ -4,18 +4,18 @@ import { FlowRunStatus, deepMerge, isNil } from '@linkerry/shared'
 import { Card, CardContent } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import {
-	CategoryScale,
-	ChartData,
-	Chart as ChartJS,
-	ChartOptions,
-	Filler,
-	Legend,
-	LineElement,
-	LinearScale,
-	Point,
-	PointElement,
-	Title,
-	Tooltip,
+  CategoryScale,
+  ChartData,
+  Chart as ChartJS,
+  ChartOptions,
+  Filler,
+  Legend,
+  LineElement,
+  LinearScale,
+  Point,
+  PointElement,
+  Title,
+  Tooltip,
 } from 'chart.js'
 import dayjs from 'dayjs'
 import { HTMLAttributes, useEffect, useState } from 'react'
@@ -33,7 +33,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 // const labels = [...Array.from({ length: 6 }, (_, i) => dayjs().subtract(i, 'day').format('dddd')).reverse(), 'Today']
 const labelDays = [...Array.from({ length: 7 }, (_, i) => dayjs().subtract(i, 'day'))]
 
-export interface ChartStatisticProps extends HTMLAttributes<HTMLElement> {}
+export type ChartStatisticProps = HTMLAttributes<HTMLElement>
 
 export const ChartStatistic = ({ ...props }: ChartStatisticProps) => {
 	const { weekStart } = useDayjs()

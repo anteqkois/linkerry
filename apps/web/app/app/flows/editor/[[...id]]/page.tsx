@@ -1,17 +1,17 @@
 'use client'
 
-import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-	ActionType,
-	CustomError,
-	ErrorCode,
-	FlowVersion,
-	TriggerType,
-	assertNotNullOrUndefined,
-	isCustomHttpExceptionAxios,
-	isQuotaErrorCode,
+    ActionType,
+    CustomError,
+    ErrorCode,
+    FlowVersion,
+    TriggerType,
+    assertNotNullOrUndefined,
+    isCustomHttpExceptionAxios,
+    isQuotaErrorCode,
 } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { Edge } from 'reactflow'
@@ -20,11 +20,11 @@ import { useSubscriptions } from '../../../../../modules/billing/subscriptions/u
 import { useReachLimitDialog } from '../../../../../modules/billing/useReachLimitDialog'
 import { CustomNode, Editor, useEditor } from '../../../../../modules/editor'
 import {
-	actionNodeFactory,
-	nodeConfigs,
-	selectTriggerNodeFactory,
-	testFlowNodeFactory,
-	triggerNodeFactory,
+    actionNodeFactory,
+    nodeConfigs,
+    selectTriggerNodeFactory,
+    testFlowNodeFactory,
+    triggerNodeFactory,
 } from '../../../../../modules/editor/common/nodeFactory'
 import { defaultEdgeFactory } from '../../../../../modules/editor/edges/edgesFactory'
 import { connectorsMetadataQueryConfig } from '../../../../../modules/flows/connectors/api/query-configs'

@@ -1,8 +1,14 @@
 {
-	"name": "@linkerry/react-email",
-	"version": "0.0.1",
-	"type": "commonjs",
-	"scripts": {
-		"dev": "DEV_EMAIL=true email dev"
-	}
+  "name": "@linkerry/react-email",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "DEV_EMAIL=true email dev"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "type": "commonjs",
+  "main": "./index.ts",
+  "typings": "./index.d.ts",
+  "private": true
 }

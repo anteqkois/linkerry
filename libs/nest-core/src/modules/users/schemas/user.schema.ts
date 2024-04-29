@@ -1,6 +1,7 @@
 import { Language, UserMetadata, UserRole, UserWithPassword } from '@linkerry/shared'
 import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import mongoose from 'mongoose'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { BaseDatabaseModel } from '../../../lib/mongodb'
 import { UserSettingsModel } from '../../user-settings/schemas/user-settings.schema'
 
@@ -15,8 +16,6 @@ export const UserMetadataSchema = SchemaFactory.createForClass(UserMetadataModel
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'users' })
 export class UserModel extends BaseDatabaseModel implements UserWithPassword {
-  _id: string
-
   @Prop({ required: true, type: String, unique: true, index: true })
   name!: string
 
@@ -80,7 +79,7 @@ export const userModelFactory: AsyncModelFactory = {
   imports: [],
   useFactory: () => {
     const schema = UserSchema
-    schema.plugin(require('mongoose-unique-validator'), { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+    schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
     return schema
   },
   inject: [],

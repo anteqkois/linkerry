@@ -2,12 +2,12 @@
 
 import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@linkerry/ui-components/client'
 import { Badge, Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
