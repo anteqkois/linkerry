@@ -23,8 +23,8 @@ jobs:
             node_modules
             ~/.cache/Cypress # needed for the Cypress binary
           key: npm-dependencies-${{ hashFiles('package.json') }}
+      - run: pnpm install
       - run: npx nx@18.3.4 affected -t docker-compose
-      - run: pnpm install -D
       - name: Cache npm dependencies
         uses: actions/cache/save@v3
         with:
