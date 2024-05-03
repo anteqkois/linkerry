@@ -5,6 +5,10 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "docker-compose": {
+      "command": " echo \"api-gateway\" was changed"
+      // "command": "docker compose -f ./apps/api-gateway/docker-compose.local.yml up -d"
+    },
     "build-with-engine": {
       "command": "webpack-cli build",
       "inputs": [
