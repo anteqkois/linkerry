@@ -13,13 +13,25 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      # Setup pnpm
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - run: pnpm install -D
-      - run: pnpm install -D
+      - name: Restore cached npm dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            node_modules
+            ~/.cache/Cypress # needed for the Cypress binary
+          key: npm-dependencies-${{ hashFiles('package.json') }}
       - run: npx nx@18.3.4 affected -t docker-compose
+      - run: pnpm install -D
+      - name: Cache npm dependencies
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            node_modules
+            ~/.cache/Cypress # needed for the Cypress binary
+          key: npm-dependencies-${{ hashFiles('package.json') }}
 
       # - run: npm i -D
       # - run: npx nx@18.3.4 affected -t docker-compose
