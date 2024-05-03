@@ -1,8 +1,5 @@
 # build base docker image 
-`docker build . -t linkerry-base:base`
+`docker build . -t linkerry-base:latest`
 
-# build server codebase
-`npx nx run-many --target=build --projects=api-gateway --configuration production`
-
-# build docker-compose for server
-RUN npx nx run-many --target=build --projects=api-gateway --configuration production
+# build and run server docker compose
+`docker compose -f ./apps/api-gateway/docker-compose.local.yml up -d`

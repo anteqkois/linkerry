@@ -3,6 +3,10 @@
 .vscode
 dist
 docs
+# omit almost all connectors
+libs/connectors/*
+!libs/connectors/common/
+!libs/connectors/framework/
 node_modules
 tmp
 tools
@@ -10,18 +14,17 @@ tools
 .dockerignore
 .env
 .eslintignore
-.eslintrc.json
 .gitignore
 .prettierignore
-.prettierrc
 components.json
 Dockerfile
 env.d.ts
-jest.config.ts
-jest.preset.ts
 Makefile
 README.md
 TODO.md
+
+apps/api-gateway-e2e
+apps/web-e2e
 
 .git
 *.log

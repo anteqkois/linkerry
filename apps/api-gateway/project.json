@@ -5,6 +5,20 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "build-with-engine": {
+      "command": "webpack-cli build",
+      "inputs": [
+        "production",
+        "^production",
+        { "externalDependencies": ["webpack-cli"] }
+      ],
+      "outputs": ["{workspaceRoot}/dist/apps/api-gateway"],
+      "dependsOn": ["^build", "engine:build"],
+      "options": {
+        "cwd": "apps/api-gateway",
+        "args": ["--node-env=production"]
+      }
+    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
