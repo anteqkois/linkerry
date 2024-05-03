@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  master:
+  Build and deploy:
     runs-on: ubuntu-latest
     name: Check affected apps
     # secrets:
