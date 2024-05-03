@@ -19,8 +19,8 @@ jobs:
       #     version: 8
       # - run: pnpm install
 
-      - run: npm install @nx/cypress @nx/esbuild @nx/eslint-plugin @nx/eslint @nx/jest @nx/js @nx/nest @nx/next @nx/node @nx/react @nx/web @nx/webpack @nx/workspace
-      - run: npx nx affected -t docker-compose
+      - run: npm i -D
+      - run: npx nx@18.3.4 affected -t docker-compose
 
       # - run: npm add --global nx@latest
       # - run: npm ls --depth=0 --parseable=true | grep '/@nx/' | awk -F'/' '{printf "%s/%s\n", $(NF-1), $NF}' | xargs npm install
