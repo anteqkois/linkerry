@@ -32,19 +32,3 @@ jobs:
             ~/.cache/Cypress # needed for the Cypress binary
           key: npm-dependencies-${{ hashFiles('package.json') }}
       - run: npx nx@18.3.4 affected -t docker-compose --base=origin/master~1 --head=origin/master
-
-      # - run: npm i -D
-      # - run: npx nx@18.3.4 affected -t docker-compose
-
-      # - run: npm add --global nx@latest
-      # - run: npm ls --depth=0 --parseable=true | grep '/@nx/' | awk -F'/' '{printf "%s/%s\n", $(NF-1), $NF}' | xargs npm install
-      # - run: npx nx@latest affected -t docker-compose
-      # - run: npx nx affected -t docker-compose
-
-      # - run: npm add --global nx@latest
-      # - run: nx affected -t docker-compose
-
-      # - uses: mansagroup/nrwl-nx-action@v3
-      #   with:
-      #     targets: docker-compose
-      #     affected: 'true'
