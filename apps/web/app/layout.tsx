@@ -78,7 +78,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 					<LiveChatProvider>
-          siema
 						{children}
 						{/* <Analytics /> */}
 						{/* <Toaster duration={5_000} viewportClassName='sm:top-0 sm:left-1/2 -translate-x-1/2'/> */}
