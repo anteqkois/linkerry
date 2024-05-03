@@ -7,10 +7,11 @@ on:
 
 jobs:
   master:
+    runs-on: ubuntu-latest
     name: Check affected apps
     # secrets:
     #   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-    uses: mansagroup/nrwl-nx-action@v3
-    with:
+    - uses: mansagroup/nrwl-nx-action@v3
+    - with:
       targets: docker-compose
       affected: 'true'
