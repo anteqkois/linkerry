@@ -18,7 +18,13 @@ jobs:
       #   with:
       #     version: 8
       # - run: pnpm install
-      - run: npx nx affected -t docker-compose
+
+      - run: npx nx@latest affected -t docker-compose
+      # - run: npx nx affected -t docker-compose
+      # - run: npm install @nx
+      # - run: npx nx affected -t docker-compose
+      # - run: npx nx affected -t docker-compose
+
       # - uses: mansagroup/nrwl-nx-action@v3
       #   with:
       #     targets: docker-compose
