@@ -13,14 +13,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      # Setup pnpm
-      # - uses: pnpm/action-setup@v2
-      #   with:
-      #     version: 8
-      # - run: pnpm install
-
-      - run: npm i -D
+      Setup pnpm
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - run: pnpm install -D
+      - run: pnpm install -D
       - run: npx nx@18.3.4 affected -t docker-compose
+
+      # - run: npm i -D
+      # - run: npx nx@18.3.4 affected -t docker-compose
 
       # - run: npm add --global nx@latest
       # - run: npm ls --depth=0 --parseable=true | grep '/@nx/' | awk -F'/' '{printf "%s/%s\n", $(NF-1), $NF}' | xargs npm install
