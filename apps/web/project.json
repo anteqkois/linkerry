@@ -7,7 +7,9 @@
   "// targets": "to see all targets run: nx show project web --web",
   "targets": {
     "docker-compose": {
-      "command": " echo \"web\" was changed"
+      "command": "bash ./apps/web/build_and_deploy.sh"
+      // "command": "docker build -t linkerry/test -f ./apps/web/Dockerfile-test ."
+      // "command": " echo \"web\" was changed"
       // "command": "docker compose -f ./apps/web/docker-compose.local.yml up -d"
     }
   }
