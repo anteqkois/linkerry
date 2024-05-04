@@ -1,30 +1,17 @@
 version: '3.8'
-
 services:
   web:
-    container_name: web
-    build:
-      context: ./
-      cache_from:
-        - linkerry-base:latest
-      dockerfile: ./Dockerfile
-      args:
-        NODE_ENV: 'production'
-        BUILD_FLAG: ''
-    image: web:latest
-    env_file:
-      - ../../.env
+    image: registry.digitalocean.com/linkerry/web:dev
     ports:
-      - 3000:3000
+      - ${VIRTUAL_PORT}:${VIRTUAL_PORT}
+    env_file:
+      - .env
     environment:
-      NODE_ENV: 'production'
-    networks:
-      - proxy
-    restart: on-failure
-
-volumes:
-  redis:
-    driver: local
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=anteqkois@gmail.com
+      - VIRTUAL_PORT=${VIRTUAL_PORT}
+    restart: unless-stopped
 
 networks:
   default:

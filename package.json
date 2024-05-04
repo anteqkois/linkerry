@@ -19,7 +19,7 @@
     "registry": "sleep 3 && make publish-connectors & npx nx local-registry",
     "ngrok": "ngrok http --domain=fairly-winning-chamois.ngrok-free.app 3001",
     "stripe": "stripe listen --forward-to localhost:3001/api/v1/stripe/webhook",
-    "docker-base": "docker build . -t linkerry-base:latest",
+    "docker-base": "docker build . -t linkerry/base:latest --platform=linux/amd64",
     "docker-api": "docker compose -f ./apps/api-gateway/docker-compose.local.yml up -d",
     "docker-web": "docker compose -f ./apps/web/docker-compose.local.yml up -d"
   },

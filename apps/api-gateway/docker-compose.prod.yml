@@ -2,29 +2,22 @@ version: '3.8'
 
 services:
   api-gateway:
-    container_name: api-gateway
-    build:
-      context: ./
-      cache_from:
-        - linkerry-base:latest
-      dockerfile: ./Dockerfile
-      args:
-        NODE_ENV: 'production'
-        BUILD_FLAG: ''
-    image: api-gateway:latest
-    env_file:
-      - ../../.env
+    image: registry.digitalocean.com/linkerry/api:dev
     ports:
-      - 3001:3001
+      - ${VIRTUAL_PORT}:${VIRTUAL_PORT}
+    env_file:
+      - .env
     environment:
-      NODE_ENV: 'production'
-      PORT: 3001
-    restart: on-failure
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=anteqkois@gmail.com
+      - VIRTUAL_PORT=${VIRTUAL_PORT}
+    restart: unless-stopped
   redis:
     image: redis:alpine
     container_name: redis
     env_file:
-      - ../../.env
+      - .env
     command: redis-server --appendonly yes --replica-read-only no --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
     restart: always
     ports:

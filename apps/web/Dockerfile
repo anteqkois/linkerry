@@ -1,11 +1,14 @@
-FROM linkerry-base:latest AS builder
+FROM linkerry/base:latest AS builder
 
 ARG NODE_ENV
 ARG BUILD_FLAG
 
 WORKDIR /app/builder
 
-RUN npx nx run web:build ${BUILD_FLAG} || echo "nx run web:build failed"
+# RUN ls apps/web/.next -a
+RUN npx nx run web:build -d || echo "nx run web:build failed"
+# RUN ls apps/web/.next -a
+# RUN ls apps/web/.next/standalone
 
 FROM node:lts-alpine AS runner
 

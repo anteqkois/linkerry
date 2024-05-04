@@ -3,8 +3,6 @@ declare global {
     interface ProcessEnv {
       // common
       PORT_API_GATEWAY: string,
-      PORT_EXTERNAL_ALERTS: string,
-      PORT_CONDITION_EVENT_CONSUMER: string,
 
       KAFKA_CONDITION_GROUP_ID: string,
       KAFKA_CONDITION_TOPIC_NAME: string,

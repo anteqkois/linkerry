@@ -6,8 +6,7 @@
   "tags": [],
   "targets": {
     "docker-compose": {
-      "command": " echo \"api-gateway\" was changed"
-      // "command": "docker compose -f ./apps/api-gateway/docker-compose.local.yml up -d"
+      "command": "bash ./apps/api-gateway/deploy-docker.sh"
     },
     "build-with-engine": {
       "command": "webpack-cli build",

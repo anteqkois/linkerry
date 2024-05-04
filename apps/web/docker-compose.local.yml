@@ -6,7 +6,7 @@ services:
     build:
       context: ./
       cache_from:
-        - linkerry-base:latest
+        - linkerry/base:latest
       dockerfile: ./Dockerfile
       args:
         NODE_ENV: 'production'
