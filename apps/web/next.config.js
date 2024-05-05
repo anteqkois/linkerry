@@ -34,6 +34,9 @@ const nextConfig = {
     ],
   },
   output: "standalone",
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 };
 
 const plugins = [

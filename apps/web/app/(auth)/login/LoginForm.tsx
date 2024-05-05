@@ -7,7 +7,6 @@ import * as z from 'zod'
 
 import { ButtonClient, Input, Label } from '@linkerry/ui-components/client'
 import { cn } from '@linkerry/ui-components/utils'
-import { useSearchParams } from 'next/navigation'
 import { useUser } from '../../../modules/user/useUser'
 import { retriveServerHttpException } from '../../../shared/utils'
 import { userAuthSchema } from '../validations'
@@ -28,7 +27,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
 	})
 	const [isLoading, setIsLoading] = React.useState<boolean>(false)
 	// const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
-	const searchParams = useSearchParams()
 
 	async function onSubmit(data: FormData) {
 		setIsLoading(true)
