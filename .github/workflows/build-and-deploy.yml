@@ -1,0 +1,54 @@
+name: deploy-changed-apps
+
+on:
+  workflow_dispatch
+# on:
+#   push:
+#     branches:
+#       - master
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Check affected apps
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Restore cached npm dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            node_modules
+            ~/.cache/Cypress # needed for the Cypress binary
+          key: npm-dependencies-${{ hashFiles('package.json') }}
+      - name: Install dependencies
+        run: pnpm install
+        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Cache npm dependencies
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            node_modules
+            ~/.cache/Cypress # needed for the Cypress binary
+          key: npm-dependencies-${{ hashFiles('package.json') }}
+      - name: Build base image
+        run: npm run docker-base
+      - name: Tag image
+        run:
+          docker tag sample/my-page \
+          registry.digitalocean.com/my-sample-registry/my-sample-page:${{github.event.inputs.version }}
+      # Install doctl.
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DO Container Registry
+        run: doctl registry login --expiry-seconds 600
+      - run: npx nx@18.3.4 affected -t docker-compose --base=origin/master~1 --head=origin/master
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}

@@ -101,7 +101,7 @@
     "mongoose": "^8.3.2",
     "mongoose-unique-validator": "^5.0.0",
     "nanoid": "^3.3.6",
-    "next": "14.0.4",
+    "next": "14.2.3",
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.13",
     "object-sizeof": "^2.6.4",
@@ -196,6 +196,11 @@
     "typescript": "~5.4.2",
     "verdaccio": "^5.0.4",
     "webpack-cli": "^5.1.4"
+  },
+  "optionalDependencies": {
+    "@nx/nx-darwin-arm64": "18.3.4",
+    "@nx/nx-darwin-x64": "18.3.4",
+    "@nx/nx-linux-x64-gnu": "18.3.4"
   },
   "config": {
     "commitizen": {
