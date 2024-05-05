@@ -1,4 +1,5 @@
-FROM linkerry/base:latest AS builder
+# FROM linkerry/base:latest AS builder
+FROM registry.digitalocean.com/linkerry/base:latest AS builder
 
 ARG NODE_ENV
 ARG BUILD_FLAG
