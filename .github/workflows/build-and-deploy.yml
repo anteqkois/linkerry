@@ -38,8 +38,7 @@ jobs:
         run: npm run docker-base
       - name: Tag base image
         run:
-          docker tag linkerry/base \
-          registry.digitalocean.com/linkerry/base:latest
+          docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
       # Install doctl.
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -53,8 +52,7 @@ jobs:
         run: docker build -t linkerry/web -f ./apps/web/Dockerfile . --platform=linux/amd64
       - name: Tag web image
         run:
-          docker tag linkerry/web \
-          registry.digitalocean.com/linkerry/web:latest
+          docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/web:latest
       # - run: npx nx@18.3.4 affected -t docker-compose --base=origin/master~1 --head=origin/master
