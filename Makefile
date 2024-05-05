@@ -12,3 +12,6 @@ delete-flow:
 
 publish-connectors:
 	npx ts-node -T tools/scripts/package-manager/publish-connector-to-local-registry.ts
+
+ssh:
+	ssh root@64.226.97.74

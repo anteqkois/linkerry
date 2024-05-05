@@ -13,8 +13,11 @@ FROM node:lts-alpine AS runner
 
 WORKDIR /app
 
+# COPY --from=builder /app/builder/apps/web/.next/standalone ./
+# COPY --from=builder /app/builder/apps/web/.next/static ./apps/web/.next/static
+
 COPY --from=builder /app/builder/apps/web/.next/standalone ./
-COPY --from=builder /app/builder/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/builder/apps/web/.next/static ./.next/static
 
 ENV PORT 3000
 ENV NODE_ENV=$NODE_ENV
