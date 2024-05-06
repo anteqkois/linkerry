@@ -7,14 +7,10 @@ ARG BUILD_FLAG
 WORKDIR /app/builder
 
 RUN npx nx run web:build || echo "nx run web:build failed"
-RUN ls apps/web/.next
 
 FROM node:lts-alpine AS runner
 
 WORKDIR /app
-
-# COPY --from=builder /app/builder/apps/web/.next/standalone ./
-# COPY --from=builder /app/builder/apps/web/.next/static ./apps/web/.next/static
 
 COPY --from=builder /app/builder/apps/web/.next/standalone ./
 COPY --from=builder /app/builder/apps/web/.next/static ./.next/static

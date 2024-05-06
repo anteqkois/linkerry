@@ -9,3 +9,6 @@ engine and connector-framework must use bundler
 - all model schema also should be in @core lib
 - only unsherable service should be in apps
 - all models, entities names are pluar (-s) 
+
+
+DEPLOY NA API NA SERVER

@@ -2,10 +2,7 @@ name: deploy-changed-apps
 
 on:
   workflow_dispatch
-# on:
-#   push:
-#     branches:
-#       - master
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -34,24 +31,23 @@ jobs:
             node_modules
             ~/.cache/Cypress # needed for the Cypress binary
           key: npm-dependencies-${{ hashFiles('package.json') }}
-      # - name: Build base image
-      #   run: npm run docker-base
-      # - name: Tag base image
-      #   run:
-      #     docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
+      - name: Build base image
+        run: npm run docker-base
+      - name: Tag base image
+        run:
+          docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to DO Container Registry
         run: doctl registry login --expiry-seconds 600
-      # - name: Push image to DO Container Registry
-      #   run: docker push registry.digitalocean.com/linkerry/base:latest
+      - name: Push image to DO Container Registry
+        run: docker push registry.digitalocean.com/linkerry/base:latest
       - name: Build image for web
-        run: docker build -t linkerry/web -f ./apps/web/Dockerfile . --platform=linux/amd64
+        run: docker build -t linkerry/api-gateway -f ./apps/api-gateway/Dockerfile . --platform=linux/amd64
       - name: Tag web image
         run:
-          docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
+          docker tag linkerry/api-gateway registry.digitalocean.com/linkerry/api-gateway:latest
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/linkerry/web:latest
-      # - run: npx nx@18.3.4 affected -t docker-compose --base=origin/master~1 --head=origin/master
+        run: docker push registry.digitalocean.com/linkerry/api-gateway:latest
