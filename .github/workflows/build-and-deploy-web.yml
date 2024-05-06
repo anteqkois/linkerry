@@ -1,4 +1,4 @@
-name: deploy-changed-apps
+name: build-and-deploy-web
 
 on:
   workflow_dispatch

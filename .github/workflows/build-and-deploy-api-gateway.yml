@@ -1,4 +1,4 @@
-name: deploy-changed-apps
+name: build-and-deploy-api-gateway
 
 on:
   workflow_dispatch
