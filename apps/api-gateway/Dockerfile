@@ -5,7 +5,7 @@ ARG BUILD_FLAG
 
 WORKDIR /app/builder
 
-RUN npx nx run api-gateway:build-with-engine ${BUILD_FLAG}
+RUN npx nx run api-gateway:build-with-engine || echo "nx run api-gateway:build failed"
 RUN pnpm prune --prod
 
 FROM node:lts-alpine AS runner

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api-gateway:
-    image: registry.digitalocean.com/linkerry/api:dev
+    image: registry.digitalocean.com/linkerry/api-gateway:latest
     ports:
       - ${VIRTUAL_PORT}:${VIRTUAL_PORT}
     env_file:
@@ -29,7 +29,7 @@ volumes:
   redis:
     driver: local
 
-networks:
-  default:
-    external:
-      name: ${NETWORK:-proxy}
+# networks:
+#   default:
+#     external:
+#       name: ${NETWORK:-proxy}
