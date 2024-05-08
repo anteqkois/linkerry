@@ -8,7 +8,7 @@ WORKDIR /app/builder
 RUN npx nx run api-gateway:build-with-engine || echo "nx run api-gateway:build failed"
 RUN pnpm prune --prod
 
-FROM node:lts-alpine AS runner
+FROM node:lts-alpine
 
 WORKDIR /app
 # optymalize adding node modules, check if it possible to bundle dependencies to output by webpack

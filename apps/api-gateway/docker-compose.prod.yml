@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api-gateway:
     image: registry.digitalocean.com/linkerry/api-gateway:latest
@@ -18,10 +16,11 @@ services:
     container_name: redis
     env_file:
       - .env
-    command: redis-server --appendonly yes --replica-read-only no --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    command: redis-server --appendonly yes --replica-read-only no --bind redis --port 6379 --requirepass ${REDIS_PASSWORD}
     restart: always
     ports:
-      - 4004:6379
+      # for no reason this don't work if i change port
+      - 6379:6379
     volumes:
       - redis:/data
 
@@ -29,7 +28,7 @@ volumes:
   redis:
     driver: local
 
-# networks:
-#   default:
-#     external:
-#       name: ${NETWORK:-proxy}
+networks:
+  default:
+    external:
+      name: ${NETWORK:-proxy}
