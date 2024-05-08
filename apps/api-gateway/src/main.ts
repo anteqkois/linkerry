@@ -26,12 +26,18 @@ async function bootstrap() {
 	)
 
 	const configService = app.get(ConfigService)
-	const frontendUrl = configService.get('FRONTEND_HOST')
+	// const frontendUrl = configService.get('FRONTEND_HOST')
+
+	// app.enableCors({
+	// 	origin: [frontendUrl],
+	// 	methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+	// 	credentials: true,
+	// })
 
 	app.enableCors({
-		origin: [frontendUrl],
+		origin: '*',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-		credentials: true,
+		// credentials: true,
 	})
 
 	await app.register(fastifyMultipart, {
