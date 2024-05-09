@@ -1,5 +1,5 @@
 import { ConnectorProperty, JsonProperty } from '@linkerry/connectors-framework'
-import { hasVariableToken, isNil } from '@linkerry/shared'
+import { hasVariableToken, isEmpty } from '@linkerry/shared'
 import { FormControl, FormField, FormItem, FormMessage } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -26,7 +26,7 @@ export const JsonField = ({ property, name, refreshedProperties }: JsonFieldProp
 		trigger(name)
 
 		const value = getValues(name)
-		if (isNil(value)) return
+		if (isEmpty(value)) return
 		else if (hasVariableToken(value)) {
 			setUseDynamicValue(true)
 		}

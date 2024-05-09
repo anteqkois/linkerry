@@ -24,6 +24,7 @@ export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
 		if (flowOperationRunning) return { invalid: true, message: 'Operation runs...' }
 		else if (!flow.version.valid) return { invalid: true, message: 'Complete Flow' }
 		else if (testingFlowVersion) return { invalid: true, message: 'Testing...' }
+		else if (flow.version.stepsCount < 2) return { invalid: true, message: 'Min. 2 steps' }
 
 		return { invalid: false }
 	}, [flow.version.valid, testingFlowVersion, flowOperationRunning])

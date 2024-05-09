@@ -9,7 +9,7 @@ export const nodeConfigs = {
 		y: 50,
 	},
 	BaseNode: {
-		width: 300,
+		width: 320,
 		height: 100,
 	},
 	TestFlowNode: {

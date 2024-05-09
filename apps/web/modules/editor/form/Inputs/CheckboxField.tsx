@@ -1,5 +1,5 @@
 import { CheckboxProperty, ConnectorProperty } from '@linkerry/connectors-framework'
-import { hasVariableToken, isNil } from '@linkerry/shared'
+import { hasVariableToken, isEmpty } from '@linkerry/shared'
 import { Checkbox, FormControl, FormField, FormItem } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -24,7 +24,7 @@ export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxF
 		trigger(name)
 
 		const value = getValues(name)
-		if (isNil(value) || typeof value === 'boolean') return
+		if (isEmpty(value) || typeof value === 'boolean') return
 		else if (hasVariableToken(value)) {
 			setUseDynamicValue(true)
 		}
