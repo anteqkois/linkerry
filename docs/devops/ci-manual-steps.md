@@ -44,3 +44,5 @@ networks:
 
 start docker compose
 `docker compose -f ./docker-compose.yml up -d`
+
+Update docker compose images: https://stackoverflow.com/questions/49316462/how-to-update-existing-images-with-docker-compose

@@ -3,6 +3,8 @@ FROM registry.digitalocean.com/linkerry/base:latest AS builder
 
 ARG NODE_ENV
 ARG BUILD_FLAG
+ENV NEXT_TELEMETRY_DISABLED=true
+ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
 
 WORKDIR /app/builder
 
