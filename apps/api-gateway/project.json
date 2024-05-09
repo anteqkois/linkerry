@@ -25,6 +25,7 @@
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
+      "dependsOn": ["^build", "engine:build"],
       "options": {
         "buildTarget": "api-gateway:build"
       },
