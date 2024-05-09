@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/binance",
         "main": "libs/connectors/binance/src/index.ts",
         "tsConfig": "libs/connectors/binance/tsconfig.lib.json",
-        "assets": ["libs/connectors/binance/*.md"]
+        "assets": ["libs/connectors/binance/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

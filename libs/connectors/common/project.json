@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/common",
         "main": "libs/connectors/common/src/index.ts",
         "tsConfig": "libs/connectors/common/tsconfig.lib.json",
-        "assets": ["libs/connectors/common/*.md"]
+        "assets": ["libs/connectors/common/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

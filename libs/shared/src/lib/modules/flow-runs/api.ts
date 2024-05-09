@@ -11,4 +11,4 @@ export const flowRunsGetManyQuerySchema = z.object({
 	flowId: idSchema.optional(),
 	fromDate: stringDateSchema.optional(),
 })
-export interface FlowRunsGetManyQuery extends z.infer<typeof flowRunsGetManyQuerySchema> {}
+export type FlowRunsGetManyQuery = z.infer<typeof flowRunsGetManyQuerySchema>

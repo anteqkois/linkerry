@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/discord",
         "main": "libs/connectors/discord/src/index.ts",
         "tsConfig": "libs/connectors/discord/tsconfig.lib.json",
-        "assets": ["libs/connectors/discord/*.md"]
+        "assets": ["libs/connectors/discord/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

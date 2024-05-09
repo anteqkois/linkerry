@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/telegram-bot",
         "main": "libs/connectors/telegram-bot/src/index.ts",
         "tsConfig": "libs/connectors/telegram-bot/tsconfig.lib.json",
-        "assets": ["libs/connectors/telegram-bot/*.md"]
+        "assets": ["libs/connectors/telegram-bot/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

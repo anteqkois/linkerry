@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/schedule",
         "main": "libs/connectors/schedule/src/index.ts",
         "tsConfig": "libs/connectors/schedule/tsconfig.lib.json",
-        "assets": ["libs/connectors/schedule/*.md"]
+        "assets": ["libs/connectors/schedule/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

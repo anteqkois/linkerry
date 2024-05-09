@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/coingecko",
         "main": "libs/connectors/coingecko/src/index.ts",
         "tsConfig": "libs/connectors/coingecko/tsconfig.lib.json",
-        "assets": ["libs/connectors/coingecko/*.md"]
+        "assets": ["libs/connectors/coingecko/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

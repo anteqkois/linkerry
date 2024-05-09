@@ -1,20 +1,20 @@
 import {
-	CustomError,
-	ErrorCode,
-	ExecutioOutputFile,
-	ExecutionState,
-	ExecutionType,
-	FlowRetryStrategy,
-	FlowRun,
-	FlowRunStatus,
-	FlowRunsGetManyQuery,
-	Id,
-	PauseType,
-	RunEnvironment,
-	RunTerminationReason,
-	assertNotNullOrUndefined,
-	isNil,
-	spreadIfDefined,
+  CustomError,
+  ErrorCode,
+  ExecutioOutputFile,
+  ExecutionState,
+  ExecutionType,
+  FlowRetryStrategy,
+  FlowRun,
+  FlowRunStatus,
+  FlowRunsGetManyQuery,
+  Id,
+  PauseType,
+  RunEnvironment,
+  RunTerminationReason,
+  assertNotNullOrUndefined,
+  isNil,
+  spreadIfDefined,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -193,7 +193,7 @@ export class FlowRunsService {
 				$gte: query.fromDate,
 			}
 
-		return this.flowRunModel.find(filter)
+		return this.flowRunModel.find(filter).populate('flow')
 	}
 
 	async getFlowRunOrCreate(params: GetOrCreateParams): Promise<FlowRunDocument> {

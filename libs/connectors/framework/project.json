@@ -6,15 +6,15 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/connectors/framework",
         "main": "libs/connectors/framework/src/index.ts",
         "tsConfig": "libs/connectors/framework/tsconfig.lib.json",
         "assets": ["libs/connectors/framework/*.md"],
-        "generatePackageJson": true,
-        "format": ["cjs"]
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }
