@@ -57,7 +57,7 @@ export class WebhookSimulationService {
 	async _preCreateSideEffect({ projectId, flowId }: PreCreateParams): Promise<void> {
 		const flowVersion = await this.flowVersionModel.findOne(
 			{
-				flow: flowId,
+				flowId: flowId,
 				// _id: flowVersionId,
 				projectId,
 			},
@@ -88,7 +88,7 @@ export class WebhookSimulationService {
 		const flowVersion = await this.flowVersionModel.findOne(
 			{
 				// _id: flowVersionId,
-				flow: flowId,
+				flowId: flowId,
 				projectId,
 			},
 			{},

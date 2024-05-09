@@ -122,7 +122,7 @@ export class FlowsService {
         let flowVersion = await this.flowVersionService.findOne({
           filter: {
             _id: operation.flowVersionId,
-            flow: id,
+            flowId: id,
           },
         })
         assertNotNullOrUndefined(flowVersion, 'flowVersion')

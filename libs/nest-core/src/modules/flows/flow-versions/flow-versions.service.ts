@@ -338,7 +338,7 @@ export class FlowVersionsService {
     switch (userOperation.type) {
       // case FlowOperationType.USE_AS_DRAFT: {
       // 		const previousVersion = await flowVersionService.getFlowVersionOrThrow({
-      // 				flow: flowVersion.flowId,
+      // 				flowId: flowVersion.flowId,
       // 				version: userOperation.request.versionId,
       // 				removeSecrets: false,
       // 		})
@@ -368,7 +368,7 @@ export class FlowVersionsService {
 
       // case FlowOperationType.DUPLICATE_ACTION: {
       // 		mutatedFlowVersion = await this.getFlowVersionOrThrow({
-      // 				flow: flowVersion.flowId,
+      // 				flowId: flowVersion.flowId,
       // 				version: flowVersion.id,
       // 		})
 

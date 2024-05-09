@@ -76,7 +76,7 @@ export class WebhooksService {
 		if (simulate) {
 			flowVersion = await this.flowVersionModel.findOne(
 				{
-					flow: flow._id,
+					flowId: flow._id,
 				},
 				{},
 				{
@@ -104,7 +104,7 @@ export class WebhooksService {
 			flowVersion,
 			payload,
 		})
-		
+
 		if (response !== null) {
 			this.logger.debug(`#handshake condition met, handshake executed, response`, {
 				response,

@@ -33,7 +33,7 @@ export class FlowHooks {
 		const publishedFlowVersion = await this.flowVersionService.findOne({
 			filter: {
 				_id: flowToUpdate.publishedVersionId,
-				flow: flowToUpdate._id,
+				flowId: flowToUpdate._id,
 			},
 		})
 		assertNotNullOrUndefined(publishedFlowVersion, 'publishedFlowVersion')
@@ -118,7 +118,7 @@ export class FlowHooks {
 		const publishedFlowVersion = await this.flowVersionService.findOne({
 			filter: {
 				_id: flowToDelete.publishedVersionId,
-				flow: flowToDelete._id,
+				flowId: flowToDelete._id,
 			},
 		})
 

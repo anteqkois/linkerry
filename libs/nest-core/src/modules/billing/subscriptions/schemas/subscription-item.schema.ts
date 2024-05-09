@@ -6,7 +6,15 @@ import { ProductDocument, ProductModel } from '../../products/product.schema'
 
 export type SubscriptionItemDocument<T extends keyof SubscriptionItem = never> = mongoose.HydratedDocument<SubscriptionItemModel<T>>
 
-@Schema({ _id: false })
+@Schema({
+  _id: false,
+  toJSON: {
+    virtuals: true,
+  },
+  toObject: {
+    virtuals: true,
+  },
+})
 export class SubscriptionItemModel<T> implements Omit<SubscriptionItem, 'priceId' | 'productId'> {
   @Prop({
     required: true,

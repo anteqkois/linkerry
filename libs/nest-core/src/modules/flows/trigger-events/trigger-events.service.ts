@@ -67,16 +67,18 @@ export class TriggerEventsService {
 
 	async deleteAllRelatedToTrigger({ flowId, trigger }: { flowId: Id; trigger: Trigger }) {
 		const sourceName = this._getSourceName(trigger)
-		return this.triggerEventsModel.deleteMany({
+		await this.triggerEventsModel.deleteMany({
 			flowId,
 			sourceName,
 		})
+
+    return { success: true}
 	}
 
 	async saveEvent(data: SaveTriggerEventInput) {
 		if (!data.sourceName) {
 			const flowVersion = await this.flowVersionModel.findOne({
-				flow: data.flowId,
+				flowId: data.flowId,
 				projectId: data.projectId,
 			})
 
@@ -396,7 +398,7 @@ export class TriggerEventsService {
 
 	async getMany(query: GetTriggerEventsQuery, projectId: Id) {
 		const flowVersion = await this.flowVersionModel.findOne({
-			flow: query.flowId,
+			flowId: query.flowId,
 			projectId,
 		})
 		if (!flowVersion) throw new UnprocessableEntityException('Can not retrive flow version')

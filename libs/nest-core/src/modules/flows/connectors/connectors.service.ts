@@ -1,9 +1,9 @@
 import {
-	ConnectorsGetOptionsInput,
-	CustomError,
-	ErrorCode,
-	Id,
-	assertNotNullOrUndefined
+  ConnectorsGetOptionsInput,
+  CustomError,
+  ErrorCode,
+  Id,
+  assertNotNullOrUndefined
 } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -23,7 +23,7 @@ export class ConnectorsService {
 	async getPropertyOptions(projectId: Id, body: ConnectorsGetOptionsInput) {
 		const flowVersion = await this.flowVersionModel.findOne({
 			_id: body.flowVersionId,
-			flow: body.flowId,
+			flowId: body.flowId,
 		})
 
 		assertNotNullOrUndefined(flowVersion, 'flowVersion')
