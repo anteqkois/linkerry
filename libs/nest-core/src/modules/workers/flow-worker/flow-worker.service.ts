@@ -1,31 +1,31 @@
 import {
-	ActionType,
-	BeginExecuteFlowOperation,
-	ConnectorPackage,
-	CustomError,
-	ErrorCode,
-	ExecutioOutputFile,
-	ExecutionType,
-	File,
-	FileCompression,
-	FileType,
-	FlowRunResponse,
-	FlowRunStatus,
-	FlowStatus,
-	FlowVersion,
-	Id,
-	MAX_LOG_SIZE,
-	ResumeExecuteFlowOperation,
-	ResumePayload,
-	RunEnvironment,
-	SandBoxCacheType,
-	TriggerType,
-	assertNotNullOrUndefined,
-	flowHelper,
-	isCustomError,
-	isNil,
-	isQuotaError,
-	isTrigger,
+  ActionType,
+  BeginExecuteFlowOperation,
+  ConnectorPackage,
+  CustomError,
+  ErrorCode,
+  ExecutioOutputFile,
+  ExecutionType,
+  File,
+  FileCompression,
+  FileType,
+  FlowRunResponse,
+  FlowRunStatus,
+  FlowStatus,
+  FlowVersion,
+  Id,
+  MAX_LOG_SIZE,
+  ResumeExecuteFlowOperation,
+  ResumePayload,
+  RunEnvironment,
+  SandBoxCacheType,
+  TriggerType,
+  assertNotNullOrUndefined,
+  flowHelper,
+  isCustomError,
+  isNil,
+  isQuotaError,
+  isTrigger,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -314,10 +314,10 @@ export class FlowWorkerService {
 			)
 		} catch (error: unknown) {
 			if (isQuotaError(error)) {
-				this.logger.log(`#executeFlow removing flow.id=${flowVersionWithLockedConnectors.flow._id}, exceeded tasks limit`)
+				this.logger.log(`#executeFlow removing flow.id=${flowVersionWithLockedConnectors.flowId}, exceeded tasks limit`)
 				await this.flowsService.changeStatus({
 					newStatus: FlowStatus.DISABLED,
-					id: flowVersionWithLockedConnectors.flow._id.toString(),
+					id: flowVersionWithLockedConnectors.flowId.toString(),
 					projectId: jobData.projectId,
 				})
 

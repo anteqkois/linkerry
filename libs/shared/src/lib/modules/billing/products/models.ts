@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { BaseDatabaseFields } from '../../../common'
 import { booleanOrBooleanStringSchema, idSchema, stringShortSchema } from '../../../common/zod'
-import { SubscriptionPeriod } from '../subscription'
+import { SubscriptionPeriod } from '../subscription/enums'
 import { planProductConfigurationSchema } from './planProductConfiguration'
 export * from './planProductConfiguration'
 

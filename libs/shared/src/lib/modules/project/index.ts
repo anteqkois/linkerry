@@ -2,8 +2,10 @@
 // import { ApId } from '../common/id-generator'
 // import { Static, Type } from '@sinclair/typebox'
 
-import { BaseDatabaseFields, Id } from '../../common'
-import { User } from '../user'
+import { z } from 'zod'
+import { BaseDatabaseFields } from '../../common'
+import { idSchema, stringShortSchema } from '../../common/zod'
+import { User, userSchema } from '../user'
 
 export enum NotificationStatus {
 	NEVER = 'NEVER',
@@ -15,16 +17,19 @@ export enum NotificationStatus {
 //     STANDALONE = 'STANDALONE',
 // }
 
-export interface Project extends BaseDatabaseFields {
-	_id: Id
-	owner: Id
-	users: Id[]
-	displayName: string
-	notifyStatus: NotificationStatus
-	// type: ProjectType,
-	// platformId: Id,
-	// externalId: string,
-}
+export const projectSchema = z.object({
+  ownerId: idSchema,
+  owner: userSchema.optional(),
+  userIds: z.array(idSchema),
+  users: z.array(userSchema).optional(),
+  displayName: stringShortSchema,
+  notifyStatus:  z.nativeEnum(NotificationStatus)
+  // type: ProjectType,
+  // platformId: Id,
+  // externalId: string,
+})
+
+export interface Project extends BaseDatabaseFields, z.infer<typeof projectSchema> {}
 
 export interface ProjectOwnerPopulated extends Omit<Project, 'owner'> {
 	owner: User

@@ -1,12 +1,11 @@
 import {
-  Flow,
   FlowRun,
   FlowRunStatus,
   PauseMetadata,
-  Project,
   RunEnvironment,
   RunTerminationReason,
   StepOutput,
+  TypeOrDefaultType
 } from '@linkerry/shared';
 import {
   AsyncModelFactory,
@@ -18,18 +17,28 @@ import mongoose from 'mongoose';
 import mongooseUniqueValidator from 'mongoose-unique-validator';
 import {
   BaseDatabaseModel,
-  IdObjectOrPopulated,
+  ObjectId
 } from '../../../../lib/mongodb';
 import { ProjectModel } from '../../../projects/schemas/projects.schema';
 import { FlowVersionModel } from '../../flow-versions/schemas/flow-version.schema';
-import { FlowModel } from '../../flows/schemas/flow.schema';
+import { FlowDocument, FlowModel } from '../../flows/schemas/flow.schema';
 
 export type FlowRunDocument<T extends keyof FlowRun = never> =
   mongoose.HydratedDocument<FlowRunModel<T>>;
 export type FlowRunWithStepsDocument<T extends keyof FlowRun = never> =
   mongoose.HydratedDocument<FlowRunModel<T> & { steps: FlowRun }>;
 
-@Schema({ timestamps: true, autoIndex: true, collection: 'flow_runs' })
+@Schema({
+  timestamps: true,
+  autoIndex: true,
+  collection: 'flow_runs',
+  toJSON: {
+    virtuals: true,
+  },
+  toObject: {
+    virtuals: true,
+  },
+})
 export class FlowRunModel<T>
   extends BaseDatabaseModel
   implements
@@ -40,14 +49,16 @@ export class FlowRunModel<T>
     type: mongoose.Schema.Types.ObjectId,
     ref: ProjectModel.name,
   })
-  projectId: IdObjectOrPopulated<T, 'projectId', Project>;
+  projectId: ObjectId
 
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: FlowModel.name,
   })
-  flowId: IdObjectOrPopulated<T, 'flowId', Flow>;
+  flowId: ObjectId
+
+  flow: TypeOrDefaultType<T, 'price', FlowDocument, undefined>;
 
   @Prop({
     required: true,
@@ -63,7 +74,7 @@ export class FlowRunModel<T>
   terminationReason?: RunTerminationReason | undefined;
 
   @Prop({ required: false, type: String })
-  logsFileId: NonNullable<IdObjectOrPopulated<T, 'flowId', Flow>>;
+  logsFileId: ObjectId
 
   @Prop({ required: false, type: Number })
   tasks?: number | undefined;
@@ -89,9 +100,10 @@ export class FlowRunModel<T>
 
 export const FlowRunSchema = SchemaFactory.createForClass(FlowRunModel);
 FlowRunSchema.virtual('flow', {
-  ref: FlowModel.name,
   localField: 'flowId',
+  ref: FlowModel.name,
   foreignField: '_id',
+  justOne: true,
 });
 
 export const FlowRunModelFactory: AsyncModelFactory = {

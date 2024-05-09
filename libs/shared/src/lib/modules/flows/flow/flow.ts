@@ -21,7 +21,8 @@ export interface Flow extends BaseDatabaseFields {
 	_id: Id
 	projectId: Id
 	// folderId: Id
-	version: FlowVersion | Id
+	flowVersionId: Id
+	version?: FlowVersion
 	status: FlowStatus
 	publishedVersionId: Nullable<Id>
 	schedule: Nullable<FlowScheduleOptions>

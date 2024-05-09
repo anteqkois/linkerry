@@ -11,7 +11,7 @@ describe('POST /api/auth', () => {
   it('user can sign up and create account', async () => {
     const signUpRes = await axios.post<IAuthSignUpResponse>(`/auth/signup`, testAuthUser)
     expect(signUpRes.status).toBe(201)
-    expect(signUpRes.data.user.roles).toEqual([UserRole.Customer])
+    expect(signUpRes.data.user.roles).toEqual([UserRole.CUSTOMER])
     axios.defaults.headers.Cookie = signUpRes.headers['set-cookie'][0]
   })
 

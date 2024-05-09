@@ -1,6 +1,7 @@
+import { BaseDatabaseFields, Id } from '../../common'
 import { User } from './user'
 
-export interface UserSettings {
-  _id: string
+export interface UserSettings extends BaseDatabaseFields {
+  userId: Id
   user: User
 }

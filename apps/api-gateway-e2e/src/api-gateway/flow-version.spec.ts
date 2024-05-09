@@ -90,7 +90,7 @@ describe('POST /api/flows-version', () => {
 	})
 
 	afterAll(async () => {
-		await axios.delete<FlowVersion>(`/flows/${flowVersion.flow}`)
+		await axios.delete<FlowVersion>(`/flows/${flowVersion.flowId}`)
 	})
 
 	it('created flow with version', async () => {

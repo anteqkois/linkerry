@@ -1,5 +1,6 @@
 import { BaseDatabaseFields, Id } from '../../../common'
 import { Action } from '../actions'
+import { Flow } from '../flow/flow'
 import { Trigger } from '../triggers'
 
 export enum FlowVersionState {
@@ -9,7 +10,8 @@ export enum FlowVersionState {
 
 export interface FlowVersion extends BaseDatabaseFields {
 	_id: Id
-	flow: Id
+	flowId: Id
+	flow?: Flow
 	projectId: Id
 	displayName: string
 	triggers: Trigger[]

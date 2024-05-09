@@ -95,19 +95,19 @@ export class AuthService {
 		const hashedPassword = await this.hashService.hash(body.password)
 		body.password = hashedPassword
 
-		const user = await this.userModel.create({ ...body, roles: [UserRole.Customer] })
+		const user = await this.userModel.create({ ...body, roles: [UserRole.CUSTOMER] })
 		this.logger.debug(`New signUp: ${body.email}`)
 
 		/* create also default project for new user */
 		const newProject = await this.projectsService.create({
 			displayName: `${user.name}'s project`,
 			notifyStatus: NotificationStatus.ALWAYS,
-			owner: user.id,
-			users: [user.id],
+			ownerId: user.id,
+			userIds: [user.id],
 		})
 
 		/* create default subscription */
-		await this.subscriptionsService.createDefault(newProject.id)
+		// await this.subscriptionsService.createDefault(newProject.id)
 
 		await this._sendVerificationCode({
 			emailAdsress: user.email,

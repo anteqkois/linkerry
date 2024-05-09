@@ -1,14 +1,14 @@
 import { TriggerBase, WebhookHandshakeStrategy, WebhookRenewStrategy, WebhookResponse } from '@linkerry/connectors-framework'
 import {
-	EngineResponseStatus,
-	FlowStatus,
-	FlowVersion,
-	RunEnvironment,
-	TriggerConnector,
-	TriggerHookType,
-	TriggerStrategy,
-	TriggerType,
-	isNil,
+  EngineResponseStatus,
+  FlowStatus,
+  FlowVersion,
+  RunEnvironment,
+  TriggerConnector,
+  TriggerHookType,
+  TriggerStrategy,
+  TriggerType,
+  isNil,
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -89,7 +89,7 @@ export class TriggerHooks {
 			flowVersion,
 			triggerPayload: payload,
 			webhookUrl: await this.webhookUrlsService.getWebhookUrl({
-				flowId: flowVersion.flow,
+				flowId: flowVersion.flowId,
 				simulate: false,
 			}),
 			projectId,
@@ -166,7 +166,7 @@ export class TriggerHooks {
 		const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
 
 		const webhookUrl = await this.webhookUrlsService.getWebhookUrl({
-			flowId: flowVersion.flow,
+			flowId: flowVersion.flowId,
 			simulate,
 		})
 
@@ -205,7 +205,7 @@ export class TriggerHooks {
 								schemaVersion: LATEST_JOB_DATA_SCHEMA_VERSION,
 								projectId,
 								flowVersionId: flowVersion._id,
-								flowId: flowVersion.flow,
+								flowId: flowVersion.flowId,
 								jobType: RepeatableJobType.RENEW_WEBHOOK,
 							},
 							scheduleOptions: {
@@ -236,7 +236,7 @@ export class TriggerHooks {
 						projectId,
 						environment: RunEnvironment.PRODUCTION,
 						flowVersionId: flowVersion._id,
-						flowId: flowVersion.flow,
+						flowId: flowVersion.flowId,
 						triggerType: TriggerType.CONNECTOR,
 						jobType: RepeatableJobType.EXECUTE_TRIGGER,
 					},
@@ -259,7 +259,7 @@ export class TriggerHooks {
 		const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
 
 		const webhookUrl = await this.webhookUrlsService.getWebhookUrl({
-			flowId: flowVersion.flow,
+			flowId: flowVersion.flowId,
 			simulate,
 		})
 
@@ -289,7 +289,7 @@ export class TriggerHooks {
 			case TriggerType.CONNECTOR: {
 				const connectorTrigger = await this.connectorsMetadataService.getTrigger(flowTrigger.settings.connectorName, flowTrigger.settings.triggerName)
 				const webhookUrl = await this.webhookUrlsService.getWebhookUrl({
-					flowId: flowVersion.flow,
+					flowId: flowVersion.flowId,
 					simulate,
 				})
 				const { result } = await this.engineService.executeTrigger({
@@ -325,13 +325,13 @@ export class TriggerHooks {
 				hookType: TriggerHookType.RENEW,
 				flowVersion,
 				webhookUrl: await this.webhookUrlsService.getWebhookUrl({
-					flowId: flowVersion.flow,
+					flowId: flowVersion.flowId,
 					simulate,
 				}),
 				projectId,
 			})
 		} catch (error: any) {
-			this.logger.error(`Failed to renew webhook for flow ${flowVersion.flow} in project ${projectId}`, error)
+			this.logger.error(`Failed to renew webhook for flow ${flowVersion.flowId.toString()} in project ${projectId}`, error)
 		}
 	}
 

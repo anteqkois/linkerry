@@ -1,17 +1,17 @@
 import {
-	ChangeSubscriptionBody,
-	CustomError,
-	ErrorCode,
-	Id,
-	PaymentGateway,
-	ProductType,
-	Subscription,
-	SubscriptionBlank,
-	SubscriptionItem,
-	SubscriptionPeriod,
-	SubscriptionStatus,
-	assertNotNullOrUndefined,
-	isEmpty,
+  ChangeSubscriptionBody,
+  CustomError,
+  ErrorCode,
+  Id,
+  PaymentGateway,
+  ProductType,
+  Subscription,
+  SubscriptionBlank,
+  SubscriptionItem,
+  SubscriptionPeriod,
+  SubscriptionStatus,
+  assertNotNullOrUndefined,
+  isEmpty,
 } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -54,7 +54,7 @@ export class SubscriptionsService {
 			.populate('items.product')
 		assertNotNullOrUndefined(defaultSubscription, 'defaultSubscription')
 
-		defaultSubscription.project = new mongoose.Types.ObjectId(projectId)
+		defaultSubscription.projectId = new mongoose.Types.ObjectId(projectId)
 		return defaultSubscription
 	}
 
@@ -80,7 +80,7 @@ export class SubscriptionsService {
 		const input: Omit<SubscriptionBlank, '_id' | 'createdAt' | 'updatedAt'> = {
 			paymentGateway: PaymentGateway.NONE,
 			period,
-			project: projectId,
+			projectId,
 			status: SubscriptionStatus.INCOMPLETE,
 			validTo: nowDate,
 			items,
@@ -125,8 +125,8 @@ export class SubscriptionsService {
 			projectId: project._id.toString(),
 			period,
 			items: paymentIems.map((item) => ({
-				price: item.price._id,
-				product: item.product._id,
+        priceId: item.price._id,
+				productId: item.product._id,
 			})),
 		})
 
@@ -154,18 +154,19 @@ export class SubscriptionsService {
 		)
 	}
 
-	async createDefault(projectId: Id) {
-		const createdSubscription = await this.subscriptionModel.create({
-			paymentGateway: PaymentGateway.NONE,
-			period: SubscriptionPeriod.MONTHLY,
-			project: projectId,
-			status: SubscriptionStatus.ACTIVE,
-			validTo: this.DEFAULT_VALIDITY_DATE,
-			products: [new mongoose.Types.ObjectId(this.DEFAULT_PRODUCT_ID)],
-		})
+	// async createDefault(projectId: Id) {
+	// 	const createdSubscription = await this.subscriptionModel.create({
+	// 		paymentGateway: PaymentGateway.NONE,
+	// 		period: SubscriptionPeriod.MONTHLY,
+	// 		projectId,
+	// 		status: SubscriptionStatus.ACTIVE,
+	// 		validTo: this.DEFAULT_VALIDITY_DATE,
+  //     items:[]
+	// 		// products: [new mongoose.Types.ObjectId(this.DEFAULT_PRODUCT_ID)],
+	// 	})
 
-		return createdSubscription
-	}
+	// 	return createdSubscription
+	// }
 
 	async change(input: CreateSubscriptionParams) {
 		if (input.items.length !== 1) throw new CustomError(`Currently only one item for subscription is supported`, ErrorCode.INVALID_PRODUCT)
@@ -234,22 +235,22 @@ export class SubscriptionsService {
 
 		/* retrive current data before update using projectId also */
 		const activeSubscriptions = await this.findMany({
-			project: newSubscription.project._id,
+			project: newSubscription.projectId,
 			status: SubscriptionStatus.ACTIVE,
 		})
 
 		if (activeSubscriptions.length > 1)
 			throw new CustomError(`More than one active subscription`, ErrorCode.INVALID_BILLING, {
-				projectId: newSubscription.project._id,
+				projectId: newSubscription.projectId.toString(),
 			})
 
 		/* get default subscription */
-		if (!activeSubscriptions.length) activeSubscriptions[0] = await this._getDefaultSubscription(newSubscription.project._id.toString())
+		if (!activeSubscriptions.length) activeSubscriptions[0] = await this._getDefaultSubscription(newSubscription.projectId.toString())
 
 		const oldPlanProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
 		if (oldPlanProducts.length > 1)
 			throw new CustomError(`More than one product plan in old subscription`, ErrorCode.INVALID_BILLING, {
-				projectId: newSubscription.project._id,
+				projectId: newSubscription.projectId.toString(),
 				subscriptionId: activeSubscriptions[0].id,
 			})
 
@@ -262,7 +263,7 @@ export class SubscriptionsService {
 		const newPlanProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
 		if (oldPlanProducts.length > 1)
 			throw new CustomError(`More than one product plan in new subscription`, ErrorCode.INVALID_BILLING, {
-				projectId: newSubscription.project._id,
+				projectId: newSubscription.projectId.toString(),
 				subscriptionId: activeSubscriptions[0].id,
 			})
 

@@ -17,31 +17,31 @@ export const UserMetadataSchema = SchemaFactory.createForClass(UserMetadataModel
 @Schema({ timestamps: true, autoIndex: true, collection: 'users' })
 export class UserModel extends BaseDatabaseModel implements UserWithPassword {
   @Prop({ required: true, type: String, unique: true, index: true })
-  name!: string
+  name: string
 
-  @Prop({ type: [{ type: String, enum: UserRole, default: UserRole.Customer }] })
+  @Prop({ type: [{ type: String, enum: UserRole, default: UserRole.CUSTOMER }] })
   roles: UserRole[]
 
   @Prop({ required: false, type: String })
   phone: string
 
   @Prop({ required: true, type: String, unique: true })
-  email!: string
+  email: string
 
   @Prop({ required: false, type: Date })
-  emailVerifiedAtDate: Date
+  emailVerifiedAtDate: string
 
   @Prop({ required: true, type: String })
   password: string
 
   @Prop({ required: false, type: Date })
-  trialExpiredAtDate: Date
+  trialExpiredAtDate: string
 
   @Prop({ required: false, type: Date })
-  trialStartedAtDate: Date
+  trialStartedAtDate: string
 
   @Prop({ required: false, type: Date })
-  deletedAtDate: Date
+  deletedAtDate: string
 
   @Prop({ required: false, type: String })
   cryptoWallet: string

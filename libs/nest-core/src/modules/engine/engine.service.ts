@@ -1,29 +1,29 @@
 import {
-	Action,
-	ActionType,
-	BeginExecuteFlowOperation,
-	CustomError,
-	EngineOperation,
-	EngineOperationType,
-	EngineResponseStatus,
-	EngineTestOperation,
-	ErrorCode,
-	ExecuteExtractConnectorMetadata,
-	ExecuteFlowOperation,
-	ExecutePropsOptions,
-	ExecuteStepOperation,
-	ExecuteTriggerOperation,
-	ExecuteValidateAuthOperation,
-	Id,
-	JWTPrincipalType,
-	ResumeExecuteFlowOperation,
-	SandBoxCacheType,
-	TriggerHookType,
-	assertNotNullOrUndefined,
-	clone,
-	flowHelper,
-	isConnectorTrigger,
-	tryParseJson,
+  Action,
+  ActionType,
+  BeginExecuteFlowOperation,
+  CustomError,
+  EngineOperation,
+  EngineOperationType,
+  EngineResponseStatus,
+  EngineTestOperation,
+  ErrorCode,
+  ExecuteExtractConnectorMetadata,
+  ExecuteFlowOperation,
+  ExecutePropsOptions,
+  ExecuteStepOperation,
+  ExecuteTriggerOperation,
+  ExecuteValidateAuthOperation,
+  Id,
+  JWTPrincipalType,
+  ResumeExecuteFlowOperation,
+  SandBoxCacheType,
+  TriggerHookType,
+  assertNotNullOrUndefined,
+  clone,
+  flowHelper,
+  isConnectorTrigger,
+  tryParseJson,
 } from '@linkerry/shared'
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -35,14 +35,14 @@ import { WebhookSecretsService } from '../webhooks/webhook-secrets/webhook-secre
 import { SandboxProvisionerService } from '../workers/sandbox/sandbox-provisioner.service'
 import { Sandbox } from '../workers/sandbox/sandboxes/sandbox'
 import {
-	EngineHelperActionResult,
-	EngineHelperExtractConnectorInformation,
-	EngineHelperFlowResult,
-	EngineHelperPropResult,
-	EngineHelperResponse,
-	EngineHelperResult,
-	EngineHelperTriggerResult,
-	EngineHelperValidateAuthResult,
+  EngineHelperActionResult,
+  EngineHelperExtractConnectorInformation,
+  EngineHelperFlowResult,
+  EngineHelperPropResult,
+  EngineHelperResponse,
+  EngineHelperResult,
+  EngineHelperTriggerResult,
+  EngineHelperValidateAuthResult,
 } from './types'
 
 @Injectable()
@@ -245,7 +245,7 @@ export class EngineService {
 		const step = flowHelper.getAction(clonedFlowVersion, operation.stepName)
 		assertNotNullOrUndefined(step, 'Step not found')
 
-		const sandbox = await this._getSandboxForAction(operation.projectId, operation.flowVersion.flow, step)
+		const sandbox = await this._getSandboxForAction(operation.projectId, operation.flowVersion.flowId, step)
 		const input: ExecuteStepOperation = {
 			// flowVersion: lockedFlowVersion,
 			flowVersion: clonedFlowVersion,

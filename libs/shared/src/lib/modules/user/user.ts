@@ -1,44 +1,45 @@
-import { BaseDatabaseFields } from '../../common'
-import { Language } from '../language'
+import { z } from 'zod';
+import { BaseDatabaseFields } from '../../common';
+import {
+  idSchema,
+  stringDateSchema,
+  stringShortSchema,
+} from '../../common/zod';
+import { Language } from '../language';
 
 export enum UserRole {
-	Customer = 'Customer',
-	Admin = 'Admin',
-	Tester = 'Tester',
+  CUSTOMER = 'CUSTOMER',
+  ADMIN = 'ADMIN',
+  TESTER = 'TESTER',
 }
 
-// export enum UserRole {
-//   CUSTOMER = 'customer',
-//   ADMIN = 'admin',
-//   TESTER = 'tester',
-// }
+export const userSchema = z.object({
+  name: stringShortSchema,
+  roles: z.array(z.nativeEnum(UserRole)),
+  phone: z.string().max(20).optional(),
+  // telegramId?: string  // Move to external collection (notification-channels)
+  // telegramBotConnected?: boolean
+  email: z.string().email(),
+  emailVerifiedAtDate: stringDateSchema.optional(),
+  trialExpiredAtDate: stringDateSchema.optional(),
+  trialStartedAtDate: stringDateSchema.optional(),
+  deletedAtDate: stringDateSchema.optional(),
+  // cryptoWallet?: string
+  language: z.nativeEnum(Language),
+  affiliationPercent: z.number(),
+  consents: z.record(z.boolean()),
+  settings: z.any(),
+  referrerId: idSchema.optional(),
+  // referrer?: User;
+  // remember_token
+});
 
-export interface User extends BaseDatabaseFields {
-	_id: string
-	name: string
-	roles: UserRole[]
-	phone?: string
-	// telegramId?: string  // Move to external collection (notification-channels)
-	// telegramBotConnected?: boolean
-	email: string
-	emailVerifiedAtDate?: Date
-	trialExpiredAtDate?: Date
-	trialStartedAtDate?: Date
-	deletedAtDate?: Date
-	cryptoWallet?: string
-	language: Language
-	affiliationPercent: number
-	consents: Record<string, boolean>
-	settings: any
-	referrer?: string
-	// referrer?: User;
-	// remember_token
-}
+export interface User extends BaseDatabaseFields, z.infer<typeof userSchema> {}
 
 export interface UserWithPassword extends User {
-	password: string
+  password: string;
 }
 
 export interface UserMetadata {
-	earlyAdopter?: boolean
+  earlyAdopter?: boolean;
 }

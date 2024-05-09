@@ -1,36 +1,64 @@
-import { Id, NotificationStatus, Project, User } from '@linkerry/shared'
-import { AsyncModelFactory, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import mongoose from 'mongoose'
-import mongooseUniqueValidator from 'mongoose-unique-validator'
-import { BaseDatabaseModel, IdObjectOrPopulated } from '../../../lib/mongodb'
-import { UserModel } from '../../users/schemas/user.schema'
+import {
+  NotificationStatus,
+  Project,
+  TypeOrDefaultType,
+} from '@linkerry/shared';
+import {
+  AsyncModelFactory,
+  Prop,
+  Schema,
+  SchemaFactory,
+} from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+import mongooseUniqueValidator from 'mongoose-unique-validator';
+import { BaseDatabaseModel } from '../../../lib/mongodb';
+import { UserDocument, UserModel } from '../../users/schemas/user.schema';
 
-export type ProjectDocument<T extends keyof Project = never> = mongoose.HydratedDocument<ProjectModel<T>>
+export type ProjectDocument<T extends keyof Project = never> =
+  mongoose.HydratedDocument<ProjectModel<T>>;
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'projects' })
-export class ProjectModel<T = ''> extends BaseDatabaseModel implements Omit<Project, 'owner' | '_id'> {
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: UserModel.name })
-	owner: IdObjectOrPopulated<T, 'owner', User>
+export class ProjectModel<T = ''>
+  extends BaseDatabaseModel
+  implements Omit<Project, '_id' | 'ownerId' | 'owner' | 'userIds' | 'users'>
+{
+  @Prop({
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: UserModel.name,
+  })
+  ownerId: mongoose.Types.ObjectId;
 
-	@Prop({ required: true, type: [mongoose.Schema.Types.ObjectId], ref: UserModel.name })
-	users: Id[]
+  owner: TypeOrDefaultType<T, 'owner', UserDocument, undefined>;
 
-	@Prop({ required: true, type: String })
-	displayName: string
+  @Prop({
+    required: true,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: UserModel.name,
+  })
+  userIds: mongoose.Types.ObjectId[];
 
-	@Prop({ required: true, type: String, enum: NotificationStatus })
-	notifyStatus: NotificationStatus
+  users: TypeOrDefaultType<T, 'owner', UserDocument[], undefined>;
+
+  @Prop({ required: true, type: String })
+  displayName: string;
+
+  @Prop({ required: true, type: String, enum: NotificationStatus })
+  notifyStatus: NotificationStatus;
 }
 
-export const ProjectsSchema = SchemaFactory.createForClass(ProjectModel)
+export const ProjectsSchema = SchemaFactory.createForClass(ProjectModel);
+// TODO add virtual fields
 
 export const ProjectModelFactory: AsyncModelFactory = {
-	name: ProjectModel.name,
-	imports: [],
-	useFactory: () => {
-		const schema = ProjectsSchema
-		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
-		return schema
-	},
-	inject: [],
-}
+  name: ProjectModel.name,
+  imports: [],
+  useFactory: () => {
+    const schema = ProjectsSchema;
+    schema.plugin(mongooseUniqueValidator, {
+      message: 'Error, expected {PATH} to be unique. Received {VALUE}',
+    });
+    return schema;
+  },
+  inject: [],
+};

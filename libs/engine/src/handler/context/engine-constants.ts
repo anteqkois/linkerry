@@ -1,12 +1,12 @@
 import {
-	ExecuteFlowOperation,
-	ExecuteStepOperation,
-	ExecuteTriggerOperation,
-	ExecutionType,
-	Id,
-	Project,
-	TriggerHookType,
-	assertNotNullOrUndefined,
+  ExecuteFlowOperation,
+  ExecuteStepOperation,
+  ExecuteTriggerOperation,
+  ExecutionType,
+  Id,
+  Project,
+  TriggerHookType,
+  assertNotNullOrUndefined,
 } from '@linkerry/shared'
 import { VariableService } from '../../services/veriables.service'
 
@@ -60,7 +60,7 @@ export class EngineConstants {
 
 	public static fromExecuteFlowInput(input: ExecuteFlowOperation): EngineConstants {
 		return new EngineConstants(
-			input.flowVersion.flow,
+			input.flowVersion.flowId,
 			input.flowRunId,
 			input.serverUrl,
 			DEFAULT_RETRY_CONSTANTS,
@@ -79,7 +79,7 @@ export class EngineConstants {
 
 	public static fromExecuteStepInput(input: ExecuteStepOperation): EngineConstants {
 		return new EngineConstants(
-			input.flowVersion.flow,
+			input.flowVersion.flowId,
 			'test-run',
 			input.serverUrl,
 			DEFAULT_RETRY_CONSTANTS,
@@ -97,7 +97,7 @@ export class EngineConstants {
 
 	public static fromExecutePropertyInput(input: ExecuteStepOperation): EngineConstants {
 		return new EngineConstants(
-			input.flowVersion.flow,
+			input.flowVersion.flowId,
 			'execute-property',
 			input.serverUrl,
 			DEFAULT_RETRY_CONSTANTS,
@@ -115,7 +115,7 @@ export class EngineConstants {
 
 	public static fromExecuteTriggerInput(input: ExecuteTriggerOperation<TriggerHookType>): EngineConstants {
 		return new EngineConstants(
-			input.flowVersion.flow,
+			input.flowVersion.flowId,
 			'execute-trigger',
 			input.serverUrl,
 			DEFAULT_RETRY_CONSTANTS,

@@ -47,7 +47,7 @@ export const triggerHelper = {
 		const context = {
 			store: createContextStore({
 				prefix,
-				flowId: params.flowVersion.flow,
+				flowId: params.flowVersion.flowId,
 				workerToken: params.workerToken,
 			}),
 			app: {
@@ -114,7 +114,7 @@ export const triggerHelper = {
 							// files: createFilesService({
 							//     workerToken: params.workerToken,
 							//     stepName: triggerName,
-							//     flowId: params.flowVersion.flow,
+							//     flowId: params.flowVersion.flowId,
 							//     type: 'db',
 							// }),
 						}),
@@ -166,7 +166,7 @@ export const triggerHelper = {
 					...context,
 					// files: createFilesService({
 					//     workerToken: params.workerToken,
-					//     flowId: params.flowVersion.flow,
+					//     flowId: params.flowVersion.flowId,
 					//     stepName: triggerName,
 					//     type: 'memory',
 					// }),

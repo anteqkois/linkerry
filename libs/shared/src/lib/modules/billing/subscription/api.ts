@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { idSchema } from '../../../common/zod'
-import { SubscriptionPeriod } from './subscription'
+import { SubscriptionPeriod } from './enums'
 
 export const changeSubscriptionBodySchema = z.object({
 	items: z.array(
