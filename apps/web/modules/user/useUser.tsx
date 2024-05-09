@@ -28,7 +28,7 @@ export function UserProvider({ children }: PropsWithChildren) {
 	const [liveChatHash, setLiveChatHash] = useState('')
 	const [emialVerificationDialog, setEmialVerificationDialog] = useState<boolean>(false)
 	const { push } = useRouter()
-	const { get } = useSearchParams()
+	const searchParams = useSearchParams()
 
 	const signUp = useCallback(async (data: SignUpInput) => {
 		const response = await AuthApi.signUp(data)
@@ -51,7 +51,7 @@ export function UserProvider({ children }: PropsWithChildren) {
 			return push('/app/dashboard')
 		}
 
-		const from = get('from')
+		const from = searchParams.get('from')
 		if (from) return push(from)
 
 		return push('/app/dashboard')

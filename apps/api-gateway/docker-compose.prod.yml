@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     environment:
-      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - VIRTUAL_HOST=${PORT_API_GATEWAY}
       - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
       - LETSENCRYPT_EMAIL=anteqkois@gmail.com
       - VIRTUAL_PORT=${VIRTUAL_PORT}

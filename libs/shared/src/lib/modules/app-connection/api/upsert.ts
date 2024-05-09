@@ -8,7 +8,7 @@ const commonAuthPropsSchema = z.object({
 	connectorName: connectorNameSchema,
 	projectId: idSchema,
 })
-interface CommonAuthProps extends z.infer<typeof commonAuthPropsSchema> {}
+type CommonAuthProps = z.infer<typeof commonAuthPropsSchema>
 
 export enum OAuth2GrantType {
 	AUTHORIZATION_CODE = 'authorization_code',
@@ -24,7 +24,7 @@ export const upsertCustomAuthInputSchema = commonAuthPropsSchema.merge(
 		}),
 	}),
 )
-export interface UpsertCustomAuthInput extends z.infer<typeof upsertCustomAuthInputSchema> {}
+export type UpsertCustomAuthInput = z.infer<typeof upsertCustomAuthInputSchema>
 
 // export const UpsertPlatformOAuth2Request = Type.Object({
 //     ...commonAuthProps,
@@ -61,7 +61,7 @@ export const upsertCloudOAuth2RequestSchema = commonAuthPropsSchema.merge(
 		}),
 	}),
 )
-export interface UpsertCloudOAuth2Request extends z.infer<typeof upsertCloudOAuth2RequestSchema> {}
+export type UpsertCloudOAuth2Request = z.infer<typeof upsertCloudOAuth2RequestSchema>
 
 export const upsertSecretTextInputSchema = commonAuthPropsSchema.merge(
 	z.object({
@@ -72,7 +72,7 @@ export const upsertSecretTextInputSchema = commonAuthPropsSchema.merge(
 		}),
 	}),
 )
-export interface UpsertSecretTextInput extends z.infer<typeof upsertSecretTextInputSchema> {}
+export type UpsertSecretTextInput = z.infer<typeof upsertSecretTextInputSchema>
 
 // export const UpsertOAuth2Request = Type.Object({
 //     ...commonAuthProps,

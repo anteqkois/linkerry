@@ -7,7 +7,7 @@ export const oAuth2AppInputSchema = z.object({
 	clientSecret: stringShortSchema,
 	connectorName: stringShortSchema,
 })
-export interface OAuth2AppInput extends z.infer<typeof oAuth2AppInputSchema> {}
+export type OAuth2AppInput = z.infer<typeof oAuth2AppInputSchema>
 
 export interface OAuth2AppDecrypted {
 	clientId: string
