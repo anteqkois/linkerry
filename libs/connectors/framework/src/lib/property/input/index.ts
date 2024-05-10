@@ -85,11 +85,11 @@ export const Property = {
     } as unknown as R extends true ? ObjectProperty<true> : ObjectProperty<false>
   },
   StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
-    config: Properties<StaticDropdownProperty<T, R>>,
-  ): R extends true ? StaticDropdownProperty<T, true> : StaticDropdownProperty<T, false> {
+    config: Properties<StaticDropdownProperty<R, T>>,
+  ): R extends true ? StaticDropdownProperty<true, T> : StaticDropdownProperty<false, T> {
     return { ...config, type: PropertyType.STATIC_DROPDOWN } as unknown as R extends true
-      ? StaticDropdownProperty<T, true>
-      : StaticDropdownProperty<T, false>
+      ? StaticDropdownProperty<true, T>
+      : StaticDropdownProperty<false, T>
   },
   DynamicDropdown<R extends boolean = boolean, T = any>(
     config: Properties<DynamicDropdownProperty<R, T>>,
@@ -117,5 +117,6 @@ export const Property = {
 }
 
 export type DynamicDropdownConfigOverwrite<R extends boolean = boolean, T = any> = Partial<Properties<DynamicDropdownProperty<R, T>>>
+export type StaticDropdownConfigOverwrite<R extends boolean = boolean, T = any> = Partial<Properties<StaticDropdownProperty<R, T>>>
 export type NumberConfigOverwrite<R extends boolean = boolean> = Partial<Properties<NumberProperty<R>>>
 export type DateTimeConfigOverwrite<R extends boolean = boolean> = Partial<Properties<DateTimeProperty<R>>>

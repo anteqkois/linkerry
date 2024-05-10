@@ -1,4 +1,4 @@
-import { DateTimeConfigOverwrite, DynamicDropdownConfigOverwrite, NumberConfigOverwrite, Property } from '@linkerry/connectors-framework'
+import { DateTimeConfigOverwrite, DynamicDropdownConfigOverwrite, NumberConfigOverwrite, Property, StaticDropdownConfigOverwrite } from '@linkerry/connectors-framework'
 import { ExchangeClientInterface } from '../types'
 
 export const exchangeCommon = {
@@ -133,4 +133,22 @@ export const exchangeCommon = {
       required: true,
       ...overwrite,
     }),
+  margin_mode: (overwrite: StaticDropdownConfigOverwrite = {}) =>  Property.StaticDropdown({
+    displayName: 'Mode',
+    required: true,
+    options: {
+      options: [
+        {
+          label: 'Cross',
+          value: 'cross',
+        },
+        {
+          label: 'Isolated',
+          value: 'isolated',
+        },
+      ],
+    },
+    defaultValue: 'cross',
+    ...overwrite
+  }),
 }

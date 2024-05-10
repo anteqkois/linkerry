@@ -14,8 +14,8 @@ export type StaticDropdownOption<T> = {
 	value: T;
 };
 
-type StaticDropdownProps<T extends StaticDropdownValue> = { options: StaticDropdownState<T>; }
+type StaticDropdownProps<T = any> = { options: StaticDropdownState<T>; }
 
-export type StaticDropdownProperty<T extends StaticDropdownValue = StaticDropdownValue , R extends boolean = boolean> = BaseProperty &
+export type StaticDropdownProperty<R extends boolean = boolean, T = any > = BaseProperty &
   StaticDropdownProps<T> &
   PropertyValue<T, PropertyType.STATIC_DROPDOWN, ValidationInputType.ANY, R>

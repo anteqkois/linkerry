@@ -1,4 +1,21 @@
+export * from './lib/actions/cancel-all-symbol-orders'
+export * from './lib/actions/cancel-order'
+export * from './lib/actions/cancel-orders'
+export * from './lib/actions/create-market-order-with-cost'
+export * from './lib/actions/create-order'
+export * from './lib/actions/edit-order'
 export * from './lib/actions/get-account-balance'
+export * from './lib/actions/get-bids-asks'
+export * from './lib/actions/get-ohlcv'
+export * from './lib/actions/get-order'
+export * from './lib/actions/get-orders'
+export * from './lib/actions/get-ticker'
+export * from './lib/actions/get-trades'
+export * from './lib/actions/get-trading-fee'
+export * from './lib/actions/set-margin-mode'
+
 export * from './lib/common/auth'
+export * from './lib/common/common'
+
 export * from './lib/types'
 
