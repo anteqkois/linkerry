@@ -22,14 +22,11 @@ export type DropdownOption<T> = {
 
 export type DynamicDropdownOptions<T> = (propsValue: Record<string, unknown>, ctx: PropertyContext) => Promise<DynamicDropdownState<T>>
 
-// export type DynamicDropdownProperty<T, R extends boolean> = BaseProperty & {
 export type DynamicDropdownProperty<R extends boolean = boolean, T = any> = BaseProperty & {
 	refreshers: string[]
 	refreshOnSearch?: boolean
 	options: DynamicDropdownOptions<T>
 } & PropertyValue<T, PropertyType.DYNAMIC_DROPDOWN, ValidationInputType.ANY, R>
-// todo add validator type generic
-// } & PropertyValue<T, PropertyType.DynamicDropdown, ValidationInputType.ANY, R>
 
 export const isDynamicDropdownProperty = (property: any): property is DynamicDropdownProperty => {
 	if (property && property?.type === PropertyType.DYNAMIC_DROPDOWN) return true

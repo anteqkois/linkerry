@@ -1,6 +1,6 @@
 import { binance } from 'ccxt';
 
-export class BinanceClient {
+export class BinanceClient  {
 	static exchange = new binance({})
 
 	static setAuth({ apiKey, secretKey }: { apiKey: string; secretKey: string }) {
