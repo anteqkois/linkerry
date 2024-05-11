@@ -23,6 +23,7 @@
       "@linkerry/connectors-framework": ["libs/connectors/framework/src/index.ts"],
       "@linkerry/connectors/bybit": ["libs/connectors/bybit/src/index.ts"],
       "@linkerry/connectors/kucoin": ["libs/connectors/kucoin/src/index.ts"],
+      "@linkerry/connectors/mexc": ["libs/connectors/mexc/src/index.ts"],
       "@linkerry/discord": ["libs/connectors/discord/src/index.ts"],
       "@linkerry/engine": ["libs/engine/src/index.ts"],
       "@linkerry/google-sheets": ["libs/connectors/google-sheets/src/index.ts"],
