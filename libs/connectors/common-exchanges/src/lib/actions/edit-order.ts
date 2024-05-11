@@ -1,9 +1,8 @@
 import { createAction } from '@linkerry/connectors-framework'
-import { exchangeAuth } from '../common/auth'
 import { exchangeCommon } from '../common/common'
 import { ExchangeClientInterface } from '../types'
 
-export const editOrderActionFactory = (exchangeClient: ExchangeClientInterface, auth: ReturnType<typeof exchangeAuth>) =>
+export const editOrderActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
     description: 'Edit Market / Limit Order',
@@ -22,7 +21,8 @@ export const editOrderActionFactory = (exchangeClient: ExchangeClientInterface, 
     run: async ({ auth, propsValue }) => {
       exchangeClient.setAuth(auth)
 
-      const response = await exchangeClient.exchange.createOrder(
+      const response = await exchangeClient.exchange.editOrder(
+        propsValue.order_id,
         propsValue.symbol,
         propsValue.type,
         propsValue.side,

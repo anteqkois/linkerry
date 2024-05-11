@@ -1,9 +1,8 @@
 import { createAction } from '@linkerry/connectors-framework'
-import { exchangeAuth } from '../common/auth'
 import { exchangeCommon } from '../common/common'
 import { ExchangeClientInterface } from '../types'
 
-export const createMarketOrderWithCostActionFactory = (exchangeClient: ExchangeClientInterface, auth: ReturnType<typeof exchangeAuth>) =>
+export const createMarketOrderWithCostActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
     description: 'Create Market Order with Cost',

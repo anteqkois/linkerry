@@ -1,11 +1,10 @@
 import { Property, createAction } from '@linkerry/connectors-framework'
 import { binance } from 'ccxt'
-import { exchangeAuth } from '../common/auth'
 import { exchangeCommon } from '../common/common'
 import { ExchangeClientInterface } from '../types'
 
 // ! use only for exchanges with this feature, so here i cast exchange type to binance which support it
-export const cancelOrdersActionFactory = (exchangeClient: ExchangeClientInterface, auth: ReturnType<typeof exchangeAuth>) =>
+export const cancelOrdersActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
     description: 'Cancel Orders',

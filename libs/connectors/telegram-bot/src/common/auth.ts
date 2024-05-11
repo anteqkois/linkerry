@@ -11,7 +11,8 @@ const markdownDescription = `**Authentication**:
 3. Select a name for your bot.
 4. Choose a username for your bot.
 5. Copy the token value provided by the Botfather and use it to activate the connection.
-6. Congratulations! You can now utilize your new Telegram connection within your flows.`
+6. Congratulations! You can now utilize your new Telegram connection within your flows.
+`
 
 export const telegramBotAuth = ConnectorAuth.SecretText({
 	displayName: 'Bot Token',

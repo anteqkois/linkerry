@@ -1,8 +1,7 @@
 import { Property, createAction } from '@linkerry/connectors-framework'
-import { exchangeAuth } from '../common/auth'
 import { ExchangeClientInterface } from '../types'
 
-export const setMarginModeActionFactory = (exchangeClient: ExchangeClientInterface, auth: ReturnType<typeof exchangeAuth>) =>
+export const setMarginModeActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth,
     description: 'Set Margin Mode',

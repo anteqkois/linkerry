@@ -1,9 +1,8 @@
 import { createAction } from '@linkerry/connectors-framework'
-import { exchangeAuth } from '../common/auth'
 import { exchangeCommon } from '../common/common'
 import { ExchangeClientInterface } from '../types'
 
-export const cancelAllSymbolOrdersActionFactory = (exchangeClient: ExchangeClientInterface, auth: ReturnType<typeof exchangeAuth>) =>
+export const cancelAllSymbolOrdersActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
     description: 'Cancel All Symbol Orders',

@@ -2,8 +2,7 @@ import { ConnectorAuth } from '@linkerry/connectors-framework'
 import { HttpStatusCode, isAxiosError } from 'axios'
 import { CoingeckoApi } from './api'
 
-const markdownDescription = `**Authentication**:
-
+const markdownDescription = `
 You can follow this **[Coingecko article link](https://support.coingecko.com/hc/en-us/articles/21880397454233-User-Guide-How-to-sign-up-for-CoinGecko-Demo-API-and-generate-an-API-key)** to obtain **free** demo API key.
 If the link not exists, search in the browser "coingecko how to obtain free API keys"`
 

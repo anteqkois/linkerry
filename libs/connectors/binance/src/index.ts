@@ -5,7 +5,6 @@ import {
   createMarketOrderWithCostActionFactory,
   createOrderActionFactory,
   editOrderActionFactory,
-  getAccountBalanceActionFactory,
   getBidsAsksActionFactory,
   getOHLCVActionFactory,
   getOrderActionFactory,
@@ -13,9 +12,10 @@ import {
   getTickersActionFactory,
   getTradesActionFactory,
   getTradingFeeActionFactory,
-  setMarginModeActionFactory,
+  setMarginModeActionFactory
 } from '@linkerry/common-exchanges'
 import { createConnector } from '@linkerry/connectors-framework'
+import { getAccountBalance } from './actions/get-account-balance'
 import { binanceAuth } from './common/auth'
 import { BinanceClient } from './common/client'
 
@@ -32,7 +32,7 @@ export const coingecko = createConnector({
     createMarketOrderWithCostActionFactory(BinanceClient, binanceAuth),
     createOrderActionFactory(BinanceClient, binanceAuth),
     editOrderActionFactory(BinanceClient, binanceAuth),
-    getAccountBalanceActionFactory(BinanceClient, binanceAuth),
+    getAccountBalance,
     getBidsAsksActionFactory(BinanceClient),
     getOHLCVActionFactory(BinanceClient),
     getOrderActionFactory(BinanceClient, binanceAuth),
