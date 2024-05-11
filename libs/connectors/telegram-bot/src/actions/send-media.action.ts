@@ -1,7 +1,7 @@
 import { HttpMessageBody, HttpMethod, QueryParams, httpClient } from '@linkerry/connectors-common'
 import { DynamicPropsValue, Property, createAction } from '@linkerry/connectors-framework'
-import { telegramBotAuth } from '..'
-import { telegramCommons } from '../common'
+import { telegramBotAuth } from '../common/auth'
+import { telegramCommons } from '../common/common'
 
 export const telegramSendMediaAction = createAction({
 	auth: telegramBotAuth,

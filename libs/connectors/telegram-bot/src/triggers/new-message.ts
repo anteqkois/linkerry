@@ -1,7 +1,7 @@
 import { createTrigger } from '@linkerry/connectors-framework';
 import { TriggerStrategy } from '@linkerry/shared';
-import { telegramBotAuth } from '..';
-import { telegramCommons } from '../common';
+import { telegramBotAuth } from '../common/auth';
+import { telegramCommons } from '../common/common';
 
 export const telegramNewMessage = createTrigger({
   auth: telegramBotAuth,

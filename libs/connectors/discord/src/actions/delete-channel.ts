@@ -1,4 +1,4 @@
-import { HttpRequest, HttpMethod, httpClient } from '@linkerry/connectors-common';
+import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common';
 import { createAction } from '@linkerry/connectors-framework';
 import { discordAuth } from '..';
 import { discordCommon } from '../common';

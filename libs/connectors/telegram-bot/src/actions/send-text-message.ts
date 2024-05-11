@@ -1,7 +1,7 @@
 import { HttpMethod, httpClient } from '@linkerry/connectors-common'
 import { createAction } from '@linkerry/connectors-framework'
-import { telegramBotAuth } from '..'
-import { telegramCommons } from '../common'
+import { telegramCommons } from '../common/common'
+import { telegramBotAuth } from '../common/auth'
 
 export const telegramSendMessageAction = createAction({
 	auth: telegramBotAuth,

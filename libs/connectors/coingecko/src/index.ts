@@ -1,16 +1,18 @@
-import { ConnectorAuth, createConnector } from '@linkerry/connectors-framework'
-import { fetchCoin } from './actions/fetch-coin'
-import { fetchMarktecap } from './actions/fetch-marketcap'
+import { createConnector } from '@linkerry/connectors-framework'
+import { getCoin } from './actions/get-coin'
+import { getDeFiInfo } from './actions/get-defi-info'
+import { getGlobalInfo } from './actions/get-global-info'
+import { coingeckoAuth } from './common/auth'
 import { trendingCoins } from './triggers/trending-coins'
 import { trendingNfts } from './triggers/trending-nfts'
 
 export const coingecko = createConnector({
-  displayName: 'Coingecko',
+  displayName: 'Coingecko Free',
+  description: 'Coingecko connector for cryptocurrency data. Use it with Coingecko Demo API key',
   logoUrl: '/images/connectors/coingecko.png',
   triggers: [trendingCoins, trendingNfts],
-  description: 'Coingecko connector for cryptocurrency data',
+  actions: [getCoin, getGlobalInfo, getDeFiInfo],
   minimumSupportedRelease: '0.0.0',
-  actions: [fetchMarktecap, fetchCoin],
-  auth: ConnectorAuth.None(),
+  auth: coingeckoAuth,
   tags: ['cryptocurrency', 'data feed', 'trends'],
 })
