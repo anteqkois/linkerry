@@ -18,7 +18,7 @@ export type InputProperty =
   | LongTextProperty
   | NumberProperty
   | CheckboxProperty
-  | StaticDropdownProperty
+  | StaticDropdownProperty<boolean>
   | DynamicDropdownProperty<boolean>
   | DynamicProperties<boolean>
   | ObjectProperty<boolean>
@@ -70,9 +70,9 @@ export const Property = {
       defaultProcessors: [Processors.json],
     } as unknown as R extends true ? JsonProperty<true> : JsonProperty<false>
   },
-  Array<R extends boolean>(request: Properties<ArrayProperty<R>>): R extends true ? ArrayProperty<true> : ArrayProperty<false> {
+  Array<R extends boolean>(config: Properties<ArrayProperty<R>>): R extends true ? ArrayProperty<true> : ArrayProperty<false> {
     return {
-      ...request,
+      ...config,
       valueSchema: undefined,
       type: PropertyType.ARRAY,
     } as unknown as R extends true ? ArrayProperty<true> : ArrayProperty<false>
@@ -87,7 +87,7 @@ export const Property = {
   StaticDropdown<T extends StaticDropdownValue, R extends boolean = boolean>(
     config: Properties<StaticDropdownProperty<R, T>>,
   ): R extends true ? StaticDropdownProperty<true, T> : StaticDropdownProperty<false, T> {
-    return { ...config, type: PropertyType.STATIC_DROPDOWN } as unknown as R extends true
+    return { ...config, valueSchema: undefined, type: PropertyType.STATIC_DROPDOWN } as unknown as R extends true
       ? StaticDropdownProperty<true, T>
       : StaticDropdownProperty<false, T>
   },
