@@ -32,8 +32,6 @@ const FormSchema = z.object({
 	}),
 })
 
-// export interface EmailVerificationDialogProps extends HTMLAttributes<HTMLElement> {}
-
 export const EmailVerificationDialog = () => {
 	const { toast } = useToast()
 	const { emialVerificationDialog, setEmialVerificationDialog, user, setUser } = useUser()

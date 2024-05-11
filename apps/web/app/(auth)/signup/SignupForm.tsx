@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Language } from '@linkerry/shared'
-import { ButtonClient, Input, Label, toast } from '@linkerry/ui-components/client'
+import { ButtonClient, Input, Label } from '@linkerry/ui-components/client'
 import { cn } from '@linkerry/ui-components/utils'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
@@ -46,10 +46,10 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
 
       if (signUpResponse.error) throw new Error('Something went wrong')
 
-      toast({
-        title: 'Check your email',
-        description: 'We sent you a login link. Be sure to check your spam too.',
-      })
+      // toast({
+      //   title: 'Check your email',
+      //   description: 'We sent you a login link. Be sure to check your spam too.',
+      // })
 
       setIsLoading(false)
       push('/app/dashboard')
