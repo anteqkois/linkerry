@@ -1,0 +1,19 @@
+{
+  "name": "connectors-stripe",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/stripe/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/stripe",
+        "main": "libs/connectors/stripe/src/index.ts",
+        "tsConfig": "libs/connectors/stripe/tsconfig.lib.json",
+        "assets": ["libs/connectors/stripe/*.md"]
+      }
+    }
+  }
+}
