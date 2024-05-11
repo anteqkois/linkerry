@@ -18,7 +18,7 @@ export interface PProps extends React.HTMLAttributes<HTMLParagraphElement>, Vari
 }
 
 const P = React.forwardRef<HTMLParagraphElement, PProps>(({ className, variant, asChild = false, ...props }, ref) => {
-  return <p className={cn(pVariants({ variant, className }))} ref={ref} {...props} />
+  return <p className={cn(pVariants({ variant }), className)} ref={ref} {...props} />
 })
 P.displayName = 'P'
 
