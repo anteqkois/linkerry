@@ -10,7 +10,7 @@ const authDescription = `
 5. Fill form* and generate API Keys, remember to hold generated password.
 6. Congratulations! You have generated your API Keys.
 
-*Set **IP restriction** to "No" (our flows runs on multiple servers). Remember  to unlock the restrictions that you will use. So if you want to trade, unlock **Spot Trading** and similarly for other options.
+*Set **IP restriction** to "No" (our flows runs on multiple servers). Remember to unlock the restrictions that you will use. So if you want to trade, unlock **Spot Trading** and similarly for other options.
 `
 
 export const kucoinAuth = ConnectorAuth.CustomAuth({

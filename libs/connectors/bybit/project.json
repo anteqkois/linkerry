@@ -1,0 +1,19 @@
+{
+  "name": "connectors-bybit",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/bybit/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/bybit",
+        "main": "libs/connectors/bybit/src/index.ts",
+        "tsConfig": "libs/connectors/bybit/tsconfig.lib.json",
+        "assets": ["libs/connectors/bybit/*.md"]
+      }
+    }
+  }
+}
