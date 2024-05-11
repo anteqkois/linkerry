@@ -14,7 +14,7 @@ export type CustomAuthProps = Record<
 	| ShortTextProperty<boolean>
 	| SecretTextProperty<boolean>
 	| NumberProperty<boolean>
-	| StaticDropdownProperty
+	| StaticDropdownProperty<boolean, any>
 	| CheckboxProperty<boolean>
 >
 

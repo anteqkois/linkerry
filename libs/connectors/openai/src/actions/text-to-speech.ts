@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { openaiAuth } from '../..';
+import { openaiAuth } from '../common/auth';
 import { streamToBuffer } from '../common/common';
 import { Property, createAction } from '@linkerry/connectors-framework';
 

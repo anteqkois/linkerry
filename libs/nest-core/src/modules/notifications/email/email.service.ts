@@ -6,7 +6,7 @@ import { render } from '@react-email/render'
 export class EmailService {
 	constructor(private readonly mailerService: MailerService) {}
 
-	async sendEmail({ subject, to, reactEmailComponent, props, text }: SendEmialProps) {
+	async sendEmail({ subject, to, reactEmailComponent, props, text }: SendEmailProps) {
 		const emailHtml = reactEmailComponent ? render(reactEmailComponent(props ?? {})) : undefined
 
 		await this.mailerService.sendMail({
@@ -19,7 +19,7 @@ export class EmailService {
 	}
 }
 
-export interface SendEmialProps {
+export interface SendEmailProps {
 	to: string
 	subject: string
 	text?: string

@@ -17,7 +17,7 @@ type ReturnType = {
 	logout: () => Promise<IAuthLogoutResponse>
 	/* emial verification */
 	emialVerificationDialog: boolean
-	setEmialVerificationDialog: Dispatch<SetStateAction<boolean>>
+	setEmailVerificationDialog: Dispatch<SetStateAction<boolean>>
 }
 
 const Context = createContext<ReturnType>({} as ReturnType)
@@ -26,7 +26,7 @@ export function UserProvider({ children }: PropsWithChildren) {
 	const [authStatus, setAuthStatus] = useCookie<AuthStatus>(Cookies.AUTH_STATUS, AuthStatus.LOADING)
 	const [user, setUser] = useLocalStorage('user-data', {} as User)
 	const [liveChatHash, setLiveChatHash] = useState('')
-	const [emialVerificationDialog, setEmialVerificationDialog] = useState<boolean>(false)
+	const [emialVerificationDialog, setEmailVerificationDialog] = useState<boolean>(false)
 	const { push } = useRouter()
 	const searchParams = useSearchParams()
 
@@ -87,7 +87,7 @@ export function UserProvider({ children }: PropsWithChildren) {
 				login,
 				logout,
 				emialVerificationDialog,
-				setEmialVerificationDialog,
+				setEmailVerificationDialog,
 				liveChatHash
 			}}
 		>

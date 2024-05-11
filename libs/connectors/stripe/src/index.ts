@@ -1,19 +1,14 @@
 import { createCustomApiCallAction } from '@linkerry/connectors-common';
-import { ConnectorAuth, createConnector } from '@linkerry/connectors-framework';
+import { createConnector } from '@linkerry/connectors-framework';
 import { stripeCreateCustomer } from './actions/create-customer';
 import { stripeCreateInvoice } from './actions/create-invoice';
 import { stripeRetrieveCustomer } from './actions/retrieve-customer';
 import { stripeSearchCustomer } from './actions/search-customer';
+import { stripeAuth } from './common/auth';
 import { stripeNewCustomer } from './trigger/new-customer';
 import { stripeNewPayment } from './trigger/new-payment';
 import { stripeNewSubscription } from './trigger/new-subscription';
 import { stripePaymentFailed } from './trigger/payment-failed';
-
-export const stripeAuth = ConnectorAuth.SecretText({
-  displayName: 'Secret API Key',
-  required: true,
-  description: 'Secret key acquired from your [Stripe API dashboard](https://dashboard.stripe.com/apikeys)',
-});
 
 export const stripe = createConnector({
   displayName: 'Stripe',

@@ -1,6 +1,6 @@
 import { HttpMethod, httpClient } from '@linkerry/connectors-common';
 import { Property, createAction } from '@linkerry/connectors-framework';
-import { stripeAuth } from '../..';
+import { stripeAuth } from '../common/auth';
 
 export const stripeCreateCustomer = createAction({
   name: 'create_customer',

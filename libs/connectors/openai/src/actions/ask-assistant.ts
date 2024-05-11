@@ -1,7 +1,7 @@
 import { Property, StoreScope, Validators, createAction } from '@linkerry/connectors-framework';
 import { waitMs } from '@linkerry/shared';
 import OpenAI from 'openai';
-import { openaiAuth } from '../..';
+import { openaiAuth } from '../common/auth';
 
 export const askAssistant = createAction({
   auth: openaiAuth,

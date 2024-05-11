@@ -1,5 +1,5 @@
 import { Property, createAction } from '@linkerry/connectors-framework';
-import { stripeAuth } from '../..';
+import { stripeAuth } from '../common/auth';
 import { HttpMethod, httpClient } from '@linkerry/connectors-common';
 
 export const stripeCreateInvoice = createAction({

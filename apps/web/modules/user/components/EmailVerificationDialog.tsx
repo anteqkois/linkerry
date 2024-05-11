@@ -1,22 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isCustomHttpExceptionAxios } from '@linkerry/shared'
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	InputOTP,
-	InputOTPGroup,
-	InputOTPSlot,
-	useToast,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSlot,
+    useToast,
 } from '@linkerry/ui-components/client'
 import { Button } from '@linkerry/ui-components/server'
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp'
@@ -34,7 +34,7 @@ const FormSchema = z.object({
 
 export const EmailVerificationDialog = () => {
 	const { toast } = useToast()
-	const { emialVerificationDialog, setEmialVerificationDialog, user, setUser } = useUser()
+	const { emialVerificationDialog, setEmailVerificationDialog, user, setUser } = useUser()
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -53,7 +53,7 @@ export const EmailVerificationDialog = () => {
 				duration: 5_000,
 			})
 			setUser((user) => ({ ...user, emailVerifiedAtDate: data.emailVerifiedAtDate }))
-			setEmialVerificationDialog(false)
+			setEmailVerificationDialog(false)
 		} catch (error) {
 			if (isCustomHttpExceptionAxios(error))
 				form.setError('code', {
@@ -67,7 +67,7 @@ export const EmailVerificationDialog = () => {
 			return form.setError('code', {
 				message: 'you need to verify your email so we can know it belongs to you.',
 			})
-		setEmialVerificationDialog(newState)
+		setEmailVerificationDialog(newState)
 	}, [])
 
 	const onResendCode = useCallback(async () => {
@@ -107,7 +107,7 @@ export const EmailVerificationDialog = () => {
 							name="code"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Emial code </FormLabel>
+									<FormLabel>Email code </FormLabel>
 									<FormControl>
 										<InputOTP maxLength={6} {...field} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
 											<InputOTPGroup>

@@ -1,5 +1,5 @@
 import { createTrigger } from '@linkerry/connectors-framework';
-import { stripeAuth } from '../..';
+import { stripeAuth } from '../common/auth';
 import { stripeCommon } from '../common';
 import { TriggerStrategy } from '@linkerry/shared';
 

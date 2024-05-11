@@ -5,27 +5,26 @@ import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
 import { getAvailableConnectorNames } from '../utils/get-available-connector-names'
 
-const skipConnectorsMetadata = ['@linkerry/common-exchanges']
+const skipConnectorsMetadata = ['@linkerry/common-exchanges', '@linkerry/connectors-common', '@linkerry/connectors-framework']
 const customConnectors = []
 const coreConnectors = ['@linkerry/linkerry-schedule']
 
 export const getRealMetadata = async () => {
   const names = await getAvailableConnectorNames()
-  console.log(`found ${names.length} connectors`)
+  console.log(`found ${names.length} packages`)
 
   const connectorsMetadata: Omit<ConnectorMetadata, '_id'>[] = []
   for (const packageName of names) {
     const packagePath = `libs/connectors/${packageName}`
 
     const packageJson = await readPackageJson(packagePath)
-
-    const module = await import(join(packagePath, 'src', 'index'))
     const { name: connectorName, version: connectorVersion } = packageJson
     if (skipConnectorsMetadata.includes(connectorName)) {
       console.log(`skip ${connectorName}`)
       continue
     }
 
+    const module = await import(join(packagePath, 'src', 'index'))
     const connector = extractConnectorFromModule({ module })
 
     const fullMetadata = connector.metadata()
@@ -52,6 +51,7 @@ export const getRealMetadata = async () => {
   return connectorsMetadata
 }
 
+// TODO duplicate code
 const extractConnectorFromModule = (params: { module: Record<string, unknown> }) => {
   const { module } = params
   const exports = Object.values(module)

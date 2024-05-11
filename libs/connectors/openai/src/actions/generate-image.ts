@@ -1,6 +1,6 @@
 import { Property, createAction } from '@linkerry/connectors-framework';
 import OpenAI from 'openai';
-import { openaiAuth } from '../..';
+import { openaiAuth } from '../common/auth';
 
 export const generateImage = createAction({
   auth: openaiAuth,

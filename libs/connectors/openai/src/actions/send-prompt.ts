@@ -1,6 +1,6 @@
 import { Property, StoreScope, Validators, createAction } from '@linkerry/connectors-framework';
 import OpenAI from 'openai';
-import { openaiAuth } from '../..';
+import { openaiAuth } from '../common/auth';
 import {
   calculateMessagesTokenSize,
   exceedsHistoryLimit,
