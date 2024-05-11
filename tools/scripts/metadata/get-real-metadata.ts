@@ -5,55 +5,61 @@ import { valid } from 'semver'
 import { readPackageJson } from '../utils/files'
 import { getAvailableConnectorNames } from '../utils/get-available-connector-names'
 
+const skipConnectorsMetadata = ['@linkerry/common-exchanges']
 const customConnectors = []
 const coreConnectors = ['@linkerry/linkerry-schedule']
 
 export const getRealMetadata = async () => {
-	const names = await getAvailableConnectorNames()
-	console.log(`found ${names.length} connectors`)
+  const names = await getAvailableConnectorNames()
+  console.log(`found ${names.length} connectors`)
 
-	const connectorsMetadata: Omit<ConnectorMetadata, '_id'>[] = []
-	for (const packageName of names) {
-		const packagePath = `libs/connectors/${packageName}`
+  const connectorsMetadata: Omit<ConnectorMetadata, '_id'>[] = []
+  for (const packageName of names) {
+    const packagePath = `libs/connectors/${packageName}`
 
-		const packageJson = await readPackageJson(packagePath)
+    const packageJson = await readPackageJson(packagePath)
 
-		const module = await import(join(packagePath, 'src', 'index'))
-		const { name: connectorName, version: connectorVersion } = packageJson
-		const connector = extractConnectorFromModule({ module })
+    const module = await import(join(packagePath, 'src', 'index'))
+    const { name: connectorName, version: connectorVersion } = packageJson
+    if (skipConnectorsMetadata.includes(connectorName)) {
+      console.log(`skip ${connectorName}`)
+      continue
+    }
 
-		const fullMetadata = connector.metadata()
+    const connector = extractConnectorFromModule({ module })
 
-		if (fullMetadata.auth) delete fullMetadata.auth.valueSchema
+    const fullMetadata = connector.metadata()
 
-		const metadata: Omit<ConnectorMetadata, '_id'> = {
-			...fullMetadata,
-			connectorType: customConnectors.includes(connectorName) ? ConnectorType.CUSTOM : ConnectorType.OFFICIAL,
-			packageType: PackageType.REGISTRY,
-			group: coreConnectors.includes(connectorName) ? ConnectorGroup.CORE : ConnectorGroup.APP,
-			name: connectorName,
-			version: connectorVersion,
-			minimumSupportedRelease: connector.minimumSupportedRelease,
-			maximumSupportedRelease: connector.maximumSupportedRelease,
-		}
+    if (fullMetadata.auth) delete fullMetadata.auth.valueSchema
 
-		if (!valid(metadata.minimumSupportedRelease) || !valid(metadata.maximumSupportedRelease))
-			throw new Error(`Invalid semantic version of connector ${metadata.name}@${metadata.version}`)
+    const metadata: Omit<ConnectorMetadata, '_id'> = {
+      ...fullMetadata,
+      connectorType: customConnectors.includes(connectorName) ? ConnectorType.CUSTOM : ConnectorType.OFFICIAL,
+      packageType: PackageType.REGISTRY,
+      group: coreConnectors.includes(connectorName) ? ConnectorGroup.CORE : ConnectorGroup.APP,
+      name: connectorName,
+      version: connectorVersion,
+      minimumSupportedRelease: connector.minimumSupportedRelease,
+      maximumSupportedRelease: connector.maximumSupportedRelease,
+    }
 
-		connectorsMetadata.push(metadata)
-	}
+    if (!valid(metadata.minimumSupportedRelease) || !valid(metadata.maximumSupportedRelease))
+      throw new Error(`Invalid semantic version of connector ${metadata.name}@${metadata.version}`)
 
-	return connectorsMetadata
+    connectorsMetadata.push(metadata)
+  }
+
+  return connectorsMetadata
 }
 
 const extractConnectorFromModule = (params: { module: Record<string, unknown> }) => {
-	const { module } = params
-	const exports = Object.values(module)
+  const { module } = params
+  const exports = Object.values(module)
 
-	for (const e of exports) {
-		if (e !== null && e !== undefined && e.constructor.name === 'Connector') {
-			return e as Connector
-		}
-	}
-	throw new Error("Can't find constructor")
+  for (const e of exports) {
+    if (e !== null && e !== undefined && e.constructor.name === 'Connector') {
+      return e as Connector
+    }
+  }
+  throw new Error("Can't find constructor")
 }
