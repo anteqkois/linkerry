@@ -6,7 +6,7 @@ import { HTMLAttributes, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { retriveStepInputFromObject } from '../../steps/retriveStepInputFromObject'
 import { useEditor } from '../../useEditor'
-import { VirtualizedSelect } from './VirtualizedSelect'
+import { VirtualizedCombobox } from './VirtualizedCombobox'
 
 const initOptions = {
 	options: [
@@ -189,7 +189,7 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 	}, [])
 
 	return (
-		<VirtualizedSelect
+		<VirtualizedCombobox
 			property={{
 				...property,
 				type: PropertyType.STATIC_DROPDOWN,
