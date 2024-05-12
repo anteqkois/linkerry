@@ -1,5 +1,5 @@
 import { ConnectorMetadata, SecretTextProperty } from '@linkerry/connectors-framework'
-import { AppConnectionType, AppConnectionWithoutSensitiveData, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import { AppConnectionType, AppConnectionWithoutSensitiveData, isCustomHttpExceptionAxios, isQuotaErrorCode } from '@linkerry/shared'
 import {
   ButtonClient,
   DialogDescription,
@@ -21,6 +21,7 @@ import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useState } from 'r
 import { useForm } from 'react-hook-form'
 import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { AppConnectionsApi } from '../../app-connections'
+import { useReachLimitDialog } from '../../billing/useReachLimitDialog'
 import { SecretTextField } from '../form/Inputs/SecretTextField'
 
 export interface SecretTextAuthProps extends HTMLAttributes<HTMLElement> {
@@ -30,6 +31,7 @@ export interface SecretTextAuthProps extends HTMLAttributes<HTMLElement> {
 	setShowDialog: Dispatch<SetStateAction<boolean>>
 }
 export const SecretTextAuth = ({ onCreateAppConnection, auth, connector, setShowDialog }: SecretTextAuthProps) => {
+  const { showDialogBasedOnErrorCode } = useReachLimitDialog()
 	const appConnectionForm = useForm({
 		mode: 'all',
 		defaultValues: {
@@ -69,10 +71,12 @@ export const SecretTextAuth = ({ onCreateAppConnection, auth, connector, setShow
 			onCreateAppConnection(data)
 			setShowDialog(false)
 		} catch (error: any) {
-			if (isCustomHttpExceptionAxios(error))
+			if (isCustomHttpExceptionAxios(error)){
 				appConnectionForm.setError('root', {
 					message: error.response.data.message,
 				})
+        if (isQuotaErrorCode(error.response.data.code)) return showDialogBasedOnErrorCode(error.response.data.code)
+      }
 			else {
 				appConnectionForm.setError('root', {
 					message: 'Unknwon error occures, try again or inform our Team',

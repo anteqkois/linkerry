@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/stripe",
         "main": "libs/connectors/stripe/src/index.ts",
         "tsConfig": "libs/connectors/stripe/tsconfig.lib.json",
-        "assets": ["libs/connectors/stripe/*.md"]
+        "assets": ["libs/connectors/stripe/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

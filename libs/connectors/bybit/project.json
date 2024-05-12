@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/bybit",
         "main": "libs/connectors/bybit/src/index.ts",
         "tsConfig": "libs/connectors/bybit/tsconfig.lib.json",
-        "assets": ["libs/connectors/bybit/*.md"]
+        "assets": ["libs/connectors/bybit/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

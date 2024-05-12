@@ -25,7 +25,7 @@ import { FlowApi, TriggerApi } from '../../flows'
 import { selectTriggerNodeFactory, triggerNodeFactory } from '../common/nodeFactory'
 import { CustomNode } from '../types'
 import { editorDrawers } from './editorSlice'
-import { CreateSlice, TriggersSlice } from './types'
+import { CreateSlice, FlowOperationRunnType, TriggersSlice } from './types'
 
 export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	// TRIGGERS
@@ -71,7 +71,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		}
 
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 		try {
 			await updateEditedTrigger(newTrigger)
@@ -79,7 +79,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			setRightDrawer('trigger_connector')
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
@@ -102,7 +102,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 	patchEditedTriggerConnector: async (update: DeepPartial<TriggerConnector>) => {
 		const { editedTrigger, flow, setFlow, patchNode } = get()
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		try {
@@ -125,7 +125,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			})
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
@@ -134,7 +134,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		// eslint-disable-next-line prefer-const
 		let { nodes, flow, setFlow, patchNode } = get()
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		try {
@@ -172,7 +172,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			})
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
@@ -181,7 +181,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		let testResult: TriggerTestPoolResponse
 
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		try {
@@ -207,7 +207,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			set({ editedTrigger: updatedTrigger })
 			setFlow({ ...flow, version: testResult.flowVersion })
 		} finally {
-			set({ flowOperationRunning: false })
+			set({ flowOperationRunning: null })
 		}
 
 		return testResult.triggerEvents
@@ -219,7 +219,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			throw new CustomError(`Invalid trigger type: ${editedTrigger?.type}`, ErrorCode.INVALID_TYPE, editedTrigger ?? undefined)
 
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.TEST_WEBHOOK,
 		})
 
 		const socket = initWebSocketConnection({
@@ -235,7 +235,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 			socket.on(WEBSOCKET_EVENT.EXCEPTION, (error: CustomWebSocketExceptionResponse) => {
 				set({
-					flowOperationRunning: false,
+					flowOperationRunning: null,
 					webhookTriggerWatcherWorks: false,
 				})
 
@@ -258,7 +258,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 				if (typeof data === 'string') {
 					// neutral message like "manual cancelation", "timeout"
 					set({
-						flowOperationRunning: false,
+						flowOperationRunning: null,
 					})
 					closeWebSocketConnection()
 					return resolve(data)
@@ -277,7 +277,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 						trigger: updatedTrigger,
 					},
 				})
-				set({ editedTrigger: updatedTrigger, flowOperationRunning: false })
+				set({ editedTrigger: updatedTrigger, flowOperationRunning: null })
 				setFlow({ ...flow, version: flowVersion })
 
 				closeWebSocketConnection()
@@ -293,7 +293,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 		if (!socket?.connected) throw new CustomError(`Client isn't connected to websocket`, ErrorCode.WEB_SOCKET_ERROR)
 
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		return new Promise((resolve, reject) => {
@@ -304,7 +304,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 
 			socket.on(WEBSOCKET_EVENT.EXCEPTION, (error: CustomWebSocketExceptionResponse) => {
 				set({
-					flowOperationRunning: false,
+					flowOperationRunning: null,
 					webhookTriggerWatcherWorks: false,
 				})
 
@@ -315,7 +315,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
 			})
 
 			socket.on(WEBSOCKET_EVENT.WEBHOOK_WATCHER_CANCELED, () => {
-				set({ flowOperationRunning: false, webhookTriggerWatcherWorks: false })
+				set({ flowOperationRunning: null, webhookTriggerWatcherWorks: false })
 
 				closeWebSocketConnection()
 				return resolve()

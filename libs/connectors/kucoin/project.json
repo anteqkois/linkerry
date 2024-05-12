@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/kucoin",
         "main": "libs/connectors/kucoin/src/index.ts",
         "tsConfig": "libs/connectors/kucoin/tsconfig.lib.json",
-        "assets": ["libs/connectors/kucoin/*.md"]
+        "assets": ["libs/connectors/kucoin/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

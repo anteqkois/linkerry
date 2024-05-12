@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/mexc",
         "main": "libs/connectors/mexc/src/index.ts",
         "tsConfig": "libs/connectors/mexc/tsconfig.lib.json",
-        "assets": ["libs/connectors/mexc/*.md"]
+        "assets": ["libs/connectors/mexc/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

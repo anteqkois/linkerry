@@ -1,21 +1,21 @@
 import {
-	ConnectorMetadata,
-	ConnectorPropertyMap,
-	DynamicDropdownProperty,
-	DynamicDropdownState,
-	DynamicProperties,
-	PropertyContext,
-	PropertyType,
-	StaticPropsValue,
+  ConnectorMetadata,
+  ConnectorPropertyMap,
+  DynamicDropdownProperty,
+  DynamicDropdownState,
+  DynamicProperties,
+  PropertyContext,
+  PropertyType,
+  StaticPropsValue,
 } from '@linkerry/connectors-framework'
 import {
-	BasicAuthConnectionValue,
-	CustomAuthConnectionValue,
-	ExecuteExtractConnectorMetadata,
-	ExecutePropsOptions,
-	ExecuteValidateAuthOperation,
-	ExecuteValidateAuthResponse,
-	SecretTextConnectionValue,
+  BasicAuthConnectionValue,
+  CustomAuthConnectionValue,
+  ExecuteExtractConnectorMetadata,
+  ExecutePropsOptions,
+  ExecuteValidateAuthOperation,
+  ExecuteValidateAuthResponse,
+  SecretTextConnectionValue,
 } from '@linkerry/shared'
 import { EngineConstants } from '../handler/context/engine-constants'
 import { FlowExecutorContext } from '../handler/context/flow-execution-context'

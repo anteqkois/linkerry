@@ -21,7 +21,7 @@ import {
 } from '@linkerry/shared'
 import { FlowApi } from '../../flows'
 import { ConnectorsApi } from '../../flows/connectors/api/api'
-import { CreateSlice, FlowAndConnectorsSlice } from './types'
+import { CreateSlice, FlowAndConnectorsSlice, FlowOperationRunnType } from './types'
 
 const emptyFlow: FlowPopulated = {
   _id: '1234567890',
@@ -52,7 +52,7 @@ const emptyFlow: FlowPopulated = {
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
   // FLOW
   loaded: false,
-  flowOperationRunning: false,
+  flowOperationRunning: null,
   flow: emptyFlow,
   loadFlow: async (id: Id) => {
     const { useLocalStorage } = get()
@@ -78,7 +78,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
   publishFlow: async () => {
     const { flow, setFlow } = get()
     set({
-      flowOperationRunning: true,
+      flowOperationRunning: FlowOperationRunnType.RUN,
     })
 
     try {
@@ -91,14 +91,14 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
       setFlow(data)
     } finally {
       set({
-        flowOperationRunning: false,
+        flowOperationRunning: null,
       })
     }
   },
   setFlowStatus: async (status: FlowStatus) => {
     const { flow, setFlow } = get()
     set({
-      flowOperationRunning: true,
+      flowOperationRunning: FlowOperationRunnType.RUN,
     })
 
     try {
@@ -112,7 +112,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
       setFlow(data)
     } finally {
       set({
-        flowOperationRunning: false,
+        flowOperationRunning: null,
       })
     }
   },
@@ -187,7 +187,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
   updateFlowVersionDisplayName: async (newName) => {
     const { flow, setFlow } = get()
     set({
-      flowOperationRunning: true,
+      flowOperationRunning: FlowOperationRunnType.RUN,
     })
 
     try {
@@ -201,7 +201,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
       setFlow(data)
     } finally {
       set({
-        flowOperationRunning: false,
+        flowOperationRunning: null,
       })
     }
   },

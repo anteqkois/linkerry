@@ -61,10 +61,15 @@ export interface EditorSlice {
   setShowLeftDrawer: Dispatch<SetStateAction<boolean>>
 }
 
+export enum FlowOperationRunnType {
+  'TEST_WEBHOOK' = 'TEST_WEBHOOK',
+  'RUN' = 'RUN', // TODO temp sollution
+}
+
 export interface FlowAndConnectorsSlice {
   // FLOW
   loaded: boolean
-  flowOperationRunning: boolean
+  flowOperationRunning: null | FlowOperationRunnType
   flow: FlowPopulated
   loadFlow: (id: Id) => Promise<FlowPopulated | null>
   setFlow: (flow: FlowPopulated) => void

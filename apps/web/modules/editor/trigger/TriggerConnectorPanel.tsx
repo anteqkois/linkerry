@@ -233,7 +233,7 @@ export const TriggerConnectorPanel = () => {
           <TriggerTestFunction
             panelSize={testDataPanelHeight}
             // TODO refactor this
-            disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0 || flowOperationRunning}
+            disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0 || !!flowOperationRunning}
             disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Trigger fields'}
           />
         </ResizablePanel>
@@ -246,7 +246,7 @@ export const TriggerConnectorPanel = () => {
         >
           <TriggerWebhookSimulation
             panelSize={testDataPanelHeight}
-            disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0 || flowOperationRunning}
+            disabled={isEmpty(triggerWatcher?.name) || Object.keys(triggerForm.formState.errors).length !== 0 || !!flowOperationRunning}
             disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Trigger fields'}
             triggerDisplayName={triggerWatcher.displayName}
           />

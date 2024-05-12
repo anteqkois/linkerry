@@ -236,7 +236,7 @@ export const ActionConnectorPanel = () => {
         >
           <ActionTest
             panelSize={testDataPanelHeight}
-            disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0 || flowOperationRunning}
+            disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0 || !!flowOperationRunning}
             disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Action fields'}
           />
         </ResizablePanel>

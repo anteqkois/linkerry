@@ -123,7 +123,7 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
 							disabledMessage={disabledMessage}
 							text="Regenerate Data"
 							onClick={onClickTest}
-							loading={flowOperationRunning}
+							loading={!!flowOperationRunning}
 						/>
 					</div>
 					<Select onValueChange={onChangeTriggerEvent} value={selectedTriggerEventId}>
@@ -152,12 +152,12 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
 						disabledMessage={disabledMessage}
 						text="Generate Data"
 						onClick={onClickTest}
-						loading={flowOperationRunning}
+						loading={!!flowOperationRunning}
 					/>
 				</div>
 			)}
 
-			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={230} title="Output" className="mt-2" />}
+			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={280} title="Output" className="mt-2" />}
 		</div>
 	)
 }

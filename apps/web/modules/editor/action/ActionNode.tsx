@@ -36,7 +36,7 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
 			<BaseNodeElement
 				title={action.displayName}
 				valid={action.valid}
-				invalidMessage="Invalid action, try edit settings"
+				invalidMessage="Invalid action, try edit settings, or generate new 'Sample Data'"
 				onClick={onClickHandler}
 				className="group"
 			>

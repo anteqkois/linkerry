@@ -10,6 +10,7 @@ import { CodeEditor, ErrorInfo, Spinner, WarningInfo } from '../../../shared/com
 import { TriggerApi } from '../../flows/triggers/api'
 import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
 import { useEditor } from '../useEditor'
+import { FlowOperationRunnType } from '../store'
 
 export interface TriggerWebhookSimulationProps extends HTMLAttributes<HTMLElement> {
 	triggerDisplayName: string
@@ -150,11 +151,11 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 		) : (
 			<GenerateTestDataButton
 				// or when test starts but the watcher isn't yet enabled
-				disabled={disabled || (flowOperationRunning && !webhookTriggerWatcherWorks)}
+				disabled={disabled || (!!flowOperationRunning && !webhookTriggerWatcherWorks)}
 				disabledMessage={disabledMessage}
 				text={data?.length ? 'Regenerate Data' : 'Generate Data'}
 				onClick={onClickTest}
-				loading={flowOperationRunning}
+				loading={!!flowOperationRunning}
 			/>
 		)
 
@@ -164,7 +165,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 				<Small>Generate sample sata</Small>
 				<Muted>The sample sata can be used in next steps</Muted>
 			</div>
-			{flowOperationRunning ? (
+			{flowOperationRunning === FlowOperationRunnType.TEST_WEBHOOK ? (
 				<WarningInfo className="my-2">
 					<Small>
 						Action Required: Please go to {editedConnectorMetadata?.displayName} and perform action to trigger &quot;{triggerDisplayName}&quot;
@@ -211,7 +212,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 				</div>
 			)}
 
-			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={230} title="Output" className="mt-2" />}
+			{record && <CodeEditor value={record} heightVh={panelSize} substractPx={280} title="Output" className="mt-2" />}
 		</div>
 	)
 }

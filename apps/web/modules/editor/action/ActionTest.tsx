@@ -86,7 +86,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 							disabledMessage={disabledMessage}
 							text="Regenerate Data"
 							onClick={onClickTest}
-							loading={flowOperationRunning}
+							loading={!!flowOperationRunning}
 						/>
 					</div>
 					{errorMessage.length ? (
@@ -103,7 +103,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 							disabledMessage={disabledMessage}
 							text="Generate Data"
 							onClick={onClickTest}
-							loading={flowOperationRunning}
+							loading={!!flowOperationRunning}
 						/>
 					</div>
 				</>

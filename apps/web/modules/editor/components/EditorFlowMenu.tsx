@@ -114,7 +114,7 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 							ref={inputFlowVersionNameRef}
 							value={flowVersionName}
 							onChange={onChangeHandler}
-							disabled={flowOperationRunning}
+							disabled={!!flowOperationRunning}
 							className="border-0 h-7 ml-0 pl-6 w-36"
 						/>
 					</div>
@@ -129,7 +129,7 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<div>
-									<ButtonClient className="h-7 rounded-sm" disabled={flowValidity.invalid} onClick={onPublishFlow} loading={flowOperationRunning}>
+									<ButtonClient className="h-7 rounded-sm" disabled={flowValidity.invalid} onClick={onPublishFlow} loading={!!flowOperationRunning}>
 										Publish
 									</ButtonClient>
 								</div>
@@ -153,7 +153,7 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 												id="flow-enabled"
 												checked={flow.status === FlowStatus.ENABLED}
 												onCheckedChange={onChangeFlowStatus}
-												disabled={flowOperationRunning}
+												disabled={!!flowOperationRunning}
 											/>
 										</div>
 									</TooltipTrigger>

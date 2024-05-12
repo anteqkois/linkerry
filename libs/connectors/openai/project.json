@@ -12,7 +12,9 @@
         "outputPath": "dist/libs/connectors/openai",
         "main": "libs/connectors/openai/src/index.ts",
         "tsConfig": "libs/connectors/openai/tsconfig.lib.json",
-        "assets": ["libs/connectors/openai/*.md"]
+        "assets": ["libs/connectors/openai/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   }

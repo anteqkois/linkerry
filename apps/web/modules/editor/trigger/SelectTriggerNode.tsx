@@ -13,7 +13,7 @@ export const SelectTriggerNodeElement = ({ data: { trigger } }: SelectTriggerPro
 	}
 
 	return (
-		<BaseNodeElement title="Trigger" valid={false} invalidMessage="Invalid trigger, try edit settings" onClick={handleOnClick}>
+		<BaseNodeElement title="Trigger" valid={false} invalidMessage="Invalid trigger, try edit settings, or generate new 'Sample Data'" onClick={handleOnClick}>
 			<div className="flex gap-6">
 				<Icons.QuestionMarkCircle className="w-16 h-16" />
 				<div>

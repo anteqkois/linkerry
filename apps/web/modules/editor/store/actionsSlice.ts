@@ -19,7 +19,7 @@ import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { FlowApi, StepApi } from '../../flows'
 import { actionNodeFactory, nodeConfigs } from '../common/nodeFactory'
 import { defaultEdgeFactory, generateEdgeId } from '../edges/edgesFactory'
-import { ActionsSlice, CreateSlice } from './types'
+import { ActionsSlice, CreateSlice, FlowOperationRunnType } from './types'
 
 export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 	// ACTIONS
@@ -72,7 +72,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 
 		try {
 			set({
-				flowOperationRunning: true,
+				flowOperationRunning: FlowOperationRunnType.RUN,
 			})
 
 			const { data } = await FlowApi.operation(flow._id, {
@@ -116,7 +116,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			setEditedAction(action)
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
@@ -127,7 +127,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const newAction = deepMerge<Action>(editedAction, update)
 		if (JSON.stringify(newAction) === JSON.stringify(editedAction)) return console.debug('Skip action update, data after merge is the same')
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		try {
@@ -145,7 +145,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			})
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
@@ -153,7 +153,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const { flow, setFlow, patchNode } = get()
 
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		try {
@@ -172,7 +172,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			})
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
@@ -180,7 +180,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 		const { flow, setFlow, deleteNode, setShowRightDrawer, patchNode, deleteEdge } = get()
 
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		try {
@@ -221,14 +221,14 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			setFlow(data)
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
 	testAction: async () => {
 		const { flow, setFlow, patchNode, editedAction } = get()
 		set({
-			flowOperationRunning: true,
+			flowOperationRunning: FlowOperationRunnType.RUN,
 		})
 
 		try {
@@ -269,7 +269,7 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
 			return testResult
 		} finally {
 			set({
-				flowOperationRunning: false,
+				flowOperationRunning: null,
 			})
 		}
 	},
