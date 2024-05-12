@@ -10,10 +10,10 @@ import { VirtualizedSelect } from './VirtualizedSelect'
 
 const initOptions = {
 	options: [
-		{
-			label: '',
-			value: '',
-		},
+		// {
+		// 	label: 'Loading',
+		// 	value: 'loading',
+		// },
 	],
 	disabled: true,
 	placeholder: undefined,
