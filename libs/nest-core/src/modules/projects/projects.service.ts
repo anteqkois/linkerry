@@ -12,7 +12,7 @@ export class ProjectsService {
 
 	async findManyUserProjects(userId: Id) {
 		return this.projectsModel.find({
-			users: {
+			userIds: {
 				$in: [userId],
 			},
 		})
