@@ -4,8 +4,8 @@ import { ExchangeClientInterface } from '../types'
 export const setMarginModeActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth,
-    description: 'Set Margin Mode',
-    displayName: 'Set margin mode to "cross" or "isolated"',
+    displayName: 'Set Margin Mode',
+    description: 'Set margin mode to "cross" or "isolated"',
     name: 'set_margin_mode',
     props: {
       margin_mode: Property.StaticDropdown({

@@ -5,8 +5,8 @@ import { ExchangeClientInterface } from '../types'
 export const getTickersActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Get Ticekr',
-    displayName: 'Get a price ticker, a statistical calculation with the information calculated over the past 24 hours for a specific market',
+    displayName: 'Get Ticekr',
+    description: 'Get a price ticker, a statistical calculation with the information calculated over the past 24 hours for a specific market',
     name: 'get_ticker',
     props: {
       symbol: exchangeCommon.symbol(exchangeClient),

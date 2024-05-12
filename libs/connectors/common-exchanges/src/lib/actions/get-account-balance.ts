@@ -4,8 +4,8 @@ import { ExchangeClientInterface } from '../types'
 export const getAccountBalanceActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Get Account Asset Balance',
-    displayName: 'Get account balance',
+    displayName: 'Get Account Asset Balance',
+    description: 'Get account balance',
     name: 'get_account_balance',
     props: {},
     run: async ({ auth, propsValue }) => {

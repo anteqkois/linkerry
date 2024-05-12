@@ -5,8 +5,8 @@ import { ExchangeClientInterface } from '../types'
 export const createMarketOrderWithCostActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Create Market Order with Cost',
-    displayName: 'Create a market order by providing the symbol, side and cost',
+    displayName: 'Create Market Order with Cost',
+    description: 'Create a market order by providing the symbol, side and cost',
     name: 'create_market_order_with_cost',
     props: {
       symbol: exchangeCommon.symbol(exchangeClient),

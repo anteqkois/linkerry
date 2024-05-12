@@ -5,8 +5,8 @@ import { ExchangeClientInterface } from '../types'
 export const cancelAllSymbolOrdersActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Cancel All Symbol Orders',
-    displayName: 'Cancel all open orders in a market for given symbol',
+    displayName: 'Cancel All Symbol Orders',
+    description: 'Cancel all open orders in a market for given symbol',
     name: 'cancel_all_symbol_orders',
     props: {
       symbol: exchangeCommon.symbol(exchangeClient),
@@ -16,5 +16,5 @@ export const cancelAllSymbolOrdersActionFactory = (exchangeClient: ExchangeClien
 
       const response = await exchangeClient.exchange.cancelAllOrders(propsValue.symbol)
       return response
-    }
+    },
   })

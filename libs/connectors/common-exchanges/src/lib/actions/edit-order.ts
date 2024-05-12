@@ -5,8 +5,8 @@ import { ExchangeClientInterface } from '../types'
 export const editOrderActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Edit Market / Limit Order',
-    displayName: 'Edit a trade order based on order id',
+    displayName: 'Edit Market / Limit Order',
+    description: 'Edit a trade order based on order id',
     name: 'edit_order',
     props: {
       order_id: exchangeCommon.order_id,

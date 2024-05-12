@@ -7,8 +7,8 @@ import { ExchangeClientInterface } from '../types'
 export const cancelOrdersActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Cancel Orders',
-    displayName: 'Cancel multiple open orders in a market',
+    displayName: 'Cancel Orders',
+    description: 'Cancel multiple open orders in a market',
     name: 'cancel_orders',
     props: {
       ids: Property.Array({

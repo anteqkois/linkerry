@@ -5,8 +5,8 @@ import { ExchangeClientInterface } from '../types'
 export const getTradesActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Get Trades',
-    displayName: 'Get all trades made on your account',
+    displayName: 'Get Trades',
+    description: 'Get all trades made on your account',
     name: 'get_trades',
     props: {
       symbol: exchangeCommon.symbol(exchangeClient),

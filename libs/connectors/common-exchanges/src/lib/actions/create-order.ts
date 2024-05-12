@@ -5,8 +5,8 @@ import { ExchangeClientInterface } from '../types'
 export const createOrderActionFactory = (exchangeClient: ExchangeClientInterface, auth: any) =>
   createAction({
     auth: auth,
-    description: 'Create Market / Limit Order',
-    displayName: 'Choose and create "market" or "limit" order. It can be "sell" or "buy" order',
+    displayName: 'Create Market / Limit Order',
+    description: 'Choose and create "market" or "limit" order. It can be "sell" or "buy" order',
     name: 'create_order',
     props: {
       symbol: exchangeCommon.symbol(exchangeClient),

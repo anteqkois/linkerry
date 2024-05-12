@@ -5,8 +5,8 @@ import { BinanceClient } from '../common/client'
 
 export const getAccountBalance = createAction({
   auth: binanceAuth,
-  description: 'Get Account Asset Balance',
-  displayName: 'Get account balance',
+  displayName: 'Get Account Asset Balance',
+  description: 'Get account balance',
   name: 'get_account_balance',
   props: {
     non_zero_assets: Property.Checkbox({

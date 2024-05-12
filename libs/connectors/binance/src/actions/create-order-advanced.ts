@@ -5,8 +5,8 @@ import { BinanceClient } from '../common/client'
 
 export const createOrderAdvanced = createAction({
   auth: binanceAuth,
-  description: 'Create Advanced Order',
-  displayName: 'Create a trade order with options like stoploss, profit etc.',
+  displayName: 'Create Advanced Order',
+  description: 'Create a trade order with options like stoploss, profit etc.',
   name: 'create_order',
   props: {
     symbol: exchangeCommon.symbol(BinanceClient),

@@ -9,8 +9,8 @@ import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-quer
 import { CodeEditor, ErrorInfo, Spinner, WarningInfo } from '../../../shared/components'
 import { TriggerApi } from '../../flows/triggers/api'
 import { GenerateTestDataButton } from '../steps/GenerateTestDataButton'
-import { useEditor } from '../useEditor'
 import { FlowOperationRunnType } from '../store'
+import { useEditor } from '../useEditor'
 
 export interface TriggerWebhookSimulationProps extends HTMLAttributes<HTMLElement> {
 	triggerDisplayName: string

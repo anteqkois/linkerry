@@ -4,8 +4,8 @@ import { ExchangeClientInterface } from '../types'
 
 export const getOHLCVActionFactory = (exchangeClient: ExchangeClientInterface) =>
   createAction({
-    description: 'Get OHLC Symbol',
-    displayName: 'Get historical candlestick data containing the open, high, low, and close price, and the volume of a market',
+    displayName: 'Get OHLC Symbol',
+    description: 'Get historical candlestick data containing the open, high, low, close price, and the volume of a market',
     name: 'get_ohlcv',
     props: {
       symbol: exchangeCommon.symbol(exchangeClient),
