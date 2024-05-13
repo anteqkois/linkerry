@@ -20,5 +20,6 @@ export const connectorTag = [
   'payments',
   'commerce',
   'artificial intelligence',
+  'database',
 ] as const
 export type ConnectorTag = (typeof connectorTag)[number]

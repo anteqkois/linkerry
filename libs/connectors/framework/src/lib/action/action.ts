@@ -9,12 +9,12 @@ export type ActionRunner<ConnectorAuth extends ConnectorAuthProperty, ActionProp
 // TODO move to schema
 export interface ErrorHandlingOptionsParam {
 	retryOnFailure: {
-		defaultValue: boolean
-		hide: boolean
+		defaultValue?: boolean
+		hide?: boolean
 	}
 	continueOnFailure: {
-		defaultValue: boolean
-		hide: boolean
+		defaultValue?: boolean
+		hide?: boolean
 	}
 }
 

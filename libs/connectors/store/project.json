@@ -1,0 +1,21 @@
+{
+  "name": "connectors-store",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/store/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/store",
+        "main": "libs/connectors/store/src/index.ts",
+        "tsConfig": "libs/connectors/store/tsconfig.lib.json",
+        "assets": ["libs/connectors/store/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
+      }
+    }
+  }
+}

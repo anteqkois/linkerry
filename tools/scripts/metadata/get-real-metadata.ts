@@ -7,7 +7,7 @@ import { getAvailableConnectorNames } from '../utils/get-available-connector-nam
 
 const skipConnectorsMetadata = ['@linkerry/common-exchanges', '@linkerry/connectors-common', '@linkerry/connectors-framework']
 const customConnectors = []
-const coreConnectors = ['@linkerry/linkerry-schedule']
+const coreConnectors = ['@linkerry/schedule', '@linkerry/store']
 
 export const getRealMetadata = async () => {
   const names = await getAvailableConnectorNames()
