@@ -75,11 +75,6 @@ export const VirtualizedCombobox = ({
     return Math.min(500, property.options.options.length * 32)
   }, [property.options.options])
 
-  const onChangeValue = (newLabel: string) => {
-    const value = property.options.options.find((option) => option.label === newLabel)
-    setValue(name, value?.value)
-  }
-
   return useDynamicValue ? (
     <DynamicValueField
       name={name}
@@ -119,8 +114,8 @@ export const VirtualizedCombobox = ({
                         <p
                           key={option.value}
                           onClick={() => {
-                            onChangeValue(option.value)
-                            field.onChange(option.value)
+                            setValue(name, option.value)
+                            field.onChange(option.label)
                           }}
                           className={cn(
                             'cursor-pointer relative flex select-none items-center rounded-sm py-1.5 pl-2 pr-3 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
@@ -130,18 +125,6 @@ export const VirtualizedCombobox = ({
                           {option.label}
                           <Icons.Check className={cn('ml-auto h-4 w-4', option.label === field.value ? 'opacity-100' : 'opacity-0')} />
                         </p>
-                        // <CommandItem
-                        // value={option.label}
-                        //   key={option.value}
-                        //   onSelect={() => {
-                        //     onChangeValue(option.value)
-                        //     field.onChange(option.value)
-                        //   }}
-                        //   className="cursor-pointer"
-                        // >
-                        //   {option.label}
-                        //   <Icons.Check className={cn('ml-auto h-4 w-4', option.label === field.value ? 'opacity-100' : 'opacity-0')} />
-                        // </CommandItem>
                       ))}
                     </Virtualizer>
                   </CommandList>
