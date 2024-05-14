@@ -1,12 +1,12 @@
 import {
-	BaseStepSettings,
-	CustomError,
-	ErrorCode,
-	StepNotEmpty,
-	assertNotNullOrUndefined,
-	flowHelper,
-	isNil,
-	isStepBaseSettings,
+  BaseStepSettings,
+  CustomError,
+  ErrorCode,
+  StepNotEmpty,
+  assertNotNullOrUndefined,
+  flowHelper,
+  isNil,
+  isStepBaseSettings,
 } from '@linkerry/shared'
 import { Separator } from '@linkerry/ui-components/client'
 import { Button, Card, CardContent, CardHeader, CardTitle, Icons } from '@linkerry/ui-components/server'
@@ -74,7 +74,7 @@ export const DynamicValueModal = () => {
 	return showDynamicValueModal ? (
 		<Card
 			ref={ref}
-			className="fixed -left-[457px] bottom-2 w-112 min-h-[400px] max-h-[400px] overflow-y-scroll overflow-x-hidden duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]"
+			className="fixed -left-[457px] bottom-16 w-112 min-h-[400px] max-h-[400px] overflow-y-scroll overflow-x-hidden duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]"
 			data-state={showDynamicValueModal ? 'open' : 'close'}
 		>
 			<CardHeader className="p-2 flex flex-row justify-between items-center bg-card sticky top-0 border-b">
