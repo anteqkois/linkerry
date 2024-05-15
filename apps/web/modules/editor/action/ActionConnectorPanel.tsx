@@ -1,20 +1,20 @@
 import { ActionBase, getRefreshersToRefreshedProperties } from '@linkerry/connectors-framework'
-import { ActionType, ConnectorGroup, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
+import { ActionType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+	ResizableHandle,
+	ResizablePanel,
+	ResizablePanelGroup,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from '@linkerry/ui-components/client'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { useEffect, useMemo, useState } from 'react'
@@ -101,7 +101,7 @@ export const ActionConnectorPanel = () => {
         ...initData,
       })
     }, 0)
-  }, [isFetched, editedAction.settings.connectorName])
+  }, [isFetched, editedAction.settings.actionName])
 
   // synchronize with global state and database, merge only new values
   const handleWatcher = useDebouncedCallback(
@@ -126,7 +126,7 @@ export const ActionConnectorPanel = () => {
   useEffect(() => {
     const subscription = actionForm.watch(handleWatcher)
     return () => subscription.unsubscribe()
-  }, [editedAction.settings.connectorName, handleWatcher])
+  }, [editedAction.settings.actionName, handleWatcher])
 
   if (isLoading) return <Spinner />
   if (error) return <ErrorInfo errorObject={error} />
@@ -221,26 +221,31 @@ export const ActionConnectorPanel = () => {
             ) : null}
             {actionWatcher?.props &&
               Object.entries(actionWatcher.props).map(([name, property]) => (
-                <FieldResolver property={property} refreshedProperties={refreshersToRefreshedProperties[name]} name={name} key={name} />
+                <FieldResolver
+                  property={property}
+                  refreshedProperties={refreshersToRefreshedProperties[name]}
+                  name={name}
+                  // use connected key, to rerender when action changed but the have prop with the same name
+                  key={`${actionWatcher.name}_${name}`}
+                />
               ))}
           </form>
         </Form>
         <ConnectorVersion connectorMetadata={connectorMetadata} className="mt-4" />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      {connectorMetadata.group !== ConnectorGroup.CORE && (
-        <ResizablePanel
-          defaultSize={editedAction.settings.inputUiInfo.currentSelectedData ? 60 : 30}
-          maxSize={80}
-          onResize={(size) => setTestDataPanelHeight(size)}
-        >
-          <ActionTest
-            panelSize={testDataPanelHeight}
-            disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0 || !!flowOperationRunning}
-            disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Action fields'}
-          />
-        </ResizablePanel>
-      )}
+      <ResizablePanel
+        defaultSize={editedAction.settings.inputUiInfo.currentSelectedData ? 60 : 30}
+        maxSize={80}
+        onResize={(size) => setTestDataPanelHeight(size)}
+        className="px-1"
+      >
+        <ActionTest
+          panelSize={testDataPanelHeight}
+          disabled={isEmpty(actionWatcher?.name) || Object.keys(actionForm.formState.errors).length !== 0 || !!flowOperationRunning}
+          disabledMessage={flowOperationRunning ? 'Flow operation is running' : 'First fill all required Action fields'}
+        />
+      </ResizablePanel>
       <DynamicValueModal />
     </ResizablePanelGroup>
   )

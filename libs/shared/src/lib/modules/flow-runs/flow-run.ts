@@ -37,3 +37,9 @@ export enum FlowRetryStrategy {
 export type FlowRetryPayload = {
     strategy: FlowRetryStrategy
 }
+
+export type FlowResponse = {
+	status: number
+	body: unknown
+	headers: Record<string, string>
+}

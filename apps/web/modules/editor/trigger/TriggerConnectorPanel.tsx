@@ -96,7 +96,7 @@ export const TriggerConnectorPanel = () => {
         ...initData,
       })
     }, 0)
-  }, [isFetched])
+  }, [isFetched, editedTrigger.settings.triggerName])
 
   // synchronize with global state and database, merge only new values
   const handleWatcher = useDebouncedCallback(
@@ -121,7 +121,7 @@ export const TriggerConnectorPanel = () => {
   useEffect(() => {
     const subscription = triggerForm.watch(handleWatcher)
     return () => subscription.unsubscribe()
-  }, [editedTrigger.settings.connectorName, handleWatcher])
+  }, [editedTrigger.settings.triggerName, handleWatcher])
 
   if (isLoading) return <Spinner />
   if (error) return <ErrorInfo errorObject={error} />
@@ -243,6 +243,7 @@ export const TriggerConnectorPanel = () => {
           defaultSize={editedTrigger.settings.inputUiInfo.currentSelectedData ? 60 : 30}
           maxSize={80}
           onResize={(size) => setTestDataPanelHeight(size)}
+          className='px-1'
         >
           <TriggerWebhookSimulation
             panelSize={testDataPanelHeight}

@@ -6,6 +6,7 @@ import {
   ErrorCode,
   FlowOperationType,
   FlowPopulated,
+  FlowResponse,
   FlowRun,
   FlowRunWSInput,
   FlowStatus,
@@ -137,11 +138,12 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
       socket.on(WEBSOCKET_EVENT.EXCEPTION, (error: CustomWebSocketExceptionResponse) => {
         set({
           testingFlowVersion: false,
+          showLeftDrawer: false,
         })
 
         closeWebSocketConnection()
         console.error(error.message)
-        return reject(error.message)
+        return reject(error)
       })
 
       socket.on(WEBSOCKET_EVENT.TEST_FLOW_STARTED, (flowRun: FlowRun) => {
@@ -150,7 +152,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
         })
       })
 
-      socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, async (flowRun: FlowRun) => {
+      socket.on(WEBSOCKET_EVENT.TEST_FLOW_FINISHED, async (flowHTTPResponse: FlowResponse, flowRun: FlowRun) => {
         set({
           testingFlowVersion: false,
           flowRun,

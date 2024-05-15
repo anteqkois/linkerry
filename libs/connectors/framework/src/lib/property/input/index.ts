@@ -33,6 +33,7 @@ export const Property = {
       ...config,
       valueSchema: undefined,
       type: PropertyType.SHORT_TEXT,
+      defaultProcessors: [Processors.string],
       defaultValidators: [Validators.string],
     } as unknown as R extends true ? ShortTextProperty<true> : ShortTextProperty<false>
   },
@@ -53,9 +54,12 @@ export const Property = {
     }
   },
   Number<R extends boolean>(config: Properties<NumberProperty<R>>): R extends true ? NumberProperty<true> : NumberProperty<false> {
-    return { ...config, type: PropertyType.NUMBER, defaultValidators: [Validators.number] } as unknown as R extends true
-      ? NumberProperty<true>
-      : NumberProperty<false>
+    return {
+      ...config,
+      type: PropertyType.NUMBER,
+      defaultProcessors: [Processors.number],
+      defaultValidators: [Validators.number],
+    } as unknown as R extends true ? NumberProperty<true> : NumberProperty<false>
   },
   Checkbox<R extends boolean>(config: Properties<CheckboxProperty<R>>): R extends true ? CheckboxProperty<true> : CheckboxProperty<false> {
     return { ...config, valueSchema: undefined, type: PropertyType.CHECKBOX } as unknown as R extends true

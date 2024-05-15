@@ -1,7 +1,7 @@
 import { Property, StoreScope } from "@linkerry/connectors-framework"
 
 export enum PieceStoreScope {
-    PROJECT = 'COLLECTION',
+    PROJECT = 'PROJECT',
     FLOW = 'FLOW',
     RUN = 'RUN',
 }

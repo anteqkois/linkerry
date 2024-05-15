@@ -1,33 +1,42 @@
 import { PlanProductConfiguration, planConfigurationDetails } from '../modules/billing/products'
 import { ErrorCode, ErrorCodeQuota } from './errorCodes'
 
-export interface HttpExceptionResponse {
-	statusCode: number
-	error: string
-}
-
-export interface CustomHttpExceptionResponse extends HttpExceptionResponse {
-	path: string
-	method: string
-	code: string
-	message: string
-	fieldPath?: string
-	timestamp: Date
-}
 
 export interface CustomWebSocketExceptionResponse {
-	error: string
+  error: string
 	event: string
 	code: string
 	message: string
 	timestamp: Date
 }
 
-const neccesaryKeys: Array<keyof CustomHttpExceptionResponse> = ['path', 'method', 'code', 'message', 'timestamp', 'error', 'statusCode']
+const neccesaryKeysOfCustomWebSocketException: Array<keyof CustomWebSocketExceptionResponse> = ['error', 'event', 'code', 'message', 'timestamp']
+export const isCustomWebSocketException = (object: unknown): object is CustomWebSocketExceptionResponse => {
+  if (!(object instanceof Object)) return false
+  for (const key of neccesaryKeysOfCustomWebSocketException) {
+    if (!Object.keys(object).includes(key)) return false
+  }
+  return true
+}
 
+export interface HttpExceptionResponse {
+  statusCode: number
+  error: string
+}
+
+export interface CustomHttpExceptionResponse extends HttpExceptionResponse {
+  path: string
+  method: string
+  code: string
+  message: string
+  fieldPath?: string
+  timestamp: Date
+}
+
+const neccesaryKeysOfCustomHttpException: Array<keyof CustomHttpExceptionResponse> = ['path', 'method', 'code', 'message', 'timestamp', 'error', 'statusCode']
 export const isCustomHttpException = (object: unknown): object is CustomHttpExceptionResponse => {
 	if (!(object instanceof Object)) return false
-	for (const key of neccesaryKeys) {
+	for (const key of neccesaryKeysOfCustomHttpException) {
 		if (!Object.keys(object).includes(key)) return false
 	}
 	return true

@@ -240,6 +240,12 @@ export class FlowRunsService {
     };
   }
 
+  async findOne(query: FilterQuery<FlowRun>) {
+    // const filter: FilterQuery<FlowRun> = {};
+
+    return this.flowRunModel.findOne(query);
+  }
+
   async findMany(query: FlowRunsGetManyQuery, projectId: Id) {
     const filter: FilterQuery<FlowRun> = {};
 
@@ -250,7 +256,6 @@ export class FlowRunsService {
         $gte: query.fromDate,
       };
 
-    console.log(await this.flowRunModel.find(filter));
     return this.flowRunModel.find(filter);
   }
 
