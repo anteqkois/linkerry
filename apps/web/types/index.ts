@@ -1,12 +1,22 @@
 import { Icons } from '@linkerry/ui-components/server'
 
+export type NavItemChildren = {
+  title: string
+  titleIcon: JSX.Element
+  description: string
+  href: string
+}
+
 export type NavItem = {
   title: string
   href: string
   disabled?: boolean
 }
 
-export type MainNavItem = NavItem
+export type MainNavItem = Omit<NavItem, 'href'> & {
+  href?: string
+  children: NavItemChildren[]
+}
 
 export type SidebarNavItem = {
   title: string
@@ -40,7 +50,7 @@ export type DocsConfig = {
   sidebarNav: SidebarNavItem[]
 }
 
-export type MarketingConfig = {
+export type LandingConfig = {
   mainNav: MainNavItem[]
 }
 

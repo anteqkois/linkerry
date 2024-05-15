@@ -1,22 +1,22 @@
 'use client'
 
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuPortal,
-	DropdownMenuSeparator,
-	DropdownMenuShortcut,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
-	DropdownMenuTrigger,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from '@linkerry/ui-components/client'
 import { Button, Icons, Toggle } from '@linkerry/ui-components/server'
 import Link from 'next/link'
@@ -54,17 +54,17 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
 					<Link href="/app/subscriptions" prefetch={false}>
 						<DropdownMenuItem>Subscriptions</DropdownMenuItem>
 					</Link>
-					<DropdownMenuItem>
+					{/* <DropdownMenuItem>
 						Settings
 						<DropdownMenuShortcut>
 							<Icons.Settings />
 						</DropdownMenuShortcut>
-					</DropdownMenuItem>
+					</DropdownMenuItem> */}
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
 					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+						<DropdownMenuSubTrigger disabled className='text-muted-foreground'>Invite users</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent className="w-56">
 								<DropdownMenuItem>

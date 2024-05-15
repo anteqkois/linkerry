@@ -1,11 +1,7 @@
-import Link from 'next/link'
 
-import { ModeToggle } from '@linkerry/ui-components/client'
-import { buttonVariants } from '@linkerry/ui-components/server'
-import { cn } from '@linkerry/ui-components/utils'
-import { MainNav } from '../../shared/components/MianNav'
 import { SiteFooter } from '../../shared/components/SiteFooter'
-import { marketingConfig } from './config'
+import { MainNav } from './components/MianNav'
+import { landingConfig } from './config'
 
 interface MarketingLayoutProps {
   children: React.ReactNode
@@ -14,15 +10,11 @@ interface MarketingLayoutProps {
 export default async function MarketingLayout({ children }: MarketingLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="container z-40 bg-background">
-        <div className="flex h-20 items-center justify-between py-6">
-          <MainNav items={marketingConfig.mainNav} />
-          <nav className='flex gap-2 items-center'>
-            <Link href="/login" className={cn(buttonVariants({ size: 'sm' }), 'px-4')}>
-              Login
-            </Link>
-            <ModeToggle/>
-          </nav>
+      <header className="z-40 bg-background">
+        <div className="fixed h-16 top-0 z-40 w-full flex-center border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex justify-between items-center w-full max-w-6xl p-1 py-2 ">
+            <MainNav items={landingConfig.mainNav} />
+          </div>
         </div>
       </header>
       <main className="flex-1">{children}</main>
