@@ -1,8 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { useSelectedLayoutSegment } from 'next/navigation'
-import * as React from 'react'
 
 import {
   ModeToggle,
@@ -16,10 +14,13 @@ import {
   buttonVariants,
   navigationMenuTriggerStyle,
 } from '@linkerry/ui-components/client'
-import { Icons } from '@linkerry/ui-components/server'
+import { Button, Icons } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
-import { MobileNav } from '../../../shared/components/MobileNav'
+// import { useClickOutside } from '@react-hookz/web'
+import { useRef, useState } from 'react'
 import { MainNavItem } from '../../../types'
+import { MenuItem } from './MenuItem'
+import { MobileNav } from './MobileNav'
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -27,13 +28,21 @@ interface MainNavProps {
 }
 
 export function MainNav({ items, children }: MainNavProps) {
-  const segment = useSelectedLayoutSegment()
-  const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
+  // const segment = useSelectedLayoutSegment()
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const ref = useRef(null)
+
+  // useClickOutside(ref, () => {
+  //   if(showMobileMenu)setShowMobileMenu(false)
+  // })
 
   return (
     <>
       <Link href="/" className="hidden items-center space-x-2 md:flex">
         <Icons.LogoWhole className="w-40 h-full" />
+      </Link>
+      <Link href="/" className="items-center space-x-2 md:hidden">
+        <Icons.Logo size={'md'} />
       </Link>
       {items?.length ? (
         <nav className="hidden gap-6 md:flex">
@@ -52,17 +61,22 @@ export function MainNav({ items, children }: MainNavProps) {
                     <NavigationMenuContent className="p-2">
                       <ul className="grid grid-cols-1 lg:w-[410px] ">
                         {item.children.map((childrenEntry, index) => (
-                          <>
-                            <ListItem
-                              key={childrenEntry.title}
-                              title={childrenEntry.title}
-                              href={childrenEntry.href}
-                              titleIcon={childrenEntry.titleIcon}
-                            >
-                              {childrenEntry.description}
-                            </ListItem>
+                          <div key={childrenEntry.title}>
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <MenuItem
+                                  title={childrenEntry.title}
+                                  href={childrenEntry.href}
+                                  titleIcon={childrenEntry.titleIcon}
+                                  ref={ref}
+                                  className="space-y-1 rounded-md p-3"
+                                >
+                                  {childrenEntry.description}
+                                </MenuItem>
+                              </NavigationMenuLink>
+                            </li>
                             {index !== item.children.length - 1 ? <Separator className="bg-border/50 my-1" /> : null}
-                          </>
+                          </div>
                         ))}
                       </ul>
                     </NavigationMenuContent>
@@ -74,7 +88,7 @@ export function MainNav({ items, children }: MainNavProps) {
         </nav>
       ) : null}
       <nav className="flex gap-2 items-center">
-        <Link href="/login" className={cn(buttonVariants({ size: 'sm', variant: 'secondary' }), 'px-4')}>
+        <Link href="/login" className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'px-4')}>
           Login
         </Link>
         <Link href="/login" className={cn(buttonVariants({ size: 'sm' }), 'px-4')}>
@@ -82,39 +96,14 @@ export function MainNav({ items, children }: MainNavProps) {
         </Link>
         <ModeToggle />
       </nav>
-      <button className="flex items-center space-x-2 md:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
-        {showMobileMenu ? <Icons.Close /> : <Icons.Logo />}
-        <span className="font-bold">Menu</span>
-      </button>
-      {showMobileMenu && items && <MobileNav items={items}>{children}</MobileNav>}
+      <Button className="md:hidden" size={'icon'} variant={'outline'} onClick={() => setShowMobileMenu((prev) => !prev)}>
+        <Icons.HamburgerMenu />
+      </Button>
+      {showMobileMenu && items && (
+        <MobileNav ref={ref} items={items} className="fixed left-0 right-0 top-16 z-50 animate-in slide-in-from-bottom-80">
+          {children}
+        </MobileNav>
+      )}
     </>
   )
 }
-
-interface ListItemProps extends React.ComponentPropsWithoutRef<'a'> {
-  titleIcon: JSX.Element
-}
-
-const ListItem = React.forwardRef<React.ElementRef<'a'>, ListItemProps>(({ className, title, children, titleIcon, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            'flex items-center gap-4 select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            className,
-          )}
-          {...props}
-        >
-          <div>{titleIcon}</div>
-          <div>
-            <div className="flex items-center gap-1 text-lg font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-          </div>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  )
-})
-ListItem.displayName = 'ListItem'

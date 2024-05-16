@@ -12,7 +12,7 @@ export default async function MarketingLayout({ children }: MarketingLayoutProps
     <div className="flex min-h-screen flex-col">
       <header className="z-40 bg-background">
         <div className="fixed h-16 top-0 z-40 w-full flex-center border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex justify-between items-center w-full max-w-6xl p-1 py-2 ">
+          <div className="flex justify-between items-center w-full max-w-6xl p-2 ">
             <MainNav items={landingConfig.mainNav} />
           </div>
         </div>

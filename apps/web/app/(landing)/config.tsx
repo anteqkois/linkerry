@@ -35,7 +35,7 @@ export const landingConfig: LandingConfig = {
           title: 'Feature Request',
           titleIcon: <Icons.Feature className="w-9 h-9 text-blue-400" />,
           description: "Need a new feature, have an idea to improve Linkerry, want to use new apps? Let's talk together.",
-          href: '/road-map',
+          href: 'mailto:anteqkois@gmail.com',
         },
       ],
     },
@@ -68,7 +68,6 @@ export const landingConfig: LandingConfig = {
           href: '/connectors',
         },
       ],
-      // href: "/#features",
     },
     // {
     //   title: 'Examples',
@@ -82,5 +81,11 @@ export const landingConfig: LandingConfig = {
       children: [],
       href: '/#pricing',
     },
+    // {
+    //   title: 'Discord',
+    //   disabled: false,
+    //   children: [],
+    //   href: 'https://discord.gg/Yzs9zbUjd8',
+    // },
   ],
 }
