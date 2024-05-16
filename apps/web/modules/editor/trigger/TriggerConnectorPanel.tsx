@@ -193,10 +193,10 @@ export const TriggerConnectorPanel = () => {
                           <p>{triggerWatcher?.displayName}</p>
                         </SelectValue>
                       </SelectTrigger>
-                      <SelectContent position="popper">
+                      <SelectContent position="popper" className="max-h-[375px] max-w-lg overflow-y-scroll">
                         {Object.values(connectorMetadata.triggers).map((trigger) => {
                           return (
-                            <SelectItem value={trigger.name} key={trigger.name} className="max-w-[400px]">
+                            <SelectItem value={trigger.name} key={trigger.name}>
                               <p>{trigger.displayName}</p>
                               <p className="text-xs text-muted-foreground">{trigger.description}</p>
                             </SelectItem>
@@ -243,7 +243,7 @@ export const TriggerConnectorPanel = () => {
           defaultSize={editedTrigger.settings.inputUiInfo.currentSelectedData ? 60 : 30}
           maxSize={80}
           onResize={(size) => setTestDataPanelHeight(size)}
-          className='px-1'
+          className="px-1"
         >
           <TriggerWebhookSimulation
             panelSize={testDataPanelHeight}

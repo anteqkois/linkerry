@@ -38,7 +38,7 @@ export const TriggerNodeElement = ({ data: { trigger, connectorMetadata }, id }:
             <Image width={64} height={64} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
           </div>
           <div className="flex flex-col flex-wrap justify-center">
-            <p className="font-bold">{trigger.displayName}</p>
+            <p className="font-bold leading-none">{trigger.displayName}</p>
             <p>{connectorMetadata.displayName}</p>
           </div>
         </div>

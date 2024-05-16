@@ -1,5 +1,5 @@
 import { ConnectorProperty, ShortTextProperty } from '@linkerry/connectors-framework'
-import { hasVariableToken, isNil } from '@linkerry/shared'
+import { hasVariableToken } from '@linkerry/shared'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useDynamicField } from '../useFieldCustomValidation'
@@ -12,8 +12,8 @@ interface ShortTextFieldProps {
 }
 
 export const ShortTextField = ({ property, name, refreshedProperties }: ShortTextFieldProps) => {
-  const { control, trigger, getValues } = useFormContext()
-  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
+  const { trigger, getValues } = useFormContext()
+  const { setUseDynamicValue } = useDynamicField({
     property,
   })
 
@@ -21,7 +21,7 @@ export const ShortTextField = ({ property, name, refreshedProperties }: ShortTex
     trigger(name)
 
     const value = getValues(name)
-    if (isNil(value)) return
+    if (typeof value !== 'string') return
     else if (hasVariableToken(value)) {
       setUseDynamicValue(true)
     }

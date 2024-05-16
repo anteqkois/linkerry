@@ -94,7 +94,7 @@ export const DynamicVirtualizedSelect = ({ property, name, refreshedProperties }
 
 	const handleWatcher = useDebouncedCallback(
 		async (values, { name }) => {
-			const fixedName = name.includes('__temp__') ? name.split('__temp__')[1] : name
+			const fixedName = name?.includes('__temp__') ? name.split('__temp__')[1] : name
 			if (!fixedName) return
 			if (!property.refreshers.includes(fixedName) && fixedName !== 'auth') return
 			clearErrors([name, fixedName])

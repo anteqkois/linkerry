@@ -1,20 +1,20 @@
 import { ActionBase, getRefreshersToRefreshedProperties } from '@linkerry/connectors-framework'
 import { ActionType, assertNotNullOrUndefined, isEmpty } from '@linkerry/shared'
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@linkerry/ui-components/client'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { useEffect, useMemo, useState } from 'react'
@@ -197,7 +197,7 @@ export const ActionConnectorPanel = () => {
                           <p>{actionWatcher?.displayName}</p>
                         </SelectValue>
                       </SelectTrigger>
-                      <SelectContent position="popper">
+                      <SelectContent position="popper" className='max-h-[375px] max-w-lg overflow-y-scroll'>
                         {Object.values(connectorMetadata.actions).map((action) => {
                           return (
                             <SelectItem value={action.name} key={action.name}>

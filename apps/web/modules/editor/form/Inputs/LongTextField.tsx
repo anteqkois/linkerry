@@ -1,5 +1,5 @@
 import { ConnectorProperty, LongTextProperty } from '@linkerry/connectors-framework'
-import { hasVariableToken, isNil } from '@linkerry/shared'
+import { hasVariableToken } from '@linkerry/shared'
 import { FormControl, FormField, FormItem, FormMessage, Textarea } from '@linkerry/ui-components/client'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -24,7 +24,7 @@ export const LongTextField = ({ property, name, refreshedProperties }: LongTextF
 		trigger(name)
 
 		const value = getValues(name)
-		if (isNil(value)) return
+		if (typeof value !== 'string') return
 		else if (hasVariableToken(value)) {
 			setUseDynamicValue(true)
 		}

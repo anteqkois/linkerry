@@ -1,12 +1,7 @@
-import { Property, StoreScope, Validators, createAction } from '@linkerry/connectors-framework';
-import OpenAI from 'openai';
-import { openaiAuth } from '../common/auth';
-import {
-  calculateMessagesTokenSize,
-  exceedsHistoryLimit,
-  notLLMs,
-  reduceContextSize,
-} from '../common/common';
+import { Property, StoreScope, Validators, createAction } from '@linkerry/connectors-framework'
+import OpenAI from 'openai'
+import { openaiAuth } from '../common/auth'
+import { calculateMessagesTokenSize, exceedsHistoryLimit, notLLMs, reduceContextSize } from '../common/common'
 
 export const askOpenAI = createAction({
   auth: openaiAuth,
@@ -27,32 +22,30 @@ export const askOpenAI = createAction({
             disabled: true,
             placeholder: 'Enter your API key first',
             options: [],
-          };
+          }
         }
         try {
           const openai = new OpenAI({
             apiKey: auth as string,
-          });
-          const response = await openai.models.list();
+          })
+          const response = await openai.models.list()
           // We need to get only LLM models
-          const models = response.data.filter(
-            (model) => !notLLMs.includes(model.id)
-          );
+          const models = response.data.filter((model) => !notLLMs.includes(model.id))
           return {
             disabled: false,
             options: models.map((model) => {
               return {
                 label: model.id,
                 value: model.id,
-              };
+              }
             }),
-          };
+          }
         } catch (error) {
           return {
             disabled: true,
             options: [],
             placeholder: "Couldn't load models, API key is invalid",
-          };
+          }
         }
       },
     }),
@@ -72,7 +65,7 @@ export const askOpenAI = createAction({
       displayName: 'Maximum Tokens',
       required: true,
       description:
-        "The maximum number of tokens to generate should not be set to the absolute maximum. Reserve some tokens for the input, as requests can utilize up to 2,048 or 4,096 tokens shared between the prompt and completion, depending on the model. (One token is approximately 4 characters for regular English text)",
+        'The maximum number of tokens to generate should not be set to the absolute maximum. Reserve some tokens for the input, as requests can utilize up to 2,048 or 4,096 tokens shared between the prompt and completion, depending on the model. (One token is approximately 4 characters for regular English text)',
       defaultValue: 2048,
     }),
     topP: Property.Number({
@@ -100,60 +93,49 @@ export const askOpenAI = createAction({
       displayName: 'Memory Key',
       validators: [Validators.maxLength(128)],
       description:
-        'A memory key that will keep the chat history shared across runs and flows. Leave it empty to reset ChatGPT\'s memory of previous messages.',
+        "A memory key that will keep the chat history shared across runs and flows. Leave it empty to reset ChatGPT's memory of previous messages.",
       required: false,
     }),
     roles: Property.Json({
       displayName: 'Roles',
       required: false,
       description: 'Array of roles to specify more accurate response',
-      defaultValue: [
-        { role: 'system', content: 'You are a helpful assistant.' },
-      ],
+      defaultValue: [{ role: 'system', content: 'You are a helpful assistant.' }],
     }),
   },
   async run({ auth, propsValue, store }) {
     const openai = new OpenAI({
       apiKey: auth,
-    });
-    const {
-      model,
-      temperature,
-      maxTokens,
-      topP,
-      frequencyPenalty,
-      presencePenalty,
-      prompt,
-      memoryKey,
-    } = propsValue;
+    })
+    const { model, temperature, maxTokens, topP, frequencyPenalty, presencePenalty, prompt, memoryKey } = propsValue
 
-    let messageHistory: any[] | null = [];
+    let messageHistory: any[] | null = []
     // If memory key is set, retrieve messages stored in history
     if (memoryKey) {
-      messageHistory = (await store.get(memoryKey, StoreScope.PROJECT)) ?? [];
+      messageHistory = (await store.get(memoryKey, StoreScope.PROJECT)) ?? []
     }
 
     // Add user prompt to message history
     messageHistory.push({
       role: 'user',
       content: prompt,
-    });
+    })
 
     // Add system instructions if set by user
-    const rolesArray = propsValue.roles ? (propsValue.roles as any) : [];
+    const rolesArray = propsValue.roles ? (propsValue.roles as any) : []
+    console.log('rolesArray', rolesArray)
+    console.log(typeof rolesArray)
     const roles = rolesArray.map((item: any) => {
-      const rolesEnum = ['system', 'user', 'assistant'];
+      const rolesEnum = ['system', 'user', 'assistant']
       if (!rolesEnum.includes(item.role)) {
-        throw new Error(
-          'The only available roles are: [system, user, assistant]'
-        );
+        throw new Error('The only available roles are: [system, user, assistant]')
       }
 
       return {
         role: item.role,
         content: item.content,
-      };
-    });
+      }
+    })
 
     // Send prompt
     const completion = await openai.chat.completions.create({
@@ -164,27 +146,23 @@ export const askOpenAI = createAction({
       top_p: topP,
       frequency_penalty: frequencyPenalty,
       presence_penalty: presencePenalty,
-    });
+    })
 
     // Add response to message history
-    messageHistory = [...messageHistory, completion.choices[0].message];
+    messageHistory = [...messageHistory, completion.choices[0].message]
 
     // Check message history token size
     // System limit is 32K tokens, we can probably make it bigger but this is a safe spot
-    const tokenLength = await calculateMessagesTokenSize(messageHistory, model);
+    const tokenLength = await calculateMessagesTokenSize(messageHistory, model)
     if (memoryKey) {
       // If tokens exceed 90% system limit or 90% of model limit - maxTokens, reduce history token size
       if (exceedsHistoryLimit(tokenLength, model, maxTokens)) {
-        messageHistory = await reduceContextSize(
-          messageHistory,
-          model,
-          maxTokens
-        );
+        messageHistory = await reduceContextSize(messageHistory, model, maxTokens)
       }
       // Store history
-      await store.put(memoryKey, messageHistory, StoreScope.PROJECT);
+      await store.put(memoryKey, messageHistory, StoreScope.PROJECT)
     }
 
-    return completion.choices[0].message.content;
+    return completion.choices[0].message.content
   },
-});
+})

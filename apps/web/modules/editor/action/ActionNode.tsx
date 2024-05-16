@@ -46,7 +46,7 @@ export const ActionNodeElement = ({ data: { action, connectorMetadata }, id }: A
             <Image width={64} height={64} src={connectorMetadata.logoUrl} alt={connectorMetadata.displayName} />
           </div>
           <div className="flex flex-col flex-wrap justify-center">
-            <p className="font-bold">{action.displayName}</p>
+            <p className="font-bold leading-none">{action.displayName}</p>
             <p>{connectorMetadata.displayName}</p>
           </div>
         </div>

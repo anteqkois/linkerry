@@ -42,7 +42,7 @@ export const PropertyLabel = ({ property, refreshedProperties, setUseDynamicValu
 				{setUseDynamicValue ? (
 					<TooltipProvider delayDuration={100}>
 						<Tooltip>
-							<TooltipTrigger onClick={() => setUseDynamicValue(true)} className="text-primary-foreground/40 hover:text-primary-foreground">
+							<TooltipTrigger onClick={() => setUseDynamicValue(true)} className="opacity-50  hover:opacity-100">
 								<Icons.Power size={'sm'} className="mb-1 mr-2" />
 							</TooltipTrigger>
 							<TooltipContent side="bottom" align="start">

@@ -106,7 +106,8 @@ module.exports = {
 				dialog: 'var(--max-w-dialog)',
 			},
 			maxHeight: {
-				'screen-no-nav': 'calc(100vh - 64px)',
+        'screen-no-nav': 'calc(100vh - 64px)',
+        ...newSizes,
 			},
 			minHeight: {
 				'screen-no-nav': 'calc(100vh - 64px)',

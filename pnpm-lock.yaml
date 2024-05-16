@@ -161,6 +161,9 @@ dependencies:
   '@tawk.to/tawk-messenger-react':
     specifier: ^2.0.2
     version: 2.0.2(react-dom@18.2.0)(react@18.2.0)
+  '@uiw/codemirror-theme-eclipse':
+    specifier: ^4.22.1
+    version: 4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
   '@uiw/codemirror-theme-vscode':
     specifier: ^4.21.25
     version: 4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
@@ -8832,6 +8835,16 @@ packages:
       '@codemirror/view': 6.26.3
     dev: false
 
+  /@uiw/codemirror-theme-eclipse@4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
+    resolution: {integrity: sha512-R7YYkpf8XWmkZOiqWE1ecirAbqep2/pEQHTqAv6FVtqsIaQxrlT4BdG0VzsZyqbjC2VNILgaWVvCBh9JmYu4wQ==}
+    dependencies:
+      '@uiw/codemirror-themes': 4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
+    transitivePeerDependencies:
+      - '@codemirror/language'
+      - '@codemirror/state'
+      - '@codemirror/view'
+    dev: false
+
   /@uiw/codemirror-theme-vscode@4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
     resolution: {integrity: sha512-1gubCz7kHE5XH3H1IUTSrnyK/G3dQRmOIgPFsefE9e+TizhBJnkbKSDSfRfpm5l7jl1G7v/as0HQvN3cYg/Rkg==}
     dependencies:
@@ -8844,6 +8857,18 @@ packages:
 
   /@uiw/codemirror-themes@4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
     resolution: {integrity: sha512-C3t/voELxQj0eaVhrlgzaOnSALNf8bOcRbL5xN9r2+RkdsbFOmvNl3VVhlxEB7PSGc1jUZwVO4wQsB2AP178ag==}
+    peerDependencies:
+      '@codemirror/language': '>=6.0.0'
+      '@codemirror/state': '>=6.0.0'
+      '@codemirror/view': '>=6.0.0'
+    dependencies:
+      '@codemirror/language': 6.10.1
+      '@codemirror/state': 6.4.1
+      '@codemirror/view': 6.26.3
+    dev: false
+
+  /@uiw/codemirror-themes@4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
+    resolution: {integrity: sha512-5TeB8wCc0aNd3YEhzOvgekpAFQfEm4fCTUcGmEIQqaRNgKAM83HYNpE1JF2j7x2oDFugdiO0yJynS6bo1zVOuw==}
     peerDependencies:
       '@codemirror/language': '>=6.0.0'
       '@codemirror/state': '>=6.0.0'
