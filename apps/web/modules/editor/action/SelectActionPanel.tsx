@@ -1,13 +1,14 @@
-import { ConnectorMetadataSummary, connectorTag } from '@linkerry/connectors-framework'
+import { ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import { isCustomHttpExceptionAxios, isQuotaErrorCode } from '@linkerry/shared'
-import { useToast } from '@linkerry/ui-components/client'
+import { Separator, useToast } from '@linkerry/ui-components/client'
+import { Icons } from '@linkerry/ui-components/server'
 import { Row } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { useClientQuery } from '../../../libs/react-query'
-import { DataTable } from '../../../shared/components/Table/Table'
 import { useReachLimitDialog } from '../../billing/useReachLimitDialog'
+import { ConnectorReviewItem } from '../../flows/connectors/ConnectorReviewItem'
 import { connectorsMetadataQueryConfig } from '../../flows/connectors/api/query-configs'
-import { columns } from '../../flows/connectors/table/defaultColumns'
 import { useEditor } from '../useEditor'
 
 export const SelectActionPanel = () => {
@@ -15,10 +16,27 @@ export const SelectActionPanel = () => {
   const { showDialogBasedOnErrorCode } = useReachLimitDialog()
   const { handleSelectActionConnector } = useEditor()
   const { toast } = useToast()
+
   const connectorsWithActions = useMemo(() => {
     if (!data?.length) return []
     return data.filter((connectorMetadata) => connectorMetadata.actions)
   }, [data])
+
+  const next = async () => {
+    setLoading(true)
+
+    setHasMore(false)
+    // const res = await fetch(`https://dummyjson.com/products?limit=3&skip=${3 * page}&select=title,price`)
+    // const data = (await res.json()) as DummyProductResponse
+    // setProducts((prev) => [...prev, ...data.products])
+    // setPage((prev) => prev + 1)
+
+    // // Usually your response will tell you if there is no more data.
+    // if (data.products.length < 3) {
+    //   setHasMore(false)
+    // }
+    setLoading(false)
+  }
 
   const handleSelectAction = async (row: Row<ConnectorMetadataSummary>) => {
     try {
@@ -41,7 +59,22 @@ export const SelectActionPanel = () => {
 
   return (
     <div className="p-1">
-      <DataTable
+      <div className="flex w-full overflow-scroll">
+        <InfiniteScroll dataLength={connectorsWithActions.length} next={next} hasMore={false} loader={<Icons.Spinner />}>
+          {connectorsWithActions.map((connector) => (
+            <div key={connector._id}>
+              <ConnectorReviewItem connector={connector} />
+              <Separator className='my-5'/>
+            </div>
+          ))}
+        </InfiniteScroll>
+
+        {/* <InfiniteScroll hasMore={hasMore} isLoading={loading} next={next} threshold={1}> */}
+        {/* {hasMore && <Icons.Spinner />} */}
+        {/* {hasMore && <Spinner />}
+        </InfiniteScroll> */}
+      </div>
+      {/* <DataTable
         getRowId={(row) => row._id}
         onClickRow={handleSelectAction}
         data={connectorsWithActions}
@@ -60,7 +93,7 @@ export const SelectActionPanel = () => {
         className="overflow-y-scroll max-h-100"
         onlyColumns={['logoUrl', 'displayName', 'description']}
         clickable
-      />
+      /> */}
     </div>
   )
 }
