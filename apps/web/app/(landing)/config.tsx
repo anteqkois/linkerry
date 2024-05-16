@@ -34,7 +34,7 @@ export const landingConfig: LandingConfig = {
         {
           title: 'Feature Request',
           titleIcon: <Icons.Feature className="w-9 h-9 text-blue-400" />,
-          description: "Need a new feature, have an idea how to improve Linkerry, or want to use new apps? Let's talk together.",
+          description: "Need a new feature, have an idea to improve Linkerry, want to use new apps? Let's talk together.",
           href: '/road-map',
         },
       ],
@@ -46,13 +46,13 @@ export const landingConfig: LandingConfig = {
         {
           title: 'AI - Artificial intelligence',
           titleIcon: <Icons.AI className="w-9 h-9 text-primary" />,
-          description: 'Use popular AI apps like ChatGPT from OpenAI and more.',
+          description: 'Use popular AI apps like ChatGPT from OpenAI and process data using it.',
           href: '/connectors?search=ai',
         },
         {
           title: 'Investment',
           titleIcon: <Icons.Invest className="w-9 h-9 text-red-400" />,
-          description: 'Automate your investment and trading with multiple exchanges and alert providers like TradingView and Maxdata.app.',
+          description: 'Automate investing and trading across exchanges with tools like TradingView and Maxdata.app.',
           href: '/connectors?search=investemnt',
         },
         {
@@ -80,7 +80,7 @@ export const landingConfig: LandingConfig = {
       title: 'Pricing',
       disabled: false,
       children: [],
-      href: "/#pricing",
+      href: '/#pricing',
     },
   ],
 }

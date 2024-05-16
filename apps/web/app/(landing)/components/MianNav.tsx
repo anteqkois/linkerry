@@ -12,6 +12,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  Separator,
   buttonVariants,
   navigationMenuTriggerStyle,
 } from '@linkerry/ui-components/client'
@@ -49,16 +50,19 @@ export function MainNav({ items, children }: MainNavProps) {
                   <NavigationMenuItem>
                     <NavigationMenuTrigger disabled={item.disabled}>{item.title}</NavigationMenuTrigger>
                     <NavigationMenuContent className="p-2">
-                      <ul className="grid grid-cols-1 lg:w-[400px] ">
-                        {item.children.map((childrenEntry) => (
-                          <ListItem
-                            key={childrenEntry.title}
-                            title={childrenEntry.title}
-                            href={childrenEntry.href}
-                            titleIcon={childrenEntry.titleIcon}
-                          >
-                            {childrenEntry.description}
-                          </ListItem>
+                      <ul className="grid grid-cols-1 lg:w-[410px] ">
+                        {item.children.map((childrenEntry, index) => (
+                          <>
+                            <ListItem
+                              key={childrenEntry.title}
+                              title={childrenEntry.title}
+                              href={childrenEntry.href}
+                              titleIcon={childrenEntry.titleIcon}
+                            >
+                              {childrenEntry.description}
+                            </ListItem>
+                            {index !== item.children.length - 1 ? <Separator className="bg-border/50 my-1" /> : null}
+                          </>
                         ))}
                       </ul>
                     </NavigationMenuContent>
