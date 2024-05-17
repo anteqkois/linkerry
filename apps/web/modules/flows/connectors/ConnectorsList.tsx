@@ -13,6 +13,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  ScrollArea,
 } from '@linkerry/ui-components/client'
 import { Badge, Button, Icons } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
@@ -20,8 +21,8 @@ import { useDebouncedEffect } from '@react-hookz/web'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useClientQuery } from '../../../libs/react-query'
-import { ConnectorReviewItem } from '../../../modules/flows/connectors/ConnectorReviewItem'
-import { connectorsMetadataQueryConfig } from '../../../modules/flows/connectors/api/query-configs'
+import { ConnectorReviewItem } from './ConnectorReviewItem'
+import { connectorsMetadataQueryConfig } from './api/query-configs'
 
 const tagOptions = connectorTag.map((tag) => ({
   label: tag,
@@ -29,11 +30,12 @@ const tagOptions = connectorTag.map((tag) => ({
 }))
 
 export interface ConnectorReviewItemProps extends HTMLAttributes<HTMLElement> {
-  onClickConnector: (connector: ConnectorMetadataSummary) => void
+  onClickConnector?: (connector: ConnectorMetadataSummary) => void
   connectorType?: 'trigger' | 'action'
+  listClassName?: string
 }
 
-export const Connectors = ({ onClickConnector, connectorType }: ConnectorReviewItemProps) => {
+export const ConnectorsList = ({ onClickConnector, connectorType, className, listClassName }: ConnectorReviewItemProps) => {
   const { data } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
   const [filteredConnectors, setFilteredConnectors] = useState<ConnectorMetadataSummary[]>([])
   const [connectorsForType, setConnectorsForType] = useState<ConnectorMetadataSummary[]>([])
@@ -107,9 +109,9 @@ export const Connectors = ({ onClickConnector, connectorType }: ConnectorReviewI
   }
 
   return (
-    <div className="p-1 w-full flex justify-center">
-      <div className="flex w-full flex-wrap max-w-2xl overflow-scroll">
-        <div className="bg-background/95 w-full p-4 flex flex-wrap gap-2 items-center backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className={cn('p-1 w-full flex justify-center', className)}>
+      <div className="flex w-full flex-wrap max-w-2xl">
+        <div className="bg-background/95 w-full flex flex-wrap gap-2 p-1 items-center backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <form className="flex-grow">
             <div className="relative">
               <Icons.Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -194,17 +196,19 @@ export const Connectors = ({ onClickConnector, connectorType }: ConnectorReviewI
             </PopoverContent>
           </Popover>
         </div>
-        <InfiniteScroll dataLength={filteredConnectors.length} next={next} hasMore={false} loader={<Icons.Spinner />}>
-          {!filteredConnectors.length ? (
-            <p className="pl-5 text-muted-foreground">No connectors found ...</p>
-          ) : (
-            filteredConnectors.map((connector) => (
-              <div key={connector._id}>
-                <ConnectorReviewItem connector={connector} onClickConnector={onClickConnector} />
-              </div>
-            ))
-          )}
-        </InfiniteScroll>
+        <ScrollArea className={cn('', listClassName)}>
+          <InfiniteScroll dataLength={filteredConnectors.length} next={next} hasMore={false} loader={<Icons.Spinner />}>
+            {!filteredConnectors.length ? (
+              <p className="pl-5 text-muted-foreground">No connectors found ...</p>
+            ) : (
+              filteredConnectors.map((connector) => (
+                <div key={connector._id}>
+                  <ConnectorReviewItem connector={connector} onClickConnector={onClickConnector} />
+                </div>
+              ))
+            )}
+          </InfiniteScroll>
+        </ScrollArea>
       </div>
     </div>
   )

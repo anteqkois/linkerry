@@ -96,7 +96,7 @@ export const ConnectionsSelect = ({ auth, connector }: ConnectionsSelectProps) =
         )}
       />
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] max-h-[calc(100vh-10px)] overflow-y-scroll">
           {auth.type === PropertyType.CUSTOM_AUTH && (
             <CustomAuth onCreateAppConnection={handleAddedConnection} auth={auth} connector={connector} setShowDialog={setShowDialog} />
           )}

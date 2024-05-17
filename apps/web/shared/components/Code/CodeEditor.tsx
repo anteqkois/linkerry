@@ -34,7 +34,7 @@ export interface CodeEditorProps extends Omit<HTMLAttributes<HTMLElement>, 'onCh
 const formatOptions = { indent_size: 2, space_in_empty_paren: true }
 
 export const CodeEditor = ({ value, title, heightVh, substractPx = 0, style, className, readOnly = true, heightPx, onChange }: CodeEditorProps) => {
-  if (!heightVh && !heightPx) throw new Error(`One of heightVh|heightPx must be provided`)
+  // if (!heightVh && !heightPx) throw new Error(`One of heightVh|heightPx must be provided`)
 
   const [code, setCode] = useState(value)
   const [errorMessage, setErrorMessage] = useState('')
@@ -163,7 +163,7 @@ export const CodeEditor = ({ value, title, heightVh, substractPx = 0, style, cla
         onBlur={onBlur}
         style={{
           overflow: 'scroll',
-          height: heightPx ? `${heightPx}px` : `calc(${heightVh}vh - ${substractPx}px)`,
+          // height: heightPx ? `${heightPx}px` : `calc(${heightVh}vh - ${substractPx}px)`,
           ...style,
         }}
         theme={theme === 'dark' ? vscodeDark : eclipse}

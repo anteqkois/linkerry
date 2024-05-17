@@ -238,6 +238,7 @@ export const ActionConnectorPanel = () => {
         defaultSize={editedAction.settings.inputUiInfo.currentSelectedData ? 60 : 30}
         maxSize={80}
         onResize={(size) => setTestDataPanelHeight(size)}
+        // className="px-1 max-h-full overflow-scroll"
         className="px-1"
       >
         <ActionTest

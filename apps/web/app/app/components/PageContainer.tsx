@@ -9,7 +9,7 @@ const buttonVariants = cva('px-2 mt-16 w-screen lg:max-w-none', {
 			centered: 'min-h-screen-no-nav flex-center',
 		},
 		maxScreen: {
-			true: 'max-h-screen-no-nav overflow-y-hidden',
+			true: 'max-h-screen-no-nav',
 			false: '',
 		},
 		padding: {

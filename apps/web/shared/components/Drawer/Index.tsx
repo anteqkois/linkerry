@@ -3,7 +3,7 @@ import { cn } from '@linkerry/ui-components/utils'
 import { cva } from 'class-variance-authority'
 import { Dispatch, HTMLAttributes, SetStateAction } from 'react'
 
-const variants = cva('w-full h-full fixed top-14 z-40 bg-popover md:w-108 border-l border-r ease-out duration-300', {
+const variants = cva('w-full h-[calc(100%-56px)] fixed top-14 z-40 bg-popover max-h-full md:w-108 border-l border-r ease-out duration-300', {
   variants: {
     state: {
       true: 'translate-x-0',
@@ -52,7 +52,7 @@ export const Drawer = ({ show, setShow, children, title, position, className, cu
       <Button className="absolute top-2 right-2" size={'icon'} variant={'ghost'} onClick={() => setShow((prev) => !prev)}>
         <Icons.Close size={'xs'} />
       </Button>
-      {children}
+      <div className="h-[calc(100%-44px)]">{children}</div>
     </aside>
   )
 }

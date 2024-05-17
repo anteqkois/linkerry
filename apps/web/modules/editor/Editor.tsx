@@ -71,7 +71,6 @@ export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) =
   }, [])
 
   const EditorRightDrawer = useMemo(() => editorDrawers[rightDrawer.name], [rightDrawer.name])
-  // const EditorRightDrawerCustomHeader = useMemo(() => editorDrawers[rightDrawer.name], [rightDrawer.name])
   const EditorLeftDrawer = useMemo(() => editorDrawers[leftDrawer.name], [leftDrawer.name])
 
   return (
@@ -100,6 +99,7 @@ export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) =
         setShow={setShowRightDrawer}
         position="right"
         customHeader={rightDrawer.name === 'action_connector' || rightDrawer.name === 'trigger_connector' ? rightDrawerCustomHeader : undefined}
+        title={rightDrawer.title}
       >
         <EditorRightDrawer />
       </Drawer>

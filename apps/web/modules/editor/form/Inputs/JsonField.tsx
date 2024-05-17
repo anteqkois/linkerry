@@ -47,7 +47,6 @@ export const JsonField = ({ property, name, refreshedProperties }: JsonFieldProp
             <CodeEditor
               value={prepareCodeMirrorValue(field.value)}
               title={property.displayName}
-              heightVh={2}
               readOnly={false}
               heightPx={200}
               onChange={field.onChange}

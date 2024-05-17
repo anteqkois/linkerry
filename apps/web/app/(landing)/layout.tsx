@@ -18,7 +18,7 @@ export default async function MarketingLayout({ children }: MarketingLayoutProps
             </div>
           </div>
         </header>
-        <main className="flex-1 mt-16">{children}</main>
+        {children}
         <SiteFooter />
       </div>
     </ReactQueryProvider>
