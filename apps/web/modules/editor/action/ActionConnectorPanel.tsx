@@ -197,7 +197,7 @@ export const ActionConnectorPanel = () => {
                           <p>{actionWatcher?.displayName}</p>
                         </SelectValue>
                       </SelectTrigger>
-                      <SelectContent position="popper" className='max-h-[375px] max-w-lg overflow-y-scroll'>
+                      <SelectContent position="popper" className="max-h-[375px] max-w-lg overflow-y-scroll">
                         {Object.values(connectorMetadata.actions).map((action) => {
                           return (
                             <SelectItem value={action.name} key={action.name}>

@@ -12,7 +12,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@linkerry/ui-components/client'
 import { HTMLAttributes, useEffect, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -30,17 +30,19 @@ export interface ConnectionsSelectProps extends Omit<HTMLAttributes<HTMLElement>
 export const ConnectionsSelect = ({ auth, connector }: ConnectionsSelectProps) => {
   const { setValue, control, trigger } = useFormContext()
   const [showDialog, setShowDialog] = useState(false)
-  const { data: appConnections, isFetched } = useClientQuery(appConnectionsQueryConfig.getMany())
-
+  const { data: appConnections, isFetched } = useClientQuery(
+    appConnectionsQueryConfig.getMany({
+      connectorName: connector.name,
+    }),
+  )
   useEffect(() => {
     if (!isFetched) return
     trigger('auth')
   }, [isFetched])
 
   const connectorConnections = useMemo(() => {
-    if (!isFetched) return []
     return appConnections?.filter((appConnection) => appConnection.connectorName === connector.name)
-  }, [appConnections, isFetched])
+  }, [appConnections])
 
   const handleAddedConnection = (newConnection: AppConnectionWithoutSensitiveData) => {
     const queryClient = getBrowserQueryCllient()
@@ -69,7 +71,14 @@ export const ConnectionsSelect = ({ auth, connector }: ConnectionsSelectProps) =
                 + New Connection
               </div>
             </FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
+            <Select
+              onValueChange={(value) => {
+                // don't set form field to empty string - prevent setting connections to empty string (when app connections are refetch for new selected steps, the select logic sets first field to empty string)
+                if (!value) return
+                field.onChange(value)
+              }}
+              value={field.value}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder={field.value ? undefined : 'Select connection'} />
@@ -83,9 +92,7 @@ export const ConnectionsSelect = ({ auth, connector }: ConnectionsSelectProps) =
                 ) : (
                   connectorConnections.map((appConnection) => (
                     <SelectItem value={`{{connections['${appConnection.name}']}}`} key={appConnection.name}>
-                      <span className="flex gap-2 items-center">
-                        <p>{appConnection.name}</p>
-                      </span>
+                      <span className="flex gap-2 items-center">{appConnection.name}</span>
                     </SelectItem>
                   ))
                 )}

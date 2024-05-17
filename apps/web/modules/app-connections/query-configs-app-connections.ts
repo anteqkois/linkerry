@@ -1,12 +1,12 @@
-import { AppConnectionWithoutSensitiveData } from '@linkerry/shared'
+import { AppConnectionWithoutSensitiveData, AppCpnnectionsGetManyQuery } from '@linkerry/shared'
 import { UseQueryOptions } from '@tanstack/react-query'
 import { AppConnectionsApi } from './api'
 
 export const appConnectionsQueryConfig = {
-  getMany: (): UseQueryOptions<AppConnectionWithoutSensitiveData[]> => {
+  getMany: (query?: AppCpnnectionsGetManyQuery): UseQueryOptions<AppConnectionWithoutSensitiveData[]> => {
     return {
       queryKey: ['app-connections'],
-      queryFn: async () => (await AppConnectionsApi.getMany()).data,
+      queryFn: async () => (await AppConnectionsApi.getMany(query)).data,
     }
   },
   // getOne: ({ connectorName, connectorVersion }: { connectorName: string, connectorVersion: string }): UseQueryOptions<ConnectorMetadata> => {

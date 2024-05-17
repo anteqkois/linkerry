@@ -6,6 +6,7 @@ import {
   AppConnectionType,
   AppConnectionValue,
   AppConnectionWithoutSensitiveData,
+  AppCpnnectionsGetManyQuery,
   CustomError,
   EngineResponseStatus,
   ErrorCode,
@@ -18,7 +19,7 @@ import {
 } from '@linkerry/shared'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { FilterQuery, Model } from 'mongoose'
 import { CryptoService } from '../../lib/crypto'
 import { RedisLockService } from '../../lib/redis-lock'
 import { SubscriptionsService } from '../billing/subscriptions/subscriptions.service'
@@ -26,7 +27,7 @@ import { EngineService } from '../engine/engine.service'
 import { ConnectorsMetadataService } from '../flows/connectors/connectors-metadata/connectors-metadata.service'
 import { oauth2Util } from './oauth2'
 import { OAuth2Service } from './oauth2/oauth2.service'
-import { AppConnectionsModel } from './schemas/connections.schema'
+import { AppConnectionsDocument, AppConnectionsModel } from './schemas/connections.schema'
 
 @Injectable()
 export class AppConnectionsService {
@@ -138,10 +139,14 @@ export class AppConnectionsService {
     }
   }
 
-  async find(projectId: Id) {
-    const appConnections = await this.appConnectionsModel.find({
+  async find(projectId: Id, query?: AppCpnnectionsGetManyQuery) {
+    const filter: FilterQuery<AppConnectionsDocument> = {
       projectId,
-    })
+    }
+
+    if (query?.connectorName) filter.connectorName = query.connectorName
+
+    const appConnections = await this.appConnectionsModel.find(filter)
 
     return appConnections.map((appConnection) => this._decryptConnection(appConnection.toObject()))
   }
