@@ -252,6 +252,19 @@
 			@apply my-2;
 		}
 	}
+
+  @keyframes shadow-slide {
+    from {
+      background: hsl(var(--primary) / 20%);
+      right: 460px;
+    }
+    to {
+      background: hsl(var(--primary) / 80%);
+      right: 160px;
+    }
+  }
+
+
 }
 
 /* html {
