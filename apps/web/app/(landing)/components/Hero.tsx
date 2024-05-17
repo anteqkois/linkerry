@@ -1,16 +1,10 @@
-// import { Button } from "./ui/button";
-// import { buttonVariants } from "./ui/button";
-// import { HeroCards } from "./HeroCards";
-// import { GitHubLogoIcon } from "@radix-ui/react-icons";
-
 import { Button } from '@linkerry/ui-components/server'
 import { HeroImage } from './HeroImage'
 
 export const Hero = () => {
   return (
-    <section className="p-2 md:px-10 2xl:pl-52 2xl:pr-10 mx-auto grid grid-cols-12 place-items-center py-20 md:pb-52 md:pt-40 gap-y-10">
+    <section className="p-2 md:px-10 2xl:pl-52 2xl:pr-10 mx-auto grid grid-cols-12 place-items-center py-20 md:pb-40 md:pt-40 2xl:pb-44 gap-y-10">
       <div className="text-center lg:text-start space-y-6 col-span-12 md:col-span-6">
-        {/* <main className="text-[1.75rem] leading-tight md:text-5xl 2xl:text-6xl font-bold"> */}
         <main className="text-[2.5rem] leading-tight md:text-5xl 2xl:text-6xl font-bold">
           <h1 className="inline">
             No-Code{' '}

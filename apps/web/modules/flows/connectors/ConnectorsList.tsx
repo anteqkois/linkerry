@@ -109,8 +109,8 @@ export const ConnectorsList = ({ onClickConnector, connectorType, className, lis
   }
 
   return (
-    <div className={cn('p-1 w-full flex justify-center', className)}>
-      <div className="flex w-full flex-wrap max-w-2xl">
+    <div className={cn('', className)}>
+      <div className="">
         <div className="bg-background/95 w-full flex flex-wrap gap-2 p-1 items-center backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <form className="flex-grow">
             <div className="relative">
