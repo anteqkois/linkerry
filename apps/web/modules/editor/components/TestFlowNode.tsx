@@ -124,7 +124,8 @@ export const TestFlowNodeElement = ({ onClick, className }: TestFlowProps) => {
       }}
       onClick={onClick}
     >
-      <H5 onClick={handleTestFlowVersion}>{flowValidity.invalid ? flowValidity.message : 'Test Flow'}</H5>
+      {/* <H5 onClick={handleTestFlowVersion}>{flowValidity.invalid ? flowValidity.message : 'Test Flow'}</H5> */}
+      <H5 onClick={handleTestFlowVersion}>{flowValidity.invalid ? flowValidity.message : 'Run Once'}</H5>
     </Card>
   )
 }

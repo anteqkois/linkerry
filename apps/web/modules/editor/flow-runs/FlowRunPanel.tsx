@@ -113,7 +113,7 @@ export const FlowRunPanel = () => {
   return (
     <ResizablePanelGroup direction="vertical" className="max-h-screen pt-2">
       <ResizablePanel defaultSize={30}>
-        <div>
+        <div className="max-h-full overflow-scroll">
           {steps.map((stepData, index) => (
             <StepItem {...stepData} stepIndex={index} key={stepData.step.name} onSelectStep={onSelectStep} />
           ))}
@@ -121,7 +121,7 @@ export const FlowRunPanel = () => {
       </ResizablePanel>
       {selectedResult && (
         <>
-          <ResizableHandle withHandle/>
+          <ResizableHandle withHandle />
           <ResizablePanel defaultSize={35} minSize={5} maxSize={80} onResize={(size) => setResultInputPanelHeight(size)} className="p-1">
             <CodeEditor
               className="max-h-full overflow-scroll"
