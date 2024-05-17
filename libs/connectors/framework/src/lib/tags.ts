@@ -19,7 +19,7 @@ export const connectorTag = [
   'community management',
   'payments',
   'commerce',
-  'artificial intelligence',
+  'ai',
   'database',
 ] as const
 export type ConnectorTag = (typeof connectorTag)[number]

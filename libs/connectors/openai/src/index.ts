@@ -16,7 +16,7 @@ export const openai = createConnector({
   description: 'Take advantage of the many tools ChatGPT has to offer. Use artificial intelligence to speed up your business and save time.',
   minimumSupportedRelease: '0.0.0',
   logoUrl: '/images/connectors/openai.png',
-  tags: ['artificial intelligence'],
+  tags: ['ai'],
   auth: openaiAuth,
   actions: [
     askOpenAI,

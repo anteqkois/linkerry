@@ -18,6 +18,7 @@ import {
 import { Badge, Button, Icons } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { useDebouncedEffect } from '@react-hookz/web'
+import { useSearchParams } from 'next/navigation'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useClientQuery } from '../../../libs/react-query'
@@ -36,11 +37,17 @@ export interface ConnectorReviewItemProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const ConnectorsList = ({ onClickConnector, connectorType, className, listClassName }: ConnectorReviewItemProps) => {
+  const searchParams = useSearchParams()
   const { data } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
   const [filteredConnectors, setFilteredConnectors] = useState<ConnectorMetadataSummary[]>([])
   const [connectorsForType, setConnectorsForType] = useState<ConnectorMetadataSummary[]>([])
   const [search, setSearch] = useState('')
   const [tags, setTags] = useState<ConnectorTag[]>([])
+
+  useEffect(() => {
+    const searchTags = (searchParams.getAll('tag') ?? []) as ConnectorTag[]
+    if (searchTags) setTags(searchTags)
+  }, [searchParams])
 
   useEffect(() => {
     if (!data) return
