@@ -31,7 +31,10 @@ export const Hero = () => {
         </p>
 
         <div className="space-y-4 md:space-y-0 md:space-x-4">
-          <Button className="w-full md:w-1/2 text-xl p-5 font-bold" size={'lg'}>
+          <Button
+            className="w-full md:w-1/2 text-xl p-5 font-bold bg-gradient-to-r from-[hsl(262,83%,57%)] via-[hsl(262,93%,55%)] to-[hsl(262,93%,50%)]"
+            size={'lg'}
+          >
             Start Free
           </Button>
         </div>
@@ -40,7 +43,7 @@ export const Hero = () => {
       <div className="z-10 col-span-12 md:col-span-6 skew-y-1 md:skew-y-3">
         <HeroImage />
         <div
-          className="w-3/5 h-4/6 inline-block rotate-1 bg-primary absolute top-[20%] left-[50%] -translate-x-1/2 blur-[120px] -z-10 shadow"
+          className="w-4/5 h-4/6 inline-block rotate-1 bg-primary absolute top-[20%] left-[50%] -translate-x-1/2 blur-[120px] -z-10 shadow"
           style={{ animation: 'shadow-slide infinite 4s linear alternate' }}
         />
       </div>

@@ -3,7 +3,6 @@ import localFont from 'next/font/local'
 import './global.css'
 
 import { ThemeProvider, Toaster } from '@linkerry/ui-components/client'
-import { TailwindIndicator } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { LiveChatProvider } from '../libs/Tawk'
 import { siteConfig } from './webConfig'
@@ -76,13 +75,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={cn('min-h-screen-no-nav bg-background font-sans antialiased', fontSans.variable, fontHeading.variable)}
         suppressHydrationWarning={true}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark">
           <LiveChatProvider>
             {children}
             {/* <Analytics /> */}
             {/* <Toaster duration={5_000} viewportClassName='sm:top-0 sm:left-1/2 -translate-x-1/2'/> */}
             <Toaster duration={5_000} />
-            <TailwindIndicator />
+            {/* <TailwindIndicator /> */}
           </LiveChatProvider>
         </ThemeProvider>
       </body>

@@ -17,7 +17,7 @@ export const landingConfig: LandingConfig = {
           title: 'App Connectors',
           titleIcon: <Icons.Connectors className="w-9 h-9 text-green-400" />,
           description: 'Connect multiple applications into one flow to automate tasks for your business or personal life.',
-          href: '#connectors',
+          href: '/#connectors',
         },
         {
           title: 'We Automate Your Business for You',
@@ -26,9 +26,9 @@ export const landingConfig: LandingConfig = {
           href: 'mailto:anteqkois@gmail.com',
         },
         {
-          title: 'Road Map',
+          title: 'Concept and Road Map',
           titleIcon: <Icons.RoadMap className="w-9 h-9 text-yellow-400" />,
-          description: 'Check out the upcoming features on Linkerry.',
+          description: 'Check out the planning and upcoming features on Linkerry.',
           href: '/road-map',
         },
         {

@@ -1,10 +1,10 @@
 import { PageContainer } from '../../app/components/PageContainer'
-import { RoadMap } from '../components/RoadMap'
+import { HeroImage } from '../components/HeroImage'
 
 export default async function IndexPage() {
   return (
-    <PageContainer variant={'fromTop'}>
-      <RoadMap />
+    <PageContainer variant={'fromTop'} className="p-10">
+      <HeroImage />
     </PageContainer>
   )
 }

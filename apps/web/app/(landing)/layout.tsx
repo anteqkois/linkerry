@@ -1,5 +1,5 @@
 import ReactQueryProvider from '../../libs/reactQueryProvider'
-import { SiteFooter } from '../../shared/components/SiteFooter'
+import { Footer } from './components/Footer'
 import { MainNav } from './components/MianNav'
 import { landingConfig } from './config'
 
@@ -19,7 +19,7 @@ export default async function MarketingLayout({ children }: MarketingLayoutProps
           </div>
         </header>
         {children}
-        <SiteFooter />
+        <Footer />
       </div>
     </ReactQueryProvider>
   )
