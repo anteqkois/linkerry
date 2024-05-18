@@ -1,6 +1,15 @@
 import { Button } from '@linkerry/ui-components/server'
 import { HeroImage } from './HeroImage'
 
+// No-Code Automations
+// Powered by AI and Web3
+
+// No-Code Automations
+// based on AI and Web3
+
+// No-Code Automations
+// focused on AI and Web3
+
 export const Hero = () => {
   return (
     <section className="p-2 md:px-10 2xl:pl-52 2xl:pr-10 mx-auto grid grid-cols-12 place-items-center py-20 md:pt-40 gap-y-10">
@@ -13,7 +22,7 @@ export const Hero = () => {
             </span>
             <br />
           </h1>
-          <h2 className="inline">
+          {/* <h2 className="inline">
             for{' '}
             <span className="inline bg-gradient-to-r from-[hsl(262,83%,65%)] via-[hsl(262,93%,55%)] to-[hsl(262,93%,50%)] text-transparent bg-clip-text">
               Business
@@ -22,12 +31,22 @@ export const Hero = () => {
             <span className="inline bg-gradient-to-r from-[hsl(262,83%,65%)] via-[hsl(262,93%,55%)] to-[hsl(262,93%,50%)] text-transparent bg-clip-text">
               Personal Use
             </span>{' '}
+          </h2> */}
+          <h2 className="inline">
+            focused on{' '}
+            <span className="inline bg-gradient-to-r from-[hsl(262,83%,65%)] via-[hsl(262,93%,55%)] to-[hsl(262,93%,50%)] text-transparent bg-clip-text">
+              AI
+            </span>{' '}
+            and{' '}
+            <span className="inline bg-gradient-to-r from-[hsl(262,83%,65%)] via-[hsl(262,93%,55%)] to-[hsl(262,93%,50%)] text-transparent bg-clip-text">
+              Web3
+            </span>{' '}
           </h2>
         </main>
 
         <p className=" text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
-          Save time and money with AI-driven automation. We&apos;re focused on simplify all your daily tasks, allowing you to focus on what matters
-          most.
+          Save time and money with Web3 and AI-driven automation. We&apos;re focused on simplifying all your daily tasks, allowing you to focus on
+          what matters most. Our future Agents will do it for you.
         </p>
 
         <div className="space-y-4 md:space-y-0 md:space-x-4">

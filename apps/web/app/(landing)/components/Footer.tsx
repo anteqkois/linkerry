@@ -70,7 +70,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <a rel="noreferrer noopener" href="/roadmap" className="opacity-60 hover:opacity-100">
+            <a rel="noreferrer noopener" href="/road-map" className="opacity-60 hover:opacity-100">
               Road Map
             </a>
           </div>

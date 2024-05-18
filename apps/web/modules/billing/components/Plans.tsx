@@ -128,13 +128,17 @@ const plansConfig: Record<PlanName, PlanCardProps['config'] & { children?: React
     disclaimer: "*Price will increase upon delivery of the 'Coming Soon Features'. Reduced rate now.",
     points: [
       { point: 'Pre Access for AI helper & AI generator', unfinished: true },
+      // { point: 'AI Agents to create and perform the whole flow from input', unfinished: true },
+      { point: 'Linkerry AGI to create and perform the whole flow from input', unfinished: true },
       { point: 'Voting system on the development order of connectors', unfinished: false },
       { point: 'Live notifications for Flow Runs and errors', unfinished: true },
       { point: 'Access to a Premium closed group', unfinished: false },
       { point: 'Up to 25 000 tasks / monthly', unfinished: false },
     ],
     children: (
-      <span className="bg-primary px-4 py-1 text-sm text-primary-foreground font-medium rounded-lg absolute -top-3 right-6 shadow-2xl">Recommended</span>
+      <span className="bg-primary px-4 py-1 text-sm text-primary-foreground font-medium rounded-lg absolute -top-3 right-6 shadow-2xl">
+        Recommended
+      </span>
     ),
   },
   Enterprise: {
