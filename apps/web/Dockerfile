@@ -9,7 +9,9 @@ WORKDIR /app/builder
 
 # Copy the correct environment file based on the build argument `ENVIRONMENT`
 # COPY .env.${ENVIRONMENT} ./.env
-COPY /app/builder/apps/web/.env.prod-build /app/builder/apps/web/.env
+# COPY /app/builder/apps/web/.env.prod-build /app/builder/apps/web/.env
+RUN echo "NEXT_PUBLIC_API_HOST=${NEXT_PUBLIC_API_HOST}" >> /app/builder/apps/web/.env
+RUN echo "NEXT_TELEMETRY_DISABLED=true" >> /app/builder/apps/web/.env
 
 RUN npx nx run web:build || echo "nx run web:build failed"
 
