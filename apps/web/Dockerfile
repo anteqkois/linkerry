@@ -9,7 +9,7 @@ WORKDIR /app/builder
 
 # Copy the correct environment file based on the build argument `ENVIRONMENT`
 # COPY .env.${ENVIRONMENT} ./.env
-COPY /app/builder/apps/web/.env.prod /app/builder/apps/web/.env
+COPY /app/builder/apps/web/.env.prod-build /app/builder/apps/web/.env
 
 RUN npx nx run web:build || echo "nx run web:build failed"
 
