@@ -1,7 +1,7 @@
 {
   "name": "@linkerry/source",
   "version": "0.0.0",
-  "packageManager": "pnpm@^8.0.0",
+  "packageManager": "pnpm@8.15.2",
   "license": "MIT",
   "private": true,
   "author": {
@@ -21,8 +21,8 @@
     "registry-and-publish": "sleep 3 && make publish-connectors & npx nx local-registry",
     "ngrok": "ngrok http --domain=fairly-winning-chamois.ngrok-free.app 3001",
     "stripe": "stripe listen --forward-to localhost:3001/api/v1/stripe/webhook",
-    "docker-base-linux": "docker build . -t linkerry/base:latest --platform=linux/amd64",
-    "docker-base": "docker build . -t linkerry/base:latest",
+    "docker-base-linux": "docker build . -t registry.digitalocean.com/linkerry/base:latest --platform=linux/amd64",
+    "docker-base": "docker build . -t registry.digitalocean.com/linkerry/base:latest",
     "docker-api": "docker compose -f ./apps/api-gateway/docker-compose.local.yml up -d",
     "docker-web": "docker compose -f ./apps/web/docker-compose.local.yml up -d"
   },

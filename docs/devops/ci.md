@@ -1,5 +1,5 @@
 # build base docker image 
-`docker build . -t linkerry/base:latest`
+`docker build . -t registry.digitalocean.com/linkerry/base:latest`
 
 # build and run server docker compose
 `docker compose -f ./apps/api-gateway/docker-compose.local.yml up -d`

@@ -1,12 +1,15 @@
-# FROM linkerry/base:latest AS builder
 FROM registry.digitalocean.com/linkerry/base:latest AS builder
 
 ARG NODE_ENV
-ARG BUILD_FLAG
 ENV NEXT_TELEMETRY_DISABLED=true
 ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
+RUN echo "API Host: $NEXT_PUBLIC_API_HOST"
 
 WORKDIR /app/builder
+
+# Copy the correct environment file based on the build argument `ENVIRONMENT`
+# COPY .env.${ENVIRONMENT} ./.env
+COPY /app/builder/apps/web/.env.prod /app/builder/apps/web/.env
 
 RUN npx nx run web:build || echo "nx run web:build failed"
 
