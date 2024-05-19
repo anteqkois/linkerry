@@ -42,7 +42,7 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/base:latest
-      - name: Build image for web
+      - name: Build image for api-gateway
         env:
           NEXT_TELEMETRY_DISABLED: true
           NEXT_PUBLIC_API_HOST: https://api.linkerry.com

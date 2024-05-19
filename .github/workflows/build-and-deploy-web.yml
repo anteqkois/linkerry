@@ -1,7 +1,6 @@
 name: build-and-deploy-web
 
-on:
-  workflow_dispatch
+on: workflow_dispatch
 
 jobs:
   build_and_deploy:
@@ -12,9 +11,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
-        # with:
-        #   version: 8
       - name: Restore cached npm dependencies
+        id: cache-npm-deps
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -23,7 +21,7 @@ jobs:
           key: npm-dependencies-${{ hashFiles('package.json') }}
       - name: Install dependencies
         run: pnpm install
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-npm-deps.outputs.cache-hit != 'true'
       - name: Cache npm dependencies
         uses: actions/cache/save@v4
         with:
@@ -31,23 +29,26 @@ jobs:
             node_modules
             ~/.cache/Cypress # needed for the Cypress binary
           key: npm-dependencies-${{ hashFiles('package.json') }}
-      - name: Build base image
-        run: npm run docker-base-linux
-      - name: Tag base image
-        run:
-          docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to DO Container Registry
         run: doctl registry login --expiry-seconds 600
+      - name: Pull existing base image
+        run: docker pull registry.digitalocean.com/linkerry/base:latest || echo "No existing image to pull"
+      - name: Build base image
+        run: npm run docker-base-linux
+      - name: Tag base image
+        run: docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/base:latest
       - name: Build image for web
-        run: docker build -t linkerry/web -f ./apps/web/Dockerfile . --platform=linux/amd64
+        env:
+          NEXT_TELEMETRY_DISABLED: true
+          NEXT_PUBLIC_API_HOST: https://api.linkerry.com
+        run: docker build -t linkerry/web --build-arg NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST -f ./apps/web/Dockerfile . --platform=linux/amd64
       - name: Tag web image
-        run:
-          docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
+        run: docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/web:latest
