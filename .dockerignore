@@ -14,6 +14,7 @@ tools
 .dockerignore
 .env
 .env.*
+!**/.env.prod-build
 .eslintignore
 .gitignore
 .prettierignore

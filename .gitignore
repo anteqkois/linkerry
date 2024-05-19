@@ -3,6 +3,7 @@
 # env
 .env
 .env.*
+!**/.env.prod-build
 
 # compiled output
 dist
