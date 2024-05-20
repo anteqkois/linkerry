@@ -3,7 +3,7 @@ FROM registry.digitalocean.com/linkerry/base:latest AS builder
 ARG NODE_ENV
 ENV NEXT_TELEMETRY_DISABLED=true
 ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
-RUN echo "API Host: $NEXT_PUBLIC_API_HOST"
+RUN echo $NEXT_PUBLIC_API_HOST
 
 WORKDIR /app/builder
 
@@ -13,8 +13,16 @@ WORKDIR /app/builder
 # RUN echo "NEXT_PUBLIC_API_HOST=${NEXT_PUBLIC_API_HOST}" >> /app/builder/apps/web/.env
 RUN echo "NEXT_PUBLIC_API_HOST=https://api.linkerry.com" >> /app/builder/apps/web/.env
 RUN echo "NEXT_TELEMETRY_DISABLED=true" >> /app/builder/apps/web/.env
+RUN echo "TEST=true" >> /app/builder/apps/web/.env
+RUN echo "NEXT_PUBLIC_API_HOST=https://api.linkerry.com" >> /app/builder/apps/web/.env.production
+RUN echo "NEXT_TELEMETRY_DISABLED=true" >> /app/builder/apps/web/.env.production
+RUN echo "TEST=true" >> /app/builder/apps/web/.env.production
+RUN cat /app/builder/apps/web/.env
+RUN ls -a /app/builder/apps/web
 
 RUN npx nx run web:build || echo "nx run web:build failed"
+RUN grep -rn --include="*.js" "process.env.NEXT_PUBLIC_API_HOST" /app/builder/apps/web/.next/standalone
+RUN grep -rn --include="*.js" "https://api.linkerry.com" /app/builder/apps/web/.next/standalone
 
 FROM node:lts-alpine AS runner
 
