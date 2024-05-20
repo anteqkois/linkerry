@@ -11,20 +11,20 @@ WORKDIR /app/builder
 # COPY .env.${ENVIRONMENT} ./.env
 # COPY /app/builder/apps/web/.env.prod-build /app/builder/apps/web/.env
 # RUN echo "NEXT_PUBLIC_API_HOST=${NEXT_PUBLIC_API_HOST}" >> /app/builder/apps/web/.env
-RUN echo "NEXT_PUBLIC_API_HOST=https://api.linkerry.com" >> /app/builder/apps/web/.env
-RUN echo "NEXT_TELEMETRY_DISABLED=true" >> /app/builder/apps/web/.env
-RUN echo "TEST=true" >> /app/builder/apps/web/.env
-RUN echo "NEXT_PUBLIC_API_HOST=https://api.linkerry.com" >> /app/builder/apps/web/.env.production
-RUN echo "NEXT_TELEMETRY_DISABLED=true" >> /app/builder/apps/web/.env.production
-RUN echo "TEST=true" >> /app/builder/apps/web/.env.production
-RUN cat /app/builder/apps/web/.env
-RUN ls -a /app/builder/apps/web
+# RUN echo "NEXT_PUBLIC_API_HOST=https://api.linkerry.com" >> /app/builder/apps/web/.env
+# RUN echo "NEXT_TELEMETRY_DISABLED=true" >> /app/builder/apps/web/.env
+# RUN echo "TEST=true" >> /app/builder/apps/web/.env
+# RUN echo "NEXT_PUBLIC_API_HOST=https://api.linkerry.com" >> /app/builder/apps/web/.env.production
+# RUN echo "NEXT_TELEMETRY_DISABLED=true" >> /app/builder/apps/web/.env.production
+# RUN echo "TEST=true" >> /app/builder/apps/web/.env.production
+# RUN cat /app/builder/apps/web/.env
+# RUN ls -a /app/builder/apps/web
 
 RUN npx nx run web:build || echo "nx run web:build failed"
 # RUN grep -rn --include="*.js" "process.env.NEXT_PUBLIC_API_HOST" /app/builder/apps/web/.next/standalone
 # RUN grep -rn --include="*.js" "https://api.linkerry.com" /app/builder/apps/web/.next/standalone
-RUN find /app/builder/apps/web/.next/standalone -name "*.js" -exec grep -n "process.env.NEXT_PUBLIC_API_HOST" {} + || true
-RUN find /app/builder/apps/web/.next/standalone -name "*.js" -exec grep -n "https://api.linkerry.com" {} + || true
+# RUN find /app/builder/apps/web/.next/standalone -name "*.js" -exec grep -n "process.env.NEXT_PUBLIC_API_HOST" {} + || true
+# RUN find /app/builder/apps/web/.next/standalone -name "*.js" -exec grep -n "https://api.linkerry.com" {} + || true
 
 FROM node:lts-alpine AS runner
 

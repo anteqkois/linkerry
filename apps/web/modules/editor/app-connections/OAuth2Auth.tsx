@@ -28,6 +28,7 @@ import dayjs from 'dayjs'
 import { nanoid } from 'nanoid'
 import { Dispatch, FormEvent, HTMLAttributes, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { API_URL } from '../../../libs/api-client'
 import { useClientQuery } from '../../../libs/react-query'
 import { ErrorInfo } from '../../../shared/components/ErrorInfo'
 import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
@@ -56,7 +57,7 @@ export const OAuth2Auth = ({ onCreateAppConnection, auth, connector, setShowDial
 
 		setOAuth2Settings({
 			auth_url: auth.authUrl,
-			redirect_url: `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/oauth2/redirect`,
+			redirect_url: `${API_URL}/api/v1/oauth2/redirect`,
 			scope: auth.scope.join(' '),
 			pkce: auth.pkce ?? false,
 			extraParams: auth.extra || {},
