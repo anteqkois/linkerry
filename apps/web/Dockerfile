@@ -21,8 +21,10 @@ RUN cat /app/builder/apps/web/.env
 RUN ls -a /app/builder/apps/web
 
 RUN npx nx run web:build || echo "nx run web:build failed"
-RUN grep -rn --include="*.js" "process.env.NEXT_PUBLIC_API_HOST" /app/builder/apps/web/.next/standalone
-RUN grep -rn --include="*.js" "https://api.linkerry.com" /app/builder/apps/web/.next/standalone
+# RUN grep -rn --include="*.js" "process.env.NEXT_PUBLIC_API_HOST" /app/builder/apps/web/.next/standalone
+# RUN grep -rn --include="*.js" "https://api.linkerry.com" /app/builder/apps/web/.next/standalone
+RUN find /app/builder/apps/web/.next/standalone -name "*.js" -exec grep -n "process.env.NEXT_PUBLIC_API_HOST" {} + || true
+RUN find /app/builder/apps/web/.next/standalone -name "*.js" -exec grep -n "https://api.linkerry.com" {} + || true
 
 FROM node:lts-alpine AS runner
 
