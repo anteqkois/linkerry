@@ -29,18 +29,18 @@ jobs:
             node_modules
             ~/.cache/Cypress # needed for the Cypress binary
           key: npm-dependencies-${{ hashFiles('package.json') }}
+          # - name: Pull existing base image
+          #   run: docker pull registry.digitalocean.com/linkerry/base:latest || echo "No existing image to pull"
+      - name: Build base image
+        run: npm run docker-base-linux
+      # - name: Tag base image
+      #   run: docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to DO Container Registry
-        run: doctl registry login --expiry-seconds 600
-      # - name: Pull existing base image
-      #   run: docker pull registry.digitalocean.com/linkerry/base:latest || echo "No existing image to pull"
-      - name: Build base image
-        run: npm run docker-base-linux
-      # - name: Tag base image
-      #   run: docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
+        run: doctl registry login --expiry-seconds 1000
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/base:latest
       - name: Build image for web
