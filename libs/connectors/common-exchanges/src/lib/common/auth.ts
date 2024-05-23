@@ -41,6 +41,5 @@ export const exchangeAuth = (exchangeClient: ExchangeClientInterface, authDescri
           error: 'Invalid API keys',
         }
       }
-
     },
   })

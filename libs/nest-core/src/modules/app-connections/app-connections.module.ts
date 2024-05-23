@@ -12,16 +12,16 @@ import { AppConnectionsModelFactory } from './schemas/connections.schema'
 import { WorkerAppConnectionsController } from './worker-app-connections.controller'
 
 @Module({
-	imports: [
-		MongooseModule.forFeatureAsync([AppConnectionsModelFactory]),
-		EngineModule,
-		ConnectorsMetadataModule,
-		CryptoModule,
-		RedisLockModule,
-		Oauth2Module,
-		SubscriptionsModule,
-	],
-	controllers: [AppConnectionsController, WorkerAppConnectionsController],
-	providers: [AppConnectionsService],
+  imports: [
+    MongooseModule.forFeatureAsync([AppConnectionsModelFactory]),
+    EngineModule,
+    ConnectorsMetadataModule,
+    CryptoModule,
+    RedisLockModule,
+    Oauth2Module,
+    SubscriptionsModule,
+  ],
+  controllers: [AppConnectionsController, WorkerAppConnectionsController],
+  providers: [AppConnectionsService],
 })
 export class AppConnectionsModule {}

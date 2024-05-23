@@ -1,5 +1,5 @@
-import { Id } from "../../common";
+import { Id } from '../../common'
 
-export interface SyncParams{
-	flowId: Id,
+export interface SyncParams {
+  flowId: Id
 }

@@ -32,7 +32,6 @@
 //         let newExecutionContext = executionState.upsertStep(action.name, stepOutput)
 //         const firstLoopAction = action.firstLoopAction
 
-
 //         for (let i = 0; i < resolvedInput.items.length; ++i) {
 //             const newCurrentPath = newExecutionContext.currentPath.loopIteration({ loopName: action.name, iteration: i })
 //             stepOutput = stepOutput.addIteration({ index: i + 1, item: resolvedInput.items[i] })

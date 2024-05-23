@@ -5,97 +5,97 @@ import { OAuth2AuthorizationMethod } from './oauth2-authorization-method'
 export type AppConnectionId = string
 
 export enum AppConnectionStatus {
-	ACTIVE = 'ACTIVE',
-	ERROR = 'ERROR',
+  ACTIVE = 'ACTIVE',
+  ERROR = 'ERROR',
 }
 
 // this is the same type as PropertyType in connector framework
 export enum AppConnectionType {
-	OAUTH2 = 'OAUTH2',
-	PLATFORM_OAUTH2 = 'PLATFORM_OAUTH2',
-	CLOUD_OAUTH2 = 'CLOUD_OAUTH2',
-	SECRET_TEXT = 'SECRET_TEXT',
-	BASIC_AUTH = 'BASIC_AUTH',
-	CUSTOM_AUTH = 'CUSTOM_AUTH',
+  OAUTH2 = 'OAUTH2',
+  PLATFORM_OAUTH2 = 'PLATFORM_OAUTH2',
+  CLOUD_OAUTH2 = 'CLOUD_OAUTH2',
+  SECRET_TEXT = 'SECRET_TEXT',
+  BASIC_AUTH = 'BASIC_AUTH',
+  CUSTOM_AUTH = 'CUSTOM_AUTH',
 }
 
 export type SecretTextConnectionValue = {
-	type: AppConnectionType.SECRET_TEXT
-	secret_text: string
+  type: AppConnectionType.SECRET_TEXT
+  secret_text: string
 }
 export type BasicAuthConnectionValue = {
-	username: string
-	password: string
-	type: AppConnectionType.BASIC_AUTH
+  username: string
+  password: string
+  type: AppConnectionType.BASIC_AUTH
 }
 
 export type BaseOAuth2ConnectionValue = {
-	expires_in?: number
-	client_id: string
-	token_type: string
-	access_token: string
-	claimed_at: number
-	refresh_token: string
-	scope: string
-	token_url: string
-	authorization_method?: OAuth2AuthorizationMethod
-	data: Record<string, unknown>
-	props?: Record<string, unknown>
-	grant_type?: OAuth2GrantType
+  expires_in?: number
+  client_id: string
+  token_type: string
+  access_token: string
+  claimed_at: number
+  refresh_token: string
+  scope: string
+  token_url: string
+  authorization_method?: OAuth2AuthorizationMethod
+  data: Record<string, unknown>
+  props?: Record<string, unknown>
+  grant_type?: OAuth2GrantType
 }
 
 export type CustomAuthConnectionValue = {
-	type: AppConnectionType.CUSTOM_AUTH
-	props: Record<string, unknown>
+  type: AppConnectionType.CUSTOM_AUTH
+  props: Record<string, unknown>
 }
 
 export type CloudOAuth2ConnectionValue = {
-	type: AppConnectionType.CLOUD_OAUTH2
+  type: AppConnectionType.CLOUD_OAUTH2
 } & BaseOAuth2ConnectionValue
 
 export type PlatformOAuth2ConnectionValue = {
-	type: AppConnectionType.PLATFORM_OAUTH2
-	redirect_url: string
+  type: AppConnectionType.PLATFORM_OAUTH2
+  redirect_url: string
 } & BaseOAuth2ConnectionValue
 
 export type OAuth2ConnectionValueWithApp = {
-	type: AppConnectionType.OAUTH2
-	client_secret: string
-	redirect_url: string
+  type: AppConnectionType.OAUTH2
+  client_secret: string
+  redirect_url: string
 } & BaseOAuth2ConnectionValue
 
 export type AppConnectionValue<T extends AppConnectionType = AppConnectionType> = T extends AppConnectionType.SECRET_TEXT
-	? SecretTextConnectionValue
-	: T extends AppConnectionType.BASIC_AUTH
-	? BasicAuthConnectionValue
-	: T extends AppConnectionType.CLOUD_OAUTH2
-	? CloudOAuth2ConnectionValue
-	: T extends AppConnectionType.PLATFORM_OAUTH2
-	? PlatformOAuth2ConnectionValue
-	: T extends AppConnectionType.OAUTH2
-	? OAuth2ConnectionValueWithApp
-	: T extends AppConnectionType.CUSTOM_AUTH
-	? CustomAuthConnectionValue
-	: never
+  ? SecretTextConnectionValue
+  : T extends AppConnectionType.BASIC_AUTH
+  ? BasicAuthConnectionValue
+  : T extends AppConnectionType.CLOUD_OAUTH2
+  ? CloudOAuth2ConnectionValue
+  : T extends AppConnectionType.PLATFORM_OAUTH2
+  ? PlatformOAuth2ConnectionValue
+  : T extends AppConnectionType.OAUTH2
+  ? OAuth2ConnectionValueWithApp
+  : T extends AppConnectionType.CUSTOM_AUTH
+  ? CustomAuthConnectionValue
+  : never
 
 export type AppConnectionDecrypted<Type extends AppConnectionType = AppConnectionType> = BaseDatabaseFields & {
-	_id: Id
-	name: string
-	type: Type
-	connectorName: Id
-	projectId: string
-	status: AppConnectionStatus
-	value: AppConnectionValue<Type>
+  _id: Id
+  name: string
+  type: Type
+  connectorName: Id
+  projectId: string
+  status: AppConnectionStatus
+  value: AppConnectionValue<Type>
 }
 
 export type AppConnectionEncrypted<Type extends AppConnectionType = AppConnectionType> = BaseDatabaseFields & {
-	_id: Id
-	name: string
-	type: Type
-	connectorName: string
-	projectId: Id
-	status: AppConnectionStatus
-	value: EncryptedObject
+  _id: Id
+  name: string
+  type: Type
+  connectorName: string
+  projectId: Id
+  status: AppConnectionStatus
+  value: EncryptedObject
 }
 
 export type OAuth2AppConnection = AppConnectionEncrypted<AppConnectionType.OAUTH2>

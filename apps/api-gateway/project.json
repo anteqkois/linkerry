@@ -10,11 +10,7 @@
     },
     "build-with-engine": {
       "command": "webpack-cli build",
-      "inputs": [
-        "production",
-        "^production",
-        { "externalDependencies": ["webpack-cli"] }
-      ],
+      "inputs": ["production", "^production", { "externalDependencies": ["webpack-cli"] }],
       "outputs": ["{workspaceRoot}/dist/apps/api-gateway"],
       "dependsOn": ["^build", "engine:build"],
       "options": {

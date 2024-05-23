@@ -1,6 +1,6 @@
-import { Property, createAction } from '@linkerry/connectors-framework';
-import { stripeAuth } from '../common/auth';
-import { HttpMethod, httpClient } from '@linkerry/connectors-common';
+import { Property, createAction } from '@linkerry/connectors-framework'
+import { stripeAuth } from '../common/auth'
+import { HttpMethod, httpClient } from '@linkerry/connectors-common'
 
 export const stripeCreateInvoice = createAction({
   name: 'create_invoice',
@@ -29,7 +29,7 @@ export const stripeCreateInvoice = createAction({
       customer: context.propsValue.customer_id,
       currency: context.propsValue.currency,
       description: context.propsValue.description,
-    };
+    }
 
     const response = await httpClient.sendRequest({
       method: HttpMethod.POST,
@@ -43,7 +43,7 @@ export const stripeCreateInvoice = createAction({
         currency: invoice.currency,
         description: invoice.description,
       },
-    });
-    return response.body;
+    })
+    return response.body
   },
-});
+})

@@ -6,9 +6,7 @@ function useLocalStorage<S>(
   // initialState?: S | (() => S)
 ): [S, Dispatch<SetStateAction<S>>, (keyToRemove?: string) => void]
 
-function useLocalStorage<S = undefined>(
-  key: string,
-): [S | undefined, Dispatch<SetStateAction<S | undefined>>, (keyToRemove?: string) => void]
+function useLocalStorage<S = undefined>(key: string): [S | undefined, Dispatch<SetStateAction<S | undefined>>, (keyToRemove?: string) => void]
 
 function useLocalStorage<S = undefined>(key: string, initialValue?: S | (() => S)) {
   const [storedValue, setStoredValue] = useState<S>(() => {

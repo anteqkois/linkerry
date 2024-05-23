@@ -1,19 +1,18 @@
-import { EventPayload, FlowPopulated } from "@linkerry/shared"
+import { EventPayload, FlowPopulated } from '@linkerry/shared'
 
-export interface CallbackParams  {
-    flow: FlowPopulated
-    payload: EventPayload
+export interface CallbackParams {
+  flow: FlowPopulated
+  payload: EventPayload
 }
 
-export interface HandshakeParams  {
-    flow: FlowPopulated
-    payload: EventPayload
-    simulate: boolean
+export interface HandshakeParams {
+  flow: FlowPopulated
+  payload: EventPayload
+  simulate: boolean
 }
 
-
-export interface CallbackParams  {
-    flow: FlowPopulated
-    payload: EventPayload
-    synchronousHandlerId?: string
+export interface CallbackParams {
+  flow: FlowPopulated
+  payload: EventPayload
+  synchronousHandlerId?: string
 }

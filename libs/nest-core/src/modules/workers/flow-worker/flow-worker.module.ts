@@ -23,38 +23,38 @@ import { QUEUES } from './queues/types'
 
 const EIGHT_MINUTES_IN_MILLISECONDS = 8 * 60 * 1000
 const defaultJobOptions: RegisterQueueOptions['defaultJobOptions'] = {
-	attempts: 5,
-	backoff: {
-		type: 'exponential',
-		delay: EIGHT_MINUTES_IN_MILLISECONDS,
-	},
-	removeOnComplete: true,
+  attempts: 5,
+  backoff: {
+    type: 'exponential',
+    delay: EIGHT_MINUTES_IN_MILLISECONDS,
+  },
+  removeOnComplete: true,
 }
 
 @Module({
-	imports: [
-		MongooseModule.forFeatureAsync([flowVersionModelFactory, FlowModelFactory, FlowRunModelFactory]),
-		FlowRunsModule,
-		FlowsModule,
-		TriggerHooksModule,
-		FlowVersionsModule,
-		SandboxModule,
-		EngineModule,
-		FilesModule,
-		DedupeModule,
-		ConnectorsMetadataModule,
-		TasksUsageModule,
-		BullModule.registerQueue({
-			configKey: QUEUES.CONFIG_KEYS.FLOW,
-			name: QUEUES.NAMES.ONE_TIME_JOB_QUEUE,
-			defaultJobOptions,
-		}),
-		BullModule.registerQueue({
-			configKey: QUEUES.CONFIG_KEYS.FLOW,
-			name: QUEUES.NAMES.SCHEDULED_JOB_QUEUE,
-			defaultJobOptions,
-		}),
-	],
-	providers: [FlowJobProcessor, OneTimeProcessor, QueuesService, FlowWorkerService, FlowWorkerHooks],
+  imports: [
+    MongooseModule.forFeatureAsync([flowVersionModelFactory, FlowModelFactory, FlowRunModelFactory]),
+    FlowRunsModule,
+    FlowsModule,
+    TriggerHooksModule,
+    FlowVersionsModule,
+    SandboxModule,
+    EngineModule,
+    FilesModule,
+    DedupeModule,
+    ConnectorsMetadataModule,
+    TasksUsageModule,
+    BullModule.registerQueue({
+      configKey: QUEUES.CONFIG_KEYS.FLOW,
+      name: QUEUES.NAMES.ONE_TIME_JOB_QUEUE,
+      defaultJobOptions,
+    }),
+    BullModule.registerQueue({
+      configKey: QUEUES.CONFIG_KEYS.FLOW,
+      name: QUEUES.NAMES.SCHEDULED_JOB_QUEUE,
+      defaultJobOptions,
+    }),
+  ],
+  providers: [FlowJobProcessor, OneTimeProcessor, QueuesService, FlowWorkerService, FlowWorkerHooks],
 })
 export class FlowWorkerModule {}

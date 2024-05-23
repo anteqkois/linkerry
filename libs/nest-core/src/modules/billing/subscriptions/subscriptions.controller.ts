@@ -8,26 +8,26 @@ import { SubscriptionsService } from './subscriptions.service'
 
 @Controller('subscriptions')
 export class SubscriptionsController {
-	constructor(private readonly subscriptionsService: SubscriptionsService) {}
+  constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
-	@UseGuards(JwtCookiesAuthGuard)
-	@Get()
-	findMany(@ReqJwtUser() user: RequestUser) {
-		return this.subscriptionsService.findMany({
-			project: user.projectId,
-		})
-	}
+  @UseGuards(JwtCookiesAuthGuard)
+  @Get()
+  findMany(@ReqJwtUser() user: RequestUser) {
+    return this.subscriptionsService.findMany({
+      project: user.projectId,
+    })
+  }
 
-	@UseGuards(JwtCookiesAuthGuard)
-	@Get(':id')
-	findOne(@ParamIdSchema() id: Id) {
-		return this.subscriptionsService.findOne({ _id: id })
-	}
+  @UseGuards(JwtCookiesAuthGuard)
+  @Get(':id')
+  findOne(@ParamIdSchema() id: Id) {
+    return this.subscriptionsService.findOne({ _id: id })
+  }
 
-	@UseGuards(JwtCookiesAuthGuard)
-	@Put()
-	change(@BodySchema(changeSubscriptionBodySchema) body: ChangeSubscriptionBody, @ReqJwtUser() user: RequestUser) {
-		// TODO check if it is owner or if it have privilages to start subscription when project members supported
-		return this.subscriptionsService.change({ items: body.items, period: body.period, projectId: user.projectId })
-	}
+  @UseGuards(JwtCookiesAuthGuard)
+  @Put()
+  change(@BodySchema(changeSubscriptionBodySchema) body: ChangeSubscriptionBody, @ReqJwtUser() user: RequestUser) {
+    // TODO check if it is owner or if it have privilages to start subscription when project members supported
+    return this.subscriptionsService.change({ items: body.items, period: body.period, projectId: user.projectId })
+  }
 }

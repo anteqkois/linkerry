@@ -9,7 +9,7 @@ import {
   getOrderActionFactory,
   getOrdersActionFactory,
   getTickersActionFactory,
-  getTradesActionFactory
+  getTradesActionFactory,
 } from '@linkerry/common-exchanges'
 import { createConnector } from '@linkerry/connectors-framework'
 import { mexcAuth } from './common/auth'

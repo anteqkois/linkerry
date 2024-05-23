@@ -1,38 +1,33 @@
-import dayjs from 'dayjs';
-import { discordCommon } from '../common';
-import { Message } from '../common/models';
-import { DedupeStrategy, Polling, Property, createTrigger, pollingHelper } from '@linkerry/connectors-framework';
-import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common';
-import { TriggerStrategy } from '@linkerry/shared';
-import { discordAuth } from '..';
+import dayjs from 'dayjs'
+import { discordCommon } from '../common'
+import { Message } from '../common/models'
+import { DedupeStrategy, Polling, Property, createTrigger, pollingHelper } from '@linkerry/connectors-framework'
+import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
+import { TriggerStrategy } from '@linkerry/shared'
+import { discordAuth } from '..'
 
-const polling: Polling<string, { channel: string | undefined; limit: number }> =
-  {
-    strategy: DedupeStrategy.TIMEBASED,
-    items: async ({ auth, propsValue: { channel, limit } }) => {
-      if (channel === undefined) return [];
+const polling: Polling<string, { channel: string | undefined; limit: number }> = {
+  strategy: DedupeStrategy.TIMEBASED,
+  items: async ({ auth, propsValue: { channel, limit } }) => {
+    if (channel === undefined) return []
 
-      const request: HttpRequest = {
-        method: HttpMethod.GET,
-        url:
-          'https://discord.com/api/v9/channels/' +
-          channel +
-          '/messages?limit=' +
-          limit,
-        headers: {
-          Authorization: 'Bot ' + auth,
-        },
-      };
+    const request: HttpRequest = {
+      method: HttpMethod.GET,
+      url: 'https://discord.com/api/v9/channels/' + channel + '/messages?limit=' + limit,
+      headers: {
+        Authorization: 'Bot ' + auth,
+      },
+    }
 
-      const res = await httpClient.sendRequest<Message[]>(request);
+    const res = await httpClient.sendRequest<Message[]>(request)
 
-      const items = res.body;
-      return items.map((item) => ({
-        epochMilliSeconds: dayjs(item.timestamp).valueOf(),
-        data: item,
-      }));
-    },
-  };
+    const items = res.body
+    return items.map((item) => ({
+      epochMilliSeconds: dayjs(item.timestamp).valueOf(),
+      data: item,
+    }))
+  },
+}
 
 export const newMessage = createTrigger({
   auth: discordAuth,
@@ -58,7 +53,7 @@ export const newMessage = createTrigger({
         channel: context.propsValue.channel,
         limit: context.propsValue.limit ?? 50,
       },
-    });
+    })
   },
   onDisable: async (context) => {
     await pollingHelper.onDisable(polling, {
@@ -68,7 +63,7 @@ export const newMessage = createTrigger({
         channel: context.propsValue.channel,
         limit: context.propsValue.limit ?? 50,
       },
-    });
+    })
   },
   run: async (context) => {
     return await pollingHelper.poll(polling, {
@@ -78,7 +73,7 @@ export const newMessage = createTrigger({
         channel: context.propsValue.channel,
         limit: context.propsValue.limit ?? 50,
       },
-    });
+    })
   },
   test: async (context) => {
     return await pollingHelper.test(polling, {
@@ -88,6 +83,6 @@ export const newMessage = createTrigger({
         channel: context.propsValue.channel,
         limit: context.propsValue.limit ?? 50,
       },
-    });
+    })
   },
-});
+})

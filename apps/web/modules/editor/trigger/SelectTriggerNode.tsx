@@ -6,21 +6,26 @@ import { useEditor } from '../useEditor'
 type SelectTriggerProps = CustomNodeProps<SelectTriggerNodeProps>
 
 export const SelectTriggerNodeElement = ({ data: { trigger } }: SelectTriggerProps) => {
-	const { onClickSelectTrigger } = useEditor()
+  const { onClickSelectTrigger } = useEditor()
 
-	const handleOnClick = () => {
-		onClickSelectTrigger(trigger)
-	}
+  const handleOnClick = () => {
+    onClickSelectTrigger(trigger)
+  }
 
-	return (
-		<BaseNodeElement title="Trigger" valid={false} invalidMessage="Invalid trigger, try edit settings, or generate new 'Sample Data'" onClick={handleOnClick}>
-			<div className="flex gap-6">
-				<Icons.QuestionMarkCircle className="w-16 h-16" />
-				<div>
-					<H5>{trigger.displayName}</H5>
-					<p>It will execute the flow</p>
-				</div>
-			</div>
-		</BaseNodeElement>
-	)
+  return (
+    <BaseNodeElement
+      title="Trigger"
+      valid={false}
+      invalidMessage="Invalid trigger, try edit settings, or generate new 'Sample Data'"
+      onClick={handleOnClick}
+    >
+      <div className="flex gap-6">
+        <Icons.QuestionMarkCircle className="w-16 h-16" />
+        <div>
+          <H5>{trigger.displayName}</H5>
+          <p>It will execute the flow</p>
+        </div>
+      </div>
+    </BaseNodeElement>
+  )
 }

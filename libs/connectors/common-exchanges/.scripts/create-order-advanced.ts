@@ -7,11 +7,11 @@ const main = async () => {
   })
 
   try {
-    const response = await exchange.createOrder('BTC/USDT', 'limit', 'buy', 0.00015, 40_000,{
+    const response = await exchange.createOrder('BTC/USDT', 'limit', 'buy', 0.00015, 40_000, {
       // stopLossPrice: 35_000,
       // takeProfitPrice: 45_000
       triggerPrice: 40_000,
-      takeProfitPrice: 70_000
+      takeProfitPrice: 70_000,
     })
     console.log(response)
   } catch (error) {

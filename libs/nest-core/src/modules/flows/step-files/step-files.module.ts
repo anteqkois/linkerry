@@ -5,9 +5,9 @@ import { StepFilesController } from './step-files.controller'
 import { StepFilesService } from './step-files.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([StepFileModelFactory])],
-	controllers: [StepFilesController],
-	providers: [StepFilesService],
-	exports: [StepFilesService],
+  imports: [MongooseModule.forFeatureAsync([StepFileModelFactory])],
+  controllers: [StepFilesController],
+  providers: [StepFilesService],
+  exports: [StepFilesService],
 })
 export class StepFilesModule {}

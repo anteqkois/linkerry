@@ -7,97 +7,97 @@ import { FileDocument, FileModel } from './schemas/files.schema'
 
 @Injectable()
 export class FilesService {
-	private readonly logger = new Logger(FilesService.name)
-	constructor(@InjectModel(FileModel.name) private readonly fileModel: Model<FileDocument>) {}
+  private readonly logger = new Logger(FilesService.name)
+  constructor(@InjectModel(FileModel.name) private readonly fileModel: Model<FileDocument>) {}
 
-	async save({ fileId, projectId, data, type, compression }: SaveParams): Promise<File> {
-		// TODO update to use https://www.mongodb.com/docs/manual/core/gridfs/#when-to-use-gridfs
-		if (fileId) {
-			const file = await this.fileModel.findByIdAndUpdate(
-				fileId,
-				{
-					projectId,
-					// platformId,
-					data,
-					type,
-					compression,
-				},
-				{
-					upsert: true,
-					new: true,
-				},
-			)
+  async save({ fileId, projectId, data, type, compression }: SaveParams): Promise<File> {
+    // TODO update to use https://www.mongodb.com/docs/manual/core/gridfs/#when-to-use-gridfs
+    if (fileId) {
+      const file = await this.fileModel.findByIdAndUpdate(
+        fileId,
+        {
+          projectId,
+          // platformId,
+          data,
+          type,
+          compression,
+        },
+        {
+          upsert: true,
+          new: true,
+        },
+      )
 
-			this.logger.verbose(`#save fileId=${file._id} data.length=${data.length}`)
+      this.logger.verbose(`#save fileId=${file._id} data.length=${data.length}`)
 
-			return file.toObject()
-		} else {
-			const newFileId = await this.fileModel.create({
-				projectId,
-				// platformId,
-				data,
-				type,
-				compression,
-			})
+      return file.toObject()
+    } else {
+      const newFileId = await this.fileModel.create({
+        projectId,
+        // platformId,
+        data,
+        type,
+        compression,
+      })
 
-			const file = await this.fileModel.findById(newFileId)
-			assertNotNullOrUndefined(file, 'file')
+      const file = await this.fileModel.findById(newFileId)
+      assertNotNullOrUndefined(file, 'file')
 
-			this.logger.verbose(`#save fileId=${file._id} data.length=${data.length}`)
-			return file.toObject()
-		}
-	}
+      this.logger.verbose(`#save fileId=${file._id} data.length=${data.length}`)
+      return file.toObject()
+    }
+  }
 
-	async findOne({ fileId, projectId }: GetOneParams) {
-		const filter: FilterQuery<FileDocument> = {
-			_id: fileId,
-		}
+  async findOne({ fileId, projectId }: GetOneParams) {
+    const filter: FilterQuery<FileDocument> = {
+      _id: fileId,
+    }
 
-		if (projectId) filter.projectId = projectId
+    if (projectId) filter.projectId = projectId
 
-		const file = await this.fileModel.findOne(filter)
-		assertNotNullOrUndefined(file, 'file', {
-			fileId,
-			projectId,
-		})
+    const file = await this.fileModel.findOne(filter)
+    assertNotNullOrUndefined(file, 'file', {
+      fileId,
+      projectId,
+    })
 
-		const decompressedData = await fileCompressor.decompress({
-			data: file.data,
-			compression: file.compression,
-		})
-		file.data = decompressedData
+    const decompressedData = await fileCompressor.decompress({
+      data: file.data,
+      compression: file.compression,
+    })
+    file.data = decompressedData
 
-		return file
-	}
+    return file
+  }
 
-	async delete({ fileId, projectId }: DeleteOneParams): Promise<void> {
-		this.logger.verbose(`#delete ${fileId}`)
+  async delete({ fileId, projectId }: DeleteOneParams): Promise<void> {
+    this.logger.verbose(`#delete ${fileId}`)
 
-		const filter: FilterQuery<FileDocument> = {
-			_id: fileId,
-		}
+    const filter: FilterQuery<FileDocument> = {
+      _id: fileId,
+    }
 
-		if (projectId) filter.projectId = projectId
+    if (projectId) filter.projectId = projectId
 
-		await this.fileModel.deleteOne(filter)
-	}
+    await this.fileModel.deleteOne(filter)
+  }
 }
 
 type SaveParams = {
-	fileId?: Id | undefined
-	projectId?: Id
-	data: Buffer
-	type: FileType
-	// platformId?: string
-	compression: FileCompression
+  fileId?: Id | undefined
+  projectId?: Id
+  data: Buffer
+  type: FileType
+  // platformId?: string
+  compression: FileCompression
 }
 
 type GetOneParams = {
-	fileId: Id
-	projectId?: Id
+  fileId: Id
+  projectId?: Id
 }
 
 type DeleteOneParams = {
-	fileId: Id
-	projectId: Id
+  fileId: Id
+  projectId: Id
 }

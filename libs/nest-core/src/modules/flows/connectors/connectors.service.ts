@@ -1,10 +1,4 @@
-import {
-  ConnectorsGetOptionsInput,
-  CustomError,
-  ErrorCode,
-  Id,
-  assertNotNullOrUndefined
-} from '@linkerry/shared'
+import { ConnectorsGetOptionsInput, CustomError, ErrorCode, Id, assertNotNullOrUndefined } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
@@ -14,36 +8,36 @@ import { ConnectorsMetadataService } from './connectors-metadata/connectors-meta
 
 @Injectable()
 export class ConnectorsService {
-	constructor(
-		@InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
-		private readonly engineService: EngineService,
-		private readonly connectorsMetadataService: ConnectorsMetadataService,
-	) {}
+  constructor(
+    @InjectModel(FlowVersionModel.name) private readonly flowVersionModel: Model<FlowVersionDocument>,
+    private readonly engineService: EngineService,
+    private readonly connectorsMetadataService: ConnectorsMetadataService,
+  ) {}
 
-	async getPropertyOptions(projectId: Id, body: ConnectorsGetOptionsInput) {
-		const flowVersion = await this.flowVersionModel.findOne({
-			_id: body.flowVersionId,
-			flowId: body.flowId,
-		})
+  async getPropertyOptions(projectId: Id, body: ConnectorsGetOptionsInput) {
+    const flowVersion = await this.flowVersionModel.findOne({
+      _id: body.flowVersionId,
+      flowId: body.flowId,
+    })
 
-		assertNotNullOrUndefined(flowVersion, 'flowVersion')
+    assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
-		const { result } = await this.engineService.executeProp({
-			connector: await this.connectorsMetadataService.getConnectorPackage(projectId, {
-				packageType: body.packageType,
-				connectorName: body.connectorName,
-				connectorType: body.connectorType,
-				connectorVersion: body.connectorVersion,
-			}),
-			projectId,
-			flowVersion: flowVersion.toObject(),
-			input: body.input,
-			propertyName: body.propertyName,
-			stepName: body.stepName,
-			searchValue: body.searchValue
-		})
+    const { result } = await this.engineService.executeProp({
+      connector: await this.connectorsMetadataService.getConnectorPackage(projectId, {
+        packageType: body.packageType,
+        connectorName: body.connectorName,
+        connectorType: body.connectorType,
+        connectorVersion: body.connectorVersion,
+      }),
+      projectId,
+      flowVersion: flowVersion.toObject(),
+      input: body.input,
+      propertyName: body.propertyName,
+      stepName: body.stepName,
+      searchValue: body.searchValue,
+    })
 
-		if (typeof result === 'string') throw new CustomError(result, ErrorCode.ENGINE_OPERATION_FAILURE)
-		return result
-	}
+    if (typeof result === 'string') throw new CustomError(result, ErrorCode.ENGINE_OPERATION_FAILURE)
+    return result
+  }
 }

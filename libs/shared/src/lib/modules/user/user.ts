@@ -1,11 +1,7 @@
-import { z } from 'zod';
-import { BaseDatabaseFields } from '../../common';
-import {
-  idSchema,
-  stringDateSchema,
-  stringShortSchema,
-} from '../../common/zod';
-import { Language } from '../language';
+import { z } from 'zod'
+import { BaseDatabaseFields } from '../../common'
+import { idSchema, stringDateSchema, stringShortSchema } from '../../common/zod'
+import { Language } from '../language'
 
 export enum UserRole {
   CUSTOMER = 'CUSTOMER',
@@ -32,14 +28,14 @@ export const userSchema = z.object({
   referrerId: idSchema.optional(),
   // referrer?: User;
   // remember_token
-});
+})
 
 export interface User extends BaseDatabaseFields, z.infer<typeof userSchema> {}
 
 export interface UserWithPassword extends User {
-  password: string;
+  password: string
 }
 
 export interface UserMetadata {
-  earlyAdopter?: boolean;
+  earlyAdopter?: boolean
 }

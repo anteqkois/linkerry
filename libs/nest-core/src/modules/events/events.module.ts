@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common'
 // import { MongooseModule } from '@nestjs/mongoose';
-import { EventsService } from './events.service';
+import { EventsService } from './events.service'
 // import { EventModelFactory } from './schemas/alert.schema';
 
 @Module({
@@ -8,8 +8,6 @@ import { EventsService } from './events.service';
     // MongooseModule.forFeatureAsync([EventModelFactory
     // ])
   ],
-  providers:[
-    EventsService
-  ]
+  providers: [EventsService],
 })
-export class EventsModule { }
+export class EventsModule {}

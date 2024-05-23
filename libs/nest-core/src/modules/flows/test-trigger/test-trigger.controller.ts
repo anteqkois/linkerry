@@ -8,19 +8,19 @@ import { TestTriggerService } from './test-trigger.service'
 
 @Controller('test-trigger')
 export class TestTriggerController {
-	constructor(private readonly testTriggerService: TestTriggerService) {}
+  constructor(private readonly testTriggerService: TestTriggerService) {}
 
-	@StrictRateLimit()
-	@UseGuards(JwtCookiesAuthGuard)
-	@Post()
-	test(@BodySchema(testTriggerRequestBodySchema) body: TestTriggerRequestBody, @ReqJwtUser() user: RequestUser) {
-		this.testTriggerService.test({
-			flowId: body.flowId,
-			flowVersionId: body.flowVersionId,
-			testStrategy: body.testStrategy,
-			triggerName: body.triggerName,
-			projectId: user.projectId,
-			userId: user.id,
-		})
-	}
+  @StrictRateLimit()
+  @UseGuards(JwtCookiesAuthGuard)
+  @Post()
+  test(@BodySchema(testTriggerRequestBodySchema) body: TestTriggerRequestBody, @ReqJwtUser() user: RequestUser) {
+    this.testTriggerService.test({
+      flowId: body.flowId,
+      flowVersionId: body.flowVersionId,
+      testStrategy: body.testStrategy,
+      triggerName: body.triggerName,
+      projectId: user.projectId,
+      userId: user.id,
+    })
+  }
 }

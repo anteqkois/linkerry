@@ -4,130 +4,130 @@ import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 import { TriggerHooks } from '../triggers/trigger-hooks/trigger-hooks.service'
 
 type PreUpdateParams = {
-	flowToUpdate: Flow
+  flowToUpdate: Flow
 }
 
 type PreUpdateStatusParams = PreUpdateParams & {
-	newStatus: FlowStatus
+  newStatus: FlowStatus
 }
 
 type PreUpdatePublishedVersionIdParams = PreUpdateParams & {
-	flowVersionToPublish: FlowVersion
+  flowVersionToPublish: FlowVersion
 }
 
 type PreUpdateReturn = {
-	scheduleOptions: FlowScheduleOptions | null
+  scheduleOptions: FlowScheduleOptions | null
 }
 
 type PreDeleteParams = {
-	flowToDelete: Flow
+  flowToDelete: Flow
 }
 
 @Injectable()
 export class FlowHooks {
-	constructor(private readonly flowVersionService: FlowVersionsService, private readonly triggerHooks: TriggerHooks) {}
+  constructor(private readonly flowVersionService: FlowVersionsService, private readonly triggerHooks: TriggerHooks) {}
 
-	async preUpdateStatus({ flowToUpdate, newStatus }: PreUpdateStatusParams): Promise<PreUpdateReturn> {
-		assertNotNullOrUndefined(flowToUpdate.publishedVersionId, 'publishedVersionId')
+  async preUpdateStatus({ flowToUpdate, newStatus }: PreUpdateStatusParams): Promise<PreUpdateReturn> {
+    assertNotNullOrUndefined(flowToUpdate.publishedVersionId, 'publishedVersionId')
 
-		const publishedFlowVersion = await this.flowVersionService.findOne({
-			filter: {
-				_id: flowToUpdate.publishedVersionId,
-				flowId: flowToUpdate._id,
-			},
-		})
-		assertNotNullOrUndefined(publishedFlowVersion, 'publishedFlowVersion')
+    const publishedFlowVersion = await this.flowVersionService.findOne({
+      filter: {
+        _id: flowToUpdate.publishedVersionId,
+        flowId: flowToUpdate._id,
+      },
+    })
+    assertNotNullOrUndefined(publishedFlowVersion, 'publishedFlowVersion')
 
-		let scheduleOptions: ScheduleOptions | undefined
+    let scheduleOptions: ScheduleOptions | undefined
 
-		switch (newStatus) {
-			case FlowStatus.ENABLED: {
-				const response = await this.triggerHooks.enable({
-					flowVersion: publishedFlowVersion.toObject(),
-					projectId: flowToUpdate.projectId,
-					simulate: false,
-				})
-				scheduleOptions = response?.result.scheduleOptions
-				break
-			}
-			case FlowStatus.DISABLED: {
-				await this.triggerHooks.disable({
-					flowVersion: publishedFlowVersion.toObject(),
-					projectId: flowToUpdate.projectId,
-					simulate: false,
-				})
-				break
-			}
-		}
+    switch (newStatus) {
+      case FlowStatus.ENABLED: {
+        const response = await this.triggerHooks.enable({
+          flowVersion: publishedFlowVersion.toObject(),
+          projectId: flowToUpdate.projectId,
+          simulate: false,
+        })
+        scheduleOptions = response?.result.scheduleOptions
+        break
+      }
+      case FlowStatus.DISABLED: {
+        await this.triggerHooks.disable({
+          flowVersion: publishedFlowVersion.toObject(),
+          projectId: flowToUpdate.projectId,
+          simulate: false,
+        })
+        break
+      }
+    }
 
-		if (isNil(scheduleOptions)) {
-			return {
-				scheduleOptions: null,
-			}
-		}
+    if (isNil(scheduleOptions)) {
+      return {
+        scheduleOptions: null,
+      }
+    }
 
-		return {
-			scheduleOptions: {
-				...scheduleOptions,
-				type: ScheduleType.CRON_EXPRESSION,
-			},
-		}
-	}
+    return {
+      scheduleOptions: {
+        ...scheduleOptions,
+        type: ScheduleType.CRON_EXPRESSION,
+      },
+    }
+  }
 
-	async preUpdatePublishedVersionId({ flowToUpdate, flowVersionToPublish }: PreUpdatePublishedVersionIdParams): Promise<PreUpdateReturn> {
-		if (flowToUpdate.status === FlowStatus.ENABLED && flowToUpdate.publishedVersionId) {
-			const flowVersion = await this.flowVersionService.findOne({
-				filter: {
-					_id: flowToUpdate.publishedVersionId,
-				},
-			})
-			assertNotNullOrUndefined(flowVersion, 'flowVersion')
+  async preUpdatePublishedVersionId({ flowToUpdate, flowVersionToPublish }: PreUpdatePublishedVersionIdParams): Promise<PreUpdateReturn> {
+    if (flowToUpdate.status === FlowStatus.ENABLED && flowToUpdate.publishedVersionId) {
+      const flowVersion = await this.flowVersionService.findOne({
+        filter: {
+          _id: flowToUpdate.publishedVersionId,
+        },
+      })
+      assertNotNullOrUndefined(flowVersion, 'flowVersion')
 
-			await this.triggerHooks.disable({
-				flowVersion: flowVersion.toObject(),
-				projectId: flowToUpdate.projectId,
-				simulate: false,
-			})
-		}
+      await this.triggerHooks.disable({
+        flowVersion: flowVersion.toObject(),
+        projectId: flowToUpdate.projectId,
+        simulate: false,
+      })
+    }
 
-		const enableResult = await this.triggerHooks.enable({
-			flowVersion: flowVersionToPublish,
-			projectId: flowToUpdate.projectId,
-			simulate: false,
-		})
+    const enableResult = await this.triggerHooks.enable({
+      flowVersion: flowVersionToPublish,
+      projectId: flowToUpdate.projectId,
+      simulate: false,
+    })
 
-		const scheduleOptions = enableResult?.result.scheduleOptions
+    const scheduleOptions = enableResult?.result.scheduleOptions
 
-		if (isNil(scheduleOptions)) {
-			return {
-				scheduleOptions: null,
-			}
-		}
+    if (isNil(scheduleOptions)) {
+      return {
+        scheduleOptions: null,
+      }
+    }
 
-		return {
-			scheduleOptions: {
-				...scheduleOptions,
-				type: ScheduleType.CRON_EXPRESSION,
-			},
-		}
-	}
+    return {
+      scheduleOptions: {
+        ...scheduleOptions,
+        type: ScheduleType.CRON_EXPRESSION,
+      },
+    }
+  }
 
-	async preDelete({ flowToDelete }: PreDeleteParams): Promise<void> {
-		if (flowToDelete.status === FlowStatus.DISABLED || isNil(flowToDelete.publishedVersionId)) return
+  async preDelete({ flowToDelete }: PreDeleteParams): Promise<void> {
+    if (flowToDelete.status === FlowStatus.DISABLED || isNil(flowToDelete.publishedVersionId)) return
 
-		const publishedFlowVersion = await this.flowVersionService.findOne({
-			filter: {
-				_id: flowToDelete.publishedVersionId,
-				flowId: flowToDelete._id,
-			},
-		})
+    const publishedFlowVersion = await this.flowVersionService.findOne({
+      filter: {
+        _id: flowToDelete.publishedVersionId,
+        flowId: flowToDelete._id,
+      },
+    })
 
-		assertNotNullOrUndefined(publishedFlowVersion, 'publishedFlowVersion')
+    assertNotNullOrUndefined(publishedFlowVersion, 'publishedFlowVersion')
 
-		await this.triggerHooks.disable({
-			flowVersion: publishedFlowVersion.toObject(),
-			projectId: flowToDelete.projectId,
-			simulate: false,
-		})
-	}
+    await this.triggerHooks.disable({
+      flowVersion: publishedFlowVersion.toObject(),
+      projectId: flowToDelete.projectId,
+      simulate: false,
+    })
+  }
 }

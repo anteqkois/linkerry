@@ -1,7 +1,4 @@
-import {
-  ConnectorMetadata,
-  ConnectorPropertyMap,
-} from '@linkerry/connectors-framework';
+import { ConnectorMetadata, ConnectorPropertyMap } from '@linkerry/connectors-framework'
 import {
   ActionConnectorSettings,
   ActionType,
@@ -18,61 +15,45 @@ import {
   flowHelper,
   generateEmptyTrigger,
   isNil,
-} from '@linkerry/shared';
-import {
-  Injectable,
-  Logger,
-  UnprocessableEntityException,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator';
-import { WebhookSimulationService } from '../../webhooks/webhook-simulation/webhook-simulation.service';
-import { ConnectorsMetadataService } from '../connectors/connectors-metadata/connectors-metadata.service';
-import { StepFilesService } from '../step-files/step-files.service';
-import {
-  FlowVersionDocument,
-  FlowVersionModel,
-} from './schemas/flow-version.schema';
+} from '@linkerry/shared'
+import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import mongoose, { Model } from 'mongoose'
+import { MongoFilter } from '../../../lib/mongodb/decorators/filter.decorator'
+import { WebhookSimulationService } from '../../webhooks/webhook-simulation/webhook-simulation.service'
+import { ConnectorsMetadataService } from '../connectors/connectors-metadata/connectors-metadata.service'
+import { StepFilesService } from '../step-files/step-files.service'
+import { FlowVersionDocument, FlowVersionModel } from './schemas/flow-version.schema'
 
 @Injectable()
 export class FlowVersionsService {
-  private readonly logger = new Logger(FlowVersionsService.name);
+  private readonly logger = new Logger(FlowVersionsService.name)
 
   constructor(
     @InjectModel(FlowVersionModel.name)
     private readonly flowVersionModel: Model<FlowVersionDocument>,
     private readonly webhookSimulationService: WebhookSimulationService,
     private readonly stepFilesService: StepFilesService,
-    private readonly connectorsMetadataService: ConnectorsMetadataService
+    private readonly connectorsMetadataService: ConnectorsMetadataService,
   ) {}
 
-  private async _deleteWebhookSimulation(
-    params: DeleteWebhookSimulationParams
-  ): Promise<void> {
-    const { projectId, flowId } = params;
+  private async _deleteWebhookSimulation(params: DeleteWebhookSimulationParams): Promise<void> {
+    const { projectId, flowId } = params
 
     try {
       await this.webhookSimulationService.delete({
         projectId,
         flowId,
-      });
+      })
     } catch (error: unknown) {
-      const notWebhookSimulationNotFoundError = !(
-        error instanceof CustomError &&
-        error.code === ErrorCode.ENTITY_NOT_FOUND
-      );
+      const notWebhookSimulationNotFoundError = !(error instanceof CustomError && error.code === ErrorCode.ENTITY_NOT_FOUND)
       if (notWebhookSimulationNotFoundError) {
-        throw error;
+        throw error
       }
     }
   }
 
-  private async _preApplyOperationSideEffect({
-    projectId,
-    flowVersion,
-    operation,
-  }: OnApplyOperationParams) {
+  private async _preApplyOperationSideEffect({ projectId, flowVersion, operation }: OnApplyOperationParams) {
     /* disable action was moved to trigger events watcher */
     // if (operation.type === FlowOperationType.UPDATE_TRIGGER) {
     // 	try {
@@ -87,45 +68,32 @@ export class FlowVersionsService {
     // }
   }
 
-  private _decorateValidityAndUpdatedBy({
-    flowVersion,
-    userId,
-  }: DecorateValidityUpdatedByParams) {
-    flowVersion.updatedBy = userId;
-    flowVersion.valid = flowHelper.isValid(flowVersion);
-    return flowVersion;
+  private _decorateValidityAndUpdatedBy({ flowVersion, userId }: DecorateValidityUpdatedByParams) {
+    flowVersion.updatedBy = userId
+    flowVersion.valid = flowHelper.isValid(flowVersion)
+    return flowVersion
   }
 
-  private async _applySingleOperation(
-    projectId: Id,
-    flowVersion: FlowVersion,
-    operation: FlowOperationRequest
-  ): Promise<FlowVersion> {
-    this.logger.debug(
-      `#applySingleOperation ${operation.type} to ${flowVersion._id}`
-    );
+  private async _applySingleOperation(projectId: Id, flowVersion: FlowVersion, operation: FlowOperationRequest): Promise<FlowVersion> {
+    this.logger.debug(`#applySingleOperation ${operation.type} to ${flowVersion._id}`)
 
     await this._preApplyOperationSideEffect({
       projectId,
       flowVersion,
       operation,
-    });
+    })
 
-    operation = await this._prepareRequest(projectId, flowVersion, operation);
-    return flowHelper.apply(flowVersion, operation);
+    operation = await this._prepareRequest(projectId, flowVersion, operation)
+    return flowHelper.apply(flowVersion, operation)
   }
 
   // TODO add validation
-  private async _prepareRequest(
-    projectId: Id,
-    flowVersion: FlowVersion,
-    request: FlowOperationRequest
-  ): Promise<FlowOperationRequest> {
-    const clonedRequest: FlowOperationRequest = clone(request);
+  private async _prepareRequest(projectId: Id, flowVersion: FlowVersion, request: FlowOperationRequest): Promise<FlowOperationRequest> {
+    const clonedRequest: FlowOperationRequest = clone(request)
 
     switch (clonedRequest.type) {
       case FlowOperationType.ADD_ACTION:
-        clonedRequest.request.action.valid = true;
+        clonedRequest.request.action.valid = true
         switch (clonedRequest.request.action.type) {
           // case ActionType.LOOP_ON_ITEMS:
           // 	clonedRequest.request.action.valid = loopSettingsValidator.Check(clonedRequest.request.action.settings)
@@ -137,13 +105,13 @@ export class FlowVersionsService {
             clonedRequest.request.action.valid = await this._validateAction({
               settings: clonedRequest.request.action.settings,
               projectId,
-            });
-            break;
+            })
+            break
           // case ActionType.CODE: {
           // 	break
           // }
         }
-        break;
+        break
       case FlowOperationType.UPDATE_ACTION:
         // clonedRequest.request.valid = true
         switch (clonedRequest.request.type) {
@@ -158,113 +126,86 @@ export class FlowVersionsService {
             // 	settings: clonedRequest.request.settings,
             // 	projectId,
             // })
-            const previousStep = flowHelper.getStep(
-              flowVersion,
-              clonedRequest.request.name
-            );
+            const previousStep = flowHelper.getStep(flowVersion, clonedRequest.request.name)
             if (
               previousStep !== undefined &&
               previousStep.type === ActionType.CONNECTOR &&
-              clonedRequest.request.settings.connectorName !==
-                previousStep.settings.connectorName
+              clonedRequest.request.settings.connectorName !== previousStep.settings.connectorName
             ) {
               await this.stepFilesService.deleteAll({
                 projectId,
                 flowId: flowVersion.flowId,
                 stepName: previousStep.name,
-              });
+              })
             }
-            break;
+            break
           }
           // case ActionType.CODE: {
           // 	break
           // }
         }
-        break;
+        break
       case FlowOperationType.DELETE_ACTION: {
-        const previousStep = flowHelper.getStep(
-          flowVersion,
-          clonedRequest.request.name
-        );
-        if (
-          previousStep !== undefined &&
-          previousStep.type === ActionType.CONNECTOR
-        ) {
+        const previousStep = flowHelper.getStep(flowVersion, clonedRequest.request.name)
+        if (previousStep !== undefined && previousStep.type === ActionType.CONNECTOR) {
           await this.stepFilesService.deleteAll({
             projectId,
             flowId: flowVersion.flowId,
             stepName: previousStep.name,
-          });
+          })
         }
-        break;
+        break
       }
       case FlowOperationType.UPDATE_TRIGGER:
         switch (clonedRequest.request.type) {
           case TriggerType.EMPTY:
-            clonedRequest.request.valid = false;
-            break;
+            clonedRequest.request.valid = false
+            break
           case TriggerType.CONNECTOR:
             // clonedRequest.request.valid = await validateTrigger({
             // 	settings: clonedRequest.request.settings,
             // 	projectId,
             // })
-            break;
+            break
         }
-        break;
+        break
 
       default:
-        break;
+        break
     }
-    return clonedRequest;
+    return clonedRequest
   }
 
   /* STEP VALIDATION */
-  private async _validateAction({
-    projectId,
-    settings,
-  }: {
-    projectId: Id;
-    settings: ActionConnectorSettings;
-  }): Promise<boolean> {
-    if (
-      isNil(settings.connectorName) ||
-      isNil(settings.connectorVersion) ||
-      isNil(settings.actionName) ||
-      isNil(settings.input)
-    ) {
-      return false;
+  private async _validateAction({ projectId, settings }: { projectId: Id; settings: ActionConnectorSettings }): Promise<boolean> {
+    if (isNil(settings.connectorName) || isNil(settings.connectorVersion) || isNil(settings.actionName) || isNil(settings.input)) {
+      return false
     }
 
-    const connector = (await this.connectorsMetadataService.findOne(
-      settings.connectorName,
-      {
-        summary: false,
-        version: settings.connectorVersion,
-      }
-    )) as ConnectorMetadata;
+    const connector = (await this.connectorsMetadataService.findOne(settings.connectorName, {
+      summary: false,
+      version: settings.connectorVersion,
+    })) as ConnectorMetadata
 
     if (isNil(connector)) {
-      return false;
+      return false
     }
-    const action = connector.actions[settings.actionName];
+    const action = connector.actions[settings.actionName]
     if (isNil(action)) {
-      return false;
+      return false
     }
-    const props = action.props;
-    if (isNil(props)) return false;
+    const props = action.props
+    if (isNil(props)) return false
     if (!isNil(connector.auth) && action.requireAuth) {
-      props['auth'] = connector.auth;
+      props['auth'] = connector.auth
     }
 
-    return this._validateProps(props, settings.input);
+    return this._validateProps(props, settings.input)
   }
 
-  private _validateProps(
-    props: ConnectorPropertyMap,
-    input: Record<string, unknown>
-  ): boolean {
+  private _validateProps(props: ConnectorPropertyMap, input: Record<string, unknown>): boolean {
     //! TODO add props validation
-    return false;
+    return false
     // const propsSchema = buildSchema(props)
     // const propsValidator = TypeCompiler.Compile(propsSchema)
     // return propsValidator.Check(input)
@@ -279,12 +220,12 @@ export class FlowVersionsService {
         sort: {
           createdAt: -1,
         },
-      }
-    );
+      },
+    )
   }
 
   async createEmpty(flowId: Id, projectId: Id, userId: Id) {
-    const emptyTrigger = generateEmptyTrigger('trigger_1');
+    const emptyTrigger = generateEmptyTrigger('trigger_1')
 
     return this.flowVersionModel.create({
       flowId,
@@ -296,44 +237,35 @@ export class FlowVersionsService {
       triggers: [emptyTrigger],
       actions: [],
       updatedBy: userId,
-    });
+    })
   }
 
   async copyVersion(flowVersionId: string): Promise<FlowVersionDocument> {
     const flowVersionToCopy = await this.flowVersionModel.findOne({
       _id: flowVersionId,
-    });
-    assertNotNullOrUndefined(flowVersionToCopy, 'flowVersionToCopy');
-    const { _id, __v, createdAt, updatedAt, ...copiedFlowVersionInput } = clone(
-      flowVersionToCopy.toObject()
-    );
-    const copiedFlowVersionId = await this.flowVersionModel.create(
-      copiedFlowVersionInput
-    );
+    })
+    assertNotNullOrUndefined(flowVersionToCopy, 'flowVersionToCopy')
+    const { _id, __v, createdAt, updatedAt, ...copiedFlowVersionInput } = clone(flowVersionToCopy.toObject())
+    const copiedFlowVersionId = await this.flowVersionModel.create(copiedFlowVersionInput)
 
     const copiedFlowVersion = await this.flowVersionModel.findOne({
       _id: copiedFlowVersionId.id,
-    });
-    assertNotNullOrUndefined(copiedFlowVersion, 'copiedFlowVersion');
-    return copiedFlowVersion;
+    })
+    assertNotNullOrUndefined(copiedFlowVersion, 'copiedFlowVersion')
+    return copiedFlowVersion
   }
 
   async deleteRelatedToFlow(flowId: Id) {
     await this.flowVersionModel.deleteMany({
       flowId,
-    });
+    })
 
-    return { success: true };
+    return { success: true }
   }
 
-  async applyOperation({
-    flowVersion,
-    projectId,
-    userId,
-    userOperation,
-  }: ApplyOperationParams): Promise<FlowVersion> {
-    let operations: FlowOperationRequest[] = [];
-    let mutatedFlowVersion: FlowVersion = flowVersion;
+  async applyOperation({ flowVersion, projectId, userId, userOperation }: ApplyOperationParams): Promise<FlowVersion> {
+    let operations: FlowOperationRequest[] = []
+    let mutatedFlowVersion: FlowVersion = flowVersion
 
     switch (userOperation.type) {
       // case FlowOperationType.USE_AS_DRAFT: {
@@ -377,35 +309,30 @@ export class FlowVersionsService {
       // }
 
       default: {
-        operations = [userOperation];
-        break;
+        operations = [userOperation]
+        break
       }
     }
 
     for (const operation of operations) {
-      mutatedFlowVersion = await this._applySingleOperation(
-        projectId,
-        mutatedFlowVersion,
-        operation
-      );
+      mutatedFlowVersion = await this._applySingleOperation(projectId, mutatedFlowVersion, operation)
     }
 
     mutatedFlowVersion = this._decorateValidityAndUpdatedBy({
       flowVersion: mutatedFlowVersion,
       userId,
-    });
+    })
 
     const response = await this.flowVersionModel.updateOne(
       {
         _id: flowVersion._id,
         projectId,
       },
-      { $set: mutatedFlowVersion }
-    );
+      { $set: mutatedFlowVersion },
+    )
 
-    if (!response.modifiedCount)
-      throw new UnprocessableEntityException(`Can not find flow version`);
-    return mutatedFlowVersion;
+    if (!response.modifiedCount) throw new UnprocessableEntityException(`Can not find flow version`)
+    return mutatedFlowVersion
   }
 
   /* OPERATIONS */
@@ -596,13 +523,8 @@ export class FlowVersionsService {
   // 	return newFlowVersion
   // }
 
-  async lockFlowVersionIfNotLocked({
-    flowVersion,
-    projectId,
-    userId,
-    session,
-  }: LockFlowVersionIfNotLockedParams) {
-    if (flowVersion.state === FlowVersionState.LOCKED) return flowVersion;
+  async lockFlowVersionIfNotLocked({ flowVersion, projectId, userId, session }: LockFlowVersionIfNotLockedParams) {
+    if (flowVersion.state === FlowVersionState.LOCKED) return flowVersion
 
     return await this.flowVersionModel
       .findOneAndUpdate(
@@ -616,38 +538,38 @@ export class FlowVersionsService {
         },
         {
           new: true,
-        }
+        },
       )
-      .session(session);
+      .session(session)
   }
 }
 
 interface DecorateValidityUpdatedByParams {
-  flowVersion: FlowVersion;
-  userId: Id;
+  flowVersion: FlowVersion
+  userId: Id
 }
 
 interface LockFlowVersionIfNotLockedParams {
-  flowVersion: FlowVersionDocument;
-  userId: Id;
-  projectId: Id;
-  session: mongoose.mongo.ClientSession;
+  flowVersion: FlowVersionDocument
+  userId: Id
+  projectId: Id
+  session: mongoose.mongo.ClientSession
 }
 
 type OnApplyOperationParams = {
-  projectId: Id;
-  flowVersion: FlowVersion;
-  operation: FlowOperationRequest;
-};
+  projectId: Id
+  flowVersion: FlowVersion
+  operation: FlowOperationRequest
+}
 
 type DeleteWebhookSimulationParams = {
-  projectId: Id;
-  flowId: Id;
-};
+  projectId: Id
+  flowId: Id
+}
 
 type ApplyOperationParams = {
-  userId: Id;
-  projectId: Id;
-  flowVersion: FlowVersion;
-  userOperation: FlowOperationRequest;
-};
+  userId: Id
+  projectId: Id
+  flowVersion: FlowVersion
+  userOperation: FlowOperationRequest
+}

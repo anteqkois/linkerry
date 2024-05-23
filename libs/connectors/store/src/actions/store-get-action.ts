@@ -1,5 +1,5 @@
-import { createAction, Property, StoreScope, Validators } from '@linkerry/connectors-framework';
-import { getScopeAndKey, PieceStoreScope } from './common';
+import { createAction, Property, StoreScope, Validators } from '@linkerry/connectors-framework'
+import { getScopeAndKey, PieceStoreScope } from './common'
 
 export const storageGetAction = createAction({
   name: 'get',
@@ -17,7 +17,7 @@ export const storageGetAction = createAction({
     key: Property.ShortText({
       displayName: 'Key',
       required: true,
-      validators: [Validators.maxLength(128)]
+      validators: [Validators.maxLength(128)],
     }),
     defaultValue: Property.ShortText({
       displayName: 'Default Value',
@@ -51,9 +51,7 @@ export const storageGetAction = createAction({
       runId: context.run.id,
       key: context.propsValue['key'],
       scope: context.propsValue.store_scope,
-    });
-    return (
-      (await context.store.get(key, scope)) ?? context.propsValue['defaultValue']
-    );
+    })
+    return (await context.store.get(key, scope)) ?? context.propsValue['defaultValue']
   },
-});
+})

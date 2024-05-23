@@ -4,35 +4,35 @@ import { ValidationInputType } from '../../validators/types'
 import { ShortTextProperty } from '../input/text'
 
 export enum OAuth2AuthorizationMethod {
-	HEADER = 'HEADER',
-	BODY = 'BODY',
+  HEADER = 'HEADER',
+  BODY = 'BODY',
 }
 
 type OAuthProp = ShortTextProperty<true> | SecretTextProperty<boolean> | StaticDropdownProperty<any, true>
 
 export type OAuth2Props = {
-	[key: string]: OAuthProp
+  [key: string]: OAuthProp
 }
 
 type OAuthPropsValue<T extends OAuth2Props> = StaticPropsValue<T>
 
 type OAuth2ExtraProps = {
-	props?: OAuth2Props,
-	authUrl: string,
-	tokenUrl: string,
-	scope: string[],
-	pkce?: boolean,
-	authorizationMethod: OAuth2AuthorizationMethod,
-	grantType?: OAuth2GrantType,
-	extra?: Record<string, unknown>,
+  props?: OAuth2Props
+  authUrl: string
+  tokenUrl: string
+  scope: string[]
+  pkce?: boolean
+  authorizationMethod: OAuth2AuthorizationMethod
+  grantType?: OAuth2GrantType
+  extra?: Record<string, unknown>
 }
 
 export type OAuth2PropertyValue<T extends OAuth2Props = any> = {
-	access_token: string
-	props?: OAuthPropsValue<T>
-	data: Record<string, any>
+  access_token: string
+  props?: OAuthPropsValue<T>
+  data: Record<string, any>
 }
 
 export type OAuth2Property<T extends OAuth2Props> = BaseConnectorAuthSchema<OAuth2PropertyValue> &
-	OAuth2ExtraProps &
-	PropertyValue<OAuth2PropertyValue<T>, PropertyType.OAUTH2, ValidationInputType.ANY, true>
+  OAuth2ExtraProps &
+  PropertyValue<OAuth2PropertyValue<T>, PropertyType.OAUTH2, ValidationInputType.ANY, true>

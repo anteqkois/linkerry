@@ -7,14 +7,8 @@ import { SandboxModule } from '../workers/sandbox/sandbox.module'
 import { EngineService } from './engine.service'
 
 @Module({
-	imports: [
-		SandboxModule,
-		AuthModule,
-		AppEventRoutingModule,
-		WebhookSecretsModule,
-		ConnectorsMetadataModule,
-	],
-	providers: [EngineService],
-	exports: [EngineService],
+  imports: [SandboxModule, AuthModule, AppEventRoutingModule, WebhookSecretsModule, ConnectorsMetadataModule],
+  providers: [EngineService],
+  exports: [EngineService],
 })
 export class EngineModule {}

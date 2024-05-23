@@ -9,22 +9,21 @@ import { telegramCommons } from './common/common'
 import { telegramNewMessage } from './triggers/new-message'
 
 export const telegramBot = createConnector({
-	displayName: 'Telegram Bot',
-	description: 'Build chatbots for Telegram',
-	minimumSupportedRelease: '0.0.0',
-	logoUrl:
-		'/images/connectors/telegram.png',
-	tags: ['communication', 'bots', 'cryptocurrency'],
-	auth: telegramBotAuth,
-	actions: [
-		telegramSendMessageAction,
-		telegramSendMediaAction,
-		telegramGetChatMemberAction,
-		telegramCreateInviteLinkAction,
-		createCustomApiCallAction({
-			baseUrl: (auth) => telegramCommons.getApiUrl(auth as string, ''),
-			auth: telegramBotAuth,
-		}),
-	],
-	triggers: [telegramNewMessage],
+  displayName: 'Telegram Bot',
+  description: 'Build chatbots for Telegram',
+  minimumSupportedRelease: '0.0.0',
+  logoUrl: '/images/connectors/telegram.png',
+  tags: ['communication', 'bots', 'cryptocurrency'],
+  auth: telegramBotAuth,
+  actions: [
+    telegramSendMessageAction,
+    telegramSendMediaAction,
+    telegramGetChatMemberAction,
+    telegramCreateInviteLinkAction,
+    createCustomApiCallAction({
+      baseUrl: (auth) => telegramCommons.getApiUrl(auth as string, ''),
+      auth: telegramBotAuth,
+    }),
+  ],
+  triggers: [telegramNewMessage],
 })

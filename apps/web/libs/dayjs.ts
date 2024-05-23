@@ -13,30 +13,30 @@ const currentDate = dayjs()
 const weekStart = currentDate.subtract(currentDate.day() + 6, 'days').startOf('day')
 
 export const useDayjs = () => {
-	return {
-		dayjs,
-		weekStart,
-	}
+  return {
+    dayjs,
+    weekStart,
+  }
 }
 
 export const useRelativeTime = (time?: string) => {
-	const [relativeTime, setRelativeTime] = useState<string>()
-	const [initialTime, setInitialTime] = useState(time ?? '')
+  const [relativeTime, setRelativeTime] = useState<string>()
+  const [initialTime, setInitialTime] = useState(time ?? '')
 
-	useEffect(() => {
-		if (!initialTime) return
+  useEffect(() => {
+    if (!initialTime) return
 
-		setRelativeTime(dayjs().to(dayjs(initialTime)))
-		const interval = setInterval(() => {
-			setRelativeTime(dayjs().to(dayjs(initialTime)))
-		}, 10_000)
+    setRelativeTime(dayjs().to(dayjs(initialTime)))
+    const interval = setInterval(() => {
+      setRelativeTime(dayjs().to(dayjs(initialTime)))
+    }, 10_000)
 
-		return () => clearInterval(interval)
-	}, [initialTime])
+    return () => clearInterval(interval)
+  }, [initialTime])
 
-	return {
-		relativeTime,
-		setInitialTime,
-		dayjs,
-	}
+  return {
+    relativeTime,
+    setInitialTime,
+    dayjs,
+  }
 }

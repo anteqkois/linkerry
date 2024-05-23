@@ -1,6 +1,6 @@
 import { createTrigger } from '@linkerry/connectors-framework'
 import { TriggerStrategy } from '@linkerry/shared'
-import { stripeAuth } from '../common/auth';
+import { stripeAuth } from '../common/auth'
 import { stripeCommon } from '../common'
 
 export const stripeNewSubscription = createTrigger({

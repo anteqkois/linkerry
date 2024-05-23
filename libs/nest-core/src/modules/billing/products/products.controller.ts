@@ -6,15 +6,15 @@ import { ProductsService } from './products.service'
 
 @Controller('products')
 export class ProductsController {
-	constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) {}
 
-	@Get()
-	findMany(@QuerySchema(findManyProductsQuerySchema) query: FindManyProductsQuery) {
-		return this.productsService.findMany(query)
-	}
+  @Get()
+  findMany(@QuerySchema(findManyProductsQuerySchema) query: FindManyProductsQuery) {
+    return this.productsService.findMany(query)
+  }
 
-	@Get(':id')
-	findOne(@ParamIdSchema() id: Id) {
-		return this.productsService.findOne(id)
-	}
+  @Get(':id')
+  findOne(@ParamIdSchema() id: Id) {
+    return this.productsService.findOne(id)
+  }
 }

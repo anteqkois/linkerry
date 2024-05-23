@@ -5,15 +5,15 @@ import { PricesService } from './prices.service'
 
 @Controller('prices')
 export class PricesController {
-	constructor(private readonly pricesService: PricesService) {}
+  constructor(private readonly pricesService: PricesService) {}
 
-	@Get()
-	findMany() {
-		return this.pricesService.findMany()
-	}
+  @Get()
+  findMany() {
+    return this.pricesService.findMany()
+  }
 
-	@Get(':id')
-	findOne(@ParamIdSchema() id: Id) {
-		return this.pricesService.findOne(id)
-	}
+  @Get(':id')
+  findOne(@ParamIdSchema() id: Id) {
+    return this.pricesService.findOne(id)
+  }
 }

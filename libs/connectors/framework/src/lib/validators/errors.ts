@@ -4,7 +4,7 @@ export enum ErrorMessages {
   ISO_DATE = 'Expected ISO string, but found value: {userInput}',
   // FILE = 'Expected file url or base64 with mimeType, but found value: {userInput}',
   NUMBER = 'Expected number, but found value: {userInput}',
-	STRING = 'Expected string, but found value: {userInput}',
+  STRING = 'Expected string, but found value: {userInput}',
   WHOLE_NUMBER = 'Expected whole number, but found value: {userInput}',
   MAX_LENGTH = 'The value: {userInput} may not be greater than {length} characters',
   MIN_LENGTH = 'The value: {userInput} must be at least {length} characters',
@@ -22,5 +22,5 @@ export enum ErrorMessages {
   REQUIRE_KEYS = 'The following keys are required: {keys}',
   SIZE = 'The {property} size must be less than 0:{size}KB',
   NON_ZERO = 'The value: {userInput} must be a non-zero value',
-  PHONE_NUMBER = 'The phone number entered is not a valid phone number'
+  PHONE_NUMBER = 'The phone number entered is not a valid phone number',
 }

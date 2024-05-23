@@ -24,37 +24,37 @@ export * from './input/text'
 export type ConnectorProperty = InputProperty | ConnectorAuthProperty
 
 export interface InputPropertyMap {
-	[name: string]: InputProperty
+  [name: string]: InputProperty
 }
 
 export interface ConnectorPropertyMap {
-	[name: string]: ConnectorProperty
+  [name: string]: ConnectorProperty
 }
 
 export type ConnectorPropValueSchema<T extends ConnectorProperty> = T extends undefined
-	? undefined
-	: T extends { required: true }
-	? T['valueSchema']
-	: T['valueSchema'] | undefined
+  ? undefined
+  : T extends { required: true }
+  ? T['valueSchema']
+  : T['valueSchema'] | undefined
 
 export type StaticPropsValue<T extends ConnectorPropertyMap> = {
-	[P in keyof T]: ConnectorPropValueSchema<T[P]>
+  [P in keyof T]: ConnectorPropValueSchema<T[P]>
 }
 
 export const getRefreshersToRefreshedProperties = (props: ConnectorPropertyMap) => {
-	const refresherToRefreshedProperty: Record<string, ConnectorProperty[]> = {}
-	for (const [propertyName, property] of Object.entries(props)) {
-		if (!isDynamicDropdownProperty(property)) {
-			refresherToRefreshedProperty[propertyName] = []
-			continue
-		}
-		if (!refresherToRefreshedProperty[propertyName]) refresherToRefreshedProperty[propertyName] = []
+  const refresherToRefreshedProperty: Record<string, ConnectorProperty[]> = {}
+  for (const [propertyName, property] of Object.entries(props)) {
+    if (!isDynamicDropdownProperty(property)) {
+      refresherToRefreshedProperty[propertyName] = []
+      continue
+    }
+    if (!refresherToRefreshedProperty[propertyName]) refresherToRefreshedProperty[propertyName] = []
 
-		for (const refresher of property.refreshers) {
-			if (!refresherToRefreshedProperty[refresher]) refresherToRefreshedProperty[refresher] = []
-			refresherToRefreshedProperty[refresher].push(property)
-		}
-	}
+    for (const refresher of property.refreshers) {
+      if (!refresherToRefreshedProperty[refresher]) refresherToRefreshedProperty[refresher] = []
+      refresherToRefreshedProperty[refresher].push(property)
+    }
+  }
 
-	return refresherToRefreshedProperty
+  return refresherToRefreshedProperty
 }

@@ -4,8 +4,8 @@ import { ConnectorsMetadataService } from './connectors-metadata.service'
 import { ConnectorsMetadataModelFactory } from './schemas/connector.schema'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([ConnectorsMetadataModelFactory])],
-	providers: [ConnectorsMetadataService],
-	exports: [ConnectorsMetadataService],
+  imports: [MongooseModule.forFeatureAsync([ConnectorsMetadataModelFactory])],
+  providers: [ConnectorsMetadataService],
+  exports: [ConnectorsMetadataService],
 })
 export class ConnectorsMetadataModule {}

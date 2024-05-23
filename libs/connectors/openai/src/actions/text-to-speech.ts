@@ -1,7 +1,7 @@
-import OpenAI from 'openai';
-import { openaiAuth } from '../common/auth';
-import { streamToBuffer } from '../common/common';
-import { Property, createAction } from '@linkerry/connectors-framework';
+import OpenAI from 'openai'
+import { openaiAuth } from '../common/auth'
+import { streamToBuffer } from '../common/common'
+import { Property, createAction } from '@linkerry/connectors-framework'
 
 export const textToSpeech = createAction({
   auth: openaiAuth,
@@ -32,13 +32,12 @@ export const textToSpeech = createAction({
               value: 'tts-1-hd',
             },
           ],
-        };
+        }
       },
     }),
     speed: Property.Number({
       displayName: 'Speed',
-      description:
-        'The speed of the audio. Minimum is 0.25 and maximum is 4.00.',
+      description: 'The speed of the audio. Minimum is 0.25 and maximum is 4.00.',
       defaultValue: 1.0,
       required: false,
     }),
@@ -76,7 +75,7 @@ export const textToSpeech = createAction({
               value: 'shimmer',
             },
           ],
-        };
+        }
       },
     }),
     format: Property.DynamicDropdown({
@@ -105,15 +104,15 @@ export const textToSpeech = createAction({
               value: 'flac',
             },
           ],
-        };
+        }
       },
     }),
   },
   async run({ auth, propsValue, files }) {
     const openai = new OpenAI({
       apiKey: auth,
-    });
-    const { voice, format, model, text, speed } = propsValue;
+    })
+    const { voice, format, model, text, speed } = propsValue
 
     const audio = await openai.audio.speech.create({
       model: model,
@@ -121,12 +120,12 @@ export const textToSpeech = createAction({
       response_format: format as any,
       voice: voice as any,
       speed: speed,
-    });
-    const result = await streamToBuffer((audio as any).body);
+    })
+    const result = await streamToBuffer((audio as any).body)
 
     return files.write({
       fileName: 'test',
       data: result as Buffer,
-    });
+    })
   },
-});
+})

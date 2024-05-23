@@ -15,18 +15,18 @@ import { TriggerEventsController } from './trigger-events.controller'
 import { TriggerEventsService } from './trigger-events.service'
 
 @Module({
-	imports: [
-		MongooseModule.forFeatureAsync([TriggerEventModelFactory, flowVersionModelFactory, FlowModelFactory]),
-		AuthModule,
-		EngineModule,
-		FlowVersionsModule,
-		StepFilesModule,
-		RedisLockModule,
-		WebhookSimulationModule,
-		WebhooksUrlsModule
-	],
-	controllers: [TriggerEventsController],
-	providers: [TriggerEventsService, TriggerEventsWebSocketService],
-	exports: [TriggerEventsService],
+  imports: [
+    MongooseModule.forFeatureAsync([TriggerEventModelFactory, flowVersionModelFactory, FlowModelFactory]),
+    AuthModule,
+    EngineModule,
+    FlowVersionsModule,
+    StepFilesModule,
+    RedisLockModule,
+    WebhookSimulationModule,
+    WebhooksUrlsModule,
+  ],
+  controllers: [TriggerEventsController],
+  providers: [TriggerEventsService, TriggerEventsWebSocketService],
+  exports: [TriggerEventsService],
 })
 export class TriggerEventsModule {}

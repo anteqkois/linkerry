@@ -1,4 +1,4 @@
-import { UserProvider } from "../../modules/user/useUser"
+import { UserProvider } from '../../modules/user/useUser'
 
 interface AuthLayoutProps {
   children: React.ReactNode

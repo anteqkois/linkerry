@@ -1,4 +1,4 @@
-import { binance } from 'ccxt';
+import { binance } from 'ccxt'
 
 const main = async () => {
   const exchange = new binance({
@@ -10,7 +10,7 @@ const main = async () => {
 
   // console.dir(response, { depth: null })
   // console.dir(exchange, { depth: null })
-  console.log(exchange.timeframes);
+  console.log(exchange.timeframes)
   // console.log(response)
 
   process.exit(0)

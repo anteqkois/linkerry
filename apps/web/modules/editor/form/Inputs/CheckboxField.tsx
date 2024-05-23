@@ -9,45 +9,45 @@ import { useDynamicField } from '../useFieldCustomValidation'
 import { DynamicValueField } from './DynamicValueField'
 
 interface CheckboxFieldProps {
-	property: CheckboxProperty
-	name: string
-	refreshedProperties: ConnectorProperty[]
+  property: CheckboxProperty
+  name: string
+  refreshedProperties: ConnectorProperty[]
 }
 
 export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxFieldProps) => {
-	const { control, trigger, getValues } = useFormContext()
-	const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
-		property,
-	})
+  const { control, trigger, getValues } = useFormContext()
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
+    property,
+  })
 
-	useEffect(() => {
-		trigger(name)
+  useEffect(() => {
+    trigger(name)
 
-		const value = getValues(name)
-		if (typeof value !== 'string') return
-		else if (hasVariableToken(value)) {
-			setUseDynamicValue(true)
-		}
-	}, [])
+    const value = getValues(name)
+    if (typeof value !== 'string') return
+    else if (hasVariableToken(value)) {
+      setUseDynamicValue(true)
+    }
+  }, [])
 
-	return useDynamicValue ? (
-		<DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={true} />
-	) : (
-		<FormField
-			control={control}
-			name={name}
-			rules={{ ...rules, required: false }}
-			render={({ field }) => (
-				<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pl-1">
-					<FormControl>
-						<Checkbox checked={field.value} onCheckedChange={field.onChange} />
-					</FormControl>
-					<div className="space-y-1 leading-none flex-grow">
-						<PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
-						<PropertyDescription>{property.description}</PropertyDescription>
-					</div>
-				</FormItem>
-			)}
-		/>
-	)
+  return useDynamicValue ? (
+    <DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={true} />
+  ) : (
+    <FormField
+      control={control}
+      name={name}
+      rules={{ ...rules, required: false }}
+      render={({ field }) => (
+        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pl-1">
+          <FormControl>
+            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+          </FormControl>
+          <div className="space-y-1 leading-none flex-grow">
+            <PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
+            <PropertyDescription>{property.description}</PropertyDescription>
+          </div>
+        </FormItem>
+      )}
+    />
+  )
 }

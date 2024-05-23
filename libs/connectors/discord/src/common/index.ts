@@ -1,13 +1,13 @@
-import { HttpMethod, httpClient } from '@linkerry/connectors-common';
-import { Property } from '@linkerry/connectors-framework';
-import { Channel, Guild } from '../common/models';
-import { webhookUrl } from './instructions';
+import { HttpMethod, httpClient } from '@linkerry/connectors-common'
+import { Property } from '@linkerry/connectors-framework'
+import { Channel, Guild } from '../common/models'
+import { webhookUrl } from './instructions'
 
 export interface Member {
   user: {
-    id: string;
-    username: string;
-  };
+    id: string
+    username: string
+  }
 }
 
 export const discordCommon = {
@@ -22,7 +22,7 @@ export const discordCommon = {
           disabled: true,
           options: [],
           placeholder: 'Please connect your bot first',
-        };
+        }
       }
 
       const request = {
@@ -31,19 +31,19 @@ export const discordCommon = {
         headers: {
           Authorization: 'Bot ' + auth,
         },
-      };
+      }
 
-      const res = await httpClient.sendRequest<Guild[]>(request);
+      const res = await httpClient.sendRequest<Guild[]>(request)
       const options: { options: { value: string; label: string }[] } = {
         options: [],
-      };
+      }
 
       if (res.body.length === 0)
         return {
           disabled: true,
           options: [],
           placeholder: 'No guilds found, please add the bot to a guild first',
-        };
+        }
 
       await Promise.all(
         res.body.map(async (guild) => {
@@ -53,21 +53,19 @@ export const discordCommon = {
             headers: {
               Authorization: 'Bot ' + auth,
             },
-          };
+          }
 
-          const resChannels = await httpClient.sendRequest<Channel[]>(
-            requestChannels
-          );
+          const resChannels = await httpClient.sendRequest<Channel[]>(requestChannels)
           resChannels.body.forEach((channel) => {
             options.options.push({
               value: channel.id,
               label: channel.name,
-            });
-          });
-        })
-      );
+            })
+          })
+        }),
+      )
 
-      return options;
+      return options
     },
   }),
   roles: Property.DynamicDropdown<true, string>({
@@ -81,7 +79,7 @@ export const discordCommon = {
           disabled: true,
           options: [],
           placeholder: 'Please connect your bot first',
-        };
+        }
       }
 
       if (!guild_id) {
@@ -89,7 +87,7 @@ export const discordCommon = {
           disabled: true,
           options: [],
           placeholder: 'Please select a guild first',
-        };
+        }
       }
 
       const request = {
@@ -98,31 +96,31 @@ export const discordCommon = {
         headers: {
           Authorization: 'Bot ' + auth,
         },
-      };
+      }
 
-      const res = await httpClient.sendRequest<Guild[]>(request);
+      const res = await httpClient.sendRequest<Guild[]>(request)
 
       const options: { options: { value: string; label: string }[] } = {
         options: [],
-      };
+      }
 
       if (res.body.length === 0)
         return {
           disabled: true,
           options: [],
           placeholder: 'No roles found, please add the bot to a guild first',
-        };
+        }
 
       await Promise.all(
         res.body.map(async (role) => {
           options.options.push({
             value: role.id,
             label: role.name,
-          });
-        })
-      );
+          })
+        }),
+      )
 
-      return options;
+      return options
     },
   }),
   guilds: Property.DynamicDropdown<true, string>({
@@ -136,7 +134,7 @@ export const discordCommon = {
           disabled: true,
           options: [],
           placeholder: 'Please connect your bot first',
-        };
+        }
       }
 
       const request = {
@@ -145,39 +143,39 @@ export const discordCommon = {
         headers: {
           Authorization: 'Bot ' + auth,
         },
-      };
+      }
 
-      const res = await httpClient.sendRequest<Guild[]>(request);
+      const res = await httpClient.sendRequest<Guild[]>(request)
       const options: { options: { value: string; label: string }[] } = {
         options: [],
-      };
+      }
 
       if (res.body.length === 0)
         return {
           disabled: true,
           options: [],
           placeholder: 'No guilds found, please add the bot to a guild first',
-        };
+        }
 
       await Promise.all(
         res.body.map(async (guild) => {
           options.options.push({
             value: guild.id,
             label: guild.name,
-          });
-        })
-      );
+          })
+        }),
+      )
 
-      return options;
+      return options
     },
   }),
-	instructions_webhook_url: Property.MarkDown({
-		displayName: 'Obtaining Webhook URL',
-		description: webhookUrl,
-	}),
-	webhook_url: Property.ShortText({
-		displayName: 'Webhook URL',
-		description:'',
-		required: true,
-	}),
-};
+  instructions_webhook_url: Property.MarkDown({
+    displayName: 'Obtaining Webhook URL',
+    description: webhookUrl,
+  }),
+  webhook_url: Property.ShortText({
+    displayName: 'Webhook URL',
+    description: '',
+    required: true,
+  }),
+}

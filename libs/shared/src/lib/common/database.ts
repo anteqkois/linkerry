@@ -1,12 +1,12 @@
 export type Id = string // Id to db docuemnt
 
 export interface DatabaseTimestamp {
-	createdAt: string
-	updatedAt: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface BaseDatabaseFields extends DatabaseTimestamp {
-	_id: Id
+  _id: Id
 }
 
 export type DatabaseTimestampKeys = keyof BaseDatabaseFields

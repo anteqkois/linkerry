@@ -1,4 +1,4 @@
-import { kucoin } from 'ccxt';
+import { kucoin } from 'ccxt'
 
 export class KucoinClient {
   static exchange = new kucoin({})

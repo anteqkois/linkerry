@@ -7,15 +7,15 @@ import { useEditor } from '../useEditor'
 export type SelectTriggerProps = HTMLAttributes<HTMLElement>
 
 export const SelectTriggerPanel = () => {
-	const { handleSelectTriggerConnector } = useEditor()
+  const { handleSelectTriggerConnector } = useEditor()
 
-	const handleSelectTrigger = async (connector: ConnectorMetadataSummary) => {
-		await handleSelectTriggerConnector(connector)
-	}
+  const handleSelectTrigger = async (connector: ConnectorMetadataSummary) => {
+    await handleSelectTriggerConnector(connector)
+  }
 
-	return (
-		<ScrollArea className="overflow-scroll max-h-full">
-      <ConnectorsList onClickConnector={handleSelectTrigger} connectorType='trigger' />
+  return (
+    <ScrollArea className="overflow-scroll max-h-full">
+      <ConnectorsList onClickConnector={handleSelectTrigger} connectorType="trigger" />
     </ScrollArea>
-	)
+  )
 }

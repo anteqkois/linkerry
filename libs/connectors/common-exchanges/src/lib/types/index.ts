@@ -1,3 +1,2 @@
-export * from './balance';
-export * from './cctx-exchange-client';
-
+export * from './balance'
+export * from './cctx-exchange-client'

@@ -1,7 +1,7 @@
-import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common';
-import { createAction } from '@linkerry/connectors-framework';
-import { discordAuth } from '..';
-import { discordCommon } from '../common';
+import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
+import { createAction } from '@linkerry/connectors-framework'
+import { discordAuth } from '..'
+import { discordCommon } from '../common'
 
 export const discordDeleteChannel = createAction({
   auth: discordAuth,
@@ -20,10 +20,10 @@ export const discordDeleteChannel = createAction({
         authorization: `Bot ${configValue.auth}`,
         'Content-Type': 'application/json',
       },
-    };
+    }
 
-    const res = await httpClient.sendRequest<never>(request);
+    const res = await httpClient.sendRequest<never>(request)
 
-    return res.body;
+    return res.body
   },
-});
+})

@@ -8,8 +8,8 @@ import { idSchema, stringShortSchema } from '../../common/zod'
 import { User, userSchema } from '../user'
 
 export enum NotificationStatus {
-	NEVER = 'NEVER',
-	ALWAYS = 'ALWAYS',
+  NEVER = 'NEVER',
+  ALWAYS = 'ALWAYS',
 }
 
 // export enum ProjectType {
@@ -23,7 +23,7 @@ export const projectSchema = z.object({
   userIds: z.array(idSchema),
   users: z.array(userSchema).optional(),
   displayName: stringShortSchema,
-  notifyStatus:  z.nativeEnum(NotificationStatus)
+  notifyStatus: z.nativeEnum(NotificationStatus),
   // type: ProjectType,
   // platformId: Id,
   // externalId: string,
@@ -32,5 +32,5 @@ export const projectSchema = z.object({
 export interface Project extends BaseDatabaseFields, z.infer<typeof projectSchema> {}
 
 export interface ProjectOwnerPopulated extends Omit<Project, 'owner'> {
-	owner: User
+  owner: User
 }

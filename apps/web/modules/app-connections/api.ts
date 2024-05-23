@@ -1,10 +1,4 @@
-import {
-  AppConnectionWithoutSensitiveData,
-  AppCpnnectionsGetManyQuery,
-  Id,
-  OAuth2AppEncrypted,
-  UpsertAppConnectionInput,
-} from '@linkerry/shared'
+import { AppConnectionWithoutSensitiveData, AppCpnnectionsGetManyQuery, Id, OAuth2AppEncrypted, UpsertAppConnectionInput } from '@linkerry/shared'
 import { apiClient } from '../../libs/api-client'
 
 export class AppConnectionsApi {

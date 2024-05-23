@@ -7,8 +7,8 @@ import { UsageController } from './usage.controller'
 import { UsageService } from './usage.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([AppConnectionsModelFactory, FlowModelFactory]), TasksUsageModule],
-	controllers: [UsageController],
-	providers: [UsageService],
+  imports: [MongooseModule.forFeatureAsync([AppConnectionsModelFactory, FlowModelFactory]), TasksUsageModule],
+  controllers: [UsageController],
+  providers: [UsageService],
 })
 export class UsageModule {}

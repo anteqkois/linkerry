@@ -1,7 +1,7 @@
-import { createTrigger } from '@linkerry/connectors-framework';
-import { TriggerStrategy } from '@linkerry/shared';
-import { telegramBotAuth } from '../common/auth';
-import { telegramCommons } from '../common/common';
+import { createTrigger } from '@linkerry/connectors-framework'
+import { TriggerStrategy } from '@linkerry/shared'
+import { telegramBotAuth } from '../common/auth'
+import { telegramCommons } from '../common/common'
 
 export const telegramNewMessage = createTrigger({
   auth: telegramBotAuth,
@@ -39,12 +39,12 @@ export const telegramNewMessage = createTrigger({
   async onEnable(context) {
     await telegramCommons.subscribeWebhook(context.auth, context.webhookUrl, {
       allowed_updates: [],
-    });
+    })
   },
   async onDisable(context) {
-    await telegramCommons.unsubscribeWebhook(context.auth);
+    await telegramCommons.unsubscribeWebhook(context.auth)
   },
   async run(context) {
-    return [context.payload.body];
-  }
-});
+    return [context.payload.body]
+  },
+})

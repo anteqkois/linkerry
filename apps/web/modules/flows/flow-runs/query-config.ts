@@ -3,18 +3,18 @@ import { UseQueryOptions } from '@tanstack/react-query'
 import { FlowRunApi } from './api'
 
 export const flowRunQueryConfig = {
-	getMany: (query: FlowRunsGetManyQuery): UseQueryOptions<FlowRun[]> => {
-		return {
-			queryKey: ['flow-runs', ...Object.values(query)],
-			queryFn: async () => (await FlowRunApi.getMany(query)).data,
-		}
-	},
-	getOne: ({ flowRunId }: { flowRunId: Id }): UseQueryOptions<FlowRun> => {
-		return {
-			queryKey: [`flow-runs`, flowRunId],
-			queryFn: async () => (await FlowRunApi.getOne(flowRunId)).data,
-		}
-	},
+  getMany: (query: FlowRunsGetManyQuery): UseQueryOptions<FlowRun[]> => {
+    return {
+      queryKey: ['flow-runs', ...Object.values(query)],
+      queryFn: async () => (await FlowRunApi.getMany(query)).data,
+    }
+  },
+  getOne: ({ flowRunId }: { flowRunId: Id }): UseQueryOptions<FlowRun> => {
+    return {
+      queryKey: [`flow-runs`, flowRunId],
+      queryFn: async () => (await FlowRunApi.getOne(flowRunId)).data,
+    }
+  },
 }
 
 // interface FlowRunQueryConfig {

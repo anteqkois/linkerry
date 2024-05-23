@@ -6,17 +6,17 @@ import { UsersService } from './users.service'
 
 @Controller('users')
 export class UsersController {
-	constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-	@UseGuards(JwtCookiesAuthGuard)
-	@Get()
-	getUser(@ReqJwtUser() user: RequestUser) {
-		// return this.usersService.findOne()
-	}
+  @UseGuards(JwtCookiesAuthGuard)
+  @Get()
+  getUser(@ReqJwtUser() user: RequestUser) {
+    // return this.usersService.findOne()
+  }
 
-	// @UseGuards(JwtCookiesAuthGuard)
-	// @Get('/live-chat')
-	// getLiveChatHash(@ReqJwtUser() user: RequestUser) {
-	// 	return this.usersService.getLiveChatUserHash(user.id)
-	// }
+  // @UseGuards(JwtCookiesAuthGuard)
+  // @Get('/live-chat')
+  // getLiveChatHash(@ReqJwtUser() user: RequestUser) {
+  // 	return this.usersService.getLiveChatUserHash(user.id)
+  // }
 }

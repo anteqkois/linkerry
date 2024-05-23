@@ -1,4 +1,3 @@
-
 export interface CoingeckoSearchResponse {
   coins: Coin[]
   exchanges: Exchange[]

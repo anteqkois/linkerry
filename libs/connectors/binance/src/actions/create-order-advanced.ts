@@ -68,7 +68,6 @@ export const createOrderAdvanced = createAction({
   run: async ({ auth, propsValue }) => {
     // TODO finish
     // exchangeClient.setAuth(auth)
-
     // const response = await exchangeClient.exchange.createOrder(
     //   propsValue.symbol,
     //   propsValue.type,
@@ -76,7 +75,6 @@ export const createOrderAdvanced = createAction({
     //   propsValue.amount,
     //   propsValue.price,
     // )
-
     // return response
   },
 })

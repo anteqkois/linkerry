@@ -1,6 +1,6 @@
-import { AuthenticationType, HttpMethod, httpClient } from "@linkerry/connectors-common"
-import { ConnectorAuth } from "@linkerry/connectors-framework"
-import { baseUrl } from "./common"
+import { AuthenticationType, HttpMethod, httpClient } from '@linkerry/connectors-common'
+import { ConnectorAuth } from '@linkerry/connectors-framework'
+import { baseUrl } from './common'
 
 const markdownDescription = `
 To obtain your OpenAI API Key:

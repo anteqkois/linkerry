@@ -7,9 +7,9 @@ import { WebhookSimulationController } from './webhook-simulation.controller'
 import { WebhookSimulationService } from './webhook-simulation.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([WebhookSimulationModelFactory, flowVersionModelFactory]), TriggerHooksModule],
-	controllers: [WebhookSimulationController],
-	providers: [WebhookSimulationService],
-	exports: [WebhookSimulationService],
+  imports: [MongooseModule.forFeatureAsync([WebhookSimulationModelFactory, flowVersionModelFactory]), TriggerHooksModule],
+  controllers: [WebhookSimulationController],
+  providers: [WebhookSimulationService],
+  exports: [WebhookSimulationService],
 })
 export class WebhookSimulationModule {}

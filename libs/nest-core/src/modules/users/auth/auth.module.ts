@@ -21,53 +21,53 @@ import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 
 @Module({
-	imports: [
-		UsersModule,
-		PassportModule,
-		ConfigModule,
-		ProjectsModule,
-		SubscriptionsModule,
-		EmailModule,
-		ConfigModule,
-		// TODO refactor this to global module
-		RedisModule.forRootAsync({
-			imports: [ConfigModule],
-			inject: [ConfigService],
-			useClass: RedisConfigService,
-		}),
-		JwtModule.registerAsync({
-			imports: [ConfigModule],
-			useFactory: (configService: ConfigService) => {
-				return {
-					secret: configService.get<string>('JWT_SECRET'),
-					// signOptions: { expiresIn: '60s' },
-				}
-			},
-			inject: [ConfigService],
-		}),
-		MongooseModule.forFeatureAsync([
-			{
-				name: UserModel.name,
-				useFactory: () => {
-					const schema = UserSchema
-					schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }) // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
-					return schema
-				},
-			},
-		]),
-	],
-	controllers: [AuthController],
-	providers: [
-		AuthService,
-		LocalStrategy,
-		JwtCookiesStrategy,
-		JwtWebsocketStrategy,
-		JwtBearerTokenStrategy,
-		UsersService,
-		HashService,
-		ConfigService,
-		JWTCustomService,
-	],
-	exports: [AuthService],
+  imports: [
+    UsersModule,
+    PassportModule,
+    ConfigModule,
+    ProjectsModule,
+    SubscriptionsModule,
+    EmailModule,
+    ConfigModule,
+    // TODO refactor this to global module
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useClass: RedisConfigService,
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SECRET'),
+          // signOptions: { expiresIn: '60s' },
+        }
+      },
+      inject: [ConfigService],
+    }),
+    MongooseModule.forFeatureAsync([
+      {
+        name: UserModel.name,
+        useFactory: () => {
+          const schema = UserSchema
+          schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }) // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
+          return schema
+        },
+      },
+    ]),
+  ],
+  controllers: [AuthController],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtCookiesStrategy,
+    JwtWebsocketStrategy,
+    JwtBearerTokenStrategy,
+    UsersService,
+    HashService,
+    ConfigService,
+    JWTCustomService,
+  ],
+  exports: [AuthService],
 })
 export class AuthModule {}

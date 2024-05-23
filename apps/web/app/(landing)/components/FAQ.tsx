@@ -2,6 +2,6 @@ import { HTMLAttributes } from 'react'
 
 export interface FAQProps extends HTMLAttributes<HTMLElement> {}
 
-export const FAQ = ({}:FAQProps) => {
+export const FAQ = ({}: FAQProps) => {
   return <></>
 }

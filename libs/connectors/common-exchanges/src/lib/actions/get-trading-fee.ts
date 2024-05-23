@@ -11,7 +11,7 @@ export const getTradingFeeActionFactory = (exchangeClient: ExchangeClientInterfa
     props: {
       symbol: exchangeCommon.symbol(exchangeClient),
     },
-    run: async ({auth,  propsValue }) => {
+    run: async ({ auth, propsValue }) => {
       exchangeClient.setAuth(auth)
 
       const response = await exchangeClient.exchange.fetchTradingFee(propsValue.symbol)

@@ -24,5 +24,5 @@ export const cancelOrdersActionFactory = (exchangeClient: ExchangeClientInterfac
 
       const response = await (exchangeClient.exchange as binance).cancelOrders(propsValue.ids as string[], propsValue.symbol)
       return response
-    }
+    },
   })

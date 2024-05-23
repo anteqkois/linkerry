@@ -13,18 +13,18 @@ import { TasksUsageModule } from '../billing/usage/tasks/tasks.module'
 import { FlowsModule } from '../flows/flows/flows.module'
 
 @Module({
-	imports: [
-		MongooseModule.forFeatureAsync([flowVersionModelFactory, FlowModelFactory]),
-		WebhookSimulationModule,
-		TriggerEventsModule,
-		TriggerHooksModule,
-		FlowRunsModule,
-		DedupeModule,
-		TasksUsageModule,
-		FlowsModule
-	],
-	controllers: [WebhooksController],
-	providers: [WebhooksService],
-	exports: [WebhooksService],
+  imports: [
+    MongooseModule.forFeatureAsync([flowVersionModelFactory, FlowModelFactory]),
+    WebhookSimulationModule,
+    TriggerEventsModule,
+    TriggerHooksModule,
+    FlowRunsModule,
+    DedupeModule,
+    TasksUsageModule,
+    FlowsModule,
+  ],
+  controllers: [WebhooksController],
+  providers: [WebhooksService],
+  exports: [WebhooksService],
 })
 export class WebhooksModule {}

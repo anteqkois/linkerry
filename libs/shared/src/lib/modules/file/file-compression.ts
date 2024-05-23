@@ -1,4 +1,4 @@
 export enum FileCompression {
-    NONE = 'NONE',
-    GZIP = 'GZIP',
+  NONE = 'NONE',
+  GZIP = 'GZIP',
 }

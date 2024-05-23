@@ -1,12 +1,11 @@
-
 import { ConnectorMetadata, DynamicPropsValue, StaticDropdownState } from '@linkerry/connectors-framework'
 import {
-	EngineResponseStatus,
-	ExecuteActionResponse,
-	ExecuteTriggerResponse,
-	ExecuteValidateAuthResponse,
-	FlowRunResponse,
-	TriggerHookType
+  EngineResponseStatus,
+  ExecuteActionResponse,
+  ExecuteTriggerResponse,
+  ExecuteValidateAuthResponse,
+  FlowRunResponse,
+  TriggerHookType,
 } from '@linkerry/shared'
 
 export type EngineHelperFlowResult = FlowRunResponse
@@ -23,17 +22,17 @@ export type EngineHelperCodeResult = ExecuteActionResponse
 export type EngineHelperExtractConnectorInformation = Omit<ConnectorMetadata, 'name' | 'version'>
 
 export type EngineHelperResult =
-	| EngineHelperFlowResult
-	| EngineHelperTriggerResult
-	| EngineHelperPropResult
-	| EngineHelperCodeResult
-	| EngineHelperExtractConnectorInformation
-	| EngineHelperActionResult
-	| EngineHelperValidateAuthResult
+  | EngineHelperFlowResult
+  | EngineHelperTriggerResult
+  | EngineHelperPropResult
+  | EngineHelperCodeResult
+  | EngineHelperExtractConnectorInformation
+  | EngineHelperActionResult
+  | EngineHelperValidateAuthResult
 
 export type EngineHelperResponse<Result extends EngineHelperResult> = {
-	status: EngineResponseStatus
-	result: Result
-	standardError: string
-	standardOutput: string
+  status: EngineResponseStatus
+  result: Result
+  standardError: string
+  standardOutput: string
 }

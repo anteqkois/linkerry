@@ -21,7 +21,6 @@ services:
     # networks:
     #   - proxy
     restart: on-failure
-
 # networks:
 #   proxy:
 #     driver: bridge

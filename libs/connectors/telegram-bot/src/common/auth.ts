@@ -1,8 +1,8 @@
-import { HttpMethod, HttpRequest, httpClient } from "@linkerry/connectors-common"
-import { ConnectorAuth } from "@linkerry/connectors-framework"
-import { HttpStatusCode, isAxiosError } from "axios"
-import { GetMe } from "../types/getMe"
-import { telegramCommons } from "./common"
+import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
+import { ConnectorAuth } from '@linkerry/connectors-framework'
+import { HttpStatusCode, isAxiosError } from 'axios'
+import { GetMe } from '../types/getMe'
+import { telegramCommons } from './common'
 
 const markdownDescription = `**Authentication**:
 
@@ -15,45 +15,45 @@ const markdownDescription = `**Authentication**:
 `
 
 export const telegramBotAuth = ConnectorAuth.SecretText({
-	displayName: 'Bot Token',
-	description: markdownDescription,
-	required: true,
-	validate: async ({ auth }) => {
-		const request: HttpRequest = {
-			method: HttpMethod.GET,
-			url: telegramCommons.getApiUrl(auth, 'getMe'),
-		}
+  displayName: 'Bot Token',
+  description: markdownDescription,
+  required: true,
+  validate: async ({ auth }) => {
+    const request: HttpRequest = {
+      method: HttpMethod.GET,
+      url: telegramCommons.getApiUrl(auth, 'getMe'),
+    }
 
-		try {
-			const response = await httpClient.sendRequest<GetMe>(request)
+    try {
+      const response = await httpClient.sendRequest<GetMe>(request)
 
-			if (response.body.ok)
-				return {
-					valid: true,
-				}
-			else
-				return {
-					valid: true,
-					error: 'Invalid Bot Token',
-				}
-		} catch (error: any) {
-			if (isAxiosError(error)) {
-				if (error.status === HttpStatusCode.NotFound)
-					return {
-						valid: false,
-						error: 'Invalid Bot Token, bot not found',
-					}
-				else
-					return {
-						valid: false,
-						error: error.response?.data?.description,
-					}
-			}
+      if (response.body.ok)
+        return {
+          valid: true,
+        }
+      else
+        return {
+          valid: true,
+          error: 'Invalid Bot Token',
+        }
+    } catch (error: any) {
+      if (isAxiosError(error)) {
+        if (error.status === HttpStatusCode.NotFound)
+          return {
+            valid: false,
+            error: 'Invalid Bot Token, bot not found',
+          }
+        else
+          return {
+            valid: false,
+            error: error.response?.data?.description,
+          }
+      }
 
-			return {
-				valid: false,
-				error: error?.message,
-			}
-		}
-	},
+      return {
+        valid: false,
+        error: error?.message,
+      }
+    }
+  },
 })

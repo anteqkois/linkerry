@@ -6,12 +6,12 @@ import dayjs from 'dayjs'
 
 @Injectable()
 export class JWTCustomService {
-	constructor(private readonly configService: ConfigService, private readonly jwtService: JwtService) {}
+  constructor(private readonly configService: ConfigService, private readonly jwtService: JwtService) {}
 
-	generateToken({ payload }: { payload: Omit<JwtTokenPayload, 'iss' | 'exp'> }) {
-		const secret = this.configService.get('JWT_SECRET')
-		const expireUnix = dayjs().unix() + Number(this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600))
+  generateToken({ payload }: { payload: Omit<JwtTokenPayload, 'iss' | 'exp'> }) {
+    const secret = this.configService.get('JWT_SECRET')
+    const expireUnix = dayjs().unix() + Number(this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600))
 
-		return this.jwtService.sign({ ...payload, iss: 'linkerry', exp: expireUnix }, { secret })
-	}
+    return this.jwtService.sign({ ...payload, iss: 'linkerry', exp: expireUnix }, { secret })
+  }
 }

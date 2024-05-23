@@ -6,27 +6,27 @@ import { OAuth2Service } from './oauth2.service'
 
 @Controller('oauth2')
 export class Oauth2Controller {
-	constructor(private readonly oAuth2Service: OAuth2Service) {}
+  constructor(private readonly oAuth2Service: OAuth2Service) {}
 
-	@UseGuards(JwtCookiesAuthGuard)
-	@Get('apps')
-	getMany() {
-		return this.oAuth2Service.getMany()
-	}
+  @UseGuards(JwtCookiesAuthGuard)
+  @Get('apps')
+  getMany() {
+    return this.oAuth2Service.getMany()
+  }
 
-	// TODO validation to prevent unecessary data
-	@Get('redirect')
-	redirect(@Body() body: any, @Query() query: OAuth2RedirectQuery, @Response() response: FastifyReply) {
-		const params = {
-			code: query.code,
-		}
-		if (!params.code) throw new UnprocessableEntityException('The code is missing in url')
-		return response
-			.type('text/html')
-			.send(
-				`<script>if(window.opener){window.opener.postMessage({ 'code': '${encodeURIComponent(
-					params.code,
-				)}' },'*')}</script> <html>Redirect succuesfully, this window should close now</html>`,
-			)
-	}
+  // TODO validation to prevent unecessary data
+  @Get('redirect')
+  redirect(@Body() body: any, @Query() query: OAuth2RedirectQuery, @Response() response: FastifyReply) {
+    const params = {
+      code: query.code,
+    }
+    if (!params.code) throw new UnprocessableEntityException('The code is missing in url')
+    return response
+      .type('text/html')
+      .send(
+        `<script>if(window.opener){window.opener.postMessage({ 'code': '${encodeURIComponent(
+          params.code,
+        )}' },'*')}</script> <html>Redirect succuesfully, this window should close now</html>`,
+      )
+  }
 }

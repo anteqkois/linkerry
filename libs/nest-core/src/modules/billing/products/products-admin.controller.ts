@@ -6,11 +6,11 @@ import { ProductsService } from './products.service'
 
 @Controller('admin/products')
 export class ProductsAdminController {
-	constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) {}
 
-	@UseGuards(AdminGuard)
-	@Post()
-	create(@BodySchema(productSchema) body: Product) {
-		return this.productsService.create(body)
-	}
+  @UseGuards(AdminGuard)
+  @Post()
+  create(@BodySchema(productSchema) body: Product) {
+    return this.productsService.create(body)
+  }
 }

@@ -12,19 +12,19 @@ import { DataTable } from '../../../../shared/components/Table/Table'
 import { PageContainer } from '../../components/PageContainer'
 
 export default function Page() {
-	const { data, error, status } = useClientQuery(appConnectionsQueryConfig.getMany())
+  const { data, error, status } = useClientQuery(appConnectionsQueryConfig.getMany())
 
-	const onClickRowHndler = useCallback(async (row: Row<AppConnectionWithoutSensitiveData>) => {
-		// console.debug('onClickRowHndler', row)
-		// await push(`/app/flows/editor/${row.original._id}`)
-	}, [])
+  const onClickRowHndler = useCallback(async (row: Row<AppConnectionWithoutSensitiveData>) => {
+    // console.debug('onClickRowHndler', row)
+    // await push(`/app/flows/editor/${row.original._id}`)
+  }, [])
 
-	if (error) return <ErrorInfo errorObject={error} />
+  if (error) return <ErrorInfo errorObject={error} />
 
-	return (
-		<PageContainer>
-			<H5 className="mb-2 pl-1">Your flows&apos;s</H5>
-			<DataTable loading={status === 'pending'} data={data} columns={columns} onClickRow={onClickRowHndler} />
-		</PageContainer>
-	)
+  return (
+    <PageContainer>
+      <H5 className="mb-2 pl-1">Your flows&apos;s</H5>
+      <DataTable loading={status === 'pending'} data={data} columns={columns} onClickRow={onClickRowHndler} />
+    </PageContainer>
+  )
 }

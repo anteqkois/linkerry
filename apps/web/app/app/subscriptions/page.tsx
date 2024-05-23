@@ -14,54 +14,54 @@ import { SubscriptionCard } from './SubscriptionCard'
 import { UsageCard } from './UsageCard'
 
 export default function Page() {
-	const { currentSubscription, currentPlan, subscriptionsError, subscriptionsStatus } = useSubscriptions()
-	const { usage } = useUsage()
-	const { toast } = useToast()
-	const [loading, setLoading] = useState(false)
+  const { currentSubscription, currentPlan, subscriptionsError, subscriptionsStatus } = useSubscriptions()
+  const { usage } = useUsage()
+  const { toast } = useToast()
+  const [loading, setLoading] = useState(false)
 
-	const onSelectPlanConfiguration = useCallback(async ({ price, productPlan }: { productPlan: Product; price: Price }) => {
-		setLoading(true)
-		try {
-			const { data } = await SubscriptionsApi.change({
-				items: [
-					{
-						priceId: price._id,
-						productId: productPlan._id,
-					},
-				],
-				period: SubscriptionPeriod.MONTHLY,
-			})
-			window.location.href = data.checkoutUrl
-		} catch (error) {
-			let errorMessage = 'Unknown error occures during creation new subscription. Please contact with our Team.'
-			if (isCustomHttpExceptionAxios(error)) errorMessage = error.response.data.message
+  const onSelectPlanConfiguration = useCallback(async ({ price, productPlan }: { productPlan: Product; price: Price }) => {
+    setLoading(true)
+    try {
+      const { data } = await SubscriptionsApi.change({
+        items: [
+          {
+            priceId: price._id,
+            productId: productPlan._id,
+          },
+        ],
+        period: SubscriptionPeriod.MONTHLY,
+      })
+      window.location.href = data.checkoutUrl
+    } catch (error) {
+      let errorMessage = 'Unknown error occures during creation new subscription. Please contact with our Team.'
+      if (isCustomHttpExceptionAxios(error)) errorMessage = error.response.data.message
 
-			toast({
-				title: 'Payment failed',
-				description: errorMessage,
-				variant: 'destructive',
-			})
-		} finally {
-			setLoading(false)
-		}
-	}, [])
+      toast({
+        title: 'Payment failed',
+        description: errorMessage,
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
-	return (
-		<PageContainer padding={'largeOnlyDesktop'} className="space-y-3">
-			{subscriptionsStatus === 'error' ? (
-				<ErrorInfo errorObject={subscriptionsError} />
-			) : subscriptionsStatus === 'pending' ? (
-				<Spinner />
-			) : currentSubscription ? (
-				<div key={currentSubscription._id} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-					<SubscriptionCard subscription={currentSubscription} />
-					<UsageCard usage={usage} subscription={currentSubscription} />
-				</div>
-			) : (
-				<ErrorInfo message="Can not retrive subscription" />
-			)}
-			<H2 className="text-center lg:hidden">Upgarde Plan</H2>
-			<Plans onSelectPlan={onSelectPlanConfiguration} currentPlan={currentPlan} loading={loading}/>
-		</PageContainer>
-	)
+  return (
+    <PageContainer padding={'largeOnlyDesktop'} className="space-y-3">
+      {subscriptionsStatus === 'error' ? (
+        <ErrorInfo errorObject={subscriptionsError} />
+      ) : subscriptionsStatus === 'pending' ? (
+        <Spinner />
+      ) : currentSubscription ? (
+        <div key={currentSubscription._id} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <SubscriptionCard subscription={currentSubscription} />
+          <UsageCard usage={usage} subscription={currentSubscription} />
+        </div>
+      ) : (
+        <ErrorInfo message="Can not retrive subscription" />
+      )}
+      <H2 className="text-center lg:hidden">Upgarde Plan</H2>
+      <Plans onSelectPlan={onSelectPlanConfiguration} currentPlan={currentPlan} loading={loading} />
+    </PageContainer>
+  )
 }

@@ -8,12 +8,12 @@ import { ActionsService } from './actions.service'
 
 @Controller('actions')
 export class ActionsController {
-	constructor(private readonly actionsService: ActionsService) {}
+  constructor(private readonly actionsService: ActionsService) {}
 
-	@StrictRateLimit()
-	@UseGuards(JwtCookiesAuthGuard)
-	@Post('/run')
-	create(@BodySchema(runActionInputSchema) body: RunActionInput, @ReqJwtUser() user: RequestUser) {
-		return this.actionsService.run(user.projectId, user.id, body)
-	}
+  @StrictRateLimit()
+  @UseGuards(JwtCookiesAuthGuard)
+  @Post('/run')
+  create(@BodySchema(runActionInputSchema) body: RunActionInput, @ReqJwtUser() user: RequestUser) {
+    return this.actionsService.run(user.projectId, user.id, body)
+  }
 }

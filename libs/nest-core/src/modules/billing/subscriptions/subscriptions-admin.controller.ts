@@ -6,11 +6,11 @@ import { SubscriptionsAdminService } from './subscriptions-admin.service'
 
 @Controller('admin/subscriptions')
 export class SubscriptionsAdminController {
-	constructor(private readonly subscriptionsAdminService: SubscriptionsAdminService) {}
+  constructor(private readonly subscriptionsAdminService: SubscriptionsAdminService) {}
 
-	@UseGuards(AdminGuard)
-	@Post()
-	create(@BodySchema(subscriptionSchema) body: Subscription) {
-		return this.subscriptionsAdminService.create(body)
-	}
+  @UseGuards(AdminGuard)
+  @Post()
+  create(@BodySchema(subscriptionSchema) body: Subscription) {
+    return this.subscriptionsAdminService.create(body)
+  }
 }

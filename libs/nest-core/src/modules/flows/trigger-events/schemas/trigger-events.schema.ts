@@ -10,28 +10,28 @@ export type TriggerEventDocument = mongoose.HydratedDocument<TriggerEvent>
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'trigger_events' })
 export class TriggerEventModel extends BaseDatabaseModel implements TriggerEvent {
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })
-	flowId: Id
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: FlowModel.name })
+  flowId: Id
 
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
-	projectId: Id
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
+  projectId: Id
 
-	@Prop({ required: true, type: Object })
-	payload: any
+  @Prop({ required: true, type: Object })
+  payload: any
 
-	@Prop({ required: true, type: String })
-	sourceName: string
+  @Prop({ required: true, type: String })
+  sourceName: string
 }
 
 export const TriggerEventSchema = SchemaFactory.createForClass(TriggerEventModel)
 
 export const TriggerEventModelFactory: AsyncModelFactory = {
-	name: TriggerEventModel.name,
-	imports: [],
-	useFactory: () => {
-		const schema = TriggerEventSchema
-		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
-		return schema
-	},
-	inject: [],
+  name: TriggerEventModel.name,
+  imports: [],
+  useFactory: () => {
+    const schema = TriggerEventSchema
+    schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+    return schema
+  },
+  inject: [],
 }

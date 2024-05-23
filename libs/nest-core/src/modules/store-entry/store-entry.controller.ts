@@ -8,23 +8,23 @@ import { StoreEntryService } from './store-entry.service'
 
 @Controller('store-entries')
 export class StoreEntryController {
-	constructor(private readonly storeEntryService: StoreEntryService) {}
+  constructor(private readonly storeEntryService: StoreEntryService) {}
 
-	@UseGuards(JwtBearerTokenAuthGuard)
-	@Get()
-	findOne(@QuerySchema('key', stringShortSchema) key: string, @ReqJwtWorker() worker: RequestWorker) {
-		return this.storeEntryService.findOne(worker.projectId, key)
-	}
+  @UseGuards(JwtBearerTokenAuthGuard)
+  @Get()
+  findOne(@QuerySchema('key', stringShortSchema) key: string, @ReqJwtWorker() worker: RequestWorker) {
+    return this.storeEntryService.findOne(worker.projectId, key)
+  }
 
-	@UseGuards(JwtBearerTokenAuthGuard)
-	@Post()
-	upsert(@BodySchema(putStoreEntryRequestSchema) body: PutStoreEntryRequest, @ReqJwtWorker() worker: RequestWorker) {
-		return this.storeEntryService.upsert(worker.projectId, body.key, body.value)
-	}
+  @UseGuards(JwtBearerTokenAuthGuard)
+  @Post()
+  upsert(@BodySchema(putStoreEntryRequestSchema) body: PutStoreEntryRequest, @ReqJwtWorker() worker: RequestWorker) {
+    return this.storeEntryService.upsert(worker.projectId, body.key, body.value)
+  }
 
-	@UseGuards(JwtBearerTokenAuthGuard)
-	@Delete()
-	deleteOne(@QuerySchema('key', stringShortSchema) key: string, @ReqJwtWorker() worker: RequestWorker) {
-		return this.storeEntryService.deleteOne(worker.projectId, key)
-	}
+  @UseGuards(JwtBearerTokenAuthGuard)
+  @Delete()
+  deleteOne(@QuerySchema('key', stringShortSchema) key: string, @ReqJwtWorker() worker: RequestWorker) {
+    return this.storeEntryService.deleteOne(worker.projectId, key)
+  }
 }

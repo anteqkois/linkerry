@@ -2,5 +2,5 @@
 import { Throttle } from '@nestjs/throttler'
 
 export const StrictRateLimit = () => {
-	return Throttle({ default: { limit: +process.env['STRICT_THROTTLE_LIMIT']!, ttl: +process.env['STRICT_THROTTLE_TTL']! } })
+  return Throttle({ default: { limit: +process.env['STRICT_THROTTLE_LIMIT']!, ttl: +process.env['STRICT_THROTTLE_TTL']! } })
 }

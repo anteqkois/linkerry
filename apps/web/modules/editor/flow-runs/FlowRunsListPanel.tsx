@@ -8,36 +8,36 @@ import { useEditor } from '../useEditor'
 export interface FlowRunsListProps extends HTMLAttributes<HTMLElement> {}
 
 export const FlowRunsListPanel = () => {
-	const { flow, onSelectFlowRun } = useEditor()
-	const { data } = useClientQuery(flowRunQueryConfig.getMany({ flowId: flow._id }))
+  const { flow, onSelectFlowRun } = useEditor()
+  const { data } = useClientQuery(flowRunQueryConfig.getMany({ flowId: flow._id }))
 
-	// const handleSelectFlowRun = async (row: Row<FlowRun>) => {
-	// 	// onSelectFlowRun()
-	// 	// await handleSelectTriggerConnector(row.original)
-	// }
+  // const handleSelectFlowRun = async (row: Row<FlowRun>) => {
+  // 	// onSelectFlowRun()
+  // 	// await handleSelectTriggerConnector(row.original)
+  // }
 
-	return (
-		<div className='p-1'>
-			<DataTable
-				getRowId={(row) => row._id}
-				// onClickRow={handleSelectFlowRun}
-				data={data}
-				columns={columns}
-				meta={{ onSelectFlowRun }}
-				// filterAccessor=""
-				// chooseFilters={[
-				// 	{
-				// 		accessor: 'tags',
-				// 		title: 'Tags',
-				// 		options: connectorTag.map((tag) => ({
-				// 			label: tag,
-				// 			value: tag,
-				// 		})),
-				// 	},
-				// ]}
-				// onlyColumns={['logoUrl', 'displayName']}
-				clickable
-			/>
-		</div>
-	)
+  return (
+    <div className="p-1">
+      <DataTable
+        getRowId={(row) => row._id}
+        // onClickRow={handleSelectFlowRun}
+        data={data}
+        columns={columns}
+        meta={{ onSelectFlowRun }}
+        // filterAccessor=""
+        // chooseFilters={[
+        // 	{
+        // 		accessor: 'tags',
+        // 		title: 'Tags',
+        // 		options: connectorTag.map((tag) => ({
+        // 			label: tag,
+        // 			value: tag,
+        // 		})),
+        // 	},
+        // ]}
+        // onlyColumns={['logoUrl', 'displayName']}
+        clickable
+      />
+    </div>
+  )
 }

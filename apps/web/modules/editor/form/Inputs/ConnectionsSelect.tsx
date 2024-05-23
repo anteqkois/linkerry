@@ -12,7 +12,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from '@linkerry/ui-components/client'
 import { HTMLAttributes, useEffect, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'

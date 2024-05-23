@@ -1,1 +1,1 @@
- pnpm config set registry="https://registry.npmjs.org/"
+pnpm config set registry="https://registry.npmjs.org/"

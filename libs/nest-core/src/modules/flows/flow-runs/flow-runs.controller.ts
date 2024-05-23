@@ -8,21 +8,21 @@ import { FlowRunsService } from './flow-runs.service'
 
 @Controller('flow-runs')
 export class FlowRunsController {
-	constructor(private readonly flowRunsService: FlowRunsService) {}
+  constructor(private readonly flowRunsService: FlowRunsService) {}
 
-	@UseGuards(JwtCookiesAuthGuard)
-	@Get(':id')
-	getOne(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
-		return this.flowRunsService.findOneWithSteps({
-			id,
-			projectId: user.projectId,
-		})
-	}
+  @UseGuards(JwtCookiesAuthGuard)
+  @Get(':id')
+  getOne(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
+    return this.flowRunsService.findOneWithSteps({
+      id,
+      projectId: user.projectId,
+    })
+  }
 
-	// TODO tags search
-	@UseGuards(JwtCookiesAuthGuard)
-	@Get()
-	getMany(@QuerySchema(flowRunsGetManyQuerySchema) query: FlowRunsGetManyQuery, @ReqJwtUser() user: RequestUser) {
-		return this.flowRunsService.findMany(query, user.projectId)
-	}
+  // TODO tags search
+  @UseGuards(JwtCookiesAuthGuard)
+  @Get()
+  getMany(@QuerySchema(flowRunsGetManyQuerySchema) query: FlowRunsGetManyQuery, @ReqJwtUser() user: RequestUser) {
+    return this.flowRunsService.findMany(query, user.projectId)
+  }
 }

@@ -7,16 +7,16 @@ import { FlowVersionsService } from './flow-versions.service'
 
 @Controller('flow-versions')
 export class FlowVersionsController {
-	constructor(private readonly flowVersionsService: FlowVersionsService) {}
+  constructor(private readonly flowVersionsService: FlowVersionsService) {}
 
-	@UseGuards(JwtCookiesAuthGuard)
-	@Get(':id')
-	getOne(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
-		return this.flowVersionsService.findOne({
-			filter: {
-				_id: id,
-				projectId: user.projectId,
-			},
-		})
-	}
+  @UseGuards(JwtCookiesAuthGuard)
+  @Get(':id')
+  getOne(@ParamIdSchema() id: Id, @ReqJwtUser() user: RequestUser) {
+    return this.flowVersionsService.findOne({
+      filter: {
+        _id: id,
+        projectId: user.projectId,
+      },
+    })
+  }
 }

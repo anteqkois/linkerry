@@ -9,7 +9,7 @@
     "cssVariables": true
   },
   "aliases": {
-		"components": "@linkerry/ui-components/components",
-		"utils": "@linkerry/ui-components/utils"
-	}
+    "components": "@linkerry/ui-components/components",
+    "utils": "@linkerry/ui-components/utils"
+  }
 }

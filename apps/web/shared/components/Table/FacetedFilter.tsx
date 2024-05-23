@@ -1,14 +1,14 @@
 import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-	CommandSeparator,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@linkerry/ui-components/client'
 import { Badge, Button, Icons } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
@@ -35,9 +35,9 @@ export function FacetedFilter<TData, TValue>({ column, title, options }: DataTab
           <Icons.Plus />
           <span className={selectedValues?.size > 0 ? 'px-2' : 'pl-2'}>{title}</span>
           {selectedValues?.size > 0 && (
-              <Badge variant="secondary" className="rounded-sm pl-1 pr-1 font-normal">
-                {selectedValues.size}
-              </Badge>
+            <Badge variant="secondary" className="rounded-sm pl-1 pr-1 font-normal">
+              {selectedValues.size}
+            </Badge>
           )}
         </Button>
       </PopoverTrigger>

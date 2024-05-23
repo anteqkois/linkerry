@@ -1,14 +1,14 @@
-import { createCustomApiCallAction } from '@linkerry/connectors-common';
-import { createConnector } from '@linkerry/connectors-framework';
-import { stripeCreateCustomer } from './actions/create-customer';
-import { stripeCreateInvoice } from './actions/create-invoice';
-import { stripeRetrieveCustomer } from './actions/retrieve-customer';
-import { stripeSearchCustomer } from './actions/search-customer';
-import { stripeAuth } from './common/auth';
-import { stripeNewCustomer } from './trigger/new-customer';
-import { stripeNewPayment } from './trigger/new-payment';
-import { stripeNewSubscription } from './trigger/new-subscription';
-import { stripePaymentFailed } from './trigger/payment-failed';
+import { createCustomApiCallAction } from '@linkerry/connectors-common'
+import { createConnector } from '@linkerry/connectors-framework'
+import { stripeCreateCustomer } from './actions/create-customer'
+import { stripeCreateInvoice } from './actions/create-invoice'
+import { stripeRetrieveCustomer } from './actions/retrieve-customer'
+import { stripeSearchCustomer } from './actions/search-customer'
+import { stripeAuth } from './common/auth'
+import { stripeNewCustomer } from './trigger/new-customer'
+import { stripeNewPayment } from './trigger/new-payment'
+import { stripeNewSubscription } from './trigger/new-subscription'
+import { stripePaymentFailed } from './trigger/payment-failed'
 
 export const stripe = createConnector({
   displayName: 'Stripe',
@@ -30,10 +30,5 @@ export const stripe = createConnector({
       }),
     }),
   ],
-  triggers: [
-    stripeNewPayment,
-    stripeNewCustomer,
-    stripePaymentFailed,
-    stripeNewSubscription,
-  ],
-});
+  triggers: [stripeNewPayment, stripeNewCustomer, stripePaymentFailed, stripeNewSubscription],
+})

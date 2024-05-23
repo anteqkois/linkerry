@@ -103,9 +103,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
               {errors?.root && <p className="px-1 text-xs text-red-600">{errors.root.message}</p>}
             </div>
           </div>
-          <ButtonClient loading={isLoading}>
-            Sign In with Email
-          </ButtonClient>
+          <ButtonClient loading={isLoading}>Sign In with Email</ButtonClient>
         </div>
       </form>
       <div className="relative">

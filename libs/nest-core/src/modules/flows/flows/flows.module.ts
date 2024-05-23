@@ -10,9 +10,9 @@ import { FlowsService } from './flows.service'
 import { FlowModelFactory } from './schemas/flow.schema'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([FlowModelFactory]), FlowVersionsModule, TriggerHooksModule, RedisLockModule, SubscriptionsModule],
-	controllers: [FlowsController],
-	providers: [FlowsService, FlowHooks],
-	exports: [FlowsService],
+  imports: [MongooseModule.forFeatureAsync([FlowModelFactory]), FlowVersionsModule, TriggerHooksModule, RedisLockModule, SubscriptionsModule],
+  controllers: [FlowsController],
+  providers: [FlowsService, FlowHooks],
+  exports: [FlowsService],
 })
 export class FlowsModule {}

@@ -5,26 +5,26 @@ import { paymentsController } from './payments.controller'
 import { StripeService } from './stripe.service'
 
 @Module({
-	imports: [
-		GolevelupStripeModule.forRootAsync(GolevelupStripeModule, {
-			inject: [ConfigService],
-			useFactory(configService: ConfigService) {
-				return {
-					apiVersion: '2024-04-10' as any,
-					apiKey: configService.getOrThrow('STRIPE_API_KEY'),
-					webhookConfig: {
-						stripeSecrets: {
-							account: configService.getOrThrow('STRIPE_WEBHOOK_SECRET'),
-						},
-						requestBodyProperty: 'rawBody',
-					},
-				}
-			},
-		}),
-		ConfigModule
-	],
-	controllers: [paymentsController],
-	providers: [StripeService],
-	exports: [StripeService],
+  imports: [
+    GolevelupStripeModule.forRootAsync(GolevelupStripeModule, {
+      inject: [ConfigService],
+      useFactory(configService: ConfigService) {
+        return {
+          apiVersion: '2024-04-10' as any,
+          apiKey: configService.getOrThrow('STRIPE_API_KEY'),
+          webhookConfig: {
+            stripeSecrets: {
+              account: configService.getOrThrow('STRIPE_WEBHOOK_SECRET'),
+            },
+            requestBodyProperty: 'rawBody',
+          },
+        }
+      },
+    }),
+    ConfigModule,
+  ],
+  controllers: [paymentsController],
+  providers: [StripeService],
+  exports: [StripeService],
 })
 export class PaymentsModule {}

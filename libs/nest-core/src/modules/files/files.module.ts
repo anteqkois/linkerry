@@ -5,9 +5,9 @@ import { FilesService } from './files.service'
 import { FileModelFactory } from './schemas/files.schema'
 
 @Module({
-	imports:[MongooseModule.forFeatureAsync([FileModelFactory]),],
-	controllers: [FilesController],
-	providers: [FilesService],
-	exports: [FilesService],
+  imports: [MongooseModule.forFeatureAsync([FileModelFactory])],
+  controllers: [FilesController],
+  providers: [FilesService],
+  exports: [FilesService],
 })
 export class FilesModule {}

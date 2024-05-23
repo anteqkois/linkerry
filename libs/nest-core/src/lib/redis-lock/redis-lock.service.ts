@@ -5,34 +5,34 @@ import { AcquireLockParams } from './types'
 
 @Injectable()
 export class RedisLockService {
-	private readonly logger = new Logger(RedisLockService.name)
+  private readonly logger = new Logger(RedisLockService.name)
 
-	constructor(@Inject(REDIS_LOCK_CLIENT) private readonly redisClient: RedisLockClient) {}
+  constructor(@Inject(REDIS_LOCK_CLIENT) private readonly redisClient: RedisLockClient) {}
 
-	async acquireLock({ key, timeoutMs }: AcquireLockParams) {
-		try {
-			return await this.redisClient.redLockClient.acquire([key], timeoutMs, {
-				retryCount: Math.ceil(timeoutMs / 2000 * 1.5),
-				retryDelay: 2000,
-			})
-		} catch (e) {
-			this.logger.error(e)
-			throw e
-		}
-	}
-	// getClient(name?: string): Redis {
-	// 	if (!name) {
-	// 		name = this.redisClient.defaultKey
-	// 	}
-	// 	const client = this.redisClient.clients.get(name)
+  async acquireLock({ key, timeoutMs }: AcquireLockParams) {
+    try {
+      return await this.redisClient.redLockClient.acquire([key], timeoutMs, {
+        retryCount: Math.ceil((timeoutMs / 2000) * 1.5),
+        retryDelay: 2000,
+      })
+    } catch (e) {
+      this.logger.error(e)
+      throw e
+    }
+  }
+  // getClient(name?: string): Redis {
+  // 	if (!name) {
+  // 		name = this.redisClient.defaultKey
+  // 	}
+  // 	const client = this.redisClient.clients.get(name)
 
-	// 	if (!client) {
-	// 		throw new RedisClientError(`client ${name} does not exist`)
-	// 	}
-	// 	return client
-	// }
+  // 	if (!client) {
+  // 		throw new RedisClientError(`client ${name} does not exist`)
+  // 	}
+  // 	return client
+  // }
 
-	// getClients(): Map<string, Redis> {
-	// 	return this.redisClient.clients
-	// }
+  // getClients(): Map<string, Redis> {
+  // 	return this.redisClient.clients
+  // }
 }

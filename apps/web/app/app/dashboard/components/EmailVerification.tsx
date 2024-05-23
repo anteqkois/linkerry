@@ -8,11 +8,11 @@ export type EmailVerificationProps = HTMLAttributes<HTMLElement>
 
 // eslint-disable-next-line no-empty-pattern
 export const EmailVerification = ({}: EmailVerificationProps) => {
-	const { emialVerificationDialog, setEmailVerificationDialog, user } = useUser()
+  const { emialVerificationDialog, setEmailVerificationDialog, user } = useUser()
 
-	useEffect(() => {
-		if (!user.emailVerifiedAtDate) setEmailVerificationDialog(true)
-	}, [])
+  useEffect(() => {
+    if (!user.emailVerifiedAtDate) setEmailVerificationDialog(true)
+  }, [])
 
-	return <EmailVerificationDialog />
+  return <EmailVerificationDialog />
 }

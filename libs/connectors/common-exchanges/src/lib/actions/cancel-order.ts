@@ -9,7 +9,7 @@ export const cancelOrderActionFactory = (exchangeClient: ExchangeClientInterface
     description: 'Cancel order based on given id',
     name: 'cancel_order',
     props: {
-      order_id:  exchangeCommon.order_id,
+      order_id: exchangeCommon.order_id,
       symbol: exchangeCommon.symbol(exchangeClient, {
         description: 'Unified symbol of the market the order was made in',
       }),
@@ -19,5 +19,5 @@ export const cancelOrderActionFactory = (exchangeClient: ExchangeClientInterface
 
       const response = await exchangeClient.exchange.cancelOrder(propsValue.order_id, propsValue.symbol)
       return response
-    }
+    },
   })

@@ -14,16 +14,16 @@ export type ProjectJson = {
         buildableProjectDepsInPackageJsonType?: 'peerDependencies' | 'dependencies'
         updateBuildableProjectDepsInPackageJson: boolean
       }
-    },
+    }
     lint: {
-        options: {
-            lintFilePatterns: string[]
-        }
+      options: {
+        lintFilePatterns: string[]
+      }
     }
   }
 }
 
-const readJsonFile = async <T> (path: string): Promise<T> => {
+const readJsonFile = async <T>(path: string): Promise<T> => {
   const jsonFile = await readFile(path, { encoding: 'utf-8' })
   return JSON.parse(jsonFile) as T
 }

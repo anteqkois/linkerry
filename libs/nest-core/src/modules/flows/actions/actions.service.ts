@@ -6,60 +6,60 @@ import { FlowVersionsService } from '../flow-versions/flow-versions.service'
 
 @Injectable()
 export class ActionsService {
-	constructor(private readonly engineService: EngineService, private readonly flowVersionsService: FlowVersionsService) {}
+  constructor(private readonly engineService: EngineService, private readonly flowVersionsService: FlowVersionsService) {}
 
-	async run(projectId: Id, userId: Id, body: RunActionInput) {
-		let flowVersion = (
-			await this.flowVersionsService.findOne({
-				filter: {
-					_id: body.flowVersionId,
-					projectId,
-				},
-			})
-		)?.toObject<FlowVersion>()
-		assertNotNullOrUndefined(flowVersion, 'flowVersionObject')
+  async run(projectId: Id, userId: Id, body: RunActionInput) {
+    let flowVersion = (
+      await this.flowVersionsService.findOne({
+        filter: {
+          _id: body.flowVersionId,
+          projectId,
+        },
+      })
+    )?.toObject<FlowVersion>()
+    assertNotNullOrUndefined(flowVersion, 'flowVersionObject')
 
-		const { result, standardError, standardOutput } = await this.engineService.executeAction({
-			flowVersion,
-			stepName: body.actionName,
-			projectId,
-		})
+    const { result, standardError, standardOutput } = await this.engineService.executeAction({
+      flowVersion,
+      stepName: body.actionName,
+      projectId,
+    })
 
-		if (result.success) {
-			const action = flowHelper.getAction(flowVersion, body.actionName)
-			assertNotNullOrUndefined(action, 'action')
+    if (result.success) {
+      const action = flowHelper.getAction(flowVersion, body.actionName)
+      assertNotNullOrUndefined(action, 'action')
 
-			action.settings.inputUiInfo = {
-				currentSelectedData: result.output,
-				lastTestDate: dayjs().format(),
-			}
-			action.valid = true
+      action.settings.inputUiInfo = {
+        currentSelectedData: result.output,
+        lastTestDate: dayjs().format(),
+      }
+      action.valid = true
 
-			flowVersion = await this.flowVersionsService.applyOperation({
-				flowVersion,
-				projectId,
-				userId,
-				userOperation: {
-					type: FlowOperationType.UPDATE_ACTION,
-					flowVersionId: flowVersion._id,
-					request: action,
-				},
-			})
+      flowVersion = await this.flowVersionsService.applyOperation({
+        flowVersion,
+        projectId,
+        userId,
+        userOperation: {
+          type: FlowOperationType.UPDATE_ACTION,
+          flowVersionId: flowVersion._id,
+          request: action,
+        },
+      })
 
-			return {
-				success: result.success,
-				output: result.output,
-				standardError,
-				standardOutput,
-				flowVersion,
-			}
-		}
+      return {
+        success: result.success,
+        output: result.output,
+        standardError,
+        standardOutput,
+        flowVersion,
+      }
+    }
 
-		return {
-			success: result.success,
-			output: result.output,
-			standardError,
-			standardOutput,
-		}
-	}
+    return {
+      success: result.success,
+      output: result.output,
+      standardError,
+      standardOutput,
+    }
+  }
 }

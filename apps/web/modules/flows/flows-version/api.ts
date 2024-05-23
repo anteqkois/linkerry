@@ -9,5 +9,4 @@ export class FlowVersionApi {
   static async patch(flowVersionId: Id, data: Partial<FlowVersion>) {
     return apiClient.patch<FlowVersion | undefined>(`/flow-versions/${flowVersionId}`, data)
   }
-
 }

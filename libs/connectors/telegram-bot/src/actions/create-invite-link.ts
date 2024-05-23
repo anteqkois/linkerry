@@ -1,7 +1,7 @@
-import { HttpMethod, httpClient } from '@linkerry/connectors-common';
-import { Property, createAction } from '@linkerry/connectors-framework';
-import { telegramBotAuth } from '../common/auth';
-import { telegramCommons } from '../common/common';
+import { HttpMethod, httpClient } from '@linkerry/connectors-common'
+import { Property, createAction } from '@linkerry/connectors-framework'
+import { telegramBotAuth } from '../common/auth'
+import { telegramCommons } from '../common/common'
 
 export const telegramCreateInviteLinkAction = createAction({
   auth: telegramBotAuth,
@@ -37,12 +37,10 @@ export const telegramCreateInviteLinkAction = createAction({
         body: {
           chat_id: ctx.propsValue.chat_id,
           name: ctx.propsValue.name ?? undefined,
-          expire_date: ctx.propsValue.expire_date
-            ? Math.floor(new Date(ctx.propsValue.expire_date).getTime() / 1000)
-            : undefined,
+          expire_date: ctx.propsValue.expire_date ? Math.floor(new Date(ctx.propsValue.expire_date).getTime() / 1000) : undefined,
           member_limit: ctx.propsValue.member_limit ?? undefined,
         },
       })
-      .then((res) => res.body);
+      .then((res) => res.body)
   },
-});
+})

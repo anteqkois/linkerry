@@ -10,8 +10,15 @@ import { FlowModelFactory } from '../../flows/schemas/flow.schema'
 import { TriggerHooks } from './trigger-hooks.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([FlowModelFactory]), WebhooksUrlsModule, EngineModule, QueuesModule, ConnectorsMetadataModule, SubscriptionsModule],
-	providers: [TriggerHooks],
-	exports: [TriggerHooks],
+  imports: [
+    MongooseModule.forFeatureAsync([FlowModelFactory]),
+    WebhooksUrlsModule,
+    EngineModule,
+    QueuesModule,
+    ConnectorsMetadataModule,
+    SubscriptionsModule,
+  ],
+  providers: [TriggerHooks],
+  exports: [TriggerHooks],
 })
 export class TriggerHooksModule {}

@@ -1,7 +1,7 @@
-import { createTrigger } from '@linkerry/connectors-framework';
-import { TriggerStrategy } from '@linkerry/shared';
-import { stripeCommon } from '../common';
-import { stripeAuth } from '../common/auth';
+import { createTrigger } from '@linkerry/connectors-framework'
+import { TriggerStrategy } from '@linkerry/shared'
+import { stripeCommon } from '../common'
+import { stripeAuth } from '../common/auth'
 
 export const stripePaymentFailed = createTrigger({
   auth: stripeAuth,

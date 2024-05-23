@@ -1,2 +1,1 @@
-export * from './oauth2-util';
-
+export * from './oauth2-util'

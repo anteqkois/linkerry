@@ -5,8 +5,8 @@ import { StoreEntryController } from './store-entry.controller'
 import { StoreEntryService } from './store-entry.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([StoreEntryModelFactory])],
-	controllers: [StoreEntryController],
-	providers: [StoreEntryService],
+  imports: [MongooseModule.forFeatureAsync([StoreEntryModelFactory])],
+  controllers: [StoreEntryController],
+  providers: [StoreEntryService],
 })
 export class StoreEntryModule {}

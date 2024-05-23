@@ -27,5 +27,5 @@ export const createOrderActionFactory = (exchangeClient: ExchangeClientInterface
       )
 
       return response
-    }
+    },
   })

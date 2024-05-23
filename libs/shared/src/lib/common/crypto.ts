@@ -1,4 +1,4 @@
 export type EncryptedObject = {
-	iv: string
-	data: string
+  iv: string
+  data: string
 }

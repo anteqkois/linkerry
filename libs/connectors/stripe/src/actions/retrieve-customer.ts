@@ -1,6 +1,6 @@
-import { AuthenticationType, HttpMethod, httpClient } from '@linkerry/connectors-common';
-import { Property, createAction } from '@linkerry/connectors-framework';
-import { stripeAuth } from '../common/auth';
+import { AuthenticationType, HttpMethod, httpClient } from '@linkerry/connectors-common'
+import { Property, createAction } from '@linkerry/connectors-framework'
+import { stripeAuth } from '../common/auth'
 
 export const stripeRetrieveCustomer = createAction({
   name: 'retrieve_customer',
@@ -16,7 +16,7 @@ export const stripeRetrieveCustomer = createAction({
   async run(context) {
     const customer = {
       id: context.propsValue.id,
-    };
+    }
 
     const response = await httpClient.sendRequest({
       method: HttpMethod.GET,
@@ -25,8 +25,8 @@ export const stripeRetrieveCustomer = createAction({
         type: AuthenticationType.BEARER_TOKEN,
         token: context.auth,
       },
-    });
+    })
 
-    return response.body;
+    return response.body
   },
-});
+})

@@ -11,9 +11,9 @@ import { SubscriptionsService } from './subscriptions.service'
 import { SubscriptionsAdminService } from './subscriptions-admin.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([SubscriptionModelFactory, ProductModelFactory, PriceModelFactory, ProjectModelFactory]), PaymentsModule],
-	controllers: [SubscriptionsController, SubscriptionsAdminController],
-	providers: [SubscriptionsService, SubscriptionsAdminService],
-	exports: [SubscriptionsService],
+  imports: [MongooseModule.forFeatureAsync([SubscriptionModelFactory, ProductModelFactory, PriceModelFactory, ProjectModelFactory]), PaymentsModule],
+  controllers: [SubscriptionsController, SubscriptionsAdminController],
+  providers: [SubscriptionsService, SubscriptionsAdminService],
+  exports: [SubscriptionsService],
 })
 export class SubscriptionsModule {}

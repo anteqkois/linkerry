@@ -7,37 +7,37 @@ import { PropertyLabel } from '../PropertyLabel'
 import { useDynamicField } from '../useFieldCustomValidation'
 
 interface SecretTextFieldProps {
-	property: SecretTextProperty
-	name: string
-	refreshedProperties: ConnectorProperty[]
+  property: SecretTextProperty
+  name: string
+  refreshedProperties: ConnectorProperty[]
 }
 
 export const SecretTextField = ({ property, name, refreshedProperties }: SecretTextFieldProps) => {
-	const { control, trigger } = useFormContext()
-	const { rules } = useDynamicField({
-		property,
-	})
+  const { control, trigger } = useFormContext()
+  const { rules } = useDynamicField({
+    property,
+  })
 
-	useEffect(() => {
-		trigger(name)
-	}, [])
+  useEffect(() => {
+    trigger(name)
+  }, [])
 
-	return (
-		<FormField
-			control={control}
-			name={name}
-			defaultValue={''}
-			rules={rules}
-			render={({ field }) => (
-				<FormItem>
-					<PropertyLabel property={property} refreshedProperties={refreshedProperties} />
-					<FormControl>
-						<Input {...field} type='password' />
-					</FormControl>
-					<PropertyDescription>{property.description}</PropertyDescription>
-					<FormMessage />
-				</FormItem>
-			)}
-		/>
-	)
+  return (
+    <FormField
+      control={control}
+      name={name}
+      defaultValue={''}
+      rules={rules}
+      render={({ field }) => (
+        <FormItem>
+          <PropertyLabel property={property} refreshedProperties={refreshedProperties} />
+          <FormControl>
+            <Input {...field} type="password" />
+          </FormControl>
+          <PropertyDescription>{property.description}</PropertyDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
 }

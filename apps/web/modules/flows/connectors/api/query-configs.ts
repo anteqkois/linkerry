@@ -21,7 +21,7 @@ export const connectorsMetadataQueryConfig = {
       queryFn: async () => (await ConnectorsApi.getMany()).data,
     }
   },
-  getOne: ({ connectorName, connectorVersion }: { connectorName: string, connectorVersion: string }): UseQueryOptions<ConnectorMetadata> => {
+  getOne: ({ connectorName, connectorVersion }: { connectorName: string; connectorVersion: string }): UseQueryOptions<ConnectorMetadata> => {
     return {
       queryKey: [`connectors-metadata`, connectorName, connectorVersion],
       queryFn: async () => (await ConnectorsApi.getOne({ connectorName, connectorVersion })).data,

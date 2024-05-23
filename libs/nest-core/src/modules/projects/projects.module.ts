@@ -5,9 +5,9 @@ import { ProjectsService } from './projects.service'
 import { ProjectModelFactory } from './schemas/projects.schema'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([ProjectModelFactory])],
-	controllers: [ProjectsController],
-	providers: [ProjectsService],
-	exports: [ProjectsService],
+  imports: [MongooseModule.forFeatureAsync([ProjectModelFactory])],
+  controllers: [ProjectsController],
+  providers: [ProjectsService],
+  exports: [ProjectsService],
 })
 export class ProjectsModule {}

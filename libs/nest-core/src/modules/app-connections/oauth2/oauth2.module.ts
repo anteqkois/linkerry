@@ -7,9 +7,9 @@ import { OAuth2Service } from './oauth2.service'
 import { AppsModelFactory } from './schemas/apps.schema'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([AppsModelFactory]), CryptoModule],
-	controllers: [Oauth2Controller, Oauth2AdminController],
-	providers: [OAuth2Service],
-	exports: [OAuth2Service],
+  imports: [MongooseModule.forFeatureAsync([AppsModelFactory]), CryptoModule],
+  controllers: [Oauth2Controller, Oauth2AdminController],
+  providers: [OAuth2Service],
+  exports: [OAuth2Service],
 })
 export class Oauth2Module {}

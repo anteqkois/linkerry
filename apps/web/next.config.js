@@ -1,7 +1,7 @@
 //@ts-check
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { composePlugins, withNx } = require('@nx/next');
+const { composePlugins, withNx } = require('@nx/next')
 // const path = require('path');
 
 /**
@@ -20,7 +20,7 @@ const nextConfig = {
         destination: '/app/dashboard',
         permanent: true,
       },
-    ];
+    ]
   },
   images: {
     remotePatterns: [
@@ -34,16 +34,16 @@ const nextConfig = {
       },
     ],
   },
-  output: "standalone",
+  output: 'standalone',
   // outputFileTracingRoot: path.join(__dirname, '../../'),
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
-};
+}
 
 const plugins = [
   // Add more Next.js plugins to this list if needed.
   withNx,
-];
+]
 
-module.exports = composePlugins(...plugins)(nextConfig);
+module.exports = composePlugins(...plugins)(nextConfig)

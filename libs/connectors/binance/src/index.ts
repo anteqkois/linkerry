@@ -12,7 +12,7 @@ import {
   getTickersActionFactory,
   getTradesActionFactory,
   getTradingFeeActionFactory,
-  setMarginModeActionFactory
+  setMarginModeActionFactory,
 } from '@linkerry/common-exchanges'
 import { createConnector } from '@linkerry/connectors-framework'
 import { getAccountBalance } from './actions/get-account-balance'

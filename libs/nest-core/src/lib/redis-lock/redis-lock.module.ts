@@ -8,17 +8,17 @@ import { RedisLockCoreModule } from './redis-lock-core.module'
 
 @Module({})
 export class RedisLockModule {
-	static register(options: RedisLockModuleOptions): DynamicModule {
-		return {
-			module: RedisLockModule,
-			imports: [RedisLockCoreModule.register(options)],
-		}
-	}
+  static register(options: RedisLockModuleOptions): DynamicModule {
+    return {
+      module: RedisLockModule,
+      imports: [RedisLockCoreModule.register(options)],
+    }
+  }
 
-	static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
-		return {
-			module: RedisLockModule,
-			imports: [RedisLockCoreModule.forRootAsync(options)],
-		}
-	}
+  static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
+    return {
+      module: RedisLockModule,
+      imports: [RedisLockCoreModule.forRootAsync(options)],
+    }
+  }
 }

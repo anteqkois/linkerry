@@ -1,18 +1,10 @@
 // 'use client'
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarTrigger,
-} from '@linkerry/ui-components/client';
-import { Icons } from '@linkerry/ui-components/server';
-import Link from 'next/link';
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from '@linkerry/ui-components/client'
+import { Icons } from '@linkerry/ui-components/server'
+import Link from 'next/link'
 
 interface DesktopProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export function DesktopMenu({ children }: DesktopProps) {
@@ -98,5 +90,5 @@ export function DesktopMenu({ children }: DesktopProps) {
       </MenubarMenu> */}
       </Menubar>
     </nav>
-  );
+  )
 }

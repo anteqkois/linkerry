@@ -1,3 +1,3 @@
-import { z } from "zod";
+import { z } from 'zod'
 
-export const mongoIdSchema = z.string().regex(/^[0-9a-f]{24}$/);
+export const mongoIdSchema = z.string().regex(/^[0-9a-f]{24}$/)

@@ -4,7 +4,6 @@ Connect to server `ssh root@64.226.97.74`
 
 Install docker `https://docs.docker.com/engine/install/ubuntu/`
 
-
 Setup proxy
 `git clone --recurse-submodules https://github.com/evertramos/nginx-proxy-automation.git proxy`
 `cd proxy/bin && ./fresh-start.sh --yes --skip-docker-image-check -e anteqkois@gmail.com`
@@ -21,6 +20,7 @@ Login to docker container registry
 `docker login -u "$CONTAINER_REGISTRY_USERNAME" -p "$CONTAINER_REGISTRY_PASSWORD" "$CONTAINER_REGISTRY_ADDRESS"`
 
 Docker compose:
+
 ```
 version: '3.8'
 services:

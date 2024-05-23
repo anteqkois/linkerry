@@ -6,19 +6,19 @@ import { ProjectModel } from './schemas/projects.schema'
 
 @Injectable()
 export class ProjectsService {
-	constructor(@InjectModel(ProjectModel.name) private readonly projectsModel: Model<ProjectModel>) {
-		//
-	}
+  constructor(@InjectModel(ProjectModel.name) private readonly projectsModel: Model<ProjectModel>) {
+    //
+  }
 
-	async findManyUserProjects(userId: Id) {
-		return this.projectsModel.find({
-			userIds: {
-				$in: [userId],
-			},
-		})
-	}
+  async findManyUserProjects(userId: Id) {
+    return this.projectsModel.find({
+      userIds: {
+        $in: [userId],
+      },
+    })
+  }
 
-	async create(input: DatabseModelInput<Project>) {
-		return this.projectsModel.create(input)
-	}
+  async create(input: DatabseModelInput<Project>) {
+    return this.projectsModel.create(input)
+  }
 }

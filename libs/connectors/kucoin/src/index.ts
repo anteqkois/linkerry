@@ -10,7 +10,7 @@ import {
   getOrderActionFactory,
   getTickersActionFactory,
   getTradesActionFactory,
-  getTradingFeeActionFactory
+  getTradingFeeActionFactory,
 } from '@linkerry/common-exchanges'
 import { createConnector } from '@linkerry/connectors-framework'
 import { kucoinAuth } from './common/auth'

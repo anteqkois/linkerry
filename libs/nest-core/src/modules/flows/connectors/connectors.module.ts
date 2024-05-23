@@ -8,9 +8,9 @@ import { ConnectorsController } from './connectors.controller'
 import { ConnectorsService } from './connectors.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([ConnectorsMetadataModelFactory, flowVersionModelFactory]), ConnectorsMetadataModule, EngineModule],
-	controllers: [ConnectorsController],
-	providers: [ConnectorsService],
-	exports: [ConnectorsService],
+  imports: [MongooseModule.forFeatureAsync([ConnectorsMetadataModelFactory, flowVersionModelFactory]), ConnectorsMetadataModule, EngineModule],
+  controllers: [ConnectorsController],
+  providers: [ConnectorsService],
+  exports: [ConnectorsService],
 })
 export class ConnectorsModule {}

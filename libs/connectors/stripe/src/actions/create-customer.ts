@@ -1,6 +1,6 @@
-import { HttpMethod, httpClient } from '@linkerry/connectors-common';
-import { Property, createAction } from '@linkerry/connectors-framework';
-import { stripeAuth } from '../common/auth';
+import { HttpMethod, httpClient } from '@linkerry/connectors-common'
+import { Property, createAction } from '@linkerry/connectors-framework'
+import { stripeAuth } from '../common/auth'
 
 export const stripeCreateCustomer = createAction({
   name: 'create_customer',
@@ -59,7 +59,7 @@ export const stripeCreateCustomer = createAction({
         state: context.propsValue.state,
         country: context.propsValue.country,
       },
-    };
+    }
     const response = await httpClient.sendRequest({
       method: HttpMethod.POST,
       url: 'https://api.stripe.com/v1/customers',
@@ -74,7 +74,7 @@ export const stripeCreateCustomer = createAction({
         phone: customer.phone,
         address: customer.address,
       },
-    });
-    return response.body;
+    })
+    return response.body
   },
-});
+})

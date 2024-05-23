@@ -62,7 +62,13 @@ export const DynamicValueStep = ({ connectorMetadata, step, stepIndex }: Dynamic
             <DynamicValueEntry key={keyName + index} keyName={keyName} value={value} deepLevel={0} tokenString={step.name} />
           ))
         ) : (
-          <DynamicValueEntry keyName={'result'} isPrimitiveValue value={step.settings.inputUiInfo.currentSelectedData} deepLevel={0} tokenString={step.name} />
+          <DynamicValueEntry
+            keyName={'result'}
+            isPrimitiveValue
+            value={step.settings.inputUiInfo.currentSelectedData}
+            deepLevel={0}
+            tokenString={step.name}
+          />
         )
       ) : null}
     </>

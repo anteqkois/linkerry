@@ -4,16 +4,16 @@ import { TasksUsageService } from '../../billing/usage/tasks/tasks.service'
 
 @Injectable()
 export class FlowWorkerHooks {
-	private readonly logger = new Logger(FlowWorkerHooks.name)
+  private readonly logger = new Logger(FlowWorkerHooks.name)
 
-	constructor(private readonly tasksUsageService: TasksUsageService) {}
+  constructor(private readonly tasksUsageService: TasksUsageService) {}
 
-	async preExecute({ projectId }: PreExecuteParams) {
-		await this.tasksUsageService.checkTaskLimitAndThrow(projectId)
-	}
+  async preExecute({ projectId }: PreExecuteParams) {
+    await this.tasksUsageService.checkTaskLimitAndThrow(projectId)
+  }
 }
 
 export interface PreExecuteParams {
-	projectId: Id
-	runId: Id
+  projectId: Id
+  runId: Id
 }

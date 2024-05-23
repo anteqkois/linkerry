@@ -11,10 +11,10 @@ export const versionSchema = z.string().regex(/^([~^])?[0-9]+\.[0-9]+\.[0-9]+$/)
 export const flowStepNameSchema = z.string().regex(/^([a-zA-Z]+)_(\d+)$/)
 export const idSchema = z.string().regex(/^[0-9a-f]{24}$/)
 export const booleanOrBooleanStringSchema = z.union([
-	z
-		.string()
-		.toLowerCase()
-		.transform((x) => x === 'true')
-		.pipe(z.boolean()),
-	z.boolean(),
+  z
+    .string()
+    .toLowerCase()
+    .transform((x) => x === 'true')
+    .pipe(z.boolean()),
+  z.boolean(),
 ])

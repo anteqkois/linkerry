@@ -6,11 +6,11 @@ import { PricesService } from './prices.service'
 
 @Controller('admin/prices')
 export class PricesAdminController {
-	constructor(private readonly pricesService: PricesService) {}
+  constructor(private readonly pricesService: PricesService) {}
 
-	@UseGuards(AdminGuard)
-	@Post()
-	create(@BodySchema(priceSchema) body: Price) {
-		return this.pricesService.create(body)
-	}
+  @UseGuards(AdminGuard)
+  @Post()
+  create(@BodySchema(priceSchema) body: Price) {
+    return this.pricesService.create(body)
+  }
 }

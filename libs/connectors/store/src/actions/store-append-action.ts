@@ -1,5 +1,5 @@
-import { createAction, Property, Validators } from '@linkerry/connectors-framework';
-import { common, getScopeAndKey } from './common';
+import { createAction, Property, Validators } from '@linkerry/connectors-framework'
+import { common, getScopeAndKey } from './common'
 
 export const storageAppendAction = createAction({
   name: 'append',
@@ -35,16 +35,15 @@ export const storageAppendAction = createAction({
       runId: context.run.id,
       key: context.propsValue['key'],
       scope: context.propsValue.store_scope,
-    });
-    const oldValue = (await context.store.get(key, scope)) || '';
+    })
+    const oldValue = (await context.store.get(key, scope)) || ''
     if (typeof oldValue !== 'string') {
-      throw new Error(`Key ${context.propsValue.key} is not a string`);
+      throw new Error(`Key ${context.propsValue.key} is not a string`)
     }
-    const appendValue = context.propsValue.value;
-    let separator = context.propsValue.separator || '';
-    separator = separator.replace(/\\n/g, '\n'); // Allow newline escape sequence
-    const newValue =
-      oldValue + (oldValue.length > 0 ? separator : '') + appendValue;
-    return await context.store.put(key, newValue, scope);
+    const appendValue = context.propsValue.value
+    let separator = context.propsValue.separator || ''
+    separator = separator.replace(/\\n/g, '\n') // Allow newline escape sequence
+    const newValue = oldValue + (oldValue.length > 0 ? separator : '') + appendValue
+    return await context.store.put(key, newValue, scope)
   },
-});
+})

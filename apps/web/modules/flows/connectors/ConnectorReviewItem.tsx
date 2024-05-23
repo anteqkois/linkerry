@@ -9,7 +9,6 @@ export interface ConnectorReviewItemProps extends HTMLAttributes<HTMLElement> {
 }
 
 export const ConnectorReviewItem = ({ connector, className, onClickConnector, ...props }: ConnectorReviewItemProps) => {
-
   const handleClick = useCallback(() => {
     onClickConnector?.(connector)
   }, [connector])

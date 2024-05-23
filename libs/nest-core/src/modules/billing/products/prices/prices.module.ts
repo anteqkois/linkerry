@@ -6,9 +6,9 @@ import { PricesController } from './prices.controller'
 import { PricesService } from './prices.service'
 
 @Module({
-	imports: [MongooseModule.forFeatureAsync([PriceModelFactory])],
-	controllers: [PricesController, PricesAdminController],
-	providers: [PricesService],
-	exports: [PricesService],
+  imports: [MongooseModule.forFeatureAsync([PriceModelFactory])],
+  controllers: [PricesController, PricesAdminController],
+  providers: [PricesService],
+  exports: [PricesService],
 })
 export class PricesModule {}

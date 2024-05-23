@@ -10,43 +10,43 @@ import { RedisLockService } from './redis-lock.service'
 
 @Global()
 @Module({
-	providers: [RedisLockService],
-	exports: [RedisLockService],
+  providers: [RedisLockService],
+  exports: [RedisLockService],
 })
 export class RedisLockCoreModule implements OnModuleDestroy {
-	constructor(
-		@Inject(REDIS_LOCK_MODULE_OPTIONS)
-		private readonly options: RedisLockModuleOptions,
-		@Inject(REDIS_LOCK_CLIENT)
-		private readonly redisLockClient: RedisLockClient,
-	) {}
+  constructor(
+    @Inject(REDIS_LOCK_MODULE_OPTIONS)
+    private readonly options: RedisLockModuleOptions,
+    @Inject(REDIS_LOCK_CLIENT)
+    private readonly redisLockClient: RedisLockClient,
+  ) {}
 
-	static register(options: RedisLockModuleOptions): DynamicModule {
-		return {
-			module: RedisLockCoreModule,
-			providers: [createClient(), { provide: REDIS_LOCK_MODULE_OPTIONS, useValue: options }],
-			exports: [RedisLockService],
-		}
-	}
+  static register(options: RedisLockModuleOptions): DynamicModule {
+    return {
+      module: RedisLockCoreModule,
+      providers: [createClient(), { provide: REDIS_LOCK_MODULE_OPTIONS, useValue: options }],
+      exports: [RedisLockService],
+    }
+  }
 
-	static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
-		return {
-			module: RedisLockCoreModule,
-			imports: options.imports,
-			providers: [createClient(), createAsyncClientOptions(options)],
-			exports: [RedisLockService],
-		}
-	}
+  static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
+    return {
+      module: RedisLockCoreModule,
+      imports: options.imports,
+      providers: [createClient(), createAsyncClientOptions(options)],
+      exports: [RedisLockService],
+    }
+  }
 
-	onModuleDestroy() {
-		const closeWebSocketConnection =
-			({ redLockClient, redisClient }: RedisLockClient) =>
-			(options: RedisLockModuleOptions) => {
-				redisClient.disconnect()
-			}
+  onModuleDestroy() {
+    const closeWebSocketConnection =
+      ({ redLockClient, redisClient }: RedisLockClient) =>
+      (options: RedisLockModuleOptions) => {
+        redisClient.disconnect()
+      }
 
-		const closeClientConnection = closeWebSocketConnection(this.redisLockClient)
+    const closeClientConnection = closeWebSocketConnection(this.redisLockClient)
 
-		closeClientConnection(this.options)
-	}
+    closeClientConnection(this.options)
+  }
 }

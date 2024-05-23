@@ -9,45 +9,45 @@ export type AppConnectionsDocument = mongoose.HydratedDocument<AppConnectionEncr
 
 @Schema({ timestamps: true, autoIndex: true, collection: 'app_connections' })
 export class AppConnectionsModel extends BaseDatabaseModel implements AppConnectionEncrypted {
-	@Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
-	projectId: Id
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ProjectModel.name })
+  projectId: Id
 
-	@Prop({ required: true, type: String })
-	connectorName: string
+  @Prop({ required: true, type: String })
+  connectorName: string
 
-	@Prop({ required: true, type: String })
-	name: string
+  @Prop({ required: true, type: String })
+  name: string
 
-	@Prop({ required: true, type: String, enum: AppConnectionStatus })
-	status: AppConnectionStatus
+  @Prop({ required: true, type: String, enum: AppConnectionStatus })
+  status: AppConnectionStatus
 
-	@Prop({ required: true, type: String, enum: AppConnectionType })
-	type: AppConnectionType
+  @Prop({ required: true, type: String, enum: AppConnectionType })
+  type: AppConnectionType
 
-	@Prop({
-		required: true,
-		type: {
-			iv: {
-				type: String,
-			},
-			data: {
-				type: String,
-			},
-		},
-		_id: false,
-	})
-	value: EncryptedObject
+  @Prop({
+    required: true,
+    type: {
+      iv: {
+        type: String,
+      },
+      data: {
+        type: String,
+      },
+    },
+    _id: false,
+  })
+  value: EncryptedObject
 }
 
 export const AppConnectionsSchema = SchemaFactory.createForClass(AppConnectionsModel)
 
 export const AppConnectionsModelFactory: AsyncModelFactory = {
-	name: AppConnectionsModel.name,
-	imports: [],
-	useFactory: () => {
-		const schema = AppConnectionsSchema
-		schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
-		return schema
-	},
-	inject: [],
+  name: AppConnectionsModel.name,
+  imports: [],
+  useFactory: () => {
+    const schema = AppConnectionsSchema
+    schema.plugin(mongooseUniqueValidator, { message: 'Error, expected {PATH} to be unique. Received {VALUE}' })
+    return schema
+  },
+  inject: [],
 }

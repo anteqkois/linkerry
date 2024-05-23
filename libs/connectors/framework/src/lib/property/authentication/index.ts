@@ -10,17 +10,15 @@ export type ConnectorAuthProperty = SecretTextProperty | BasicAuthProperty | Cus
 type AuthProperties<T> = Omit<Properties<T>, 'displayName'>
 
 export const ConnectorAuth = {
-	SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
-		return {
-			...config,
-			valueSchema: undefined,
-			type: PropertyType.SECRET_TEXT,
-			defaultValidators: [Validators.string],
-		} as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
-	},
-	OAuth2<T extends OAuth2Props>(
-    config: AuthProperties<OAuth2Property<T>>
-  ): OAuth2Property<T> {
+  SecretText<R extends boolean>(config: Properties<SecretTextProperty<R>>): R extends true ? SecretTextProperty<true> : SecretTextProperty<false> {
+    return {
+      ...config,
+      valueSchema: undefined,
+      type: PropertyType.SECRET_TEXT,
+      defaultValidators: [Validators.string],
+    } as unknown as R extends true ? SecretTextProperty<true> : SecretTextProperty<false>
+  },
+  OAuth2<T extends OAuth2Props>(config: AuthProperties<OAuth2Property<T>>): OAuth2Property<T> {
     return {
       ...config,
       valueSchema: undefined,
@@ -28,13 +26,13 @@ export const ConnectorAuth = {
       displayName: 'Connection',
     } as unknown as OAuth2Property<T>
   },
-	BasicAuth(config: AuthProperties<BasicAuthProperty>): BasicAuthProperty {
-		return { ...config, valueSchema: undefined, type: PropertyType.BASIC_AUTH, displayName: 'Connection' } as unknown as BasicAuthProperty
-	},
-	CustomAuth<T extends CustomAuthProps>(config: AuthProperties<CustomAuthProperty<T>>): CustomAuthProperty<T> {
-		return { ...config, valueSchema: undefined, type: PropertyType.CUSTOM_AUTH, displayName: 'Connection' } as unknown as CustomAuthProperty<T>
-	},
-	None() {
-		return undefined
-	},
+  BasicAuth(config: AuthProperties<BasicAuthProperty>): BasicAuthProperty {
+    return { ...config, valueSchema: undefined, type: PropertyType.BASIC_AUTH, displayName: 'Connection' } as unknown as BasicAuthProperty
+  },
+  CustomAuth<T extends CustomAuthProps>(config: AuthProperties<CustomAuthProperty<T>>): CustomAuthProperty<T> {
+    return { ...config, valueSchema: undefined, type: PropertyType.CUSTOM_AUTH, displayName: 'Connection' } as unknown as CustomAuthProperty<T>
+  },
+  None() {
+    return undefined
+  },
 }

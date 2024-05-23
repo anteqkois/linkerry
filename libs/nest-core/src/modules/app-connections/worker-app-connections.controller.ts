@@ -7,19 +7,19 @@ import { AppConnectionsService } from './app-connections.service'
 
 @Controller('worker/app-connections')
 export class WorkerAppConnectionsController {
-	constructor(private readonly appConnectionsService: AppConnectionsService) {}
+  constructor(private readonly appConnectionsService: AppConnectionsService) {}
 
-	@UseGuards(JwtBearerTokenAuthGuard)
-	@Get(':name')
-	async findOne(@ParamSchema('name', stringShortSchema) connectionName: string, @ReqJwtWorker() worker: RequestWorker) {
-		const appConnection = await this.appConnectionsService.getOne({ name: connectionName, projectId: worker.projectId })
+  @UseGuards(JwtBearerTokenAuthGuard)
+  @Get(':name')
+  async findOne(@ParamSchema('name', stringShortSchema) connectionName: string, @ReqJwtWorker() worker: RequestWorker) {
+    const appConnection = await this.appConnectionsService.getOne({ name: connectionName, projectId: worker.projectId })
 
-		if (isNil(appConnection)) {
-			throw new CustomError(`Can not find app-connection`, ErrorCode.APP_CONNECTION_NOT_FOUND, {
-				connectionName,
-			})
-		}
+    if (isNil(appConnection)) {
+      throw new CustomError(`Can not find app-connection`, ErrorCode.APP_CONNECTION_NOT_FOUND, {
+        connectionName,
+      })
+    }
 
-		return appConnection
-	}
+    return appConnection
+  }
 }

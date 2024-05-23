@@ -1,13 +1,9 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { DynamicModule, Module } from '@nestjs/common'
+import { ClientsModule, Transport } from '@nestjs/microservices'
 
 @Module({})
 export class KafkaModule {
-  static register(options: {
-    clientId: string;
-    brokerUrl: string;
-    groupId: string;
-  }): DynamicModule {
+  static register(options: { clientId: string; brokerUrl: string; groupId: string }): DynamicModule {
     return {
       module: KafkaModule,
       imports: [
@@ -30,15 +26,15 @@ export class KafkaModule {
         ]),
       ],
       exports: [ClientsModule],
-    };
+    }
   }
 
   static registerAsync(options: {
-    inject: any[];
+    inject: any[]
     useFactory: (...args: any[]) => Promise<{
-      clientId: string;
-      brokerUrl: string;
-      groupId: string;
+      clientId: string
+      brokerUrl: string
+      groupId: string
     }>
   }): DynamicModule {
     return {
@@ -49,7 +45,7 @@ export class KafkaModule {
             name: 'CONDITION-PRODUCER',
             inject: options.inject,
             useFactory: async (...args: any[]): Promise<any> => {
-              const config = await options.useFactory(...args);
+              const config = await options.useFactory(...args)
               return {
                 transport: Transport.KAFKA,
                 options: {
@@ -61,12 +57,12 @@ export class KafkaModule {
                     groupId: config.groupId,
                   },
                 },
-              };
+              }
             },
           },
         ]),
       ],
       exports: [ClientsModule],
-    };
+    }
   }
 }

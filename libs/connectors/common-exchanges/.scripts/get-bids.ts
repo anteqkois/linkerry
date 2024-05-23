@@ -1,8 +1,7 @@
 import { binance } from 'ccxt'
 
 const main = async () => {
-  const exchange = new binance({
-  })
+  const exchange = new binance({})
 
   const response = await exchange.fetchBidsAsks(['BTC/USDT', 'ETH/USDT'])
 

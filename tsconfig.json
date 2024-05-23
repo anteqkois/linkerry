@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-		"esModuleInterop": true,
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       "@linkerry/ui-components": ["libs/ui-components/src/index.ts"],

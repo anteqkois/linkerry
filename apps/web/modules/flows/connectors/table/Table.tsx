@@ -12,38 +12,38 @@ import { columns } from './defaultColumns'
 type ColumnKey = keyof ConnectorMetadataSummary | 'buttons'
 
 export interface ConnectorsTableProps extends HTMLAttributes<HTMLElement> {
-	onlyColumns?: ColumnKey[]
-	customColums?: ColumnDef<ConnectorMetadataSummary>[]
-	mobileCollumns?: ColumnKey[]
-	desktopCollumns?: ColumnKey[]
+  onlyColumns?: ColumnKey[]
+  customColums?: ColumnDef<ConnectorMetadataSummary>[]
+  mobileCollumns?: ColumnKey[]
+  desktopCollumns?: ColumnKey[]
 }
 
 const defaultMobileColumns: ColumnKey[] = ['logoUrl', 'displayName', 'tags']
 
 export const ConnectorsTable = ({ onlyColumns, mobileCollumns, desktopCollumns, customColums }: ConnectorsTableProps) => {
-	const { data, error, status } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
+  const { data, error, status } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
 
-	if (error) return <ErrorInfo errorObject={error} />
+  if (error) return <ErrorInfo errorObject={error} />
 
-	return (
-		<DataTable
-			data={data}
-			loading={status === 'pending'}
-			columns={columns.concat(customColums || [])}
-			filterAccessor="displayName"
-			chooseFilters={[
-				{
-					accessor: 'tags',
-					title: 'Tags',
-					options: connectorTag.map((tag) => ({
-						label: tag,
-						value: tag,
-					})),
-				},
-			]}
-			mobileColumns={mobileCollumns || defaultMobileColumns}
-			desktopColumns={desktopCollumns}
-			onlyColumns={onlyColumns || []}
-		/>
-	)
+  return (
+    <DataTable
+      data={data}
+      loading={status === 'pending'}
+      columns={columns.concat(customColums || [])}
+      filterAccessor="displayName"
+      chooseFilters={[
+        {
+          accessor: 'tags',
+          title: 'Tags',
+          options: connectorTag.map((tag) => ({
+            label: tag,
+            value: tag,
+          })),
+        },
+      ]}
+      mobileColumns={mobileCollumns || defaultMobileColumns}
+      desktopColumns={desktopCollumns}
+      onlyColumns={onlyColumns || []}
+    />
+  )
 }

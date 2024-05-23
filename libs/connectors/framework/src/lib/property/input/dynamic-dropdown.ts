@@ -10,26 +10,26 @@ import { BaseProperty, PropertyType, PropertyValue } from '../base'
 //   StaticDropdownProps<V> &
 //   PropertyValue<V, PropertyType.StaticDropdown, R>
 export type DynamicDropdownState<T> = {
-	disabled?: boolean
-	placeholder?: string
-	options: DropdownOption<T>[]
+  disabled?: boolean
+  placeholder?: string
+  options: DropdownOption<T>[]
 }
 
 export type DropdownOption<T> = {
-	label: string
-	value: T
+  label: string
+  value: T
 }
 
 export type DynamicDropdownOptions<T> = (propsValue: Record<string, unknown>, ctx: PropertyContext) => Promise<DynamicDropdownState<T>>
 
 export type DynamicDropdownProperty<R extends boolean = boolean, T = any> = BaseProperty & {
-	refreshers: string[]
-	refreshOnSearch?: boolean
-	options: DynamicDropdownOptions<T>
+  refreshers: string[]
+  refreshOnSearch?: boolean
+  options: DynamicDropdownOptions<T>
 } & PropertyValue<T, PropertyType.DYNAMIC_DROPDOWN, ValidationInputType.ANY, R>
 
 export const isDynamicDropdownProperty = (property: any): property is DynamicDropdownProperty => {
-	if (property && property?.type === PropertyType.DYNAMIC_DROPDOWN) return true
-	// if (property && typeof property === 'object' && 'type' in property && property.type === PropertyType.DYNAMIC_DROPDOWN) return true
-	return false
+  if (property && property?.type === PropertyType.DYNAMIC_DROPDOWN) return true
+  // if (property && typeof property === 'object' && 'type' in property && property.type === PropertyType.DYNAMIC_DROPDOWN) return true
+  return false
 }

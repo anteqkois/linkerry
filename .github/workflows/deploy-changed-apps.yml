@@ -1,7 +1,6 @@
 name: deploy-changed-apps
 
-on:
-  workflow_dispatch
+on: workflow_dispatch
 # on:
 #   push:
 #     branches:

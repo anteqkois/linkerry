@@ -1,16 +1,16 @@
 import { ConnectorMetadata, ConnectorMetadataSummary } from '@linkerry/connectors-framework'
 import {
-	ConnectorPackage,
-	ConnectorsMetadataGetManyQuery,
-	ConnectorsMetadataGetOneQuery,
-	CustomError,
-	EXACT_VERSION_PATTERN,
-	ErrorCode,
-	Id,
-	PackageType,
-	PrivateConnectorPackage,
-	PublicConnectorPackage,
-	assertNotNullOrUndefined,
+  ConnectorPackage,
+  ConnectorsMetadataGetManyQuery,
+  ConnectorsMetadataGetOneQuery,
+  CustomError,
+  EXACT_VERSION_PATTERN,
+  ErrorCode,
+  Id,
+  PackageType,
+  PrivateConnectorPackage,
+  PublicConnectorPackage,
+  assertNotNullOrUndefined,
 } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -19,128 +19,128 @@ import { ConnectorsMetadataModel } from './schemas/connector.schema'
 
 @Injectable()
 export class ConnectorsMetadataService {
-	constructor(@InjectModel(ConnectorsMetadataModel.name) private readonly connectorMetadataModel: Model<ConnectorsMetadataModel>) {}
+  constructor(@InjectModel(ConnectorsMetadataModel.name) private readonly connectorMetadataModel: Model<ConnectorsMetadataModel>) {}
 
-	// TODO implement create for private connectors
-	// TODO implement filter based on proectId
+  // TODO implement create for private connectors
+  // TODO implement filter based on proectId
 
-	connectorToSummaryMetadata(connectorMetadata: ConnectorMetadata): ConnectorMetadataSummary {
-		return {
-			...connectorMetadata,
-			actions: Object.keys(connectorMetadata?.actions ?? {}).length,
-			triggers: Object.keys(connectorMetadata?.triggers ?? {}).length,
-		}
-	}
+  connectorToSummaryMetadata(connectorMetadata: ConnectorMetadata): ConnectorMetadataSummary {
+    return {
+      ...connectorMetadata,
+      actions: Object.keys(connectorMetadata?.actions ?? {}).length,
+      triggers: Object.keys(connectorMetadata?.triggers ?? {}).length,
+    }
+  }
 
-	async findAllUnique(query: ConnectorsMetadataGetManyQuery) {
-		const filter: FilterQuery<ConnectorMetadata> = {}
+  async findAllUnique(query: ConnectorsMetadataGetManyQuery) {
+    const filter: FilterQuery<ConnectorMetadata> = {}
 
-		if (query.displayName)
-			filter.displayName = {
-				$regex: new RegExp(query.displayName, 'i'),
-			}
+    if (query.displayName)
+      filter.displayName = {
+        $regex: new RegExp(query.displayName, 'i'),
+      }
 
-		const connectors = (
-			await this.connectorMetadataModel.find(
-				filter,
-				{},
-				{
-					limit: query.limit,
-					skip: query.offset,
-					sort: {
-						name: 'asc',
-						version: 'desc',
-					},
-				},
-			)
-		).map((connector) => connector.toObject())
+    const connectors = (
+      await this.connectorMetadataModel.find(
+        filter,
+        {},
+        {
+          limit: query.limit,
+          skip: query.offset,
+          sort: {
+            name: 'asc',
+            version: 'desc',
+          },
+        },
+      )
+    ).map((connector) => connector.toObject())
 
-		const distinctConnectors = Array.from(
-			connectors
-				.reduce((acc: Map<string, ConnectorMetadata>, curr) => {
-					if (acc.has(curr.name)) return acc
-					acc.set(curr.name, curr)
-					return acc
-				}, new Map())
-				.values(),
-		)
+    const distinctConnectors = Array.from(
+      connectors
+        .reduce((acc: Map<string, ConnectorMetadata>, curr) => {
+          if (acc.has(curr.name)) return acc
+          acc.set(curr.name, curr)
+          return acc
+        }, new Map())
+        .values(),
+    )
 
-		return query.summary ? distinctConnectors.map((connector) => this.connectorToSummaryMetadata(connector)) : distinctConnectors
-	}
+    return query.summary ? distinctConnectors.map((connector) => this.connectorToSummaryMetadata(connector)) : distinctConnectors
+  }
 
-	// TODO handle projectId when custom connectors will be aded
-	async findOne(name: string, query: ConnectorsMetadataGetOneQuery) {
-		const filter: FilterQuery<ConnectorsMetadataModel> = {
-			name,
-		}
+  // TODO handle projectId when custom connectors will be aded
+  async findOne(name: string, query: ConnectorsMetadataGetOneQuery) {
+    const filter: FilterQuery<ConnectorsMetadataModel> = {
+      name,
+    }
 
-		if (query.version) filter.version = query.version
+    if (query.version) filter.version = query.version
 
-		const connector = (await this.connectorMetadataModel.findOne(filter))?.toObject()
+    const connector = (await this.connectorMetadataModel.findOne(filter))?.toObject()
 
-		if (!connector) throw new UnprocessableEntityException(`Can not find conector metadata`)
+    if (!connector) throw new UnprocessableEntityException(`Can not find conector metadata`)
 
-		return query.summary ? this.connectorToSummaryMetadata(connector) : connector
-	}
+    return query.summary ? this.connectorToSummaryMetadata(connector) : connector
+  }
 
-	async getTrigger(connectorName: string, triggerName: string) {
-		const connector = await this.connectorMetadataModel.findOne({
-			name: connectorName,
-		})
-		assertNotNullOrUndefined(connector, `connector connectorName=${connectorName}`)
+  async getTrigger(connectorName: string, triggerName: string) {
+    const connector = await this.connectorMetadataModel.findOne({
+      name: connectorName,
+    })
+    assertNotNullOrUndefined(connector, `connector connectorName=${connectorName}`)
 
-		const trigger = Object.entries(connector.triggers).find(([name]) => name === triggerName)?.[1]
-		assertNotNullOrUndefined(trigger, 'trigger', {
-			connectorName,
-			triggerName,
-		})
+    const trigger = Object.entries(connector.triggers).find(([name]) => name === triggerName)?.[1]
+    assertNotNullOrUndefined(trigger, 'trigger', {
+      connectorName,
+      triggerName,
+    })
 
-		return trigger
-	}
+    return trigger
+  }
 
-	async getExactConnectorVersion({ name, version, projectId }: GetExactConnectorVersionParams): Promise<string> {
-		const isExactVersion = EXACT_VERSION_PATTERN.test(version)
+  async getExactConnectorVersion({ name, version, projectId }: GetExactConnectorVersionParams): Promise<string> {
+    const isExactVersion = EXACT_VERSION_PATTERN.test(version)
 
-		if (isExactVersion) {
-			return version
-		}
+    if (isExactVersion) {
+      return version
+    }
 
-		// TODO implement filter based on projectId like in ac /Users/anteqkois/Code/Projects/me/activepieces/packages/server/api/src/app/pieces/piece-metadata-service/db-piece-metadata-service.ts constructPieceFilters
+    // TODO implement filter based on projectId like in ac /Users/anteqkois/Code/Projects/me/activepieces/packages/server/api/src/app/pieces/piece-metadata-service/db-piece-metadata-service.ts constructPieceFilters
 
-		const pieceMetadata = await this.findOne(name, {
-			version
-		})
+    const pieceMetadata = await this.findOne(name, {
+      version,
+    })
 
-		return pieceMetadata.version
-	}
+    return pieceMetadata.version
+  }
 
-	async getConnectorPackage(projectId: string, pkg: PublicConnectorPackage | Omit<PrivateConnectorPackage, 'archiveId'>): Promise<ConnectorPackage> {
-		switch (pkg.packageType) {
-			case PackageType.ARCHIVE: {
-				// TODO implement private connectors
-				// const pieceMetadata = await pieceMetadataService.getOrThrow({
-				//     name: pkg.pieceName,
-				//     version: pkg.pieceVersion,
-				//     projectId,
-				// })
-				// return {
-				//     packageType: PackageType.ARCHIVE,
-				//     pieceName: pkg.pieceName,
-				//     pieceVersion: pkg.pieceVersion,
-				//     pieceType: pkg.pieceType,
-				//     archiveId: pieceMetadata.archiveId!,
-				// }
-				throw new CustomError('PackageType.ARCHIVE not implemented', ErrorCode.CONNECTOR_NOT_FOUND)
-			}
-			case PackageType.REGISTRY: {
-				return pkg
-			}
-		}
-	}
+  async getConnectorPackage(projectId: string, pkg: PublicConnectorPackage | Omit<PrivateConnectorPackage, 'archiveId'>): Promise<ConnectorPackage> {
+    switch (pkg.packageType) {
+      case PackageType.ARCHIVE: {
+        // TODO implement private connectors
+        // const pieceMetadata = await pieceMetadataService.getOrThrow({
+        //     name: pkg.pieceName,
+        //     version: pkg.pieceVersion,
+        //     projectId,
+        // })
+        // return {
+        //     packageType: PackageType.ARCHIVE,
+        //     pieceName: pkg.pieceName,
+        //     pieceVersion: pkg.pieceVersion,
+        //     pieceType: pkg.pieceType,
+        //     archiveId: pieceMetadata.archiveId!,
+        // }
+        throw new CustomError('PackageType.ARCHIVE not implemented', ErrorCode.CONNECTOR_NOT_FOUND)
+      }
+      case PackageType.REGISTRY: {
+        return pkg
+      }
+    }
+  }
 }
 
 type GetExactConnectorVersionParams = {
-	name: string
-	version: string
-	projectId: Id
+  name: string
+  version: string
+  projectId: Id
 }
