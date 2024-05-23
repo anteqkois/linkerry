@@ -57,7 +57,7 @@ export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) =
     setShowRightDrawer,
     rightDrawer,
     leftDrawer,
-    loaded,
+    flowLoaded,
     showLeftDrawer,
     setShowLeftDrawer,
     setLimits,
@@ -75,7 +75,7 @@ export const Editor = ({ mode, limits, useLocalStorage = false }: EditorProps) =
 
   return (
     <ReactFlowProvider>
-      {loaded ? <EditorFlowMenu /> : null}
+      {flowLoaded ? <EditorFlowMenu /> : null}
       <div style={{ width: '100vw', height: '100vh' }} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}

@@ -52,7 +52,7 @@ const emptyFlow: FlowPopulated = {
 
 export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> = (set, get) => ({
   // FLOW
-  loaded: false,
+  flowLoaded: false,
   flowOperationRunning: null,
   flow: emptyFlow,
   loadFlow: async (id: Id) => {
@@ -68,7 +68,7 @@ export const createFlowAndConnectorsSlice: CreateSlice<FlowAndConnectorsSlice> =
 
     assertNotNullOrUndefined(flow, 'flow')
 
-    set({ flow, loaded: true })
+    set({ flow, flowLoaded: true })
     return flow
   },
   setFlow: (flow: FlowPopulated) => {

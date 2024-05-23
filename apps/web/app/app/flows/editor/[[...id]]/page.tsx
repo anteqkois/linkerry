@@ -114,7 +114,7 @@ const renderFlow = (flowVersion: FlowVersion, connectorsMetadata: ConnectorMetad
 
 export default function Page({ params }: { params: { id: string } }) {
   const { data: connectorsMetadata, status } = useClientQuery(connectorsMetadataQueryConfig.getSummaryMany())
-  const { loadFlow, setFlow, setEdges, setNodes } = useEditor()
+  const { loadFlow, setFlow, setEdges, setNodes, clearEditorState } = useEditor()
   const { toast } = useToast()
   const { showDialogBasedOnErrorCode } = useReachLimitDialog()
   const { currentPlan, subscriptionsStatus, subscriptionsError } = useSubscriptions()
@@ -122,6 +122,9 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const initEditor = useCallback(async () => {
     if (!connectorsMetadata?.length) throw new Error('Can not retrive connectors metadata')
+    clearEditorState()
+    // Clear editor state, becouse wehn user click to create new flow when they edit other flow, there are still old data
+
     const id = params?.id?.[0]
 
     // Fetch and render if exists

@@ -84,4 +84,21 @@ export const createEditorSlice: CreateSlice<EditorSlice> = (set, get) => ({
     if (newDrawer?.name === get().leftDrawer.name) return
     set(() => ({ leftDrawer: newDrawer }))
   },
+  clearEditorState: () => {
+    const { flowLoaded } = get()
+
+    // this mean that flow is first time loaded, so there is no need to clear
+    if (!flowLoaded) return
+
+    set({
+      showLeftDrawer: false,
+      leftDrawer: editorDrawers[0],
+      showRightDrawer: false,
+      rightDrawer: editorDrawers[0],
+      editedTrigger: null,
+      editStepMetadata: null,
+      editedAction: null,
+      editedConnectorMetadata: null,
+    })
+  },
 })

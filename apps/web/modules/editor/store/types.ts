@@ -59,6 +59,7 @@ export interface EditorSlice {
   setLeftDrawer: (name: EditorDrawer['name']) => void
   showLeftDrawer: boolean
   setShowLeftDrawer: Dispatch<SetStateAction<boolean>>
+  clearEditorState: () => void
 }
 
 export enum FlowOperationRunnType {
@@ -68,7 +69,7 @@ export enum FlowOperationRunnType {
 
 export interface FlowAndConnectorsSlice {
   // FLOW
-  loaded: boolean
+  flowLoaded: boolean
   flowOperationRunning: null | FlowOperationRunnType
   flow: FlowPopulated
   loadFlow: (id: Id) => Promise<FlowPopulated | null>
