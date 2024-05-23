@@ -18,7 +18,12 @@ COPY --from=builder /app/builder/dist/libs/connectors/framework ./dist/libs/conn
 COPY --from=builder /app/builder/dist/libs/engine ./dist/libs/engine
 COPY --from=builder /app/builder/dist/libs/react-email ./dist/libs/react-email
 COPY --from=builder /app/builder/dist/libs/shared ./dist/libs/shared
+COPY --from=builder /app/builder/apps/api-gateway/entry.sh ./dist/apps/api-gateway/entry.sh
 
 ENV NODE_ENV=$NODE_ENV
 
-CMD ["node", "./dist/apps/api-gateway/main.js"]
+RUN chmod +x ./dist/apps/api-gateway/entry.sh
+
+ENTRYPOINT ["./dist/apps/api-gateway/entry.sh"]
+# CMD ["node", "./dist/apps/api-gateway/main.js"]
+# CMD ["node", "./build/index.js"]
