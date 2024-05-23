@@ -17,7 +17,8 @@ export class Processors {
       }
       return JSON.parse(value)
     } catch (error) {
-      console.error(error)
+      // if not required, probably it is a empty string
+      if (property.required) console.error(error)
       return undefined
     }
   }

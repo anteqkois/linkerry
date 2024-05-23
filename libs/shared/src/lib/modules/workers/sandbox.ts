@@ -42,11 +42,11 @@ const extractFlowCacheKey = ({ flowVersionId }: FlowProvisionCacheInfo): string 
 
 const extractNoneCacheKey = (_params: NoneProvisionCacheInfo): string => {
   // return `NONE-apId-${apId()}`
-  return `NONE-mcId`
+  return `NONE-linkerryId`
 }
 
 const extractConnectorCacheKey = ({ connectorName, connectorVersion }: ConnectorProvisionCacheInfo): string => {
-  return `CONNECOR-connectorName-${connectorName}-connectorVersion-${connectorVersion}`
+  return `CONNECTOR-connectorName-${connectorName}-connectorVersion-${connectorVersion}`
 }
 
 type BaseProvisionCacheInfo<T extends SandBoxCacheType> = {

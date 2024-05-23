@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 // import { store } from '../../features/common/store';
 // import fingerprint from '../../utils/fingerprint'
 
-export const API_URL = 'https://api.linkerry.com'
+export const API_URL = process.env.NEXT_PUBLIC_API_HOST ?? 'https://api.linkerry.com'
 
 const apiServerClient = axios.create({
   withCredentials: true,

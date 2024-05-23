@@ -2,7 +2,7 @@ import { EngineResponseStatus } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { spawn } from 'node:child_process'
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
-import path from 'node:path'
+import path, { resolve } from 'node:path'
 import { AbstractSandbox, ExecuteSandboxResult, SandboxCtorParams } from './abstract-sandbox'
 
 export class FileSandbox extends AbstractSandbox {
@@ -62,7 +62,8 @@ export class FileSandbox extends AbstractSandbox {
   }
 
   public override getSandboxFolderPath(): string {
-    return path.join(__dirname, `../../sandbox/${this.boxId}`)
+    const systemCache = process.env['CACHE_PATH'] ?? resolve('dist', 'cache')
+    return path.join(systemCache, 'sandbox', `${this.boxId}`)
   }
 
   protected override async setupCache(): Promise<void> {

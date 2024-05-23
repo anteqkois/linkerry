@@ -48,5 +48,6 @@ Thumbs.db
 
 docs/examples/**
 
+.cache
 .nx/cache
 .verdacio/prod/htpasswd

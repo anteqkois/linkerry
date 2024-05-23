@@ -28,6 +28,7 @@ TODO.md
 apps/api-gateway-e2e
 apps/web-e2e
 
+.cache
 .git
 *.log
 *.md
