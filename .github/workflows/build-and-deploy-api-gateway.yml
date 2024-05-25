@@ -32,8 +32,6 @@ jobs:
           key: npm-dependencies-${{ hashFiles('package.json') }}
       - name: Build base image
         run: npm run docker-base-linux
-      - name: Tag base image
-        run: docker tag linkerry/base registry.digitalocean.com/linkerry/base:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
