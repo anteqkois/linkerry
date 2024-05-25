@@ -38,7 +38,8 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to DO Container Registry
-        run: doctl registry login --expiry-seconds 1000
+        # 30min
+        run: doctl registry login --expiry-seconds 1800
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/base:latest
       - name: Build image for web
