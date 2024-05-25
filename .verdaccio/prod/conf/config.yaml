@@ -1,0 +1,53 @@
+# path to a directory with all packages
+storage: /verdaccio/storage
+
+security:
+  api:
+    jwt:
+      sign:
+        expiresIn: 365d
+        notBefore: 1
+  web:
+    sign:
+      expiresIn: 1h
+
+web:
+  title: Linkerry Package Registry
+  login: true
+  # enable: false
+  metaScripts:
+    - '<meta name="robots" content="noindex" />'
+
+auth:
+  # login: true
+  htpasswd:
+    file: /verdaccio/conf/htpasswd
+    max_users: -1
+    algorithm: bcrypt
+
+# a list of other known repositories we can talk to
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+    maxage: 60m
+
+packages:
+  '@linkerry/*':
+    access: $authenticated
+    publish: $authenticated
+  '@*/*':
+    access: $authenticated
+    publish: $authenticated
+    proxy: npmjs
+  '**':
+    access: $authenticated
+    publish: $authenticated
+    proxy: npmjs
+
+log:
+  type: stdout
+  format: pretty
+  level: warn
+
+publish:
+  allow_offline: true # set offline to true to allow publish offline

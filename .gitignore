@@ -50,4 +50,5 @@ docs/examples/**
 
 .cache
 .nx/cache
-.verdacio/prod/htpasswd
+.verdaccio/prod/htpasswd
+.verdaccio/prod/storage

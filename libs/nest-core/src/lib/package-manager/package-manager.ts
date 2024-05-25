@@ -1,7 +1,18 @@
 import { isEmpty } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { exec as execCallback } from 'node:child_process'
+import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { promisify } from 'node:util'
+
+const npmrcContent = `
+strict-peer-dependencies=false
+auto-install-peers=true
+ignore-scripts=true
+registry=\${REGISTRY_USERNAME}:\${REGISTRY_PASSWORD}@\${REGISTRY_URL}
+registry=\${REGISTRY_URL}
+//\${REGISTRY_URL}/:_authToken=\${REGISTRY_TOKEN}
+`
 
 export const exec = promisify(execCallback)
 const logger = new Logger('PackageManager')
@@ -54,6 +65,8 @@ export const packageManager = {
   },
 
   async init({ path }: InitParams): Promise<PackageManagerOutput> {
+    await writeFile(join(path, '.npmrc'), npmrcContent.trim())
+
     return runCommand(path, 'init')
   },
 

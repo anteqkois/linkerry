@@ -8,8 +8,11 @@
  */
 
 import pkg from '@nx/devkit'
-import { execSync } from 'child_process'
 import { readFileSync, writeFileSync } from 'fs'
+import { exec as execCallback } from 'node:child_process'
+import { promisify } from 'node:util'
+
+export const exec = promisify(execCallback)
 const { readCachedProjectGraph } = pkg
 
 function invariant(condition, message) {
@@ -48,5 +51,12 @@ try {
 } catch (e) {
   console.error(chalk.bold.red(`Error reading package.json file from library build output.`))
 }
-// Execute "npm publish" to publish
-execSync(`npm publish --access public --tag ${tag}`)
+
+const main = async () => {
+  // Execute "npm publish" to publish
+  const {stderr, stdout} = await exec(`npm publish --registry ${process.env.REGISTRY_URL} --access public --tag ${tag}`)
+  // execSync(`npm publish --registry ${process.env.REGISTRY_URL} --access public --tag ${tag}`)
+  process.exit(0)
+}
+
+main()

@@ -1,5 +1,5 @@
 .scripts
-.verdacio
+.verdaccio
 .vscode
 dist
 docs
@@ -12,8 +12,8 @@ tmp
 tools
 .editorconfig
 .dockerignore
-.env
-.env.*
+**.env
+**.env.*
 !**/.env.prod-build
 .eslintignore
 .gitignore
