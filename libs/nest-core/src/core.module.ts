@@ -5,7 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 // import * as basicAuth from '@fastify/basic-auth';
 // import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis'
 import { BullModule } from '@nestjs/bullmq'
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { MongodbModule } from './lib/mongodb'
@@ -88,7 +88,32 @@ import { QUEUES } from './modules/workers/flow-worker/queues/types'
   ],
   exports: [],
 })
-export class CoreModule implements NestModule {
+export class CoreModule implements NestModule, OnApplicationBootstrap {
+  async onApplicationBootstrap() {
+
+    // Clear env
+    setTimeout(() => {
+      delete process.env['LINKERRY_API_KEY']
+      delete process.env['APPS_SECRET']
+      delete process.env['MONGO_PROTOCOL']
+      delete process.env['MONGO_USERNAME']
+      delete process.env['MONGO_PASSWORD']
+      delete process.env['MONGO_HOST']
+      delete process.env['MONGO_DATABASE']
+      delete process.env['APP_WEBHOOK_SECRETS']
+      delete process.env['TAWK_API_KEY']
+      delete process.env['STRIPE_WEBHOOK_SECRET']
+      delete process.env['STRIPE_API_KEY']
+      delete process.env['REDIS_PASSWORD']
+      delete process.env['JWT_SECRET']
+      delete process.env['COOKIES_SIGNATURE']
+      delete process.env['ENCRYPTION_KEY']
+      delete process.env['ENCRYPTION_ALG']
+      delete process.env['IV_LENGTH']
+
+      console.log('CLEARED')
+    }, 15_000)
+  }
   // Add a middleware on all routes
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(RequestLoggerMiddleware).forRoutes('*')

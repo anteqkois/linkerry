@@ -14,6 +14,7 @@ services:
       - redis
     volumes:
       - ./.env:/app/.env
+      - ./.cache:/app/.cache
   redis:
     image: redis:alpine
     container_name: redis
