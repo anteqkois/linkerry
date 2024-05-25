@@ -1,10 +1,7 @@
-name: build-and-deploy
+name: build-and-deploy-api-gateway
 
 on: workflow_dispatch
-# on:
-#   push:
-#     branches:
-#       - master
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -33,20 +30,24 @@ jobs:
             node_modules
             ~/.cache/Cypress # needed for the Cypress binary
           key: npm-dependencies-${{ hashFiles('package.json') }}
-      # - name: Build base image
-      #   run: npm run docker-base-linux
+      - name: Build base image
+        run: npm run docker-base-linux
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to DO Container Registry
         run: doctl registry login --expiry-seconds 600
-      # - name: Push image to DO Container Registry
-      #   run: docker push registry.digitalocean.com/linkerry/base:latest
+      - name: Push image to DO Container Registry
+        run: docker push registry.digitalocean.com/linkerry/base:latest
+      - name: Build image for api-gateway
+        run: docker build -t registry.digitalocean.com/linkerry/api-gateway:latest --build-arg NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST -f ./apps/api-gateway/Dockerfile . --platform=linux/amd64
+      - name: Push image to DO Container Registry
+        run: docker push registry.digitalocean.com/linkerry/api-gateway:latest
       - name: Build image for web
-        run: docker build -t linkerry/web -f ./apps/web/Dockerfile . --platform=linux/amd64
-      - name: Tag web image
-        run: docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
+        env:
+          NEXT_TELEMETRY_DISABLED: true
+          NEXT_PUBLIC_API_HOST: https://api.linkerry.com
+        run: docker build -t registry.digitalocean.com/linkerry/web:latest --build-arg NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST -f ./apps/web/Dockerfile . --platform=linux/amd64
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/web:latest
-      # - run: npx nx@18.3.4 affected -t docker-compose --base=origin/master~1 --head=origin/master
