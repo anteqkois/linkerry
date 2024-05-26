@@ -91,28 +91,29 @@ import { QUEUES } from './modules/workers/flow-worker/queues/types'
 export class CoreModule implements NestModule, OnApplicationBootstrap {
   async onApplicationBootstrap() {
 
-    // Clear env
-    setTimeout(() => {
-      delete process.env['LINKERRY_API_KEY']
-      delete process.env['APPS_SECRET']
-      delete process.env['MONGO_PROTOCOL']
-      delete process.env['MONGO_USERNAME']
-      delete process.env['MONGO_PASSWORD']
-      delete process.env['MONGO_HOST']
-      delete process.env['MONGO_DATABASE']
-      delete process.env['APP_WEBHOOK_SECRETS']
-      delete process.env['TAWK_API_KEY']
-      delete process.env['STRIPE_WEBHOOK_SECRET']
-      delete process.env['STRIPE_API_KEY']
-      delete process.env['REDIS_PASSWORD']
-      delete process.env['JWT_SECRET']
-      delete process.env['COOKIES_SIGNATURE']
-      delete process.env['ENCRYPTION_KEY']
-      delete process.env['ENCRYPTION_ALG']
-      delete process.env['IV_LENGTH']
+    // TODO update it to delete only few keys
+    // // Clear env
+    // setTimeout(() => {
+    //   delete process.env['LINKERRY_API_KEY']
+    //   delete process.env['APPS_SECRET']
+    //   delete process.env['MONGO_PROTOCOL']
+    //   delete process.env['MONGO_USERNAME']
+    //   delete process.env['MONGO_PASSWORD']
+    //   delete process.env['MONGO_HOST']
+    //   delete process.env['MONGO_DATABASE']
+    //   delete process.env['APP_WEBHOOK_SECRETS']
+    //   delete process.env['TAWK_API_KEY']
+    //   delete process.env['STRIPE_WEBHOOK_SECRET']
+    //   delete process.env['STRIPE_API_KEY']
+    //   delete process.env['REDIS_PASSWORD']
+    //   delete process.env['JWT_SECRET']
+    //   delete process.env['COOKIES_SIGNATURE']
+    //   delete process.env['ENCRYPTION_KEY']
+    //   delete process.env['ENCRYPTION_ALG']
+    //   delete process.env['IV_LENGTH']
 
-      console.log('CLEARED')
-    }, 15_000)
+    //   console.log('CLEARED')
+    // }, 15_000)
   }
   // Add a middleware on all routes
   configure(consumer: MiddlewareConsumer) {

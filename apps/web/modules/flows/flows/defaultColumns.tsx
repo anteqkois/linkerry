@@ -7,8 +7,10 @@ import {
   FlowStatus,
   TriggerType,
   assertNotNullOrUndefined,
+  builImageUrlFromConnectorPacakgeName,
   flowHelper,
   isCustomHttpExceptionAxios,
+  isStepBaseSettings,
   isTrigger,
 } from '@linkerry/shared'
 import {
@@ -37,6 +39,7 @@ import {
 import { Button, Icons } from '@linkerry/ui-components/server'
 import { ColumnDef } from '@tanstack/react-table'
 import dayjs from 'dayjs'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useState } from 'react'
 import { getBrowserQueryCllient } from '../../../libs/react-query'
@@ -73,11 +76,44 @@ export const columns: ColumnDef<FlowPopulated>[] = [
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="font-medium max-w-[150px] truncate">
-                {/* {`${row.original.version.stepsCount} ${flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}`} */}
-
-                <span className="text-primary font-bold">{row.original.version.stepsCount}:</span>
                 <span className="pl-1 max-w-[10px] overflow-hidden">
-                  {isEmptyFlow ? 'Empty Trigger' : flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}
+                  {isEmptyFlow ? (
+                    'Empty Trigger'
+                  ) : (
+                    <>
+                      {flowVersionChainMap[0].slice(0, 4).map((step, index) => {
+                        if (!isStepBaseSettings(step.settings))
+                          return (
+                            <span
+                              key={step.name}
+                              className="h-[26px] w-[26px] inline-block bg-muted text-muted-foreground rounded-full text-center text-base border border-muted-foreground"
+                              style={{ transform: `translate(-${index * 6}px, 0px)` }}
+                            >
+                              ?
+                            </span>
+                          )
+                        return (
+                          <Image
+                            key={step.name}
+                            width={26}
+                            height={26}
+                            className="inline-block bg-muted text-muted-foreground rounded-full"
+                            style={{ transform: `translate(-${index * 6}px, 0px)` }}
+                            src={builImageUrlFromConnectorPacakgeName(step.settings.connectorName)}
+                            alt={step.displayName}
+                          />
+                        )
+                      })}
+                      {flowVersionChainMap[0].length > 4 ? (
+                        <span
+                          className="h-7 w-7 inline-block bg-muted text-muted-foreground rounded-full text-center text-base border border-muted-foreground"
+                          style={{ transform: `translate(-${24}px, 0px)` }}
+                        >
+                          +{flowVersionChainMap[0].length - 4}
+                        </span>
+                      ) : null}
+                    </>
+                  )}
                 </span>
               </div>
             </TooltipTrigger>
@@ -96,6 +132,42 @@ export const columns: ColumnDef<FlowPopulated>[] = [
       )
     },
   },
+  // {
+  //   id: 'steps',
+  //   accessorFn: (row) => row.version.stepsCount,
+  //   header: ({ column }) => <TableColumnHeader column={column} title="Steps" sortable />,
+  //   cell: ({ row }) => {
+  //     const flowVersionChainMap = flowHelper.transformFlowVersionToChainMap(row.original.version)
+  //     const isEmptyFlow = flowVersionChainMap[0][0].type === TriggerType.EMPTY
+
+  //     return (
+  //       <TooltipProvider delayDuration={100}>
+  //         <Tooltip>
+  //           <TooltipTrigger asChild>
+  //             <div className="font-medium max-w-[150px] truncate">
+  //               {/* {`${row.original.version.stepsCount} ${flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}`} */}
+
+  //               <span className="text-primary font-bold">{row.original.version.stepsCount}:</span>
+  //               <span className="pl-1 max-w-[10px] overflow-hidden">
+  //                 {isEmptyFlow ? 'Empty Trigger' : flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}
+  //               </span>
+  //             </div>
+  //           </TooltipTrigger>
+  //           {isEmptyFlow ? null : (
+  //             <TooltipContent>
+  //               {flowVersionChainMap[0].map((step) => (
+  //                 <div key={step.name} className="flex flex-col ">
+  //                   {!isTrigger(step) && <Icons.ArrowDown className="w-full" />}
+  //                   <p>{`${isTrigger(step) ? 'Trigger' : 'Action'}: ${step.settings.connectorName} - ${step.displayName}`}</p>
+  //                 </div>
+  //               ))}
+  //             </TooltipContent>
+  //           )}
+  //         </Tooltip>
+  //       </TooltipProvider>
+  //     )
+  //   },
+  // },
   // {
   // 	id: 'steps',
   // 	accessorFn: (row) => row.version.stepsCount,

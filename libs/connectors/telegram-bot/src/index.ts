@@ -12,7 +12,7 @@ export const telegramBot = createConnector({
   displayName: 'Telegram Bot',
   description: 'Build chatbots for Telegram',
   minimumSupportedRelease: '0.0.0',
-  logoUrl: '/images/connectors/telegram.png',
+  logoUrl: '/images/connectors/telegram-bot.png',
   tags: ['communication', 'bots', 'cryptocurrency'],
   auth: telegramBotAuth,
   actions: [

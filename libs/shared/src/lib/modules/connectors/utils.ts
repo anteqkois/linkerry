@@ -33,6 +33,11 @@ export const getConnectorAppNameFromConnectorPacakgeName = (pacakgeName: string)
   return pacakgeName.slice(10)
 }
 
+export const builImageUrlFromConnectorPacakgeName = (pacakgeName: string): string => {
+  const name = pacakgeName.slice(10)
+  return `/images/connectors/${name}.png`
+}
+
 export const extractConnectorFromModule = <T>(params: ExtractConnectorFromModuleParams): T => {
   const { module, connectorName, connectorVersion } = params
   const exports = Object.values(module)
