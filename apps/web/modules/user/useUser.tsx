@@ -1,5 +1,5 @@
 'use client'
-import { AuthStatus, Cookies, IAuthLogoutResponse, LoginInput, SignUpInput, SignUpResponse, User } from '@linkerry/shared'
+import { AuthStatus, Cookies, IAuthLogoutResponse, LoginInput, SignUpInput, SignUpResponse, User, assertNotNullOrUndefined } from '@linkerry/shared'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useCallback, useContext, useState } from 'react'
 import { useCookie } from '../../shared/hooks/useCookie'
@@ -14,7 +14,7 @@ type ReturnType = {
   setUser: Dispatch<SetStateAction<User>>
   signUp: (data: SignUpInput) => Promise<SignUpResponse>
   login: (data: LoginInput) => Promise<void>
-  logout: () => Promise<IAuthLogoutResponse>
+  logout: (data?: { withRedirect?: boolean; redirect?: string }) => Promise<IAuthLogoutResponse>
   /* emial verification */
   emialVerificationDialog: boolean
   setEmailVerificationDialog: Dispatch<SetStateAction<boolean>>
@@ -57,13 +57,21 @@ export function UserProvider({ children }: PropsWithChildren) {
     return push('/app/dashboard')
   }, [])
 
-  const logout = useCallback(async () => {
+  const logout = useCallback(async (data?: { withRedirect?: boolean; redirect?: string }) => {
+    if (typeof data?.withRedirect !== 'boolean') data = { ...data, withRedirect: true }
+    if (typeof data?.redirect !== 'string') data = { ...data, redirect: '/' }
+
+    assertNotNullOrUndefined(data.redirect, 'data.redirect')
+    assertNotNullOrUndefined(data.withRedirect, 'data.withRedirect')
+
+    // const { withRedirect, redirect } = data
     const response = await AuthApi.logout()
 
     setUser({} as User)
     setAuthStatus(AuthStatus.UNAUTHENTICATED)
     // if(response.data.error) // TODO handle error
-    push('/')
+
+    if (data.withRedirect) push(data.redirect)
 
     return response.data
   }, [])

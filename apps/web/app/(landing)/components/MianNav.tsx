@@ -16,7 +16,6 @@ import {
 import { Button, Icons } from '@linkerry/ui-components/server'
 // import { useClickOutside } from '@react-hookz/web'
 import { useRef, useState } from 'react'
-import { useUser } from '../../../modules/user/useUser'
 import { MainNavItem } from '../../../types'
 import { LandingNavButtons } from './LandingNavButtons'
 import { MenuItem } from './MenuItem'
@@ -29,7 +28,6 @@ interface MainNavProps {
 
 export function MainNav({ items, children }: MainNavProps) {
   // const segment = useSelectedLayoutSegment()
-  const { authStatus, logout } = useUser()
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const ref = useRef(null)
 

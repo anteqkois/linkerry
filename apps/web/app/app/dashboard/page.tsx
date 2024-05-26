@@ -16,12 +16,12 @@ export default function Page() {
           <H5 className="mb-2 pl-1">Dashboard</H5>
           <div className="flex gap-2 flex-grow sm:flex-grow-0">
             <Link href="/app/connectors">
-              <Button className="flex-grow" variant={'secondary'}>
+              <Button className="flex-grow" variant={'outline'}>
                 Connectors
               </Button>
             </Link>
             <Link href="/app/flows">
-              <Button className="flex-grow" variant={'secondary'}>
+              <Button className="flex-grow" variant={'outline'}>
                 Flows
               </Button>
             </Link>

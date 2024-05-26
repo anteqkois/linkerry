@@ -7,7 +7,7 @@ export function LogoutDropDownMenuItem() {
   const { logout } = useUser()
 
   return (
-    <DropdownMenuItem onClick={logout}>
+    <DropdownMenuItem onClick={() => logout()}>
       Log out
       <DropdownMenuShortcut>
         <Icons.Exit />
