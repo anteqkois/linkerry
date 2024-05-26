@@ -35,7 +35,7 @@ export class AuthController {
       path: '/',
       domain,
       httpOnly: true,
-      secure: false,
+      secure: true,
       // sameSite: 'lax',
       sameSite: 'none',
       expires: new Date(Date.now() + 1000 * expireDateUnix),
@@ -65,7 +65,7 @@ export class AuthController {
       path: '/',
       domain,
       httpOnly: true,
-      secure: false,
+      secure: true,
       // sameSite: 'lax',
       sameSite: 'none',
       expires: new Date(Date.now() + 1000 * expireDateUnix),
@@ -114,8 +114,8 @@ export class AuthController {
 
   //   res.setCookie('access_token', access_token, {
   //     httpOnly: true,
-  //     secure: false,
-      // sameSite: 'lax',
+  //     secure: true,
+  // sameSite: 'lax',
   //     none: 'lax',
   //     expires: new Date(Date.now() + expireDateUnix),
   //   })
