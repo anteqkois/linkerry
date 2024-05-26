@@ -7,16 +7,16 @@ services:
     env_file:
       - .env
     environment:
-      - VIRTUAL_HOST=${VIRTUAL_HOST}
-      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
-      - LETSENCRYPT_EMAIL=anteqkois@gmail.com
-      - VIRTUAL_PORT=${VIRTUAL_PORT}
-      - VERDACCIO_PORT=4873
+      # - VIRTUAL_HOST=${VIRTUAL_HOST}
+      # - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      # - LETSENCRYPT_EMAIL=anteqkois@gmail.com
+      # - VIRTUAL_PORT=${VIRTUAL_PORT}
+      - VERDACCIO_PORT=${VIRTUAL_PORT}
     volumes:
       - './storage:/verdaccio/storage'
       - './conf:/verdaccio/conf'
 
-networks:
-  default:
-    external:
-      name: ${NETWORK:-proxy}
+# networks:
+#   default:
+#     external:
+#       name: ${NETWORK:-proxy}

@@ -14,8 +14,6 @@ export class CryptoService {
     if (isEmpty(this.ENCRYPTION_KEY)) throw new CustomError(`ENCRYPTION_KEY is empty`, ErrorCode.SYSTEM_ENV_INVALID)
 
     this.ENCRYPTION_ALG = this.configService.getOrThrow<string>('ENCRYPTION_ALG')
-    console.log('this.ENCRYPTION_ALG');
-    console.log(this.ENCRYPTION_ALG);
     if (isEmpty(this.ENCRYPTION_ALG)) throw new CustomError(`ENCRYPTION_ALG is empty`, ErrorCode.SYSTEM_ENV_INVALID)
 
     this.IV_LENGTH = +this.configService.getOrThrow<string>('IV_LENGTH')

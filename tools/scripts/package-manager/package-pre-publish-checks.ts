@@ -4,7 +4,7 @@ import { ExecException } from 'node:child_process'
 import { exec } from '../utils/exec'
 import { readPackageJson } from '../utils/files'
 
-interface PrivateRegistryPackageItem {
+export interface PrivateRegistryPackageItem {
   name: string
   version: string
   type: 'module'
@@ -42,17 +42,27 @@ const getLatestPublishedVersionPrivateRegistry = async (packageName: string, max
   const retryDelay = (attempt: number) => Math.pow(4, attempt - 1) * 2000
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    const URL =
+      process.env.NODE_ENV === 'production'
+        ? // ? `https://package-registry.linkerry.com/${packageName}/latest`
+          `http://64.226.97.74:4873/${packageName}/latest`
+        : `http://localhost:4873/${packageName}/latest`
+
     try {
-      const response = await axios<PrivateRegistryPackageItem>(`http://localhost:4873/${packageName}/latest`, {
-        headers: {
-          Authorization: `Bearer ${process.env['REGISTRY_TOKEN']}`,
-        },
+      const response = await axios<PrivateRegistryPackageItem>(URL, {
+        headers:
+          process.env.NODE_ENV === 'production'
+            ? {
+                Authorization: `Bearer ${process.env['REGISTRY_TOKEN']}`,
+              }
+            : {},
       })
-      console.log('HERE')
       const version = response.data.version
       console.info(`[getLatestPublishedVersion] packageName=${packageName}, latestVersion=${version}`)
       return version
-    } catch (e: unknown) {
+    } catch (e: any) {
+      console.dir(e.response.data, { depth: null })
+
       if (attempt === maxRetries) {
         throw e // If it's the last attempt, rethrow the error
       }

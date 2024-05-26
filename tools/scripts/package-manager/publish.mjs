@@ -52,8 +52,8 @@ try {
   console.error(chalk.bold.red(`Error reading package.json file from library build output.`))
 }
 
+const REGISTRY = process.env.NODE_ENV === 'production' ? process.env.REGISTRY_URL : 'http://localhost:4873/'
 const main = async () => {
-  // Execute "npm publish" to publish
   const {stderr, stdout} = await exec(`npm publish --registry ${process.env.REGISTRY_URL} --access public --tag ${tag}`)
   // execSync(`npm publish --registry ${process.env.REGISTRY_URL} --access public --tag ${tag}`)
   process.exit(0)
