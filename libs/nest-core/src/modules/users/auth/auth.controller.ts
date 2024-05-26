@@ -29,15 +29,19 @@ export class AuthController {
   async signup(@BodySchema(signUpInputSchema) body: SignUpInput, @Response({ passthrough: true }) res: FastifyReply): Promise<SignUpResponse> {
     const { access_token, user: userRes } = await this.authService.signUp(body)
     const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
+    const domain = this.configService.getOrThrow('DOMAIN')
 
     res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
       path: '/',
+      domain,
       httpOnly: true,
       secure: false,
-      sameSite: 'lax',
+      // sameSite: 'lax',
+      sameSite: 'none',
       expires: new Date(Date.now() + 1000 * expireDateUnix),
     })
     res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
+      domain,
       path: '/',
     })
 
@@ -55,15 +59,19 @@ export class AuthController {
 
     const { access_token, user: userRes } = await this.authService.login(user)
     const expireDateUnix = +this.configService.get('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
+    const domain = this.configService.getOrThrow('DOMAIN')
 
     res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
       path: '/',
+      domain,
       httpOnly: true,
       secure: false,
-      sameSite: 'lax',
+      // sameSite: 'lax',
+      sameSite: 'none',
       expires: new Date(Date.now() + 1000 * expireDateUnix),
     })
     res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
+      domain,
       path: '/',
     })
 
@@ -107,7 +115,8 @@ export class AuthController {
   //   res.setCookie('access_token', access_token, {
   //     httpOnly: true,
   //     secure: false,
-  //     sameSite: 'lax',
+      // sameSite: 'lax',
+  //     none: 'lax',
   //     expires: new Date(Date.now() + expireDateUnix),
   //   })
   //   return res.send({ user: userRes, status: 'ok' })
