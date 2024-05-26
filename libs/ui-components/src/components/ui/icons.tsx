@@ -9,6 +9,7 @@ import {
   ChevronUpIcon,
   Component1Icon,
   ComponentInstanceIcon,
+  CookieIcon,
   CopyIcon,
   CounterClockwiseClockIcon,
   Cross1Icon,
@@ -72,6 +73,7 @@ const defaultRadixProps = ({ size, className, ...props }: RadixIconProps): Radix
 })
 
 export const Icons = {
+  Cookies: (props: RadixIconProps) => <CookieIcon {...defaultRadixProps(props)} />,
   Magic: (props: RadixIconProps) => <MagicWandIcon {...defaultRadixProps(props)} />,
   Chat: (props: RadixIconProps) => <ChatBubbleIcon {...defaultRadixProps(props)} />,
   Rocket: (props: RadixIconProps) => <RocketIcon {...defaultRadixProps(props)} />,

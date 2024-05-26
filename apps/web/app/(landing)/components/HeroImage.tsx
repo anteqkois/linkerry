@@ -14,8 +14,9 @@ export const HeroImage = () => {
   }, [theme])
 
   return (
-    <MacOSWindow className="absolute top-0 left-0">
+    <MacOSWindow className="absolute top-0 left-0" >
       <Image
+        objectFit="contain"
         key={key}
         src={theme === 'light' ? '/images/landing/hero-editor-light-1-optymalized.png' : '/images/landing/hero-editor-dark-1-optymalized.png'}
         // src={'/images/landing/hero-editor-dark-1.png'}

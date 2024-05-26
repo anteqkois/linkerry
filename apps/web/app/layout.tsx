@@ -5,6 +5,7 @@ import './global.css'
 import { ThemeProvider, Toaster } from '@linkerry/ui-components/client'
 import { cn } from '@linkerry/ui-components/utils'
 import { LiveChatProvider } from '../libs/Tawk'
+import { CookiesModal } from '../shared/components/Consents/CookiesModal'
 import { siteConfig } from './webConfig'
 // import { Analytics } from "@/components/analytics"
 
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             {/* <Toaster duration={5_000} viewportClassName='sm:top-0 sm:left-1/2 -translate-x-1/2'/> */}
             <Toaster duration={5_000} />
             {/* <TailwindIndicator /> */}
+            <CookiesModal />
           </LiveChatProvider>
         </ThemeProvider>
       </body>

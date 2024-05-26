@@ -57,11 +57,11 @@ export default function RegisterPage() {
         <SignUpForm />
         <p className="px-8 text-center text-sm text-muted-foreground">
           By clicking continue, you agree to our{' '}
-          <Link href="/terms" className="hover:text-brand underline underline-offset-4">
+          <Link href="/docs/linkerry_regulamin_treści_cyfrowe.pdf" target="_blank" className="hover:text-brand underline underline-offset-4">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href="/privacy" className="hover:text-brand underline underline-offset-4">
+          <Link href="/docs/linkerry_polityka_prywatności.pdf" target="_blank" className="hover:text-brand underline underline-offset-4">
             Privacy Policy
           </Link>
           .
