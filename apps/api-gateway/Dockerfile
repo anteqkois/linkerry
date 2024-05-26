@@ -22,6 +22,8 @@ COPY --from=builder /app/builder/apps/api-gateway/entry.sh ./dist/apps/api-gatew
 
 ENV NODE_ENV=$NODE_ENV
 
+RUN npm install -g pnpm@8.15.2
+
 RUN chmod +x ./dist/apps/api-gateway/entry.sh
 
 ENTRYPOINT ["./dist/apps/api-gateway/entry.sh"]
