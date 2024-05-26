@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
+import Link from 'next/link'
 
 interface MobileProps {
   children?: React.ReactNode
@@ -15,56 +16,49 @@ interface MobileProps {
 
 export function MobileMenu({ children }: MobileProps) {
   return (
-    // <div className="sm:hidden fixed top-1 left-1">
     <div className="sm:hidden">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            <Icons.HamburgerMenu className="h-[1.2rem] w-[1.2rem]" />
+          <Button variant="outline" size="icon" className="h-9 w-9">
+            <Icons.HamburgerMenu className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 max-h-[calc(100vh-60px)] overflow-y-scroll" align="start">
           <DropdownMenuGroup>
             <DropdownMenuLabel>
-              <div className="flex items-center gap-1 text-primary">
-                <Icons.Strategy />
-                Strategies
-              </div>
+              <div className="font-medium">Flows</div>
             </DropdownMenuLabel>
-            <DropdownMenuItem>Create New</DropdownMenuItem>
-            <DropdownMenuItem>Edit Strategy</DropdownMenuItem>
-            <DropdownMenuItem>All Strategies</DropdownMenuItem>
-            <DropdownMenuItem>Analysis</DropdownMenuItem>
-            <DropdownMenuItem disabled>Create First Strategy</DropdownMenuItem>
             <DropdownMenuSeparator />
+            <Link href="/app/flows/editor" prefetch={false}>
+              <DropdownMenuItem className="flex justify-between items-center">
+                Create New
+                <Icons.Plus />
+              </DropdownMenuItem>
+            </Link>
+            <Link href="/app/flows" prefetch={false}>
+              <DropdownMenuItem>All Flows</DropdownMenuItem>
+            </Link>
+            {/* // TODO create YT video and place link here */}
+            <DropdownMenuItem className="flex justify-between items-center" disabled>
+              Create First Flow
+              <Icons.Article />
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuGroup>
             <DropdownMenuLabel>
-              <div className="flex items-center gap-1 text-primary">
-                <Icons.Condition />
-                Conditions
-              </div>
+              <div className="font-medium">Connectors</div>
             </DropdownMenuLabel>
-            <DropdownMenuItem>Create New</DropdownMenuItem>
-            <DropdownMenuItem>Edit Condition</DropdownMenuItem>
-            <DropdownMenuItem>All Conditions</DropdownMenuItem>
-            <DropdownMenuLabel>Condition Types</DropdownMenuLabel>
-            <DropdownMenuItem>Alerts</DropdownMenuItem>
-            <DropdownMenuItem disabled>Inicators</DropdownMenuItem>
-            <DropdownMenuItem disabled>Create First Condition</DropdownMenuItem>
             <DropdownMenuSeparator />
-          </DropdownMenuGroup>
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>
-              <div className="flex items-center gap-1 text-primary">
-                <Icons.Exchange />
-                Exchanges
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuItem>Add API Keys</DropdownMenuItem>
-            <DropdownMenuItem>My API Keys</DropdownMenuItem>
-            <DropdownMenuItem>Avaible Exchanges</DropdownMenuItem>
-            <DropdownMenuItem disabled>Security</DropdownMenuItem>
+            <Link href="/app/connectors" prefetch={false}>
+              <DropdownMenuItem>All Connectors</DropdownMenuItem>
+            </Link>
+            <Link href="/app/connectors/connections" prefetch={false}>
+              <DropdownMenuItem>Connected Apps</DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem className="flex justify-between items-center" disabled>
+              Security
+              <Icons.Article />
+            </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -23,12 +23,6 @@ export function DesktopMenu({ children }: DesktopProps) {
                 </MenubarShortcut>
               </MenubarItem>
             </Link>
-            {/* <MenubarItem>
-							Edit Flow
-							<MenubarShortcut>
-								<Icons.Update />
-							</MenubarShortcut>
-						</MenubarItem> */}
             <Link href="/app/flows" prefetch={false}>
               <MenubarItem>All Flows</MenubarItem>
             </Link>

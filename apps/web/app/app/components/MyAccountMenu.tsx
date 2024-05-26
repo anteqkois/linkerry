@@ -30,7 +30,7 @@ interface MyAccountMenuProps {
 
 export function MyAccountMenu({ children }: MyAccountMenuProps) {
   const { user } = useUser()
-  const { open, toggleVisibility, liveChatRef, hidden } = useLiveChat()
+  const { open, toggleVisibility, hidden } = useLiveChat()
 
   return (
     <DropdownMenu>
@@ -39,7 +39,7 @@ export function MyAccountMenu({ children }: MyAccountMenuProps) {
           <Icons.Home className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">My Account</p>
