@@ -36,9 +36,12 @@ export const VerificationEmail = (props: Props) => {
             <Hr style={hr} />
             <Text style={paragraph}>
               If you have any problems or questions, please contact us via e-mail{' '}
-              <Link style={anchor} href="mailto:help@linkerry.com">
-                help@linkerry.com
+              <Link style={anchor} href="mailto:anteqkois@gmail.com">
+                anteqkois@gmail.com
               </Link>
+              {/* <Link style={anchor} href="mailto:help@linkerry.com">
+                help@linkerry.com
+              </Link> */}
               , live chat or{' '}
               <Link style={anchor} href="https://web.telegram.org/k/#@anteqkois">
                 Telegram

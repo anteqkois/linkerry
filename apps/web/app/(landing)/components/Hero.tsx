@@ -1,5 +1,5 @@
-import { Button } from '@linkerry/ui-components/server'
 import { HeroImage } from './HeroImage'
+import { StartFreeButton } from './StartFreeButton'
 
 // No-Code Automations
 // Powered by AI and Web3
@@ -50,12 +50,7 @@ export const Hero = () => {
         </p>
 
         <div className="space-y-4 md:space-y-0 md:space-x-4">
-          <Button
-            className="w-full md:w-1/2 text-xl p-5 font-bold bg-gradient-to-r from-[hsl(262,83%,57%)] via-[hsl(262,93%,55%)] to-[hsl(262,93%,50%)]"
-            size={'lg'}
-          >
-            Start Free
-          </Button>
+          <StartFreeButton />
         </div>
       </div>
 

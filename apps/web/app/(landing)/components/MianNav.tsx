@@ -11,14 +11,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   Separator,
-  buttonVariants,
-  navigationMenuTriggerStyle,
+  navigationMenuTriggerStyle
 } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
-import { cn } from '@linkerry/ui-components/utils'
 // import { useClickOutside } from '@react-hookz/web'
 import { useRef, useState } from 'react'
+import { useUser } from '../../../modules/user/useUser'
 import { MainNavItem } from '../../../types'
+import { LandingNavButtons } from './LandingNavButtons'
 import { MenuItem } from './MenuItem'
 import { MobileNav } from './MobileNav'
 
@@ -29,6 +29,7 @@ interface MainNavProps {
 
 export function MainNav({ items, children }: MainNavProps) {
   // const segment = useSelectedLayoutSegment()
+  const { authStatus, logout } = useUser()
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const ref = useRef(null)
 
@@ -88,12 +89,7 @@ export function MainNav({ items, children }: MainNavProps) {
         </nav>
       ) : null}
       <nav className="flex gap-2 items-center">
-        <Link href="/login" className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'px-4')}>
-          Login
-        </Link>
-        <Link href="/login" className={cn(buttonVariants({ size: 'sm' }), 'px-4')}>
-          Start Free
-        </Link>
+        <LandingNavButtons />
         <ModeToggle />
       </nav>
       <Button className="md:hidden" size={'icon'} variant={'outline'} onClick={() => setShowMobileMenu((prev) => !prev)}>

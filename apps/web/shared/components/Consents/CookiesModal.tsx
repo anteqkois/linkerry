@@ -61,7 +61,6 @@ export const CookiesModal = ({
           <span>We use cookies</span>
           <Icons.Cookies className="h-[1.2rem] w-[1.2rem]" />
         </CardTitle>
-        {/* <CardDescription>Deploy your new project in one-click.</CardDescription> */}
       </CardHeader>
       <CardContent>
         <p className="text-sm font-normal">
@@ -71,9 +70,8 @@ export const CookiesModal = ({
           <br />
           <span className="text-xs">
             By clicking &quot;<span className="font-medium opacity-80">Accept</span>&quot;, you agree to our use of cookies.
-          </span>
-          <br />
-          <a href="#" className="text-xs underline">
+          </span>{' '}
+          <a rel="noreferrer noopener" target="_blank" href="/docs/linkerry_polityka_prywatności.pdf" className="text-xs underline">
             Learn more.
           </a>
         </p>

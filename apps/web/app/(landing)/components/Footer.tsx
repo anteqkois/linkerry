@@ -80,7 +80,6 @@ export const Footer = () => {
               rel="noreferrer noopener"
               target="_blank"
               href="/docs/linkerry_regulamin_treści_cyfrowe.pdf"
-              target="_blank"
               className="opacity-60 hover:opacity-100"
             >
               Terms of Service
