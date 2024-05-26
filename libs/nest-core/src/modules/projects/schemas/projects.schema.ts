@@ -35,7 +35,17 @@ export class ProjectModel<T = ''> extends BaseDatabaseModel implements Omit<Proj
 }
 
 export const ProjectsSchema = SchemaFactory.createForClass(ProjectModel)
-// TODO add virtual fields
+ProjectsSchema.virtual('owner', {
+  localField: 'ownerId',
+  ref: UserModel.name,
+  foreignField: '_id',
+  justOne: true,
+})
+ProjectsSchema.virtual('users', {
+  localField: 'userIds',
+  ref: UserModel.name,
+  foreignField: '_id',
+})
 
 export const ProjectModelFactory: AsyncModelFactory = {
   name: ProjectModel.name,

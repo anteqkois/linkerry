@@ -254,7 +254,7 @@ export class SubscriptionsService {
 
     /* save new data */
     for (const [key, value] of Object.entries(payload.data) as [keyof Subscription, any][]) {
-      ;(newSubscription[key] as any) = value
+      (newSubscription[key] as any) = value
     }
     await newSubscription.save()
 

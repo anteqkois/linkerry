@@ -1,3 +1,4 @@
+import { UserProvider } from '../../modules/user/useUser'
 import { Connectors } from './components/Connectors'
 import { Hero } from './components/Hero'
 import { Pricing } from './components/Pricing'
@@ -9,7 +10,9 @@ export default async function IndexPage() {
     <>
       <Hero />
       <Connectors />
-      <Pricing />
+      <UserProvider>
+        <Pricing />
+      </UserProvider>
     </>
   )
 }
