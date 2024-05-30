@@ -52,7 +52,7 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
         <CardDescription>{product.shortDescription}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 relative w-full h-10">
+        <div className="mb-4 mt-2 relative w-full h-10">
           {priceSlot ? (
             priceSlot
           ) : (

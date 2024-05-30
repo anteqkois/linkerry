@@ -1,6 +1,6 @@
-import { AuthStatus } from '@linkerry/shared/lib/common/auth'
-import { Cookies } from '@linkerry/shared/lib/constants/cookies'
-import { NextRequest, NextResponse } from 'next/server'
+import { AuthStatus } from '@linkerry/shared/lib/common/auth';
+import { Cookies } from '@linkerry/shared/lib/constants/cookies';
+import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
   const authStatus = req.cookies.get(Cookies.AUTH_STATUS)

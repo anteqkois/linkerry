@@ -33,7 +33,7 @@ export class ProductsService {
       })
     }
 
-    return items
+    return items.sort((a, b) => a.priority - b.priority)
   }
 
   async findOne(id: Id) {
