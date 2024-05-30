@@ -1,6 +1,5 @@
 import { HttpError, HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
 import { ConnectorAuth } from '@linkerry/connectors-framework'
-import { HttpStatusCode } from 'axios'
 import { GetMe } from '../types/getMe'
 import { telegramCommons } from './common'
 
@@ -38,16 +37,23 @@ export const telegramBotAuth = ConnectorAuth.SecretText({
         }
     } catch (error: any) {
       if (HttpError.isHttpError(error)) {
-        if (error.axiosError.status === HttpStatusCode.NotFound)
+        const responseData = error.axiosError.response?.data as {
+          ok: boolean
+          error_code: number
+          description: string
+        }
+        if (responseData.description?.includes('Not Found')) {
           return {
             valid: false,
             error: 'Invalid Bot Token, bot not found',
           }
-        else
+        } else {
+          console.dir(responseData, { depth: null })
           return {
             valid: false,
-            error: error.axiosError?.response?.data,
+            error: responseData.description,
           }
+        }
       }
 
       return {

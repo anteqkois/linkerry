@@ -1,4 +1,3 @@
-import { HttpStatusCode } from 'axios'
 import { HttpError, HttpMethod, HttpRequest, httpClient } from '../../../../libs/connectors/common/src/lib/http'
 // import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
 
@@ -25,18 +24,20 @@ const main = async () => {
       }
   } catch (error: any) {
     if (HttpError.isHttpError(error)) {
-      if (error.axiosError.status === HttpStatusCode.NotFound)
+      const responseDescription = (error.axiosError.response.data as any)?.description
+      if (responseDescription?.includes('Not Found')) {
         return {
           valid: false,
           error: 'Invalid Bot Token, bot not found',
         }
-      else
+      } else {
+        console.log(error.axiosError.response.data)
         return {
           valid: false,
-          error: error.axiosError.response.data,
+          error: responseDescription,
         }
+      }
     }
-
   }
 }
 

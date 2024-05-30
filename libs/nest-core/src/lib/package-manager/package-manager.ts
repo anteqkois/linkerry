@@ -5,20 +5,12 @@ import { access, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 
-// const npmrcContent = `
-// strict-peer-dependencies=false
-// auto-install-peers=true
-// ignore-scripts=true
-// registry=\${REGISTRY_URL}
-// //\${REGISTRY_URL}:_authToken=\${REGISTRY_TOKEN}
-// `
-
 const npmrcContent = `
 strict-peer-dependencies=false
 auto-install-peers=true
 ignore-scripts=true
-registry=http://64.226.97.74:4873
-//http://64.226.97.74:4873:_authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWFsX2dyb3VwcyI6WyJsaW5rZXJyeV9vZmZpY2lhbF93b3JrZXIiLCIkYWxsIiwiJGF1dGhlbnRpY2F0ZWQiLCJAYWxsIiwiQGF1dGhlbnRpY2F0ZWQiLCJhbGwiXSwibmFtZSI6ImxpbmtlcnJ5X29mZmljaWFsX3dvcmtlciIsImdyb3VwcyI6WyJsaW5rZXJyeV9vZmZpY2lhbF93b3JrZXIiLCIkYWxsIiwiJGF1dGhlbnRpY2F0ZWQiLCJAYWxsIiwiQGF1dGhlbnRpY2F0ZWQiLCJhbGwiXSwiaWF0IjoxNzE2NzEyNjE1LCJuYmYiOjE3MTY3MTI2MTYsImV4cCI6MTc0ODI0ODYxNX0.h0xkG-TrJUU0crMNerrfoHpc48L0N3AREQW2naR0F18
+registry=\${REGISTRY_URL}
+//\${REGISTRY_HOST}:_authToken=\${REGISTRY_TOKEN}
 `
 
 export const exec = promisify(execCallback)
@@ -86,10 +78,6 @@ export const packageManager = {
 
   async init({ path }: InitParams): Promise<PackageManagerOutput> {
     await writeNpmrcIfNotExists(path, npmrcContent)
-
-    console.log('TEST');
-    console.log(process.env['REGISTRY_URL']);
-    console.log(process.env['REGISTRY_TOKEN']);
 
     return runCommand(path, 'init')
   },
