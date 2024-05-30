@@ -1,7 +1,7 @@
 import { isEmpty } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { exec as execCallback } from 'node:child_process'
-import { writeFile } from 'node:fs/promises'
+import { access, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 
@@ -9,7 +9,6 @@ const npmrcContent = `
 strict-peer-dependencies=false
 auto-install-peers=true
 ignore-scripts=true
-registry=\${REGISTRY_USERNAME}:\${REGISTRY_PASSWORD}@\${REGISTRY_URL}
 registry=\${REGISTRY_URL}
 //\${REGISTRY_URL}/:_authToken=\${REGISTRY_TOKEN}
 `
@@ -38,6 +37,18 @@ export type PackageInfo = {
   spec: string
 }
 
+const writeNpmrcIfNotExists = async (path: string, npmrcContent: string) => {
+  const filePath = join(path, '.npmrc');
+
+  try {
+    await access(filePath);
+    // logger.debug(`File ${filePath} already exists. Skipping write operation.`);
+  } catch (error) {
+    await writeFile(filePath, npmrcContent.trim());
+    // logger.debug(`File ${filePath} has been created.`);
+  }
+};
+
 const runCommand = async (path: string, command: Command, ...args: string[]): Promise<PackageManagerOutput> => {
   const commandLine = `pnpm ${command} ${args.join(' ')}`
   try {
@@ -45,6 +56,7 @@ const runCommand = async (path: string, command: Command, ...args: string[]): Pr
     return await exec(commandLine, { cwd: path })
   } catch (error: any) {
     logger.error(error)
+    logger.error(error?.stdout)
     throw new Error(error)
   }
 }
@@ -65,7 +77,7 @@ export const packageManager = {
   },
 
   async init({ path }: InitParams): Promise<PackageManagerOutput> {
-    await writeFile(join(path, '.npmrc'), npmrcContent.trim())
+    await writeNpmrcIfNotExists(path, npmrcContent)
 
     return runCommand(path, 'init')
   },

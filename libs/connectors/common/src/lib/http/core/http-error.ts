@@ -1,12 +1,12 @@
 import { AxiosError } from 'axios'
 
 export class HttpError extends Error {
-  constructor(private readonly _requestBody: unknown, private readonly _err: AxiosError) {
+  constructor(private readonly _requestBody: unknown, readonly axiosError: AxiosError) {
     super(
       JSON.stringify({
         response: {
-          status: _err?.response?.status || 500,
-          body: _err?.response?.data,
+          status: axiosError?.response?.status || 500,
+          body: axiosError?.response?.data,
         },
         request: {
           body: _requestBody,
@@ -18,8 +18,8 @@ export class HttpError extends Error {
   public errorMessage() {
     return {
       response: {
-        status: this._err?.response?.status || 500,
-        body: this._err?.response?.data,
+        status: this.axiosError?.response?.status || 500,
+        body: this.axiosError?.response?.data,
       },
       request: {
         body: this._requestBody,
@@ -29,8 +29,8 @@ export class HttpError extends Error {
 
   get response() {
     return {
-      status: this._err?.response?.status || 500,
-      body: this._err?.response?.data,
+      status: this.axiosError?.response?.status || 500,
+      body: this.axiosError?.response?.data,
     }
   }
 
@@ -38,5 +38,10 @@ export class HttpError extends Error {
     return {
       body: this._requestBody,
     }
+  }
+
+  static isHttpError(error: unknown): error is HttpError {
+    if (error && typeof error === 'object' && 'axiosError' in error) return true
+    return false
   }
 }

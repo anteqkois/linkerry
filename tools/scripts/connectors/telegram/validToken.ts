@@ -1,35 +1,43 @@
-import axios, { isAxiosError } from 'axios'
+import { HttpStatusCode } from 'axios'
+import { HttpError, HttpMethod, HttpRequest, httpClient } from '../../../../libs/connectors/common/src/lib/http'
+// import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
 
 const main = async () => {
-  try {
-    // await axios.get('https://api.telegram.org/bot523444/getMe')
-    await axios.get('https://api.telegram.org/bot523444/getMe', {
-      params: {
-        siema: 1,
-      },
-    })
-    // await axios.post('https://api.telegram.org/bot523444/getMe', {
-    // 	siema: 1,
-    // 	siema2: 2
-    // })
-  } catch (error) {
-    if (isAxiosError(error)) {
-      console.log(error.response.headers)
+  const botToken = 'bot423423'
+  const methodName = 'getMe'
 
-      // console.log(error.config.headers)
-      // console.log(error.config.params)
-      // console.log(error.config.method)
-      // console.log(error.config.url)
-      // console.log(error.config.data)
-
-      // console.log(error.request._header)
-      // console.log(error.request.protocol)
-      // console.log(error.request.host)
-      // console.log(error.request.path)
-    }
+  const request: HttpRequest = {
+    method: HttpMethod.GET,
+    url: `https://api.telegram.org/bot${botToken}/${methodName}`,
   }
 
-  process.exit(0)
+  try {
+    const response = await httpClient.sendRequest(request)
+
+    if (response.body.ok)
+      return {
+        valid: true,
+      }
+    else
+      return {
+        valid: true,
+        error: 'Invalid Bot Token',
+      }
+  } catch (error: any) {
+    if (HttpError.isHttpError(error)) {
+      if (error.axiosError.status === HttpStatusCode.NotFound)
+        return {
+          valid: false,
+          error: 'Invalid Bot Token, bot not found',
+        }
+      else
+        return {
+          valid: false,
+          error: error.axiosError.response.data,
+        }
+    }
+
+  }
 }
 
 main()
