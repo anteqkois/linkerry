@@ -51,3 +51,19 @@ jobs:
         run: docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/web:latest
+      - name: Connect to VPS and refresh docker compose
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: root
+          key: ${{ secrets.SSH_PASSPHRASE_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: 22
+          script: |
+            cd linkerry.com/
+            docker-compose pull
+            docker compose up --force-recreate --build -d
+            docker-compose up -d --no-deps --build api-gateway
+      - name: Clear DO container registry
+        run: doctl registry garbage-collection start
+

@@ -56,7 +56,6 @@ jobs:
           script: |
             cd api.linkerry.com/
             docker-compose pull
-            docker compose up --force-recreate --build -d
             docker-compose up -d --no-deps --build api-gateway
       - name: Clear DO container registry
         run: doctl registry garbage-collection start
