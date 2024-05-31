@@ -61,9 +61,8 @@ jobs:
           port: 22
           script: |
             cd linkerry.com/
-            docker-compose pull
-            docker compose up --force-recreate --build -d
-            docker-compose up -d --no-deps --build api-gateway
+            docker compose pull
+            docker compose up -d --no-deps --build web
+            docker image prune -f
       - name: Clear DO container registry
         run: doctl registry garbage-collection start
-

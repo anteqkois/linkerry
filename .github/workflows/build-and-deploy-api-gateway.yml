@@ -3,7 +3,7 @@ name: build-and-deploy-api-gateway
 on: workflow_dispatch
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
     name: Build images
     steps:
@@ -45,6 +45,12 @@ jobs:
         run: docker build -t registry.digitalocean.com/linkerry/api-gateway:latest -f ./apps/api-gateway/Dockerfile . --platform=linux/amd64
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/api-gateway:latest
+      - name: Clear DO container registry
+        run: doctl registry garbage-collection start
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy api
+    steps:
       - name: Connect to VPS and refresh docker compose
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -55,7 +61,6 @@ jobs:
           port: 22
           script: |
             cd api.linkerry.com/
-            docker-compose pull
-            docker-compose up -d --no-deps --build api-gateway
-      - name: Clear DO container registry
-        run: doctl registry garbage-collection start
+            docker compose pull
+            docker compose up -d --no-deps --build api-gateway
+            docker image prune -f
