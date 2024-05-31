@@ -255,7 +255,7 @@ export const createTriggersSlice: CreateSlice<TriggersSlice> = (set, get) => ({
         set({
           webhookTriggerWatcherWorks: false,
         })
-        if (typeof data === 'string') {
+        if ('message' in data) {
           // neutral message like "manual cancelation", "timeout"
           set({
             flowOperationRunning: null,

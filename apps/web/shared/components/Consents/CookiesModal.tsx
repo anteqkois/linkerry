@@ -19,7 +19,7 @@ export const CookiesModal = ({
   },
 }: CookiesModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [hide, setHide] = useState(false)
+  const [hide, setHide] = useState(true)
 
   const accept = () => {
     setIsOpen(false)

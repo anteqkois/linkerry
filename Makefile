@@ -1,7 +1,7 @@
 include .env
 export
 
-generate-metadata-real:
+generate-metadata-dev:
 	npx ts-node -r tsconfig-paths/register -P tools/tsconfig.tools.json tools/scripts/metadata/insert-real-metadata.ts libs/connectors/framework
 
 generate-metadata-prod:

@@ -43,10 +43,7 @@ const getLatestPublishedVersionPrivateRegistry = async (packageName: string, max
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     const URL =
-      process.env.NODE_ENV === 'production'
-        ? // ? `https://package-registry.linkerry.com/${packageName}/latest`
-          `http://64.226.97.74:4873/${packageName}/latest`
-        : `http://localhost:4873/${packageName}/latest`
+      process.env.NODE_ENV === 'production' ? `http://64.226.97.74:4873/${packageName}/latest` : `http://localhost:4873/${packageName}/latest`
 
     try {
       const response = await axios<PrivateRegistryPackageItem>(URL, {

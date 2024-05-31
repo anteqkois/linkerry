@@ -1,6 +1,11 @@
 import { FlowStatus, FlowVersionState, isCustomHttpExceptionAxios } from '@linkerry/shared'
 import {
   ButtonClient,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Input,
   Menubar,
   MenubarMenu,
@@ -14,6 +19,7 @@ import {
 import { Button, Icons } from '@linkerry/ui-components/server'
 import { useDebouncedCallback } from '@react-hookz/web'
 import { ChangeEvent, HTMLAttributes, useCallback, useMemo, useRef, useState } from 'react'
+import { KeyValueItem } from '../../../shared/components/KeyValueItem'
 import { useEditor } from '../useEditor'
 
 export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
@@ -21,6 +27,7 @@ export interface EditorFlowMenuProps extends HTMLAttributes<HTMLElement> {}
 export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
   const { flow, updateFlowVersionDisplayName, publishFlow, flowOperationRunning, setFlowStatus, onClickFlowRuns } = useEditor()
   const [flowVersionName, setFlowVersionName] = useState(flow.version.displayName)
+  const [flowDetails, showFlowDetails] = useState(false)
   const inputFlowVersionNameRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
   const flowValidity = useMemo(() => {
@@ -170,6 +177,29 @@ export const EditorFlowMenu = ({ children }: EditorFlowMenuProps) => {
 						<Icons.Delete />
 					</Button>
 				</MenubarMenu> */}
+        {/* flowDetails, showFlowDetails */}
+        <Dialog open={flowDetails} onOpenChange={showFlowDetails}>
+          <DialogTrigger asChild>
+            <MenubarMenu>
+              <Button className="h-7 rounded-sm" variant={'ghost'} onClick={() => showFlowDetails(true)}>
+                Details
+              </Button>
+            </MenubarMenu>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-dialog">
+            <DialogHeader>
+              <DialogTitle>Flow Details</DialogTitle>
+            </DialogHeader>
+            <KeyValueItem
+              label={
+                <>
+                  Flow ID <span className="font-bolder">(don&apos;t show anybody)</span>
+                </>
+              }
+              value={flow._id}
+            />
+          </DialogContent>
+        </Dialog>
       </Menubar>
     </nav>
   )

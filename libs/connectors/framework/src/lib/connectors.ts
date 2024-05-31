@@ -14,6 +14,7 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
     public readonly displayName: string,
     public readonly logoUrl: string,
     public readonly description: string,
+    public readonly descriptionLong: string,
     public readonly minimumSupportedRelease: string,
     public readonly maximumSupportedRelease: string,
     public readonly tags: ConnectorTag[],
@@ -61,6 +62,7 @@ type CreateConnectorParams<ConnectorAuth extends ConnectorAuthProperty = Connect
   displayName: string
   logoUrl: string
   description: string
+  descriptionLong?: string
   minimumSupportedRelease: string
   maximumSupportedRelease?: string
   auth: ConnectorAuth | undefined
@@ -76,6 +78,7 @@ export const createConnector = <ConnectorAuth extends ConnectorAuthProperty>(par
     params.displayName,
     params.logoUrl,
     params.description,
+    params.descriptionLong || '',
     params.minimumSupportedRelease,
     params.maximumSupportedRelease ?? '9999.9999.9999',
     params.tags,

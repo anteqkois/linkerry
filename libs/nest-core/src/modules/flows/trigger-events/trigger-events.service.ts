@@ -33,7 +33,10 @@ import { TriggerEventModel } from './schemas/trigger-events.schema'
 import { InsertNewTrigerEventEvent, SaveTriggerEventInput } from './types'
 
 // const listeners = new Map<string, (data: WatchTriggerEventsWSResponse) => void>()
-const listeners = new Map<string, { resolve: (data: WatchTriggerEventsWSResponse) => Promise<void>; cancel: () => Promise<void> }>()
+const listeners = new Map<
+  string,
+  { resolve: (data: WatchTriggerEventsWSResponse) => Promise<void>; cancel: (errorMessage?: string) => Promise<void> }
+>()
 const triggerEventsWatchers = new Map<string, ReturnType<Model<FlowDocument>['collection']['watch']>>()
 
 @Injectable()
@@ -363,10 +366,12 @@ export class TriggerEventsService {
             this.logger.log(`#watchTriggerEvents success listenerKey=${listenerKey}`)
             resolve(data)
           },
-          cancel: async () => {
+          cancel: async (errorMessage?: string) => {
             await clearSideEffects()
             this.logger.log(`#watchTriggerEvents canceled listenerKey=${listenerKey}`)
-            resolve('Manula cancelation')
+            if (errorMessage) {
+              resolve({ error: true, message: errorMessage })
+            } else resolve({ error: false, message: 'Manula cancelation' })
           },
         }
 
@@ -379,19 +384,19 @@ export class TriggerEventsService {
           timeout = setTimeout(async () => {
             this.logger.debug(`#watchTriggerEvents timeout`)
             await clearSideEffects()
-            resolve(`Trigger events timeout`)
+            resolve({ error: false, message: 'Trigger events timeout' })
           }, this.WEBHOOK_TIMEOUT_MS)
           listeners.set(listenerKey, listenerHandlers)
         }
       })
   }
 
-  async cancelTriggerEventsWatcher(input: WatchTriggerEventsWSInput) {
+  async cancelTriggerEventsWatcher(input: WatchTriggerEventsWSInput, errorMessage?: string) {
     const listenerKey = `${input.flowId}/${input.triggerName}`
 
     const listener = listeners.get(listenerKey)
     if (listener) {
-      await listener.cancel()
+      await listener.cancel(errorMessage)
     }
   }
 

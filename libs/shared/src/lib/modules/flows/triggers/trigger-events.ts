@@ -19,9 +19,14 @@ export interface WatchTriggerEventsWSInput {
   triggerName: string
 }
 
+export type WatchTriggerEventsWSResponseFailure = {
+  error: boolean
+  message: string
+}
+
 export type WatchTriggerEventsWSResponse =
   | {
       triggerEvents: TriggerEvent[]
       flowVersion: FlowVersion
     }
-  | string
+  | WatchTriggerEventsWSResponseFailure

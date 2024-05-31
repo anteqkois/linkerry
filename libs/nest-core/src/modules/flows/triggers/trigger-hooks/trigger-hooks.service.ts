@@ -301,10 +301,13 @@ export class TriggerHooks {
           projectId,
         })
 
-        if (result.success && Array.isArray(result.output)) {
+        if (result?.success && Array.isArray(result.output)) {
           payloads = result.output
         } else {
           this.logger.error(`Flow ${flowTrigger.name} with ${connectorTrigger.name} trigger throws and error, returning as zero payload `, result)
+
+          // for simulate purpose return errorts to pass it to the frontend
+          if(simulate) return result as any
           payloads = []
         }
 

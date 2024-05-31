@@ -54,7 +54,7 @@ try {
 
 const REGISTRY = process.env.NODE_ENV === 'production' ? process.env.REGISTRY_URL : 'http://localhost:4873/'
 const main = async () => {
-  const {stderr, stdout} = await exec(`npm publish --registry ${process.env.REGISTRY_URL} --access public --tag ${tag}`)
+  const {stderr, stdout} = await exec(`npm publish --registry ${REGISTRY} --access public --tag ${tag}`)
   // execSync(`npm publish --registry ${process.env.REGISTRY_URL} --access public --tag ${tag}`)
   process.exit(0)
 }

@@ -31,6 +31,7 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
     cancelWebhookTrigger,
     webhookTriggerWatcherWorks,
   } = useEditor()
+  const [errorMessage, setErrorMessage] = useState<string>('')
   assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
   if (!isConnectorTrigger(editedTrigger))
     throw new CustomError('Invalid trigger type, can not use other than ConnectorTrigger', ErrorCode.INVALID_TYPE, {
@@ -89,14 +90,20 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
   if (status === 'pending') return <Spinner />
 
   const onClickTest = async () => {
+    setErrorMessage('')
+
     try {
       const triggerEventsData = await testWebhookTrigger()
-      if (typeof triggerEventsData === 'string')
-        return toast({
-          title: 'Stop Test Trigger Webhook',
-          description: triggerEventsData,
-          variant: 'default',
-        })
+      if ('message' in triggerEventsData) {
+        if (triggerEventsData.error) {
+          return setErrorMessage(triggerEventsData.message)
+        } else
+          return toast({
+            title: 'Stop Test Trigger Webhook',
+            description: triggerEventsData.message,
+            variant: 'default',
+          })
+      }
 
       const queryClient = getBrowserQueryCllient()
       queryClient.setQueryData(['trigger-events', editedTrigger.name], triggerEventsData)
@@ -104,19 +111,10 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
       setSelectedTriggerEventId(triggerEventsData[triggerEventsData.length - 1]._id)
       setInitialTime(dayjs().format())
     } catch (error: any) {
-      if (typeof error === 'string')
-        toast({
-          title: 'Test Trigger Webhook Error',
-          description: error,
-          variant: 'destructive',
-        })
+      if (typeof error === 'string') return setErrorMessage(error)
       else {
         console.error(error)
-        toast({
-          title: 'Test Trigger Webhook Error',
-          description: 'Unknwon error occurred',
-          variant: 'destructive',
-        })
+        return setErrorMessage('Unknwon error occurred')
       }
     }
   }
@@ -211,6 +209,8 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
           <GenerateDataButton />
         </div>
       )}
+
+      {errorMessage.length ? <ErrorInfo message={errorMessage} className="mt-2" /> : null}
 
       {record && (
         <CodeEditor

@@ -6,10 +6,10 @@ import { Button } from '@linkerry/ui-components/server'
 import Link from 'next/link'
 import { HTMLAttributes } from 'react'
 import { ErrorInfo, Spinner } from '../../../shared/components'
+import { KeyValueItem } from '../../../shared/components/KeyValueItem'
 import { useSubscriptions } from '../subscriptions/useSubscriptions'
 import { useUsage } from '../usage/useUsage'
 import { useReachLimitDialog } from '../useReachLimitDialog'
-import { ConfigurationItem } from './ConfigItem'
 
 export interface ReachLimitDialogProps extends HTMLAttributes<HTMLElement> {}
 
@@ -46,7 +46,7 @@ export const ReachLimitDialog = () => {
               if (!itemValue) itemValue = usage[name] ? `${usage[name]} / ${currentPlan?.config[name]}` : '-'
 
               return (
-                <ConfigurationItem
+                <KeyValueItem
                   key={name}
                   className={name === exceededConfigurationEntry?.name ? 'text-negative hover:text-negative' : ''}
                   label={value.displayName}

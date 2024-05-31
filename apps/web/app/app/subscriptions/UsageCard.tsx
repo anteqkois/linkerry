@@ -3,8 +3,8 @@ import { Separator } from '@linkerry/ui-components/client'
 import { Card, CardContent, H4 } from '@linkerry/ui-components/server'
 import dayjs from 'dayjs'
 import { HTMLAttributes } from 'react'
-import { ConfigurationItem } from '../../../modules/billing/components/ConfigItem'
 import { ErrorInfo } from '../../../shared/components'
+import { KeyValueItem } from '../../../shared/components/KeyValueItem'
 
 export interface UsageCardProps extends HTMLAttributes<HTMLElement> {
   subscription: SubscriptionPopulated
@@ -32,7 +32,7 @@ export const UsageCard = ({ usage, subscription }: UsageCardProps) => {
           <div className="mt-2">
             <H4 className="">Current Usage</H4>
             {(Object.entries(planConfigurationDetails) as [keyof PlanProductConfiguration, PlanConfigurationDetailsValue][]).map(([name, value]) => (
-              <ConfigurationItem
+              <KeyValueItem
                 key={name}
                 label={value.displayName}
                 value={usage[name] ? `${usage[name]} / ${subscription.items[0].product.config[name]}` : '-'}

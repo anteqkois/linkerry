@@ -37,7 +37,7 @@ export class WebhooksService {
         payload,
         projectId,
       })
-      .catch((error) => {
+      .catch((error: any) => {
         this.logger.error(`#_saveSampleDataForWebhookTesting`, error)
       })
   }
@@ -197,6 +197,17 @@ export class WebhooksService {
       payload,
       simulate: true,
     })
+
+    // this mean that there was an error durning simulation
+    if (typeof events === 'string') {
+      return await this.triggerEventsService.cancelTriggerEventsWatcher(
+        {
+          flowId: flow._id,
+          triggerName: flow.version.triggers[0].name,
+        },
+        events,
+      )
+    }
 
     if (events.length === 0) {
       return

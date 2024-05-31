@@ -12,6 +12,8 @@ import {
   TriggerConnector,
   TriggerEvent,
   WEBSOCKET_NAMESPACE,
+  WatchTriggerEventsWSResponse,
+  WatchTriggerEventsWSResponseFailure,
 } from '@linkerry/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow'
@@ -98,7 +100,7 @@ export interface TriggersSlice {
   patchEditedTriggerConnector: (update: DeepPartial<Omit<TriggerConnector, '_id'>>) => Promise<void>
   resetTrigger: (triggerName: string) => Promise<void>
   testPoolTrigger: () => Promise<TriggerEvent[]>
-  testWebhookTrigger: () => Promise<TriggerEvent[] | string>
+  testWebhookTrigger: () => Promise<TriggerEvent[] | WatchTriggerEventsWSResponseFailure>
   webhookTriggerWatcherWorks: boolean
   cancelWebhookTrigger: () => Promise<void>
 }
