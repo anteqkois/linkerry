@@ -46,7 +46,7 @@ jobs:
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/api-gateway:latest
       - name: Clear DO container registry
-        run: doctl registry garbage-collection start
+        run: doctl registry garbage-collection start --force --registry-name linkerry
   deploy:
     runs-on: ubuntu-latest
     name: Deploy api

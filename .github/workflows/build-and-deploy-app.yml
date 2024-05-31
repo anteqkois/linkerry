@@ -3,7 +3,7 @@ name: build-and-deploy-app
 on: workflow_dispatch
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
     name: Build images
     steps:
@@ -52,6 +52,12 @@ jobs:
         run: docker build -t registry.digitalocean.com/linkerry/web:latest --build-arg NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST -f ./apps/web/Dockerfile . --platform=linux/amd64
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/web:latest
+      - name: Clear DO container registry
+        run: doctl registry garbage-collection start --force --registry-name linkerry
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy apps
+    steps:
       - name: Connect to VPS and refresh docker composes
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -69,5 +75,3 @@ jobs:
             docker compose pull
             docker compose up -d --no-deps --build web
             docker image prune -f
-      - name: Clear DO container registry
-        run: doctl registry garbage-collection start

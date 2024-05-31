@@ -3,7 +3,7 @@ name: build-and-deploy-web
 on: workflow_dispatch
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
     name: Build images
     steps:
@@ -51,6 +51,12 @@ jobs:
         run: docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/web:latest
+      - name: Clear DO container registry
+        run: doctl registry garbage-collection start --force --registry-name linkerry
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy web
+    steps:
       - name: Connect to VPS and refresh docker compose
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -64,5 +70,3 @@ jobs:
             docker compose pull
             docker compose up -d --no-deps --build web
             docker image prune -f
-      - name: Clear DO container registry
-        run: doctl registry garbage-collection start
