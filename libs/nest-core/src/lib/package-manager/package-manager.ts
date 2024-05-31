@@ -9,9 +9,17 @@ const npmrcContent = `
 strict-peer-dependencies=false
 auto-install-peers=true
 ignore-scripts=true
-registry=\${REGISTRY_URL}
-//\${REGISTRY_HOST}:_authToken=\${REGISTRY_TOKEN}
+registry=http://64.226.97.74:4873/
+//64.226.97.74:4873/:_authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWFsX2dyb3VwcyI6WyJsaW5rZXJyeV9vZmZpY2lhbF93b3JrZXIiLCIkYWxsIiwiJGF1dGhlbnRpY2F0ZWQiLCJAYWxsIiwiQGF1dGhlbnRpY2F0ZWQiLCJhbGwiXSwibmFtZSI6ImxpbmtlcnJ5X29mZmljaWFsX3dvcmtlciIsImdyb3VwcyI6WyJsaW5rZXJyeV9vZmZpY2lhbF93b3JrZXIiLCIkYWxsIiwiJGF1dGhlbnRpY2F0ZWQiLCJAYWxsIiwiQGF1dGhlbnRpY2F0ZWQiLCJhbGwiXSwiaWF0IjoxNzE2NzEyNjE1LCJuYmYiOjE3MTY3MTI2MTYsImV4cCI6MTc0ODI0ODYxNX0.h0xkG-TrJUU0crMNerrfoHpc48L0N3AREQW2naR0F18
 `
+
+// const npmrcContent = `
+// strict-peer-dependencies=false
+// auto-install-peers=true
+// ignore-scripts=true
+// registry=\${REGISTRY_URL}
+// //\${REGISTRY_HOST}:_authToken=\${REGISTRY_TOKEN}
+// `
 
 export const exec = promisify(execCallback)
 const logger = new Logger('PackageManager')

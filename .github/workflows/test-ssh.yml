@@ -1,0 +1,47 @@
+name: test-ssh
+
+on: workflow_dispatch
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Connect to DigitalOcean VPS and run commands
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_IP }}
+        username: root
+        key: ${{ secrets.SSH_PASSPHRASE_PRIVATE_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        port: 22
+        script: |
+          echo "Connected to VPS"
+          uptime
+          touch test.txt
+
+
+# name: test-ssh
+
+# on: [push]
+
+# jobs:
+#   test-job:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v3
+
+#     - name: Connect to DigitalOcean VPS and run commands
+#       uses: appleboy/ssh-action@v1.0.3
+#       with:
+#         host: ${{ secrets.VPS_IP }}
+#         username: root
+#         key: ${{ secrets.SSH_PRIVATE_KEY }}
+#         # port: 22
+#         script: |
+#           echo "Connected to VPS"
+#           # Place your commands here
+#           uptime
+#           touch test.txt
