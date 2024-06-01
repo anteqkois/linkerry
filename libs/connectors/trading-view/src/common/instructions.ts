@@ -14,9 +14,9 @@ Correct message can looks like:
 \`\`\`
 {
   "symbol": "{{ticker}}",
-  "price": "{{close}}",
-  "price_time": "{{time}}",
-  "webhook_time": "{{timenow}}",
+  "price": {{close}},
+  "price_time": {{time}},
+  "webhook_time": {{timenow}},
   "my_fixed_message": "This is fixed message, it can be use later in flow for example to send to Telegram",
   "to_buy_at_CEX": "BTC/USDT"
 }

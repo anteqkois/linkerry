@@ -27,6 +27,6 @@ export const tradingViewNewAlert = createTrigger({
     console.log('Trading View disabled')
   },
   async run(context) {
-    return context.payload.body
+    return [context.payload.body]
   },
 })

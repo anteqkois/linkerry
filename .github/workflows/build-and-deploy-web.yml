@@ -52,10 +52,11 @@ jobs:
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/linkerry/web:latest
       - name: Clear DO container registry
-        run: doctl registry garbage-collection start --force --registry-name linkerry
+        run: doctl registry garbage-collection start --force linkerry
   deploy:
     runs-on: ubuntu-latest
     name: Deploy web
+    needs: ['build']
     steps:
       - name: Connect to VPS and refresh docker compose
         uses: appleboy/ssh-action@v1.0.3
@@ -70,3 +71,12 @@ jobs:
             docker compose pull
             docker compose up -d --no-deps --build web
             docker image prune -f
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DO Container Registry
+        # 30min
+        run: doctl registry login --expiry-seconds 1800
+      - name: Clear DO container registry
+        run: doctl registry garbage-collection start --force linkerry
