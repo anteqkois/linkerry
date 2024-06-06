@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 
-export class HttpError extends Error {
-  constructor(private readonly _requestBody: unknown, readonly axiosError: AxiosError) {
+export class HttpError<T = any, D = any> extends Error {
+  constructor(private readonly _requestBody: unknown, readonly axiosError: AxiosError<T, D>) {
     super(
       JSON.stringify({
         response: {

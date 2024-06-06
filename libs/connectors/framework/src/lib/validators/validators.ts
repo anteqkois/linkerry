@@ -309,7 +309,12 @@ export class Validators {
       if (property.required && isNil(processedValue)) {
         return formatErrorMessage(ErrorMessages.ISO_DATE, { userInput })
       }
-      return null
+
+      // Regular expression to match ISO 8601 date format
+      const isoDateRegex = /^(\d{4}-\d{2}-\d{2})$/
+      const isoDateTimeRegex = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2}))$/
+
+      return isoDateRegex.test(processedValue) || isoDateTimeRegex.test(processedValue) ? null : formatErrorMessage(ErrorMessages.ISO_DATE, { userInput })
     },
   }
 

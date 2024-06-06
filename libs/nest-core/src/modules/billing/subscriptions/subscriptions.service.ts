@@ -30,7 +30,6 @@ import { SubscriptionDocument, SubscriptionModel } from './schemas/subscription.
 @Injectable()
 export class SubscriptionsService {
   private readonly DEFAULT_VALIDITY_DATE
-  private readonly DEFAULT_PRODUCT_ID
 
   constructor(
     @InjectModel(SubscriptionModel.name) private readonly subscriptionModel: Model<SubscriptionDocument>,
@@ -42,7 +41,6 @@ export class SubscriptionsService {
     private readonly eventEmitter: EventEmitter2,
   ) {
     this.DEFAULT_VALIDITY_DATE = this.configService.getOrThrow('DEFAULT_VALIDITY_DATE')
-    this.DEFAULT_PRODUCT_ID = this.configService.getOrThrow('DEFAULT_PRODUCT_ID')
   }
 
   private async _getDefaultSubscription(projectId: Id) {
@@ -153,20 +151,6 @@ export class SubscriptionsService {
       ErrorCode.FEATURE_NOT_IMPLEMENTED,
     )
   }
-
-  // async createDefault(projectId: Id) {
-  // 	const createdSubscription = await this.subscriptionModel.create({
-  // 		paymentGateway: PaymentGateway.NONE,
-  // 		period: SubscriptionPeriod.MONTHLY,
-  // 		projectId,
-  // 		status: SubscriptionStatus.ACTIVE,
-  // 		validTo: this.DEFAULT_VALIDITY_DATE,
-  //     items:[]
-  // 		// products: [new mongoose.Types.ObjectId(this.DEFAULT_PRODUCT_ID)],
-  // 	})
-
-  // 	return createdSubscription
-  // }
 
   async change(input: CreateSubscriptionParams) {
     if (input.items.length !== 1) throw new CustomError(`Currently only one item for subscription is supported`, ErrorCode.INVALID_PRODUCT)

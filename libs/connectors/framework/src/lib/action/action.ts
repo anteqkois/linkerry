@@ -23,6 +23,7 @@ export class ActionInstance<ConnectorAuth extends ConnectorAuthProperty, ActionP
     public readonly name: string,
     public readonly displayName: string,
     public readonly description: string,
+    public readonly descriptionLong: string,
     public readonly props: ActionProps,
     public readonly run: ActionRunner<ConnectorAuth, ActionProps>,
     public readonly test: ActionRunner<ConnectorAuth, ActionProps>,
@@ -40,6 +41,7 @@ type CreateActionParams<ConnectorAuth extends ConnectorAuthProperty, ActionProps
   name: string
   displayName: string
   description: string
+  descriptionLong?: string
   props: ActionProps
   run: ActionRunner<ConnectorAuth, ActionProps>
   test?: ActionRunner<ConnectorAuth, ActionProps>
@@ -52,6 +54,7 @@ export const createAction = <ConnectorAuth extends ConnectorAuthProperty, Action
   name,
   displayName,
   description,
+  descriptionLong,
   props,
   run,
   test,
@@ -62,6 +65,7 @@ export const createAction = <ConnectorAuth extends ConnectorAuthProperty, Action
     name,
     displayName,
     description,
+    descriptionLong ?? '',
     props,
     run,
     test || run,

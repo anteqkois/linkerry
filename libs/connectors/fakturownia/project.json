@@ -1,0 +1,21 @@
+{
+  "name": "connectors-fakturownia",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/fakturownia/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/fakturownia",
+        "main": "libs/connectors/fakturownia/src/index.ts",
+        "tsConfig": "libs/connectors/fakturownia/tsconfig.lib.json",
+        "assets": ["libs/connectors/fakturownia/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
+      }
+    }
+  }
+}

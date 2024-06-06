@@ -6,7 +6,7 @@ import { discordCommon } from '../common'
 export const discordCreateChannel = createAction({
   auth: discordAuth,
   name: 'create_channel',
-  description: 'create a channel',
+  description: 'Create a channel',
   displayName: 'Create channel',
   props: {
     guild_id: discordCommon.guilds,
