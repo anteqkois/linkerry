@@ -33,7 +33,7 @@ export const getConnectorAppNameFromConnectorPacakgeName = (pacakgeName: string)
   return pacakgeName.slice(10)
 }
 
-export const builImageUrlFromConnectorPacakgeName = (pacakgeName: string): string => {
+export const buildImageUrlFromConnectorPacakgeName = (pacakgeName: string): string => {
   const name = pacakgeName.slice(10)
   return `/images/connectors/${name}.png`
 }

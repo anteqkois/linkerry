@@ -1,4 +1,5 @@
 import { UserProvider } from '../../modules/user/useUser'
+import { ConnectorImages } from './components/ConnectorLogos'
 import { Connectors } from './components/Connectors'
 import { Hero } from './components/Hero'
 import { Pricing } from './components/Pricing'
@@ -9,6 +10,7 @@ export default async function IndexPage() {
   return (
     <>
       <Hero />
+      <ConnectorImages className='hidden md:block'/>
       <Connectors />
       <UserProvider>
         <Pricing />

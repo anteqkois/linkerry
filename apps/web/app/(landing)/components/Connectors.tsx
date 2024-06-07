@@ -7,7 +7,7 @@ export interface ConnectorsProps extends HTMLAttributes<HTMLElement> {}
 
 export const Connectors = () => {
   return (
-    <section className="w-full flex-center pb-10 xl:pb-32 md:pt-20 2xl:pt-56" id="connectors">
+    <section className="w-full flex-center pb-10 xl:pb-32 md:pt-20 2xl:pt-24" id="connectors">
       <div className="flex flex-col relative">
         <Heading className="pb-2">Avaible Connectors</Heading>
         <Card className="p-1 m-2 lg:w-240">

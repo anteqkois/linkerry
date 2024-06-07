@@ -1,0 +1,62 @@
+.scroll-container {
+  /* height: 100vh; */
+}
+
+.carousel-primary,
+.carousel-secondary {
+  /* top: 26%; */
+  left: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.carousel-primary img {
+  /* width: 100%; */
+  cursor: pointer;
+}
+
+.carousel-primary {
+  display: flex;
+  justify-content: space-around;
+  animation: scroll-horizontal 30s linear infinite;
+}
+
+.carousel-secondary {
+  animation: scroll-horizontal 30s linear infinite;
+  animation-delay: 15s;
+}
+
+@keyframes scroll-horizontal {
+  0% {
+    left: 100%;
+  }
+
+  100% {
+    left: -100%;
+  }
+}
+
+.carousel-primary:hover,
+.carousel-primary:hover ~ .carousel-secondary {
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  animation-play-state: paused;
+}
+
+.carousel-secondary:hover,
+.carousel-secondary:hover ~ .carousel-primary {
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  animation-play-state: paused;
+}
+
+.scroll-container:hover > .carousel-primary:not(:hover) {
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  animation-play-state: paused;
+}

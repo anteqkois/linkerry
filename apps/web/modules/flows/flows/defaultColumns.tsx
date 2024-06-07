@@ -7,7 +7,7 @@ import {
   FlowStatus,
   TriggerType,
   assertNotNullOrUndefined,
-  builImageUrlFromConnectorPacakgeName,
+  buildImageUrlFromConnectorPacakgeName,
   flowHelper,
   isCustomHttpExceptionAxios,
   isStepBaseSettings,
@@ -99,7 +99,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
                             height={26}
                             className="inline-block bg-muted text-muted-foreground rounded-full"
                             style={{ transform: `translate(-${index * 6}px, 0px)` }}
-                            src={builImageUrlFromConnectorPacakgeName(step.settings.connectorName)}
+                            src={buildImageUrlFromConnectorPacakgeName(step.settings.connectorName)}
                             alt={step.displayName}
                           />
                         )
