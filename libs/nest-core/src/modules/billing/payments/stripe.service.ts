@@ -65,6 +65,18 @@ export class StripeService {
     else if (previous_attributes?.status)
       throw new CustomError(`Unknown subscribe status`, ErrorCode.INVALID_BILLING, { status: previous_attributes?.status })
 
+    // check if user have default payment method, if not set it
+    const stripeCustomer = await this.stripeClient.customers.retrieve(event.data.object.customer.toString())
+    if (stripeCustomer.deleted) throw new CustomError(`Stripe customer is deleted`, ErrorCode.INVALID_TYPE, { customerId: stripeCustomer.id })
+    if (!(stripeCustomer as Stripe.Customer).invoice_settings.default_payment_method && typeof event.data.object.default_payment_method === 'string')
+      await this.stripeClient.customers.update(stripeCustomer.id, {
+        invoice_settings: {
+          default_payment_method: event.data.object.default_payment_method,
+        },
+      })
+
+    console.dir(object, { depth: null })
+
     this.eventEmitter.emit(EVENT.SUBSCRIPTION.UPDATE, {
       id: object.metadata.subscriptionId,
       data: update,
@@ -89,6 +101,21 @@ export class StripeService {
         },
       })
     }
+
+    return customer
+  }
+
+  private async _getCustomerOrThrow({ project }: { project: ProjectDocument<'owner'> }) {
+    const customer = (
+      await this.stripeClient.customers.search({
+        query: `metadata["projectId"]:"${project._id.toString()}"`,
+      })
+    ).data[0]
+
+    if (!customer)
+      throw new CustomError(`Can not find stripe customer`, ErrorCode.ENTITY_NOT_FOUND, {
+        project: project._id.toString(),
+      })
 
     return customer
   }
@@ -178,6 +205,38 @@ export class StripeService {
 
     return { paymentUrl: session.url }
   }
+
+  async updateSubscription({
+    paymentIems,
+    project,
+    currentSubscriptionId,
+  }: UpdateSubscriptionCheckoutSessionProps): Promise<UpdateSubscriptionCheckoutSessionRespons> {
+    const customer = await this._getCustomerOrCreate({ project })
+
+    const currentStripeSubscription = (
+      await this.stripeClient.subscriptions.search({
+        query: `metadata["subscriptionId"]:"${currentSubscriptionId}"`,
+      })
+    ).data[0]
+
+    if (!currentStripeSubscription)
+      throw new CustomError(`Can not retrive current stripe subscription`, ErrorCode.ENTITY_NOT_FOUND, {
+        currentSubscriptionId,
+      })
+
+    if (customer.metadata['projectId'] !== currentStripeSubscription.metadata['projectId'])
+      throw new CustomError(`Invalid subscription retrived`, ErrorCode.INVALID_TYPE, {
+        customerProjectId: customer.metadata['projectId'],
+        subscriptionProjectId: currentStripeSubscription.metadata['projectId'],
+      })
+
+    await this.stripeClient.subscriptions.update(currentStripeSubscription.id, {
+      items: paymentIems.map((item) => ({
+        price: item.price.stripe.id,
+        quantity: 1,
+      })),
+    })
+  }
 }
 
 const isSubscriptionMetadata = (data: unknown): data is SubscriptionMetadata => {
@@ -200,6 +259,15 @@ interface CreateSubscriptionCheckoutSessionProps {
 interface CreateSubscriptionCheckoutSessionRespons {
   paymentUrl: string
 }
+
+interface UpdateSubscriptionCheckoutSessionProps {
+  currentSubscriptionId: Id
+  project: ProjectDocument<'owner'>
+  // period: SubscriptionPeriod
+  paymentIems: PaymentItem[]
+}
+
+type UpdateSubscriptionCheckoutSessionRespons = { paymentUrl: string } | void
 
 export interface PaymentItem {
   product: Product

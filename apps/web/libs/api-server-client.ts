@@ -1,3 +1,4 @@
+import { RefreshTokenResponse } from '@linkerry/shared'
 import axios from 'axios'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -35,7 +36,7 @@ apiServerClient.interceptors.response.use(
     if (error.response.status == 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const response = await axios.get<{ success: boolean }>(`${API_URL}/api/v1/auth/refresh`, {
+        const response = await axios.get<RefreshTokenResponse>(`${API_URL}/api/v1/auth/refresh`, {
           withCredentials: true,
           headers: {
             // fingerprint: await fingerprint,

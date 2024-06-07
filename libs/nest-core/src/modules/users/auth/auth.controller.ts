@@ -2,6 +2,8 @@ import '@fastify/cookie'
 import {
   AuthStatus,
   Cookies,
+  CustomError,
+  ErrorCode,
   IAuthLoginResponse,
   IAuthLogoutResponse,
   RequestUser,
@@ -10,25 +12,30 @@ import {
   User,
   VerifyEmailInput,
   signUpInputSchema,
-  verifyEmailInputSchema,
+  verifyEmailInputSchema
 } from '@linkerry/shared'
-import { Controller, Post, Response, UseGuards } from '@nestjs/common'
+import { Controller, Get, Post, Request, Response, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { FastifyReply } from 'fastify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { JwtCookiesAuthGuard } from '../../../lib/auth'
 import { LocalAuthGuard } from '../../../lib/auth/guards/local-auth.guard'
+import { JWTCustomService } from '../../../lib/auth/jwt-custom.service'
 import { BodySchema } from '../../../lib/nest-utils/decorators/zod/body.decorator'
 import { AuthService } from './auth.service'
 import { ReqUser } from './decorators/req-user.decorator'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+    private readonly jwtCustomService: JWTCustomService,
+  ) {}
 
   @Post('signup')
   async signup(@BodySchema(signUpInputSchema) body: SignUpInput, @Response({ passthrough: true }) res: FastifyReply): Promise<SignUpResponse> {
     const { access_token, user: userRes } = await this.authService.signUp(body)
-    const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
+    const expireDateUnix = +this.configService.get<number>('JWT_ACCESS_TOKEN_EXPIRE_SSECONDS', 3600)
     const domain = this.configService.getOrThrow('DOMAIN')
 
     res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
@@ -57,8 +64,7 @@ export class AuthController {
   ): Promise<IAuthLoginResponse> {
     delete user.id
 
-    const { access_token, user: userRes } = await this.authService.login(user)
-    const expireDateUnix = +this.configService.get('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
+    const { access_token, refresh_token, user: userRes } = await this.authService.login(user)
     const domain = this.configService.getOrThrow('DOMAIN')
 
     res.setCookie(Cookies.ACCESS_TOKEN, access_token, {
@@ -68,7 +74,16 @@ export class AuthController {
       secure: true,
       // sameSite: 'lax',
       sameSite: 'none',
-      expires: new Date(Date.now() + 1000 * expireDateUnix),
+      expires: new Date(Date.now() + 1000 * this.jwtCustomService.JWT_ACCESS_TOKEN_EXPIRE_SSECONDS),
+    })
+    res.setCookie(Cookies.REFRESH_TOKEN, refresh_token, {
+      path: '/',
+      domain,
+      httpOnly: true,
+      secure: true,
+      // sameSite: 'lax',
+      sameSite: 'none',
+      expires: new Date(Date.now() + 1000 * this.jwtCustomService.JWT_REFRESH_TOKEN_EXPIRE_SSECONDS),
     })
     res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
       domain,
@@ -78,7 +93,6 @@ export class AuthController {
     return res.send({ user: userRes })
   }
 
-  // @UseGuards(JwtCookiesAuthGuard)
   @Post('logout')
   async logut(@Response({ passthrough: true }) res: FastifyReply): Promise<IAuthLogoutResponse> {
     res.clearCookie(Cookies.ACCESS_TOKEN, {
@@ -106,19 +120,38 @@ export class AuthController {
     return this.authService.resendEmailCode({ userId: user.id })
   }
 
-  // @UseGuards(LocalAuthGuard)
-  // @Post('refresh')
-  // async login(@ReqUser() user: User, @Response({ passthrough: true }) res: FastifyReply) {
-  //   const { access_token, user: userRes } = await this.authService.login(user)
-  //   const expireDateUnix = +this.configService.get<number>('JWT_ACCES_TOKEN_EXPIRE_SSECONDS', 3600)
+  @Get('refresh')
+  async refresh(@Request() req: FastifyRequest, @Response({ passthrough: true }) res: FastifyReply) {
+    const refreshToken = req.cookies[Cookies.REFRESH_TOKEN]
+    if (!refreshToken) throw new CustomError(`Can not retrive refresh token`, ErrorCode.INVALID_OR_EXPIRED_JWT_TOKEN)
 
-  //   res.setCookie('access_token', access_token, {
-  //     httpOnly: true,
-  //     secure: true,
-  // sameSite: 'lax',
-  //     none: 'lax',
-  //     expires: new Date(Date.now() + expireDateUnix),
-  //   })
-  //   return res.send({ user: userRes, status: 'ok' })
-  // }
+    const domain = this.configService.getOrThrow('DOMAIN')
+    const response = await this.authService.refreshToken(refreshToken, req.id)
+    if (response.alreadyRefreshed) return res.send({ success: true })
+
+    res.setCookie(Cookies.ACCESS_TOKEN, response.access_token, {
+      path: '/',
+      domain,
+      httpOnly: true,
+      secure: true,
+      // sameSite: 'lax',
+      sameSite: 'none',
+      expires: new Date(Date.now() + 1000 * this.jwtCustomService.JWT_ACCESS_TOKEN_EXPIRE_SSECONDS),
+    })
+    res.setCookie(Cookies.REFRESH_TOKEN, response.refresh_token, {
+      path: '/',
+      domain,
+      httpOnly: true,
+      secure: true,
+      // sameSite: 'lax',
+      sameSite: 'none',
+      expires: new Date(Date.now() + 1000 * this.jwtCustomService.JWT_REFRESH_TOKEN_EXPIRE_SSECONDS),
+    })
+    res.setCookie(Cookies.AUTH_STATUS, AuthStatus.AUTHENTICATED, {
+      domain,
+      path: '/',
+    })
+
+    return res.send({ success: true })
+  }
 }

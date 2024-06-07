@@ -38,10 +38,11 @@ export default function Page() {
 
       toast({
         title: 'Payment failed',
-        description: errorMessage,
+        description: errorMessage.includes('Implemented')
+          ? 'Upgrading subscription is now not supported. Contact with our Team and We upgared your plan '
+          : errorMessage,
         variant: 'destructive',
       })
-    } finally {
       setLoading(false)
     }
   }, [])

@@ -14,7 +14,7 @@ export class SubscriptionsController {
   @Get()
   findMany(@ReqJwtUser() user: RequestUser) {
     return this.subscriptionsService.findMany({
-      project: user.projectId,
+      projectId: user.projectId,
     })
   }
 

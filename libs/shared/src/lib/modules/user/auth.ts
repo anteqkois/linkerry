@@ -19,6 +19,10 @@ export interface SignUpResponse {
   error: string | undefined
 }
 
+export interface RefreshTokenResponse {
+  success: true
+}
+
 export const loginInputSchema = signUpInputSchema.pick({
   email: true,
   password: true,

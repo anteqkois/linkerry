@@ -18,7 +18,7 @@ export class JwtCookiesAuthGuard extends AuthGuard('jwt-cookies') {
     return super.canActivate(context)
   }
 
-  override handleRequest(err: any, user: any, info: any) {
+  override handleRequest(err: any, user: any, info: any, context: ExecutionContext) {
     if (err || !user) {
       throw err || new UnauthorizedException('Invalid authorization token')
     }

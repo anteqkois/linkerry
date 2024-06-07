@@ -17,6 +17,9 @@ export interface JwtWorkerTokenPayload {
 }
 
 export type JwtTokenPayload = JwtCustomerTokenPayload | JwtWorkerTokenPayload
+export type JwtRefreshTokenPayload = JwtCustomerTokenPayload & {
+  id: string
+}
 
 export interface RequestUser extends Omit<JwtCustomerTokenPayload, 'sub' | 'iss'> {
   id: string

@@ -11,7 +11,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   Separator,
-  navigationMenuTriggerStyle
+  navigationMenuTriggerStyle,
 } from '@linkerry/ui-components/client'
 import { Button, Icons } from '@linkerry/ui-components/server'
 // import { useClickOutside } from '@react-hookz/web'
@@ -46,7 +46,7 @@ export function MainNav({ items, children }: MainNavProps) {
       {items?.length ? (
         <nav className="hidden gap-6 md:flex">
           {items?.map((item, index) => (
-            <NavigationMenu key={index}>
+            <NavigationMenu key={index} delayDuration={50}>
               <NavigationMenuList>
                 {item.href ? (
                   <NavigationMenuItem>

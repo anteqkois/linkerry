@@ -10,11 +10,13 @@ import { StripeService } from './stripe.service'
       inject: [ConfigService],
       useFactory(configService: ConfigService) {
         return {
-          apiVersion: '2024-04-10' as any,
+          apiVersion: '2024-04-10',
           apiKey: configService.getOrThrow('STRIPE_API_KEY'),
           webhookConfig: {
+            // decorators: [SkipThrottle()],
             stripeSecrets: {
               account: configService.getOrThrow('STRIPE_WEBHOOK_SECRET'),
+              accountTest: configService.getOrThrow('STRIPE_WEBHOOK_SECRET'),
             },
             requestBodyProperty: 'rawBody',
           },

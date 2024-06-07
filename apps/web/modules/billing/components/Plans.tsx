@@ -28,6 +28,9 @@ export const Plans = ({ onSelectPlan, className, currentPlan, loading }: PlansPr
         ?.filter((plan) => plan.visible)
         ?.map((plan) => {
           const config = plansConfig[plan.name as PlanName]
+          console.log(currentPlan?.name);
+          // console.log(plan.name);
+          console.log('');
           if (currentPlan?.name === plan.name) {
             config.disabledMessage = 'It is your current plan'
             config.buttonLabel = 'Current Plan'

@@ -11,11 +11,6 @@ import { EmailService } from './email.service'
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         transport: {
-          // host: configService.getOrThrow('EMAIL_HOST'),
-          // auth: {
-          // 	user: configService.getOrThrow('EMAIL_USERNAME'),
-          // 	pass: configService.getOrThrow('EMAIL_PASSWORD'),
-          // },
           host: configService.get('MAIL_HOST'),
           // For SSL and TLS connection
           secure: true,

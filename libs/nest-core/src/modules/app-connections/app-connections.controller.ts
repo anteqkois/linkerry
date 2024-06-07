@@ -8,7 +8,7 @@ import {
 } from '@linkerry/shared'
 import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtCookiesAuthGuard } from '../../lib/auth'
-import { StrictRateLimit } from '../../lib/nest-utils/decorators/stricy-rate-limit.decorator'
+import { StrictRateLimit } from '../../lib/nest-utils/decorators/strict-rate-limit.decorator'
 import { BodySchema } from '../../lib/nest-utils/decorators/zod/body.decorator'
 import { ParamIdSchema } from '../../lib/nest-utils/decorators/zod/id.decorator'
 import { QuerySchema } from '../../lib/nest-utils/decorators/zod/query.decorator'

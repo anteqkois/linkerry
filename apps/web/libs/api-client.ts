@@ -1,8 +1,17 @@
+import { AuthStatus, Cookies } from '@linkerry/shared'
 import axios from 'axios'
-import { redirect } from 'next/navigation'
 // import { useRouter } from 'next/router';
 // import { store } from '../../features/common/store';
 // import fingerprint from '../../utils/fingerprint'
+
+export const redirectToLogin = () => {
+  window.location.href = `/login?from=${window.location.pathname}`
+}
+
+// const clearAuthCookies = () => {
+//   document.cookie = `${Cookies.ACCESS_TOKEN}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`
+//   document.cookie = `${Cookies.AUTH_STATUS}=${AuthStatus.UNAUTHENTICATED}; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`
+// }
 
 export const API_URL = process.env.NEXT_PUBLIC_API_HOST ?? 'https://api.linkerry.com'
 
@@ -34,9 +43,11 @@ apiClient.interceptors.response.use(
         })
         if (response.data.success) return apiClient.request(originalRequest)
         // Move user to login page, tell that session expired
-        await redirect('/login')
+        // clearAuthCookies()
+        await redirectToLogin()
       } catch (e) {
-        await redirect('/login')
+        // clearAuthCookies()
+        await redirectToLogin()
       }
     }
     throw error

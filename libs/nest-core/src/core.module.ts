@@ -67,6 +67,16 @@ import { QUEUES } from './modules/workers/flow-worker/queues/types'
         {
           ttl: config.getOrThrow('GLOBAL_THROTTLE_TTL'),
           limit: config.getOrThrow('GLOBAL_THROTTLE_LIMIT'),
+          skipIf: (context) => {
+            const { getRequest } = context.switchToHttp()
+            const req = getRequest()
+
+            const url = req?.url
+            if (!url && Object.hasOwn(req, 'api_version')) return true
+            if (url === '/api/v1/stripe/webhook') return true
+
+            return false
+          },
         },
       ],
     }),
@@ -90,7 +100,6 @@ import { QUEUES } from './modules/workers/flow-worker/queues/types'
 })
 export class CoreModule implements NestModule, OnApplicationBootstrap {
   async onApplicationBootstrap() {
-
     // TODO update it to delete only few keys
     // // Clear env
     // setTimeout(() => {
@@ -111,7 +120,6 @@ export class CoreModule implements NestModule, OnApplicationBootstrap {
     //   delete process.env['ENCRYPTION_KEY']
     //   delete process.env['ENCRYPTION_ALG']
     //   delete process.env['IV_LENGTH']
-
     //   console.log('CLEARED')
     // }, 15_000)
   }

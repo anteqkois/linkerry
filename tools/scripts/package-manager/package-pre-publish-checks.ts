@@ -57,19 +57,19 @@ const getLatestPublishedVersionPrivateRegistry = async (packageName: string, max
       const version = response.data.version
       console.info(`[getLatestPublishedVersion] packageName=${packageName}, latestVersion=${version}`)
       return version
-    } catch (e: any) {
-      console.dir(e.response.data, { depth: null })
+    } catch (err: any) {
+      if (!err?.error?.includes('no such package available')) console.dir(err.response.data, { depth: null })
 
       if (attempt === maxRetries) {
-        throw e // If it's the last attempt, rethrow the error
+        throw err // If it's the last attempt, rethrow the error
       }
 
-      if (e instanceof AxiosError && e.response?.status === 404) {
+      if (err instanceof AxiosError && err.response?.status === 404) {
         console.info(`[getLatestPublishedVersion] packageName=${packageName}, latestVersion=null`)
         return null
       }
 
-      console.warn(`[getLatestPublishedVersion] packageName=${packageName}, attempt=${attempt}, error=${e}`)
+      console.warn(`[getLatestPublishedVersion] packageName=${packageName}, attempt=${attempt}, error=${err}`)
       const delay = retryDelay(attempt)
       await new Promise((resolve) => setTimeout(resolve, delay)) // Wait for the delay before retrying
     }

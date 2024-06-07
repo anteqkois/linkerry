@@ -13,7 +13,7 @@ import {
   assertNotNullOrUndefined,
   isEmpty,
 } from '@linkerry/shared'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter'
 import { InjectModel } from '@nestjs/mongoose'
@@ -29,7 +29,9 @@ import { SubscriptionDocument, SubscriptionModel } from './schemas/subscription.
 
 @Injectable()
 export class SubscriptionsService {
+  private readonly logger = new Logger(SubscriptionsService.name)
   private readonly DEFAULT_VALIDITY_DATE
+  private readonly DEFAULT_SUBSCRIPTION_ID
 
   constructor(
     @InjectModel(SubscriptionModel.name) private readonly subscriptionModel: Model<SubscriptionDocument>,
@@ -41,6 +43,29 @@ export class SubscriptionsService {
     private readonly eventEmitter: EventEmitter2,
   ) {
     this.DEFAULT_VALIDITY_DATE = this.configService.getOrThrow('DEFAULT_VALIDITY_DATE')
+    this.DEFAULT_SUBSCRIPTION_ID = this.configService.getOrThrow('DEFAULT_SUBSCRIPTION_ID')
+  }
+
+  private async _populatePaymentItems(items: ChangeSubscriptionBody['items']) {
+    const paymentIems: PaymentItem[] = []
+
+    for (const item of items) {
+      const product = await this.productModel.findOne({
+        _id: item.productId,
+      })
+      assertNotNullOrUndefined(product, 'product')
+      const price = await this.priceModel.findOne({
+        _id: item.priceId,
+        productId: product.id,
+      })
+      assertNotNullOrUndefined(price, 'price')
+      paymentIems.push({
+        product: product.toObject(),
+        price: price.toObject(),
+      })
+    }
+
+    return paymentIems
   }
 
   private async _getDefaultSubscription(projectId: Id) {
@@ -67,7 +92,7 @@ export class SubscriptionsService {
   }) {
     const incompletedSubscription = await this.subscriptionModel.findOne({
       status: SubscriptionStatus.INCOMPLETE,
-      project: projectId,
+      projectId,
       items: {
         $in: items,
       },
@@ -92,24 +117,7 @@ export class SubscriptionsService {
     // TODO use payment gateway architecture in future -> use paymentGateway.createSubscription() where in the background will be used the right gateway (stripe, crypto etc)
     // TODO? add to productModel fields which will be holds data for payment gateway -> stripeMetadat - in this object will be id of stripe product etc, so i will only pass one object to pay,ent gateway. Use also the same pattern to subscription ?
 
-    const paymentIems: PaymentItem[] = []
-
-    for (const item of items) {
-      const product = await this.productModel.findOne({
-        _id: item.productId,
-      })
-      assertNotNullOrUndefined(product, 'product')
-      const price = await this.priceModel.findOne({
-        _id: item.priceId,
-        productId: product.id,
-      })
-      assertNotNullOrUndefined(price, 'price')
-      paymentIems.push({
-        product: product.toObject(),
-        price: price.toObject(),
-      })
-    }
-
+    const paymentIems = await this._populatePaymentItems(items)
     if (isEmpty(paymentIems)) throw new CustomError(`Can not configure your subscription items`, ErrorCode.INVALID_PRODUCT)
 
     const project = await this.projectModel
@@ -142,7 +150,40 @@ export class SubscriptionsService {
   }
 
   private async _upgradePaidSubscription({ items, projectId, period }: CreateSubscriptionParams) {
-    //
+    const paymentIems = await this._populatePaymentItems(items)
+    if (isEmpty(paymentIems)) throw new CustomError(`Can not configure your subscription items`, ErrorCode.INVALID_PRODUCT)
+
+    const project = await this.projectModel
+      .findOne<ProjectDocument<'owner'>>({
+        _id: projectId,
+      })
+      .populate('owner')
+    assertNotNullOrUndefined(project, 'project')
+
+    // const createdSubscription = await this._createSubscriptionOrRetriveIncompleted({
+    //   projectId: project._id.toString(),
+    //   period,
+    //   items: paymentIems.map((item) => ({
+    //     priceId: item.price._id,
+    //     productId: item.product._id,
+    //   })),
+    // })
+
+    const currentActiveSubscription = await this.getActiveSubscriptionOnlyOneOrThrow({ projectId })
+    if (currentActiveSubscription.id === this.DEFAULT_SUBSCRIPTION_ID)
+      throw new CustomError(`Invalid subscription. Can not upgrade from default subscription`, ErrorCode.INVALID_PRODUCT)
+
+    const stripeResponse = await this.stripeService.updateSubscription({
+      // currentSubscriptionId: createdSubscription.id,
+      currentSubscriptionId: currentActiveSubscription.id,
+      project,
+      // period,
+      paymentIems,
+    })
+
+    // return {
+    //   checkoutUrl: stripeResponse.paymentUrl,
+    // }
   }
 
   private async _downgradePaidSubscription() {
@@ -152,7 +193,9 @@ export class SubscriptionsService {
     )
   }
 
-  async change(input: CreateSubscriptionParams) {
+  async change(input: CreateSubscriptionParams): Promise<{
+    checkoutUrl: string
+  } | void> {
     if (input.items.length !== 1) throw new CustomError(`Currently only one item for subscription is supported`, ErrorCode.INVALID_PRODUCT)
     const item = input.items[0]
 
@@ -168,7 +211,7 @@ export class SubscriptionsService {
     else throw new CustomError(`New plan is the same as current`, ErrorCode.INVALID_PRODUCT)
   }
 
-  async findMany(filter: FilterQuery<Subscription>): Promise<SubscriptionDocument<'items'>[]> {
+  async findMany(filter: FilterQuery<SubscriptionDocument>): Promise<SubscriptionDocument<'items'>[]> {
     const subscriptions = await this.subscriptionModel.find<SubscriptionDocument<'items'>>(filter).populate(['items.price', 'items.product'])
 
     /* no one active subscription */
@@ -181,9 +224,9 @@ export class SubscriptionsService {
     return this.subscriptionModel.findOne(filter)
   }
 
-  async getCurrentPlanOrThrow({ projectId }: { projectId: Id }) {
+  async getActiveSubscriptionOnlyOneOrThrow({ projectId }: { projectId: Id }) {
     const activeSubscriptions = await this.findMany({
-      project: projectId,
+      projectId: projectId,
       status: SubscriptionStatus.ACTIVE,
     })
 
@@ -193,20 +236,25 @@ export class SubscriptionsService {
       })
 
     /* return default subscription */
-    if (!activeSubscriptions.length) (await this._getDefaultSubscription(projectId)).items[0].product
+    if (!activeSubscriptions.length) return this._getDefaultSubscription(projectId)
+    return activeSubscriptions[0]
+  }
 
-    const planProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
+  async getCurrentPlanOrThrow({ projectId }: { projectId: Id }) {
+    const activeSubscription = await this.getActiveSubscriptionOnlyOneOrThrow({ projectId })
+    const planProducts = activeSubscription.items.filter((item) => item.product.type === ProductType.PLAN)
     if (planProducts.length > 1)
       throw new CustomError(`More than one product plan in subscription`, ErrorCode.INVALID_BILLING, {
         projectId,
-        subscriptionId: activeSubscriptions[0].id,
+        subscriptionId: activeSubscription.id,
       })
     return planProducts[0].product
   }
 
   @OnEvent(EVENT.SUBSCRIPTION.UPDATE)
   async handleSubscriptionUpdate(payload: SubscriptionUpdate) {
-    /* only retrive subscription to update, becouse we want to get projectId */
+    console.dir(payload, { depth: null })
+    /* only retrive subscription to update, becouse we want to get projectId. This subscription can be incomplete */
     const newSubscription = await this.subscriptionModel
       .findOne<SubscriptionDocument<'items'>>({
         _id: payload.id,
@@ -215,9 +263,9 @@ export class SubscriptionsService {
       .populate('items.product')
     assertNotNullOrUndefined(newSubscription, 'newSubscription')
 
-    /* retrive current data before update using projectId also */
+    /* retrive current data before update using projectId also. Also retrive it, becouse it can be diffrent than newSubscription. New subscription can be incomplete, so activeSubscription can be Free default */
     const activeSubscriptions = await this.findMany({
-      project: newSubscription.projectId,
+      projectId: newSubscription.projectId,
       status: SubscriptionStatus.ACTIVE,
     })
 
@@ -227,7 +275,10 @@ export class SubscriptionsService {
       })
 
     /* get default subscription */
-    if (!activeSubscriptions.length) activeSubscriptions[0] = await this._getDefaultSubscription(newSubscription.projectId.toString())
+    if (!activeSubscriptions.length) {
+      this.logger.debug(`First paid subscription, projectId=${newSubscription.projectId.toString()}`)
+      activeSubscriptions[0] = await this._getDefaultSubscription(newSubscription.projectId.toString())
+    }
 
     const oldPlanProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
     if (oldPlanProducts.length > 1)
@@ -242,20 +293,21 @@ export class SubscriptionsService {
     }
     await newSubscription.save()
 
-    const newPlanProducts = activeSubscriptions[0].items.filter((item) => item.product.type === ProductType.PLAN)
-    if (oldPlanProducts.length > 1)
+    const newPlanProducts = newSubscription.items.filter((item) => item.product.type === ProductType.PLAN)
+    if (newPlanProducts.length > 1)
       throw new CustomError(`More than one product plan in new subscription`, ErrorCode.INVALID_BILLING, {
         projectId: newSubscription.projectId.toString(),
         subscriptionId: activeSubscriptions[0].id,
       })
 
     /* side effect to update project limits */
-    this.eventEmitter.emit(EVENT.SUBSCRIPTION.PLAN.UPDATE, {
-      oldSubscription: activeSubscriptions[0].toObject(),
-      newSubscription: newSubscription.toObject(),
-      oldPlan: oldPlanProducts[0].toObject(),
-      newPlan: newPlanProducts[0].product.toObject(),
-    } as SubscriptionPlanUpdate)
+    if (newSubscription.status === SubscriptionStatus.ACTIVE)
+      this.eventEmitter.emit(EVENT.SUBSCRIPTION.PLAN.UPDATE, {
+        oldSubscription: activeSubscriptions[0].toObject(),
+        newSubscription: newSubscription.toObject(),
+        oldPlan: oldPlanProducts[0].product.toObject(),
+        newPlan: newPlanProducts[0].product.toObject(),
+      } as SubscriptionPlanUpdate)
   }
 }
 

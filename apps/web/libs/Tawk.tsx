@@ -58,13 +58,13 @@ export function LiveChatProvider({ children }: PropsWithChildren) {
         customStyle={{
           visibility: {
             desktop: {
-              xOffset: 5,
-              yOffset: 5,
+              xOffset: 10,
+              yOffset: 10,
               // position : 'br', 'bl', 'cr', 'cl', 'tr', 'tl' // Accepted value
             },
             mobile: {
-              xOffset: 5,
-              yOffset: 5,
+              xOffset: 10,
+              yOffset: 10,
             },
           },
         }}

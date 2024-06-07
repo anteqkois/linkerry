@@ -22,7 +22,12 @@ export const ReachLimitDialog = () => {
   return (
     // TODO show highter plan to the right
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
-      <DialogContent className="sm:max-w-dialog">
+      <DialogContent
+        className="sm:max-w-dialog"
+        onInteractOutside={(event) => {
+          event.preventDefault()
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Reach Plan Limit</DialogTitle>
           {exceededConfigurationEntry ? (

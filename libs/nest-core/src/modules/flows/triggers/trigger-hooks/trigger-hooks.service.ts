@@ -307,7 +307,7 @@ export class TriggerHooks {
           this.logger.error(`Flow ${flowTrigger.name} with ${connectorTrigger.name} trigger throws and error, returning as zero payload `, result)
 
           // for simulate purpose return errorts to pass it to the frontend
-          if(simulate) return result as any
+          if (simulate) return result as any
           payloads = []
         }
 
@@ -340,10 +340,11 @@ export class TriggerHooks {
 
   @OnEvent(EVENT.SUBSCRIPTION.PLAN.UPDATE)
   async handleSubscriptionPlanUpdate({ newPlan, oldPlan, newSubscription }: SubscriptionPlanUpdate) {
+    console.dir({ newPlan, oldPlan, newSubscription }, { depth: null })
     if (oldPlan.config.minimumPollingInterval === newPlan.config.minimumPollingInterval) return
 
     const projectActiveFlows = await this.flowModel.find({
-      projectId: newSubscription.project,
+      projectId: newSubscription.projectId,
       status: FlowStatus.ENABLED,
       publishedVersionId: {
         $exists: true,

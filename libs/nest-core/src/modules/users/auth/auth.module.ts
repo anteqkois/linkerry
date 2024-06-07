@@ -4,12 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { MongooseModule } from '@nestjs/mongoose'
 import { PassportModule } from '@nestjs/passport'
+import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { HashService } from '../../../lib/auth/hash.service'
 import { JWTCustomService } from '../../../lib/auth/jwt-custom.service'
 import { JwtBearerTokenStrategy } from '../../../lib/auth/strategies/jwt-bearer-token.strategy'
 import { JwtCookiesStrategy } from '../../../lib/auth/strategies/jwt-cookies.strategy'
 import { JwtWebsocketStrategy } from '../../../lib/auth/strategies/jwt-websocket.strategy'
 import { LocalStrategy } from '../../../lib/auth/strategies/local.strategy'
+import { RedisLockModule } from '../../../lib/redis-lock'
 import { SubscriptionsModule } from '../../billing/subscriptions/subscriptions.module'
 import { RedisConfigService } from '../../configs/redis-config.service'
 import { EmailModule } from '../../notifications/email/email.module'
@@ -29,6 +31,7 @@ import { AuthService } from './auth.service'
     SubscriptionsModule,
     EmailModule,
     ConfigModule,
+    RedisLockModule,
     // TODO refactor this to global module
     RedisModule.forRootAsync({
       imports: [ConfigModule],
@@ -50,7 +53,7 @@ import { AuthService } from './auth.service'
         name: UserModel.name,
         useFactory: () => {
           const schema = UserSchema
-          schema.plugin(require('mongoose-unique-validator'), { message: 'Email or nick exists' }) // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
+          schema.plugin(mongooseUniqueValidator, { message: 'Email or nick exists' }) // or you can integrate it without the options   schema.plugin(require('mongoose-unique-validator')
           return schema
         },
       },

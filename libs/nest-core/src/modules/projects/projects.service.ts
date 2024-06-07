@@ -1,8 +1,8 @@
 import { DatabseModelInput, Id, Project } from '@linkerry/shared'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { ProjectModel } from './schemas/projects.schema'
+import { FilterQuery, Model } from 'mongoose'
+import { ProjectDocument, ProjectModel } from './schemas/projects.schema'
 
 @Injectable()
 export class ProjectsService {
@@ -20,5 +20,9 @@ export class ProjectsService {
 
   async create(input: DatabseModelInput<Project>) {
     return this.projectsModel.create(input)
+  }
+
+  async findOne(filter: FilterQuery<ProjectDocument>) {
+    return this.projectsModel.findOne(filter)
   }
 }

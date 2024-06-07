@@ -5,6 +5,7 @@ import {
   ErrorCode,
   Id,
   JWTPrincipalType,
+  JwtRefreshTokenPayload,
   JwtWorkerTokenPayload,
   NotificationStatus,
   SignUpInput,
@@ -19,8 +20,10 @@ import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
 import { Redis } from 'ioredis'
 import { Model } from 'mongoose'
+import { nanoid } from 'nanoid'
 import { HashService } from '../../../lib/auth/hash.service'
 import { JWTCustomService } from '../../../lib/auth/jwt-custom.service'
+import { RedisLockService } from '../../../lib/redis-lock'
 import { SubscriptionsService } from '../../billing/subscriptions/subscriptions.service'
 import { REDIS_CLIENT_NAMESPACE, REDIS_KEYS } from '../../configs/redis'
 import { EmailService } from '../../notifications/email/email.service'
@@ -44,6 +47,7 @@ export class AuthService {
     private readonly subscriptionsService: SubscriptionsService,
     private readonly emailService: EmailService,
     private readonly configService: ConfigService,
+    private readonly redisLockService: RedisLockService,
   ) {
     this.EMAIL_CODE_VERIFICATION_EXPIRE_MS = configService.getOrThrow('EMAIL_CODE_VERIFICATION_EXPIRE_MS')
   }
@@ -128,6 +132,8 @@ export class AuthService {
 
   async login(user: User) {
     const userProjects = await this.projectsService.findManyUserProjects(user._id)
+    const refreshTokenId = nanoid()
+
     return {
       user,
       access_token: this.jwtCustomService.generateToken({
@@ -135,6 +141,68 @@ export class AuthService {
           sub: user._id,
           type: JWTPrincipalType.CUSTOMER,
           projectId: userProjects[0]?.id,
+        },
+      }),
+      refresh_token: this.jwtCustomService.generateRefreshToken({
+        payload: {
+          sub: user._id,
+          type: JWTPrincipalType.CUSTOMER,
+          projectId: userProjects[0]?.id,
+          id: refreshTokenId,
+        },
+      }),
+    }
+  }
+
+  async refreshToken(refreshToken: string, reqId: any): Promise<RefreshTokenResponse> {
+    const jwtPayload = this.verifyJwt(refreshToken) as JwtRefreshTokenPayload
+
+    const lockKey = `lock:${jwtPayload.id}`
+    let refreshLock
+    try {
+      refreshLock = await this.redisLockService.acquireLock({
+        key: lockKey,
+        timeoutMs: 1_000, // 1 second
+      })
+    } catch {
+      //
+    }
+
+    // check if there was a couple of requests in the same time (when user refresh apge etc. there can be send many requests)
+    const alreadyRefreshed = await this.redis.get(`refreshed:${jwtPayload.id}`)
+    if (alreadyRefreshed) return { alreadyRefreshed: true }
+    await this.redis.set(`refreshed:${jwtPayload.id}`, jwtPayload.id, 'EX', 15)
+
+    // check if token was used
+    const wasUsed = await this.redis.get(jwtPayload.id)
+    if (wasUsed) throw new CustomError(`Token was used`, ErrorCode.INVALID_OR_EXPIRED_JWT_TOKEN)
+
+    await this.redis.set(jwtPayload.id, jwtPayload.id, 'EX', this.jwtCustomService.JWT_REFRESH_TOKEN_EXPIRE_SSECONDS)
+
+    const project = await this.projectsService.findOne({
+      _id: jwtPayload.projectId,
+    })
+    assertNotNullOrUndefined(project, 'project')
+
+    const refreshTokenId = nanoid()
+
+    await refreshLock?.release()
+
+    return {
+      alreadyRefreshed: false,
+      access_token: this.jwtCustomService.generateToken({
+        payload: {
+          sub: jwtPayload.sub,
+          type: JWTPrincipalType.CUSTOMER,
+          projectId: project.id,
+        },
+      }),
+      refresh_token: this.jwtCustomService.generateRefreshToken({
+        payload: {
+          sub: jwtPayload.sub,
+          type: JWTPrincipalType.CUSTOMER,
+          projectId: project.id,
+          id: refreshTokenId,
         },
       }),
     }
@@ -190,3 +258,18 @@ export interface VerifyEmailCodeParams {
   code: string
   userId: Id
 }
+
+interface RefreshTokenAlreadyResponse {
+  alreadyRefreshed: true
+  // TS complier have issue with this
+  access_token?: string
+  refresh_token?: string
+}
+
+interface RefreshTokenRefreshedResponse {
+  alreadyRefreshed: false
+  access_token: string
+  refresh_token: string
+}
+
+type RefreshTokenResponse = RefreshTokenAlreadyResponse | RefreshTokenRefreshedResponse
