@@ -28,16 +28,13 @@ export const Plans = ({ onSelectPlan, className, currentPlan, loading }: PlansPr
         ?.filter((plan) => plan.visible)
         ?.map((plan) => {
           const config = plansConfig[plan.name as PlanName]
-          console.log(currentPlan?.name);
-          // console.log(plan.name);
-          console.log('');
           if (currentPlan?.name === plan.name) {
             config.disabledMessage = 'It is your current plan'
             config.buttonLabel = 'Current Plan'
             config.buttonVariant = 'outline'
           }
           if ((currentPlan?.priority ?? 0) > plan.priority)
-            config.disabledMessage = 'Downgrade plan is uniplemented. If you want downgrade plan contact with our Team'
+            config.disabledMessage = 'Downgrade plan is uniplemented yet. If you want downgrade plan contact with our Team'
           return (
             <PlanCard key={plan.name} price={plan.prices[0]} product={plan} config={config} onSelectPlan={onSelectPlan} loading={loading}>
               {config.children}

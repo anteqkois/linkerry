@@ -13,10 +13,14 @@ import {
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { EventEmitter2 } from '@nestjs/event-emitter'
+import { InjectModel } from '@nestjs/mongoose'
 import dayjs from 'dayjs'
+import { Model } from 'mongoose'
 import { Stripe } from 'stripe'
 import { EVENT } from '../../configs/events-emitter'
 import { ProjectDocument } from '../../projects/schemas/projects.schema'
+import { PriceDocument, PriceModel } from '../products/prices/price.schema'
+import { ProductDocument, ProductModel } from '../products/product.schema'
 import { SubscriptionUpdate } from '../subscriptions/events'
 
 @Injectable()
@@ -24,6 +28,8 @@ export class StripeService {
   private readonly logger = new Logger(StripeService.name)
 
   constructor(
+    @InjectModel(ProductModel.name) private readonly productModel: Model<ProductDocument>,
+    @InjectModel(PriceModel.name) private readonly priceModel: Model<PriceDocument>,
     @InjectStripeClient() private readonly stripeClient: Stripe,
     private readonly configService: ConfigService,
     private readonly eventEmitter: EventEmitter2,
@@ -64,6 +70,25 @@ export class StripeService {
       update.status = object.status as SubscriptionStatus
     else if (previous_attributes?.status)
       throw new CustomError(`Unknown subscribe status`, ErrorCode.INVALID_BILLING, { status: previous_attributes?.status })
+    if (previous_attributes?.items) {
+      update.items = []
+
+      for (const item of object.items.data) {
+        const product = await this.productModel.findOne({
+          'stripe.id': item.price.product,
+        })
+        assertNotNullOrUndefined(product, `product=${item.price.product}`)
+        const price = await this.priceModel.findOne({
+          'stripe.id': item.price.id,
+          productId: product.id,
+        })
+        assertNotNullOrUndefined(price, `price=${item.price.id}`)
+        update.items.push({
+          productId: product.id,
+          priceId: price?.id,
+        })
+      }
+    }
 
     // check if user have default payment method, if not set it
     const stripeCustomer = await this.stripeClient.customers.retrieve(event.data.object.customer.toString())
@@ -74,8 +99,6 @@ export class StripeService {
           default_payment_method: event.data.object.default_payment_method,
         },
       })
-
-    console.dir(object, { depth: null })
 
     this.eventEmitter.emit(EVENT.SUBSCRIPTION.UPDATE, {
       id: object.metadata.subscriptionId,
@@ -231,10 +254,14 @@ export class StripeService {
       })
 
     await this.stripeClient.subscriptions.update(currentStripeSubscription.id, {
-      items: paymentIems.map((item) => ({
-        price: item.price.stripe.id,
-        quantity: 1,
-      })),
+      items: [
+        // close all other products
+        ...currentStripeSubscription.items.data.map((item) => ({ id: item.id, deleted: true })),
+        ...paymentIems.map((item) => ({
+          price: item.price.stripe.id,
+          quantity: 1,
+        })),
+      ],
     })
   }
 }

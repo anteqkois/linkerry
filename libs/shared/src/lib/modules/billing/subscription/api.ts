@@ -12,6 +12,17 @@ export const changeSubscriptionBodySchema = z.object({
   period: z.nativeEnum(SubscriptionPeriod),
 })
 export type ChangeSubscriptionBody = z.infer<typeof changeSubscriptionBodySchema>
-export interface ChangeSubscriptionResponse {
+
+export enum ChangeSubscriptionResponseType {
+  CHECKOUT = 'CHECKOUT',
+  UPGRADE = 'UPGRADE',
+}
+export interface ChangeSubscriptionCheckoutResponse {
+  type: ChangeSubscriptionResponseType.CHECKOUT
   checkoutUrl: string
 }
+export interface ChangeSubscriptionUpgradeResponse {
+  type: ChangeSubscriptionResponseType.UPGRADE
+}
+
+export type ChangeSubscriptionResponse = ChangeSubscriptionCheckoutResponse | ChangeSubscriptionUpgradeResponse

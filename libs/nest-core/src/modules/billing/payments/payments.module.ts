@@ -1,11 +1,15 @@
 import { StripeModule as GolevelupStripeModule } from '@golevelup/nestjs-stripe'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { MongooseModule } from '@nestjs/mongoose'
+import { PriceModelFactory } from '../products/prices/price.schema'
+import { ProductModelFactory } from '../products/product.schema'
 import { paymentsController } from './payments.controller'
 import { StripeService } from './stripe.service'
 
 @Module({
   imports: [
+    MongooseModule.forFeatureAsync([ProductModelFactory, PriceModelFactory]),
     GolevelupStripeModule.forRootAsync(GolevelupStripeModule, {
       inject: [ConfigService],
       useFactory(configService: ConfigService) {

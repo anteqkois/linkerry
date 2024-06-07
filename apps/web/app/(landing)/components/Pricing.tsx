@@ -2,13 +2,16 @@
 
 import {
   AuthStatus,
+  ChangeSubscriptionResponseType,
   CustomError,
   ErrorCode,
   Price,
   Product,
+  ProductType,
   SubscriptionPeriod,
   SubscriptionStatus,
   isCustomHttpExceptionAxios,
+  waitMs,
 } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useAsync } from '@react-hookz/web'
@@ -31,7 +34,7 @@ export const Pricing = () => {
 
     const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === SubscriptionStatus.ACTIVE)
     if (activeSubscriptions.length !== 1) throw new CustomError(`Invalid amount of active subscriptions`, ErrorCode.INVALID_BILLING)
-    return activeSubscriptions[0]
+    return activeSubscriptions[0].items.find((item) => item.product.type === ProductType.PLAN)?.product
   })
 
   useEffect(() => {
@@ -52,6 +55,15 @@ export const Pricing = () => {
         ],
         period: SubscriptionPeriod.MONTHLY,
       })
+      if(data.type === ChangeSubscriptionResponseType.UPGRADE){
+        toast({
+          title: 'Upgrade Plan Successful',
+          description: 'Your plan was upgraded. Thanks for choosing Linkerry 💜',
+          variant: 'success',
+        })
+        await waitMs(2_000)
+        return actions.reset()
+      }
       window.location.href = data.checkoutUrl
     } catch (error) {
       let errorMessage = 'Unknown error occures during creation new subscription. Please contact with our Team.'
@@ -72,9 +84,7 @@ export const Pricing = () => {
     <section className="flex flex-col items-center pt-10 xl:pt-20 pb-10 xl:pb-28" id="pricing">
       <Heading className="pb-2 xl:pb-4">Best Plan for You</Heading>
       <div className="p-2 max-w-7xl relative">
-        {JSON.stringify(state.result)}
-        {/* <Plans onSelectPlan={onSelectPlan} loading={loading} currentPlan={currentPlan} /> */}
-        <Plans onSelectPlan={onSelectPlan} loading={loading} />
+        <Plans onSelectPlan={onSelectPlan} loading={loading} currentPlan={state.result} />
         <div
           className="w-4/5 h-3/6 inline-block rotate-1 bg-primary/30 absolute bottom-[5%] right-[10%] blur-[120px] -z-10 shadow"
           style={{ animation: 'shadow-slide infinite 4s linear alternate' }}

@@ -1,5 +1,8 @@
 import {
   ChangeSubscriptionBody,
+  ChangeSubscriptionCheckoutResponse,
+  ChangeSubscriptionResponse,
+  ChangeSubscriptionResponseType,
   CustomError,
   ErrorCode,
   Id,
@@ -113,7 +116,7 @@ export class SubscriptionsService {
     return createdSubscription
   }
 
-  private async _createFirstPaidSubscription({ items, projectId, period }: CreateSubscriptionParams) {
+  private async _createFirstPaidSubscription({ items, projectId, period }: CreateSubscriptionParams): Promise<ChangeSubscriptionCheckoutResponse> {
     // TODO use payment gateway architecture in future -> use paymentGateway.createSubscription() where in the background will be used the right gateway (stripe, crypto etc)
     // TODO? add to productModel fields which will be holds data for payment gateway -> stripeMetadat - in this object will be id of stripe product etc, so i will only pass one object to pay,ent gateway. Use also the same pattern to subscription ?
 
@@ -145,11 +148,12 @@ export class SubscriptionsService {
     })
 
     return {
+      type: ChangeSubscriptionResponseType.CHECKOUT,
       checkoutUrl: stripeResponse.paymentUrl,
     }
   }
 
-  private async _upgradePaidSubscription({ items, projectId, period }: CreateSubscriptionParams) {
+  private async _upgradePaidSubscription({ items, projectId, period }: CreateSubscriptionParams): Promise<ChangeSubscriptionResponse> {
     const paymentIems = await this._populatePaymentItems(items)
     if (isEmpty(paymentIems)) throw new CustomError(`Can not configure your subscription items`, ErrorCode.INVALID_PRODUCT)
 
@@ -160,30 +164,20 @@ export class SubscriptionsService {
       .populate('owner')
     assertNotNullOrUndefined(project, 'project')
 
-    // const createdSubscription = await this._createSubscriptionOrRetriveIncompleted({
-    //   projectId: project._id.toString(),
-    //   period,
-    //   items: paymentIems.map((item) => ({
-    //     priceId: item.price._id,
-    //     productId: item.product._id,
-    //   })),
-    // })
-
     const currentActiveSubscription = await this.getActiveSubscriptionOnlyOneOrThrow({ projectId })
     if (currentActiveSubscription.id === this.DEFAULT_SUBSCRIPTION_ID)
       throw new CustomError(`Invalid subscription. Can not upgrade from default subscription`, ErrorCode.INVALID_PRODUCT)
 
-    const stripeResponse = await this.stripeService.updateSubscription({
-      // currentSubscriptionId: createdSubscription.id,
+    await this.stripeService.updateSubscription({
       currentSubscriptionId: currentActiveSubscription.id,
       project,
       // period,
       paymentIems,
     })
 
-    // return {
-    //   checkoutUrl: stripeResponse.paymentUrl,
-    // }
+    return {
+      type: ChangeSubscriptionResponseType.UPGRADE,
+    }
   }
 
   private async _downgradePaidSubscription() {
@@ -193,9 +187,7 @@ export class SubscriptionsService {
     )
   }
 
-  async change(input: CreateSubscriptionParams): Promise<{
-    checkoutUrl: string
-  } | void> {
+  async change(input: CreateSubscriptionParams): Promise<ChangeSubscriptionResponse | void> {
     if (input.items.length !== 1) throw new CustomError(`Currently only one item for subscription is supported`, ErrorCode.INVALID_PRODUCT)
     const item = input.items[0]
 
@@ -253,7 +245,7 @@ export class SubscriptionsService {
 
   @OnEvent(EVENT.SUBSCRIPTION.UPDATE)
   async handleSubscriptionUpdate(payload: SubscriptionUpdate) {
-    console.dir(payload, { depth: null })
+    this.logger.debug(`#handleSubscriptionUpdate`, payload)
     /* only retrive subscription to update, becouse we want to get projectId. This subscription can be incomplete */
     const newSubscription = await this.subscriptionModel
       .findOne<SubscriptionDocument<'items'>>({
@@ -292,6 +284,9 @@ export class SubscriptionsService {
       (newSubscription[key] as any) = value
     }
     await newSubscription.save()
+
+    // items were changed, populate again becouse the logic above don't do this
+    if (payload.data.items) await newSubscription.populate(['items.price', 'items.product'])
 
     const newPlanProducts = newSubscription.items.filter((item) => item.product.type === ProductType.PLAN)
     if (newPlanProducts.length > 1)

@@ -12,7 +12,7 @@ interface UseSubscriptionProps {
 
 export const useSubscriptions = (props?: UseSubscriptionProps) => {
   const { toast } = useToast()
-  const { data: subscriptions, error: subscriptionsError, status: subscriptionsStatus } = useClientQuery(subscriptionsQueryConfig.getMany())
+  const { data: subscriptions, error: subscriptionsError, status: subscriptionsStatus, refetch: refetchSubscriptions } = useClientQuery(subscriptionsQueryConfig.getMany())
 
   const currentSubscription = useMemo(() => {
     if (subscriptionsStatus === 'error') {
@@ -43,5 +43,6 @@ export const useSubscriptions = (props?: UseSubscriptionProps) => {
     subscriptionsStatus,
     currentSubscription,
     currentPlan,
+    refetchSubscriptions
   }
 }

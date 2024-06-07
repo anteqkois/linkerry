@@ -1,6 +1,6 @@
 'use client'
 
-import { Price, Product, SubscriptionPeriod, isCustomHttpExceptionAxios } from '@linkerry/shared'
+import { ChangeSubscriptionResponseType, Price, Product, SubscriptionPeriod, isCustomHttpExceptionAxios, waitMs } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { H2 } from '@linkerry/ui-components/server'
 import { useCallback, useState } from 'react'
@@ -14,7 +14,7 @@ import { SubscriptionCard } from './SubscriptionCard'
 import { UsageCard } from './UsageCard'
 
 export default function Page() {
-  const { currentSubscription, currentPlan, subscriptionsError, subscriptionsStatus } = useSubscriptions()
+  const { currentSubscription, currentPlan, subscriptionsError, subscriptionsStatus, refetchSubscriptions } = useSubscriptions()
   const { usage } = useUsage()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
@@ -31,6 +31,15 @@ export default function Page() {
         ],
         period: SubscriptionPeriod.MONTHLY,
       })
+      if (data.type === ChangeSubscriptionResponseType.UPGRADE) {
+        toast({
+          title: 'Upgrade Plan Successful',
+          description: 'Your plan was upgraded. Thanks for choosing Linkerry 💜',
+          variant: 'success',
+        })
+        await waitMs(2_000)
+        return await refetchSubscriptions()
+      }
       window.location.href = data.checkoutUrl
     } catch (error) {
       let errorMessage = 'Unknown error occures during creation new subscription. Please contact with our Team.'
