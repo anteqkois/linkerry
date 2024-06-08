@@ -17,9 +17,10 @@ export interface TriggerWebhookSimulationProps extends HTMLAttributes<HTMLElemen
   panelSize: number
   disabled: boolean
   disabledMessage: string
+  sampleData?: any
 }
 
-export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage, triggerDisplayName }: TriggerWebhookSimulationProps) => {
+export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage, triggerDisplayName, sampleData }: TriggerWebhookSimulationProps) => {
   const { toast } = useToast()
   const {
     flow,
@@ -72,6 +73,24 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
     [data],
   )
 
+  const onSelectSampleData = useCallback(async () => {
+    if (!sampleData)
+      return toast({
+        title: 'Can not retrive sample data',
+        description: `We can not retrive sample data. Please inform our team about this incident.`,
+        variant: 'destructive',
+      })
+
+    setRecord(prepareCodeMirrorValue(sampleData))
+    await patchEditedTriggerConnector({
+      settings: {
+        inputUiInfo: {
+          currentSelectedData: sampleData,
+        },
+      },
+    })
+  }, [sampleData])
+
   useEffect(() => {
     // remve trigger events when trigger changed
     setRecord('')
@@ -79,7 +98,14 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
   }, [editedTrigger.settings.triggerName])
 
   useEffect(() => {
-    if (status !== 'success' || !data?.length) return
+    if (status !== 'success') return
+
+    if (!data?.length) {
+      //  check if user selected sample data
+      if (!editedTrigger.settings.inputUiInfo.currentSelectedData) return
+      setRecord(prepareCodeMirrorValue(editedTrigger.settings.inputUiInfo.currentSelectedData))
+    }
+
     if (!editedTrigger.settings.inputUiInfo.currentSelectedData || !editedTrigger.settings.inputUiInfo.lastTestDate) return
 
     setRecord(prepareCodeMirrorValue(editedTrigger.settings.inputUiInfo.currentSelectedData))
@@ -148,6 +174,8 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
       </Button>
     ) : (
       <GenerateTestDataButton
+        haveSampleData={!!sampleData}
+        onSelectSampleData={onSelectSampleData}
         // or when test starts but the watcher isn't yet enabled
         disabled={disabled || (!!flowOperationRunning && !webhookTriggerWatcherWorks)}
         disabledMessage={disabledMessage}

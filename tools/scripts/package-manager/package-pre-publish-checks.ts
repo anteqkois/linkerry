@@ -46,7 +46,7 @@ const getLatestPublishedVersionPrivateRegistry = async (packageName: string, max
       process.env.NODE_ENV === 'production' ? `http://64.226.97.74:4873/${packageName}/latest` : `http://localhost:4873/${packageName}/latest`
 
     try {
-      const response = await axios<PrivateRegistryPackageItem>(URL, {
+      const response = await axios.get<PrivateRegistryPackageItem>(URL, {
         headers:
           process.env.NODE_ENV === 'production'
             ? {
@@ -58,7 +58,7 @@ const getLatestPublishedVersionPrivateRegistry = async (packageName: string, max
       console.info(`[getLatestPublishedVersion] packageName=${packageName}, latestVersion=${version}`)
       return version
     } catch (err: any) {
-      if (!err?.error?.includes('no such package available')) console.dir(err.response.data, { depth: null })
+      if (!err?.error?.includes('no such package available')) console.log(err);
 
       if (attempt === maxRetries) {
         throw err // If it's the last attempt, rethrow the error

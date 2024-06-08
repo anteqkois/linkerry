@@ -17,9 +17,10 @@ export interface TriggerTestFunctionProps extends HTMLAttributes<HTMLElement> {
   panelSize: number
   disabled: boolean
   disabledMessage: string
+  sampleData?: any
 }
 
-export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: TriggerTestFunctionProps) => {
+export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage, sampleData }: TriggerTestFunctionProps) => {
   const { toast } = useToast()
   const { flow, editedTrigger, testPoolTrigger, flowOperationRunning, patchEditedTriggerConnector } = useEditor()
   assertNotNullOrUndefined(editedTrigger?.name, 'editedTrigger.name')
@@ -62,6 +63,24 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
     [data],
   )
 
+  const onSelectSampleData = useCallback(async () => {
+    if (!sampleData)
+      return toast({
+        title: 'Can not retrive sample data',
+        description: `We can not retrive sample data. Please inform our team about this incident.`,
+        variant: 'destructive',
+      })
+
+    setRecord(prepareCodeMirrorValue(sampleData))
+    await patchEditedTriggerConnector({
+      settings: {
+        inputUiInfo: {
+          currentSelectedData: sampleData,
+        },
+      },
+    })
+  }, [sampleData])
+
   useEffect(() => {
     // remve trigger events when trigger changed
     setRecord('')
@@ -69,7 +88,14 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
   }, [editedTrigger.settings.triggerName])
 
   useEffect(() => {
-    if (status !== 'success' || !data?.length) return
+    if (status !== 'success') return
+
+    if (!data?.length) {
+      //  check if user selected sample data
+      if (!editedTrigger.settings.inputUiInfo.currentSelectedData) return
+      setRecord(prepareCodeMirrorValue(editedTrigger.settings.inputUiInfo.currentSelectedData))
+    }
+
     if (!editedTrigger.settings.inputUiInfo.currentSelectedData || !editedTrigger.settings.inputUiInfo.lastTestDate) return
 
     setRecord(prepareCodeMirrorValue(editedTrigger.settings.inputUiInfo.currentSelectedData))
@@ -118,6 +144,8 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
               </div>
             ) : null}
             <GenerateTestDataButton
+              haveSampleData={!!sampleData}
+              onSelectSampleData={onSelectSampleData}
               disabled={disabled}
               disabledMessage={disabledMessage}
               text="Regenerate Data"
@@ -147,6 +175,8 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage }: Tr
       ) : (
         <div className="flex h-20 px-1 flex-center">
           <GenerateTestDataButton
+            haveSampleData={!!sampleData}
+            onSelectSampleData={onSelectSampleData}
             disabled={disabled}
             disabledMessage={disabledMessage}
             text="Generate Data"
