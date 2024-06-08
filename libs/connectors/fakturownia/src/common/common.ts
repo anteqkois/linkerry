@@ -11,7 +11,7 @@ export const fakturowniaCommons = {
   },
   getInvoices: async ({ api_token, domain }: FakturowaniaAuth) => {
     const request: HttpRequest = {
-      method: HttpMethod.POST,
+      method: HttpMethod.GET,
       url: fakturowniaCommons.getApiUrl(domain, 'invoices.json'),
       queryParams:{
         api_token,

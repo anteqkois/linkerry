@@ -31,6 +31,7 @@ export class Connector<ConnectorAuth extends ConnectorAuthProperty = ConnectorAu
     return {
       displayName: this.displayName,
       description: this.description,
+      descriptionLong: this.descriptionLong,
       logoUrl: this.logoUrl,
       actions: this._actions,
       triggers: this._triggers,

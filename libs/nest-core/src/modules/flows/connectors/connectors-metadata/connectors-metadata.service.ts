@@ -11,11 +11,37 @@ import {
   PrivateConnectorPackage,
   PublicConnectorPackage,
   assertNotNullOrUndefined,
+  isNil,
 } from '@linkerry/shared'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
+import semVer from 'semver'
 import { ConnectorsMetadataModel } from './schemas/connector.schema'
+
+const increasePatchVersion = (version: string): string => {
+  const incrementedVersion = semVer.inc(version, 'patch')
+  if (isNil(incrementedVersion)) {
+    throw new Error(`Failed to increase patch version ${version}`)
+  }
+  return incrementedVersion
+}
+
+const increaseMinorVersion = (version: string): string => {
+  const incrementedVersion = semVer.inc(version, 'minor')
+  if (isNil(incrementedVersion)) {
+    throw new Error(`Failed to increase minor version ${version}`)
+  }
+  return incrementedVersion
+}
+
+const increaseMajorVersion = (version: string): string => {
+  const incrementedVersion = semVer.inc(version, 'major')
+  if (isNil(incrementedVersion)) {
+    throw new Error(`Failed to increase major version ${version}`)
+  }
+  return incrementedVersion
+}
 
 @Injectable()
 export class ConnectorsMetadataService {
@@ -76,7 +102,17 @@ export class ConnectorsMetadataService {
 
     if (query.version) filter.version = query.version
 
-    const connector = (await this.connectorMetadataModel.findOne(filter))?.toObject()
+    const connector = (
+      await this.connectorMetadataModel.findOne(
+        filter,
+        {},
+        {
+          sort: {
+            _id: -1,
+          },
+        },
+      )
+    )?.toObject()
 
     if (!connector) throw new UnprocessableEntityException(`Can not find conector metadata`)
 
@@ -96,6 +132,30 @@ export class ConnectorsMetadataService {
     })
 
     return trigger
+  }
+
+  findNextExcludedVersion(version: string | undefined): { baseVersion: string; nextExcludedVersion: string } | undefined {
+    if (version?.startsWith('^')) {
+      const baseVersion = version.substring(1)
+      return {
+        baseVersion,
+        nextExcludedVersion: increaseMajorVersion(baseVersion),
+      }
+    }
+    if (version?.startsWith('~')) {
+      const baseVersion = version.substring(1)
+      return {
+        baseVersion,
+        nextExcludedVersion: increaseMinorVersion(baseVersion),
+      }
+    }
+    if (isNil(version)) {
+      return undefined
+    }
+    return {
+      baseVersion: version,
+      nextExcludedVersion: increasePatchVersion(version),
+    }
   }
 
   async getExactConnectorVersion({ name, version, projectId }: GetExactConnectorVersionParams): Promise<string> {

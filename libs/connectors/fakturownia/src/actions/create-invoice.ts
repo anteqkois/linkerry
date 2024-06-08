@@ -3,6 +3,8 @@ import { Property, createAction } from '@linkerry/connectors-framework'
 import { faktorowniaAuth } from '../common/auth'
 import { fakturowniaCommons } from '../common/common'
 
+const products_description = `Now only one product can be added. In future connector versions, there will be option to add many products.`
+
 export const fakturowniaCreateInvoice = createAction({
   auth: faktorowniaAuth,
   name: 'create_invoice',
@@ -27,7 +29,8 @@ export const fakturowniaCreateInvoice = createAction({
     }),
     number: Property.Number({
       displayName: 'Number',
-      description: "Invoice number, if you don't specify any number, default value will be used",
+      description: "Invoice number, if you don't specify any number or 0, default value will be used",
+      defaultValue: 0,
       required: false,
     }),
     sell_date: Property.DateTime({
@@ -72,41 +75,71 @@ export const fakturowniaCreateInvoice = createAction({
       description: 'Provide the tax identification number for the buyer to ensure tax compliance.',
       required: true,
     }),
-    products: Property.Array({
+    instructions_webhook_url: Property.MarkDown({
       displayName: 'Products',
-      description: 'List the products or services being invoiced, including descriptions, quantities, and prices.',
-      required: true,
-      properties: {
-        name: Property.ShortText({
-          displayName: 'Name',
-          description: 'Specify the name of each product or service being invoiced.',
-          required: true,
-        }),
-        tax: Property.Number({
-          displayName: 'tax',
-          description: 'Indicate the tax rate applicable to each product or service for accurate tax calculation.',
-          required: false,
-          defaultValue: 23,
-        }),
-        total_price_gross: Property.Number({
-          displayName: 'Total Price Gross',
-          description: 'Enter the total gross price of each product or service before any discounts.',
-          required: true,
-        }),
-        quantity: Property.Number({
-          displayName: 'Quantity',
-          description: 'Specify the quantity of each product sold or service provided, ensuring proper billing.',
-          required: true,
-        }),
-      },
+      description: products_description,
     }),
+    product_name: Property.ShortText({
+      displayName: 'Product Name',
+      description: 'Specify the name of product or service being invoiced.',
+      required: true,
+    }),
+    product_tax: Property.Number({
+      displayName: 'Product Tax',
+      description: 'Indicate the tax rate applicable to product or service for accurate tax calculation.',
+      required: false,
+      defaultValue: 23,
+    }),
+    product_total_price_gross: Property.Number({
+      displayName: 'Total Price Gross',
+      description: 'Enter the total gross price of product or service before any discounts.',
+      required: true,
+    }),
+    product_quantity: Property.Number({
+      displayName: 'Quantity',
+      description: 'Specify the quantity of product sold or service provided, ensuring proper billing.',
+      required: true,
+    }),
+    // products: Property.Array({
+    //   displayName: 'Products',
+    //   description: 'List the products or services being invoiced, including descriptions, quantities, and prices.',
+    //   required: true,
+    //   properties: {
+    // name: Property.ShortText({
+    //   displayName: 'Name',
+    //   description: 'Specify the name of each product or service being invoiced.',
+    //   required: true,
+    // }),
+    // tax: Property.Number({
+    //   displayName: 'tax',
+    //   description: 'Indicate the tax rate applicable to each product or service for accurate tax calculation.',
+    //   required: false,
+    //   defaultValue: 23,
+    // }),
+    // total_price_gross: Property.Number({
+    //   displayName: 'Total Price Gross',
+    //   description: 'Enter the total gross price of each product or service before any discounts.',
+    //   required: true,
+    // }),
+    // quantity: Property.Number({
+    //   displayName: 'Quantity',
+    //   description: 'Specify the quantity of each product sold or service provided, ensuring proper billing.',
+    //   required: true,
+    // }),
+    //   },
+    // }),
   },
   async run({ auth, propsValue }) {
     const nowDate = new Date()
-    const invoiceNumber = propsValue.number || Math.round(nowDate.getTime() / 1000)
+
+    let invoiceNumber = null
+    if (typeof propsValue.number === 'number' && propsValue.number !== 0) invoiceNumber = propsValue.number
+
     const sell_date = propsValue.sell_date || nowDate.toISOString().slice(0, 10)
     const issue_date = propsValue.issue_date || nowDate.toISOString().slice(0, 10)
-    const payment_to = new Date(new Date(issue_date).setDate(new Date(issue_date).getDate() + 10)).toISOString().slice(0, 10)
+    const payment_to = new Date(new Date(issue_date).setDate(new Date(issue_date).getDate() + propsValue.payment_extension_days!))
+      .toISOString()
+      .slice(0, 10)
 
     const request: HttpRequest = {
       method: HttpMethod.POST,
@@ -119,9 +152,20 @@ export const fakturowniaCreateInvoice = createAction({
           sell_date: sell_date,
           issue_date: issue_date,
           payment_to: payment_to,
+          seller_name: propsValue.seller_name,
+          seller_tax_no: propsValue.seller_tax_no,
           buyer_name: propsValue.buyer_name,
+          buyer_email: propsValue.buyer_email,
           buyer_tax_no: propsValue.buyer_tax_no,
-          positions: propsValue.products,
+          positions: [
+            {
+              name: propsValue.product_name,
+              tax: propsValue.product_tax,
+              total_price_gross: propsValue.product_total_price_gross,
+              quantity: propsValue.product_quantity,
+            },
+          ],
+          // positions: propsValue.products,
         },
       },
       headers: {

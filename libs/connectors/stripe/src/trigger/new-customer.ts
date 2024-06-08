@@ -7,7 +7,8 @@ export const stripeNewCustomer = createTrigger({
   auth: stripeAuth,
   name: 'new_customer',
   displayName: 'New Customer',
-  description: 'Triggers when a new customer is created',
+  description: 'Trigger an action when a new customer is created in Stripe',
+  descriptionLong: 'This feature triggers an action whenever a new customer is created in Stripe. Users can use this to automate workflows, like sending welcome emails or updating internal databases, ensuring that customer information is always up-to-date and actions are taken promptly.',
   props: {},
   sampleData: {
     id: 'cus_Q5UhMd7GalRaDo',

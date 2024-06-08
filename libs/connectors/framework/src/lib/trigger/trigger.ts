@@ -48,7 +48,7 @@ export interface WebhookResponse {
 
 export interface TriggerContext {}
 
-export interface TriggerProps extends ConnectorPropertyMap {}
+export type TriggerProps = ConnectorPropertyMap
 
 export class TriggerInstance<TS extends TriggerStrategy, ConnectorAuth extends ConnectorAuthProperty, TriggerProps extends ConnectorPropertyMap>
   implements TriggerBase
@@ -57,6 +57,7 @@ export class TriggerInstance<TS extends TriggerStrategy, ConnectorAuth extends C
     public readonly name: string,
     public readonly displayName: string,
     public readonly description: string,
+    public readonly descriptionLong: string,
     public readonly props: TriggerProps,
     public readonly type: TS,
     public readonly handshakeConfiguration: WebhookHandshakeConfiguration,
@@ -84,6 +85,7 @@ type BaseTriggerParams<TS extends TriggerStrategy, ConnectorAuth extends Connect
   name: string
   displayName: string
   description: string
+  descriptionLong?: string
   props: TriggerProps
   type: TS
   auth?: ConnectorAuth
@@ -121,6 +123,7 @@ export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends 
         params.name,
         params.displayName,
         params.description,
+        params.descriptionLong ?? '',
         params.props,
         params.type,
         params.handshakeConfiguration ?? { strategy: WebhookHandshakeStrategy.NONE },
@@ -140,6 +143,7 @@ export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends 
         params.name,
         params.displayName,
         params.description,
+        params.descriptionLong ?? '',
         params.props,
         params.type,
         { strategy: WebhookHandshakeStrategy.NONE },
@@ -159,6 +163,7 @@ export const createTrigger = <TS extends TriggerStrategy, ConnectorAuth extends 
         params.name,
         params.displayName,
         params.description,
+        params.descriptionLong ??'',
         params.props,
         params.type,
         { strategy: WebhookHandshakeStrategy.NONE },

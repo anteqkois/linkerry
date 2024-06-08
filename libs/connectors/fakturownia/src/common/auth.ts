@@ -2,10 +2,14 @@ import { HttpError } from '@linkerry/connectors-common'
 import { ConnectorAuth } from '@linkerry/connectors-framework'
 import { fakturowniaCommons } from './common'
 
-const authDescription = `**API Key**:
+const authDescription = `**API Token**:
 
 Follow [this tutorial](https://pomoc.fakturownia.pl/150728-Skad-pobrac-kod-autoryzacyjny-API-) to obtain Fakturownia API Key.
 Don't forget to also provide your correct subdomain for Fakturowania app.
+
+**Domain**:
+
+Domain for your Fakturownia app. You provide it during the registration process, and you can obtain it from your browser's address bar. It should be in the format: https://<domain>.fakturownia.pl/, so get this <domain> and place belowe.
 `
 
 export const faktorowniaAuth = ConnectorAuth.CustomAuth({
@@ -18,8 +22,6 @@ export const faktorowniaAuth = ConnectorAuth.CustomAuth({
     }),
     domain: ConnectorAuth.SecretText({
       displayName: 'Domain',
-      description:
-        "Domain for your Fakturownia app. You provide it during the registration process, and you can obtain it from your browser's address bar. It should be in the format: https://<domain>.fakturownia.pl/, so get this <domain> and place here.",
       required: true,
     }),
   },
@@ -33,7 +35,7 @@ export const faktorowniaAuth = ConnectorAuth.CustomAuth({
       if (HttpError.isHttpError(error)) {
         return {
           valid: false,
-          error: `Invalid API token or domain. Error response: ${error.axiosError.response?.data.message}`,
+          error: `HTTPS, invalid API token or domain. Error response: ${error.axiosError.response?.data.message}`,
         }
       }
 

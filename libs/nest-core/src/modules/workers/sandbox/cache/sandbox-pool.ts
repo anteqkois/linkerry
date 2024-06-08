@@ -1,6 +1,7 @@
 import { extractProvisionCacheKey, isNil, ProvisionCacheInfo, SandBoxCacheType } from '@linkerry/shared'
 import { Logger } from '@nestjs/common'
 import { Mutex } from 'async-mutex'
+import { existsSync } from 'node:fs'
 import { CachedSandbox } from './sandbox-cache'
 
 const logger = new Logger('SandboxPool')
@@ -17,7 +18,8 @@ const sandboxKeyCachePool = {
     const cachedSandbox = await lock.runExclusive((): CachedSandbox => {
       const cachedSandbox = cachedSandboxes.get(key)
 
-      if (cachedSandbox) {
+      // check also if connector cache dir still existst
+      if (cachedSandbox && existsSync(cachedSandbox?.path())) {
         return cachedSandbox
       }
 

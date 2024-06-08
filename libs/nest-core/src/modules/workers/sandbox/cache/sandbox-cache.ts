@@ -8,7 +8,7 @@ import { connectorManager } from '../../../flows/connectors/connector-manager'
 
 export class CachedSandbox {
   private readonly logger = new Logger(CachedSandbox.name)
-  private static readonly CACHE_PATH = process.env['CACHE_PATH'] || resolve('dist', 'cache')
+  static readonly CACHE_PATH = process.env['CACHE_PATH'] || resolve('dist', 'cache')
   private _state = CachedSandboxState.CREATED
   private _activeSandboxCount = 0
   private _lastUsedAt = dayjs()

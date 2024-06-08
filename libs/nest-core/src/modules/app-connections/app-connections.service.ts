@@ -340,6 +340,16 @@ export class AppConnectionsService {
     auth: AppConnectionValue
   }): Promise<void> {
     const connectorMetadata = await this.connectorsMetadataService.findOne(connectorName, {})
+    console.log(connectorMetadata)
+    console.log('--------------')
+    console.log(
+      await this.connectorsMetadataService.getConnectorPackage(projectId, {
+        connectorName,
+        connectorType: connectorMetadata.connectorType,
+        connectorVersion: connectorMetadata.version,
+        packageType: connectorMetadata.packageType,
+      }),
+    )
 
     const engineResponse = await this.engineService.executeValidateAuth({
       auth,

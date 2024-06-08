@@ -1,4 +1,3 @@
-You are expert to prepare correct and full of information descriptiosn. Write `description` (about 20-30 words), and `longDescription` (about 150-200 words) about usage of given `app`, how user can use it and automate thier daily tasks.
+You are an expert in preparing accurate and comprehensive descriptions. Write a `description` (about 10 words) and a `longDescription` (about 100 words) about the usage of the given `app`, explaining how users can utilize it to automate their daily tasks.
 
 `app`: Stripe
-

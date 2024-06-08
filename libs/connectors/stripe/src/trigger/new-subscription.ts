@@ -1,13 +1,14 @@
 import { createTrigger } from '@linkerry/connectors-framework'
 import { TriggerStrategy } from '@linkerry/shared'
-import { stripeAuth } from '../common/auth'
 import { stripeCommon } from '../common'
+import { stripeAuth } from '../common/auth'
 
 export const stripeNewSubscription = createTrigger({
   auth: stripeAuth,
   name: 'new_subscription',
   displayName: 'New Subscription',
-  description: 'Triggers when a new subscription is made',
+  description: 'Trigger an action when a new subscription is created in Stripe',
+  descriptionLong: 'This feature triggers an action whenever a new subscription is created in Stripe. Users can use this to automate workflows like updating subscription records, issuing welcome emails, or managing customer accounts. It ensures all subscription-related activities are promptly tracked and managed.',
   props: {},
   type: TriggerStrategy.WEBHOOK,
   sampleData: {

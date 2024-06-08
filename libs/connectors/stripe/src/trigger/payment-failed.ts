@@ -7,7 +7,9 @@ export const stripePaymentFailed = createTrigger({
   auth: stripeAuth,
   name: 'payment_failed',
   displayName: 'Payment Failed',
-  description: 'Triggers when a payment fails',
+  description: 'Trigger an action when a payment fails in Stripe',
+  descriptionLong:
+    'This feature triggers an action whenever a payment fails in Stripe. Users can use this to automate workflows such as sending failure notifications, updating payment records, or retrying the payment process. It helps in managing payment issues promptly and efficiently.',
   props: {},
   sampleData: {
     id: 'ch_6d5M7gKZ2zZRdLgh1sasKArS',

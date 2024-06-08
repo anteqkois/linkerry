@@ -1,4 +1,4 @@
-import { HttpRequest, HttpMethod, AuthenticationType, httpClient } from '@linkerry/connectors-common'
+import { AuthenticationType, HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
 
 export const stripeCommon = {
   baseUrl: 'https://api.stripe.com/v1',
