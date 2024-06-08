@@ -1,0 +1,21 @@
+{
+  "name": "connectors-math-helper",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/connectors/math-helper/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/connectors/math-helper",
+        "main": "libs/connectors/math-helper/src/index.ts",
+        "tsConfig": "libs/connectors/math-helper/tsconfig.lib.json",
+        "assets": ["libs/connectors/math-helper/*.md"],
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
+      }
+    }
+  }
+}

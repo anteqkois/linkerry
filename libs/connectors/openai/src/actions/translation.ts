@@ -3,7 +3,7 @@
 //   HttpMethod,
 //   httpClient,
 // } from '@activepieces/pieces-common';
-// import { Property, createAction } from '@activepieces/pieces-framework';
+// import { Property, createAction } from '@linkerry/connectors-framework';
 // import { openaiAuth } from '../..';
 // import FormData from 'form-data';
 // import mime from 'mime-types';
