@@ -1,8 +1,10 @@
 'use client'
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
 import { cn } from '@linkerry/ui-components/utils'
 import Image from 'next/image'
 import { HTMLAttributes } from 'react'
+import { useBodyClass } from '../../../shared/hooks/useBodyClass'
 import './connectorLogos.css'
 
 const connectorNamesToShow = [
@@ -45,6 +47,9 @@ const ConnectorLogo = ({ connectorName }: ConnectorLogoProps) => {
 export interface ConnectorImagesProps extends HTMLAttributes<HTMLElement> {}
 
 export const ConnectorImages = ({ className, ...rest }: ConnectorImagesProps) => {
+  // the connectors image are overlfow X axies, so after mount, add class to body
+  useBodyClass('overflow-x-hidden')
+
   return (
     <section className={cn('scroll-container', className)} {...rest}>
       <div className="carousel-primary">

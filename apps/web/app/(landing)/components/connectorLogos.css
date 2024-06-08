@@ -1,4 +1,5 @@
 .scroll-container {
+  overflow: hidden;
   /* height: 100vh; */
 }
 
