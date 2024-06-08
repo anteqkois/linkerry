@@ -14,7 +14,6 @@ export function LandingNavButtons() {
   const [logoutButton, setLogoutButton] = useState(false)
 
   useEffect(() => {
-    console.log('authStatus', authStatus);
     if (authStatus === AuthStatus.AUTHENTICATED) setLogoutButton(true)
     else setLogoutButton(false)
   }, [authStatus])

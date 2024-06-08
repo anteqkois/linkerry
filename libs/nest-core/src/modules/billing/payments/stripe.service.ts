@@ -51,6 +51,10 @@ export class StripeService {
         status: object.status,
       },
     } as SubscriptionUpdate)
+
+    return {
+      success: true,
+    }
   }
 
   @StripeWebhookHandler('customer.subscription.updated')
@@ -104,6 +108,10 @@ export class StripeService {
       id: object.metadata.subscriptionId,
       data: update,
     } as SubscriptionUpdate)
+
+    return {
+      success: true,
+    }
   }
 
   private async _getCustomerOrCreate({ project }: { project: ProjectDocument<'owner'> }) {

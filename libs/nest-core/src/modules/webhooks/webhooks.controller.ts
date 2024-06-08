@@ -77,9 +77,17 @@ export class WebhooksController {
       return
     }
     // this._asyncHandler(payload, flow.toObject()).catch(exceptionHandler.handle)
-    this._asyncHandler(payload, flow.toObject()).catch((error) => {
-      this.logger.error(`#handleWebhookParams _asyncHandler failure`, ErrorCode.INTERNAL_SERVER, { error: error?.message })
-    })
+    try {
+      await this._asyncHandler(payload, flow.toObject())
+      return response.send({
+        success: true,
+      })
+    } catch (error: any) {
+      this.logger.error(`#handleWebhookQuery _asyncHandler failure`, ErrorCode.INTERNAL_SERVER, { error: error?.message })
+      return response.send({
+        success: false,
+      })
+    }
   }
 
   // @UseGuards(JwtBearerTokenAuthGuard)
@@ -92,10 +100,19 @@ export class WebhooksController {
     if (isHandshake) {
       return
     }
+
     // this._asyncHandler(payload, flow.toObject()).catch(exceptionHandler.handle)
-    this._asyncHandler(payload, flow.toObject()).catch((error) => {
+    try {
+      await this._asyncHandler(payload, flow.toObject())
+      return response.send({
+        success: true,
+      })
+    } catch (error: any) {
       this.logger.error(`#handleWebhookQuery _asyncHandler failure`, ErrorCode.INTERNAL_SERVER, { error: error?.message })
-    })
+      return response.send({
+        success: false,
+      })
+    }
   }
 
   // @UseGuards(JwtBearerTokenAuthGuard)
@@ -106,7 +123,9 @@ export class WebhooksController {
 
     const isHandshake = await this._handshakeHandler(flow.toObject(), payload, true, response)
     if (isHandshake) {
-      return
+      return {
+        success: true,
+      }
     }
 
     await this.webhooksService.simulationCallback({
@@ -117,6 +136,10 @@ export class WebhooksController {
         body: await this.webhooksService.convertBody(request),
         queryParams: request.query as Record<string, string>,
       },
+    })
+
+    return response.send({
+      success: true,
     })
   }
 

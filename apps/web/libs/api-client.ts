@@ -32,6 +32,15 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
+    if (!error.response) {
+      // Network error or CORS error
+      if (error.message === 'Network Error' || error.message.includes('CORS')) {
+        console.error('CORS error detected:', error.message)
+        window.location.href = '/cors-error'
+        return Promise.reject(error)
+      }
+    }
+
     if (error?.response?.status == 401 && error?.config && !error?.config?._isRetry) {
       originalRequest._isRetry = true
       try {

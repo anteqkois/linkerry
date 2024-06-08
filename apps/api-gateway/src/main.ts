@@ -27,9 +27,10 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService)
   const frontendUrl = configService.getOrThrow('FRONTEND_HOST')
+  if (!frontendUrl.length) console.error('FRONTEND_HOST is empty')
 
   app.enableCors({
-    origin: [frontendUrl],
+    origin: frontendUrl,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })
