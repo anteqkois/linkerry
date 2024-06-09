@@ -14,9 +14,7 @@ interface SecretTextFieldProps {
 
 export const SecretTextField = ({ property, name, refreshedProperties }: SecretTextFieldProps) => {
   const { control, trigger } = useFormContext()
-  const { rules } = useDynamicField({
-    property,
-  })
+  const { rules } = useDynamicField()
 
   useEffect(() => {
     trigger(name)

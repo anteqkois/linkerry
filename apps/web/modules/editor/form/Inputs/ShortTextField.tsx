@@ -13,9 +13,7 @@ interface ShortTextFieldProps {
 
 export const ShortTextField = ({ property, name, refreshedProperties }: ShortTextFieldProps) => {
   const { trigger, getValues } = useFormContext()
-  const { setUseDynamicValue } = useDynamicField({
-    property,
-  })
+  const { setUseDynamicValue } = useDynamicField()
 
   useEffect(() => {
     trigger(name)
@@ -27,5 +25,5 @@ export const ShortTextField = ({ property, name, refreshedProperties }: ShortTex
     }
   }, [])
 
-  return <DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={false} />
+  return <DynamicValueField name={name} property={property} showDynamicValueButton={false} />
 }

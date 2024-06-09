@@ -91,8 +91,8 @@ export const isCustomError = (object: unknown): object is CustomError => {
 
 export class QuotaError extends CustomError {
   override code: ErrorCodeQuota
-  constructor(limitName: keyof PlanProductConfiguration) {
-    super(`Reach plan limit: ${limitName}`, planConfigurationDetails[limitName].errorCode)
+  constructor(limitName: keyof PlanProductConfiguration, metadata?: CustomErrorMetadata) {
+    super(`Reach plan limit: ${limitName}`, planConfigurationDetails[limitName].errorCode, metadata)
     this.code = planConfigurationDetails[limitName].errorCode
   }
 }

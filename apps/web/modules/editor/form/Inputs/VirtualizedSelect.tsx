@@ -1,15 +1,15 @@
 import { ConnectorProperty, DropdownOption, PropertyType, StaticDropdownProperty } from '@linkerry/connectors-framework'
 import { hasVariableToken } from '@linkerry/shared'
 import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from '@linkerry/ui-components/client'
 import { HTMLAttributes, useEffect, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -29,9 +29,7 @@ export interface VirtualizedSelectProps extends Omit<HTMLAttributes<HTMLElement>
 
 export const VirtualizedSelect = ({ property, initData, name, refreshedProperties, type = PropertyType.STATIC_DROPDOWN }: VirtualizedSelectProps) => {
   const { setValue, control, getValues, trigger } = useFormContext()
-  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
-    property,
-  })
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField()
 
   // setup temp field which holds String value based on started value from database
   useEffect(() => {
@@ -66,7 +64,6 @@ export const VirtualizedSelect = ({ property, initData, name, refreshedPropertie
     <DynamicValueField
       name={name}
       property={{ ...property, type } as ConnectorProperty}
-      setUseDynamicValue={setUseDynamicValue}
       showDynamicValueButton={true}
     />
   ) : (
@@ -76,7 +73,7 @@ export const VirtualizedSelect = ({ property, initData, name, refreshedPropertie
       rules={rules}
       render={({ field }) => (
         <FormItem>
-          <PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
+          <PropertyLabel property={property} refreshedProperties={refreshedProperties} />
           <FormControl>
             <Select
               value={field.value}

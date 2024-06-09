@@ -18,9 +18,7 @@ interface JsonFieldProps {
 
 export const JsonField = ({ property, name, refreshedProperties }: JsonFieldProps) => {
   const { control, trigger, getValues } = useFormContext()
-  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
-    property,
-  })
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField()
 
   useEffect(() => {
     trigger(name)
@@ -33,7 +31,7 @@ export const JsonField = ({ property, name, refreshedProperties }: JsonFieldProp
   }, [])
 
   return useDynamicValue ? (
-    <DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={true} />
+    <DynamicValueField name={name} property={property} showDynamicValueButton={true} />
   ) : (
     <FormField
       control={control}
@@ -42,7 +40,7 @@ export const JsonField = ({ property, name, refreshedProperties }: JsonFieldProp
       rules={rules}
       render={({ field }) => (
         <FormItem>
-          <PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
+          <PropertyLabel property={property} refreshedProperties={refreshedProperties} />
           <FormControl>
             <CodeEditor
               value={prepareCodeMirrorValue(field.value)}

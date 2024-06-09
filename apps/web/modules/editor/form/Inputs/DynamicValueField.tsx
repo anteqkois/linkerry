@@ -14,7 +14,7 @@ import {
   useToast,
 } from '@linkerry/ui-components/client'
 import { Icons } from '@linkerry/ui-components/server'
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useEditor } from '../../useEditor'
 import { PropertyDescription } from '../PropertyDescription'
@@ -24,17 +24,15 @@ interface DynamicValueFieldProps {
   property: ConnectorProperty
   name: string
   showDynamicValueButton?: boolean
-  setUseDynamicValue?: Dispatch<SetStateAction<boolean>>
+  // setUseDynamicValue?: Dispatch<SetStateAction<boolean>>
 }
 
-export const DynamicValueField = ({ property, name, showDynamicValueButton = false, setUseDynamicValue }: DynamicValueFieldProps) => {
+export const DynamicValueField = ({ property, name, showDynamicValueButton = false }: DynamicValueFieldProps) => {
   const { toast } = useToast()
   const inputRef = useRef<HTMLInputElement>(null)
   const { setShowDynamicValueModal } = useEditor()
-  const { control, trigger, setValue, getValues, clearErrors } = useFormContext()
-  const { rules } = useDynamicField({
-    property,
-  })
+  const { control, trigger, setValue, getValues, clearErrors, unregister } = useFormContext()
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField()
 
   useEffect(() => {
     switch (property.type) {
@@ -53,10 +51,12 @@ export const DynamicValueField = ({ property, name, showDynamicValueButton = fal
       default:
         break
     }
+
+    unregister(name)
     trigger(name)
 
     inputRef.current?.focus()
-  }, [])
+  }, [rules])
 
   const onSelectData = async (tokenString: string, data: any) => {
     // TODO add data validation and better UI
@@ -80,7 +80,9 @@ export const DynamicValueField = ({ property, name, showDynamicValueButton = fal
       control={control}
       name={name}
       defaultValue={''}
-      rules={rules}
+      rules={{
+        required: rules.required,
+      }}
       render={({ field }) => (
         <FormItem>
           <FormLabel className="flex justify-between">
@@ -89,7 +91,7 @@ export const DynamicValueField = ({ property, name, showDynamicValueButton = fal
               {showDynamicValueButton ? (
                 <TooltipProvider delayDuration={100}>
                   <Tooltip>
-                    <TooltipTrigger onClick={() => setUseDynamicValue?.(false)} className="text-primary opacity-70 hover:opacity-100">
+                    <TooltipTrigger onClick={() => setUseDynamicValue(false)} className="text-primary opacity-70 hover:opacity-100">
                       <Icons.Power size={'sm'} className="mb-1 mr-2" />
                     </TooltipTrigger>
                     <TooltipContent side="bottom" align="start">

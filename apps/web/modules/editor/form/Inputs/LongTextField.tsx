@@ -16,9 +16,7 @@ interface LongTextFieldProps {
 
 export const LongTextField = ({ property, name, refreshedProperties }: LongTextFieldProps) => {
   const { control, trigger, getValues } = useFormContext()
-  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
-    property,
-  })
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField()
 
   useEffect(() => {
     trigger(name)
@@ -31,7 +29,7 @@ export const LongTextField = ({ property, name, refreshedProperties }: LongTextF
   }, [])
 
   return useDynamicValue ? (
-    <DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={true} />
+    <DynamicValueField name={name} property={property} showDynamicValueButton={true} />
   ) : (
     <FormField
       control={control}
@@ -40,7 +38,7 @@ export const LongTextField = ({ property, name, refreshedProperties }: LongTextF
       rules={rules}
       render={({ field }) => (
         <FormItem>
-          <PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
+          <PropertyLabel property={property} refreshedProperties={refreshedProperties} />
           <FormControl>
             <Textarea {...field} />
           </FormControl>

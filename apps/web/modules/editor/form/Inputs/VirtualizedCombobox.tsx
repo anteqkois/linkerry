@@ -39,9 +39,7 @@ export const VirtualizedCombobox = ({
   type = PropertyType.STATIC_DROPDOWN,
 }: VirtualizedComboboxProps) => {
   const { setValue, control, getValues, trigger } = useFormContext()
-  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
-    property,
-  })
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField()
   const ref = useRef<HTMLDivElement>(null)
   const [searchValue, setSearchValue] = useState('')
 
@@ -79,7 +77,6 @@ export const VirtualizedCombobox = ({
     <DynamicValueField
       name={name}
       property={{ ...property, type } as ConnectorProperty}
-      setUseDynamicValue={setUseDynamicValue}
       showDynamicValueButton={true}
     />
   ) : (
@@ -89,7 +86,7 @@ export const VirtualizedCombobox = ({
       rules={rules}
       render={({ field }) => (
         <FormItem>
-          <PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
+          <PropertyLabel property={property} refreshedProperties={refreshedProperties} />
           <FormControl>
             <Popover>
               <PopoverTrigger asChild>

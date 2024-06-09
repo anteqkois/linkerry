@@ -16,22 +16,21 @@ interface NumberFieldProps {
 
 export const NumberField = ({ property, name, refreshedProperties }: NumberFieldProps) => {
   const { control, trigger, getValues } = useFormContext()
-  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
-    property,
-  })
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField()
 
   useEffect(() => {
-    trigger(name)
-
     const value = getValues(name)
-    if (typeof value !== 'string') return
-    else if (hasVariableToken(value)) {
+    
+    if (typeof value !== 'string') {
+      trigger(name)
+      return
+    } else if (hasVariableToken(value)) {
       setUseDynamicValue(true)
     }
   }, [])
 
   return useDynamicValue ? (
-    <DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={true} />
+    <DynamicValueField name={name} property={property} showDynamicValueButton={true} />
   ) : (
     <FormField
       control={control}
@@ -40,7 +39,7 @@ export const NumberField = ({ property, name, refreshedProperties }: NumberField
       rules={rules}
       render={({ field }) => (
         <FormItem>
-          <PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
+          <PropertyLabel property={property} refreshedProperties={refreshedProperties} />
           <FormControl>
             <Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
           </FormControl>

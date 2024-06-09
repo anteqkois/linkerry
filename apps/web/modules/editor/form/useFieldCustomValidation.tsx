@@ -1,11 +1,27 @@
 import { ConnectorProperty, Validators } from '@linkerry/connectors-framework'
-import { useMemo, useState } from 'react'
-import { RegisterOptions } from 'react-hook-form'
+import { createContext, useContext, useMemo, useState } from 'react'
+import { FieldValues, RegisterOptions, Validate } from 'react-hook-form'
 
-export const useDynamicField = ({ property }: { property: ConnectorProperty }) => {
+interface DynamicFieldContextValue {
+  useDynamicValue: boolean
+  setUseDynamicValue: React.Dispatch<React.SetStateAction<boolean>>
+  validate: Record<string, Validate<any, FieldValues>>
+  rules: Omit<RegisterOptions, 'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>
+}
+
+const DynamicFieldContext = createContext<DynamicFieldContextValue | undefined>(undefined)
+
+interface DynamicFieldProviderProps {
+  children: React.ReactNode
+  property: ConnectorProperty
+}
+
+export const DynamicFieldProvider = ({ children, property }: DynamicFieldProviderProps) => {
   const [useDynamicValue, setUseDynamicValue] = useState(false)
 
   const validate = useMemo(() => {
+    if (useDynamicValue) return {}
+
     const output: RegisterOptions['validate'] = {}
     for (const validator of property.validators?.concat(...(property.defaultValidators ?? [])) ?? []) {
       if (!validator.validatorName) continue
@@ -17,7 +33,7 @@ export const useDynamicField = ({ property }: { property: ConnectorProperty }) =
       }
     }
     return output
-  }, [property.validators, property.defaultValidators])
+  }, [property.validators, property.defaultValidators, useDynamicValue])
 
   const rules = useMemo<Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>>(() => {
     return {
@@ -26,5 +42,24 @@ export const useDynamicField = ({ property }: { property: ConnectorProperty }) =
     }
   }, [property.required, validate])
 
-  return { validate, rules, useDynamicValue, setUseDynamicValue }
+  return (
+    <DynamicFieldContext.Provider
+      value={{
+        useDynamicValue,
+        setUseDynamicValue,
+        validate,
+        rules,
+      }}
+    >
+      {children}
+    </DynamicFieldContext.Provider>
+  )
+}
+
+export const useDynamicField = () => {
+  const context = useContext(DynamicFieldContext)
+  if (!context) {
+    throw new Error('useDynamicField must be used within a UserProvider')
+  }
+  return context
 }

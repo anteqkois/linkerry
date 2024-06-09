@@ -16,9 +16,7 @@ interface CheckboxFieldProps {
 
 export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxFieldProps) => {
   const { control, trigger, getValues } = useFormContext()
-  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField({
-    property,
-  })
+  const { rules, useDynamicValue, setUseDynamicValue } = useDynamicField()
 
   useEffect(() => {
     trigger(name)
@@ -31,7 +29,7 @@ export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxF
   }, [])
 
   return useDynamicValue ? (
-    <DynamicValueField name={name} property={property} setUseDynamicValue={setUseDynamicValue} showDynamicValueButton={true} />
+    <DynamicValueField name={name} property={property} showDynamicValueButton={true} />
   ) : (
     <FormField
       control={control}
@@ -43,7 +41,7 @@ export const CheckboxField = ({ property, name, refreshedProperties }: CheckboxF
             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
           <div className="space-y-1 leading-none flex-grow">
-            <PropertyLabel property={property} refreshedProperties={refreshedProperties} setUseDynamicValue={setUseDynamicValue} />
+            <PropertyLabel property={property} refreshedProperties={refreshedProperties} />
             <PropertyDescription>{property.description}</PropertyDescription>
           </div>
         </FormItem>

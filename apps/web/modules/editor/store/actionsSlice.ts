@@ -48,7 +48,10 @@ export const createActionSlice: CreateSlice<ActionsSlice> = (set, get) => ({
   },
   async handleSelectActionConnector(connectorMetadata: ConnectorMetadataSummary) {
     const { getNodeById, editStepMetadata, setRightDrawer, patchNode, addNode, flow, setFlow, setEditedAction, addEdge, limits } = get()
-    if (flow.version.stepsCount >= limits.flowSteps) throw new QuotaError('flowSteps')
+    if (flow.version.stepsCount >= limits.flowSteps)
+      throw new QuotaError('flowSteps', {
+        flowSteps: `${flow.version.stepsCount} / ${limits.flowSteps}`,
+      })
 
     assertNotNullOrUndefined(editStepMetadata?.actionName, 'editStepMetadata.actionName')
 

@@ -1,17 +1,19 @@
 'use client'
 
 import { ErrorCodeQuota, PlanConfigurationDetailsValue, PlanProductConfiguration, planConfigurationDetails } from '@linkerry/shared'
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
+import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useEffect, useMemo, useState } from 'react'
+
+export type CustomConfigurationItemValues = Partial<Record<keyof PlanProductConfiguration, string>>
 
 type ReturnType = {
   showDialog: boolean
   setShowDialog: Dispatch<SetStateAction<boolean>>
   reachedLimitErrorCode: ErrorCodeQuota | undefined
   setReachedLimitErrorCode: Dispatch<SetStateAction<ErrorCodeQuota | undefined>>
-  showDialogBasedOnErrorCode: (error: ErrorCodeQuota) => void
+  showDialogBasedOnErrorCode: (error: ErrorCodeQuota, _customConfigurationItemValues?: CustomConfigurationItemValues) => void
   exceededConfigurationEntry: PlanConfigurationDetailsValue | null
-  customConfigurationItemValues: Partial<Record<keyof PlanProductConfiguration, string>>
-  setCustomConfigurationItemValues: Dispatch<SetStateAction<Partial<Record<keyof PlanProductConfiguration, string>>>>
+  customConfigurationItemValues: CustomConfigurationItemValues
+  setCustomConfigurationItemValues: Dispatch<SetStateAction<CustomConfigurationItemValues>>
 }
 
 const Context = createContext<ReturnType>({} as ReturnType)
@@ -19,10 +21,15 @@ const Context = createContext<ReturnType>({} as ReturnType)
 export const ReachLimitDialogProvider = ({ children }: PropsWithChildren) => {
   const [showDialog, setShowDialog] = useState(false)
   const [reachedLimitErrorCode, setReachedLimitErrorCode] = useState<ErrorCodeQuota>()
-  const [customConfigurationItemValues, setCustomConfigurationItemValues] = useState<Partial<Record<keyof PlanProductConfiguration, string>>>({})
+  const [customConfigurationItemValues, setCustomConfigurationItemValues] = useState<CustomConfigurationItemValues>({})
 
-  const showDialogBasedOnErrorCode = (code: ErrorCodeQuota) => {
+  useEffect(() => {
+    if (!showDialog) setCustomConfigurationItemValues({})
+  }, [showDialog])
+
+  const showDialogBasedOnErrorCode = (code: ErrorCodeQuota, _customConfigurationItemValues?: CustomConfigurationItemValues) => {
     setReachedLimitErrorCode(code)
+    if (_customConfigurationItemValues) setCustomConfigurationItemValues(_customConfigurationItemValues)
     setShowDialog(true)
   }
 

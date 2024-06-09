@@ -28,9 +28,7 @@ export const TextFieldDEPRECATED = ({ property, name }: TextFieldProps) => {
   const { toast } = useToast()
   const { setShowDynamicValueModal } = useEditor()
   const { control, trigger, setValue, getValues } = useFormContext()
-  const { rules } = useDynamicField({
-    property,
-  })
+  const { rules } = useDynamicField()
 
   useEffect(() => {
     trigger(name)
