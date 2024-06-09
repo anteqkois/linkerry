@@ -1,4 +1,3 @@
-import { AuthStatus, Cookies } from '@linkerry/shared'
 import axios from 'axios'
 // import { useRouter } from 'next/router';
 // import { store } from '../../features/common/store';
@@ -33,12 +32,17 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config
 
     if (!error.response) {
+      console.log('API CLIENT ERROR')
+      console.log(error)
+      console.log(error.message)
+      console.log(error?.response)
+      console.dir(error, { depth: null })
       // Network error or CORS error
-      if (error.message === 'Network Error' || error.message.includes('CORS')) {
-        console.error('CORS error detected:', error.message)
-        window.location.href = '/cors-error'
-        return Promise.reject(error)
-      }
+      // if (error.message === 'Network Error' || error.message.includes('CORS')) {
+      //   console.error('CORS error detected:', error.message)
+      //   window.location.href = '/cors-error'
+      //   return Promise.reject(error)
+      // }
     }
 
     if (error?.response?.status == 401 && error?.config && !error?.config?._isRetry) {
