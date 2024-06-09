@@ -57,7 +57,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
       success: true,
     })
     setInitialTime(editedAction.settings.inputUiInfo.lastTestDate)
-  }, [])
+  }, [editedAction])
 
   return (
     <div className="max-h-full overflow-scroll">
