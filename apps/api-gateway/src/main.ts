@@ -1,5 +1,6 @@
 import fastifyCookie from '@fastify/cookie'
 import fastifyMultipart from '@fastify/multipart'
+import { corsHeadersPlugin } from '@linkerry/nest-core'
 import { Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
@@ -34,6 +35,9 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })
+
+  // Register CORS headers plugin, to fix if they are missing (issue with Brave browser and missing headers)
+  await app.register(corsHeadersPlugin)
 
   await app.register(fastifyMultipart, {
     attachFieldsToBody: 'keyValues',

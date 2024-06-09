@@ -1,5 +1,6 @@
 export * from './core.module'
 export * from './lib/auth'
+export * from './lib/fastify'
 export * from './lib/kafka'
 export * from './lib/nest-utils'
 export * from './modules/app-connections/app-connections.module'
@@ -28,3 +29,4 @@ export * from './modules/users/users.module'
 export * from './modules/webhooks/webhook-simulation/webhook-simulation.module'
 export * from './modules/webhooks/webhooks.module'
 export * from './modules/workers/flow-worker/flow-worker.module'
+
