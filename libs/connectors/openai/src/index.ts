@@ -21,9 +21,9 @@ export const openai = createConnector({
   actions: [
     askOpenAI,
     askAssistant,
-    generateImage,
+    // generateImage,
     // visionPrompt,
-    textToSpeech,
+    // textToSpeech,
     // transcribeAction,
     // translateAction,
     extractStructuredDataAction,
