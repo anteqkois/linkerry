@@ -7,6 +7,7 @@ interface DynamicFieldContextValue {
   setUseDynamicValue: React.Dispatch<React.SetStateAction<boolean>>
   validate: Record<string, Validate<any, FieldValues>>
   rules: Omit<RegisterOptions, 'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>
+  canUseDynamicValue: boolean
 }
 
 const DynamicFieldContext = createContext<DynamicFieldContextValue | undefined>(undefined)
@@ -14,9 +15,10 @@ const DynamicFieldContext = createContext<DynamicFieldContextValue | undefined>(
 interface DynamicFieldProviderProps {
   children: React.ReactNode
   property: ConnectorProperty
+  canUseDynamicValue?: boolean
 }
 
-export const DynamicFieldProvider = ({ children, property }: DynamicFieldProviderProps) => {
+export const DynamicFieldProvider = ({ children, property, canUseDynamicValue = true }: DynamicFieldProviderProps) => {
   const [useDynamicValue, setUseDynamicValue] = useState(false)
 
   const validate = useMemo(() => {
@@ -49,6 +51,7 @@ export const DynamicFieldProvider = ({ children, property }: DynamicFieldProvide
         setUseDynamicValue,
         validate,
         rules,
+        canUseDynamicValue
       }}
     >
       {children}

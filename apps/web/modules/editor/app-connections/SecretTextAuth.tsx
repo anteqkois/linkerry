@@ -23,6 +23,7 @@ import { MarkdownBase } from '../../../shared/components/Markdown/MarkdownBase'
 import { AppConnectionsApi } from '../../app-connections'
 import { useReachLimitDialog } from '../../billing/useReachLimitDialog'
 import { SecretTextField } from '../form/Inputs/SecretTextField'
+import { DynamicFieldProvider } from '../form/useFieldCustomValidation'
 
 export interface SecretTextAuthProps extends HTMLAttributes<HTMLElement> {
   onCreateAppConnection: (newConnection: AppConnectionWithoutSensitiveData) => void
@@ -116,7 +117,9 @@ export const SecretTextAuth = ({ onCreateAppConnection, auth, connector, setShow
             </MarkdownBase>
           ) : null}
           <div className="sm:max-w-[380px]">
-            <SecretTextField property={{ ...auth, description: undefined }} name={'secretText'} key={'secretText'} refreshedProperties={[]} />
+            <DynamicFieldProvider property={{ ...auth, description: undefined }} canUseDynamicValue={false}>
+              <SecretTextField property={{ ...auth, description: undefined }} name={'secretText'} key={'secretText'} refreshedProperties={[]} />
+            </DynamicFieldProvider>
           </div>
           <div className="h-1">
             {appConnectionForm.formState.errors.root && <FormMessage>{appConnectionForm.formState.errors.root.message}</FormMessage>}

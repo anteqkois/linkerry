@@ -1,17 +1,16 @@
 import { ConnectorProperty } from '@linkerry/connectors-framework'
 import { FormLabel, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@linkerry/ui-components/client'
 import { Icons } from '@linkerry/ui-components/server'
-import { HTMLAttributes, SetStateAction } from 'react'
+import { HTMLAttributes } from 'react'
 import { useDynamicField } from './useFieldCustomValidation'
 
 export interface PropertyLabelProps extends Omit<HTMLAttributes<HTMLElement>, 'property'> {
   refreshedProperties: ConnectorProperty[]
   property: ConnectorProperty
-  setUseDynamicValue?: (value: SetStateAction<boolean>) => void
 }
 
 export const PropertyLabel = ({ property, refreshedProperties }: PropertyLabelProps) => {
-  const { setUseDynamicValue } = useDynamicField()
+  const { setUseDynamicValue, canUseDynamicValue } = useDynamicField()
 
   return (
     <FormLabel className="flex justify-between">
@@ -42,7 +41,7 @@ export const PropertyLabel = ({ property, refreshedProperties }: PropertyLabelPr
           </TooltipProvider>
         ) : null}
 
-        {setUseDynamicValue ? (
+        {canUseDynamicValue ? (
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger onClick={() => setUseDynamicValue(true)} className="opacity-50  hover:opacity-100">
