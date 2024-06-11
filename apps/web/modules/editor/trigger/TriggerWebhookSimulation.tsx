@@ -187,10 +187,11 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 
   return (
     <div className="max-h-full overflow-scroll">
-      <div className="pt-3 pl-1">
-        <Small>Generate sample sata</Small>
-        <Muted>The sample sata can be used in next steps</Muted>
-      </div>
+      {data?.length ? null : (
+        <div className="pt-3 pl-1">
+          <Muted>The sample sata can be used in next steps</Muted>
+        </div>
+      )}
       {flowOperationRunning === FlowOperationRunnType.TEST_WEBHOOK ? (
         <WarningInfo className="my-2">
           <Small>
@@ -201,17 +202,17 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
       {data?.length ? (
         <>
           {/* TODO handle error state */}
-          <div className="flex h-14 px-1 items-center justify-between gap-4">
-            {data?.length ? (
-              <div className="flex flex-row flex-wrap">
-                <h5 className="flex items-center gap-2">
-                  <Icons.True className="text-positive" />
-                  Loaded data successfully
-                </h5>
-                <Muted className="ml-7">{relativeTime}</Muted>
-              </div>
-            ) : null}
-            <GenerateDataButton />
+          <div className="flex h-20 px-1 mt-2 items-center flex-wrap">
+            <div className="flex-center flex-grow">
+              <GenerateDataButton />
+            </div>
+            <div className="flex flex-row flex-wrap">
+              <h5 className="flex items-center gap-2">
+                <Icons.True className="text-positive" />
+                Loaded data successfully
+              </h5>
+              <Muted className="ml-7">{relativeTime}</Muted>
+            </div>
           </div>
           <Select onValueChange={onChangeTriggerEvent} value={selectedTriggerEventId}>
             <SelectTrigger className="w-full">

@@ -352,13 +352,13 @@ export const columns: ColumnDef<FlowPopulated>[] = [
               <DialogHeader>
                 <DialogTitle>Confirm deletion</DialogTitle>
                 <DialogDescription>
-                  <p>
+                  <span>
                     Your data will be deleted from your main app views like this flow list. Data related to flow like flow runs, trigger events will
                     be pernament deleted. Flow strusture and flow versions will be archived.
-                  </p>
-                  <p className="mt-4">
+                  </span>
+                  <span className="mt-4">
                     Type <span className="font-bold">DELETE</span> and press Confirm to process delete action
-                  </p>
+                  </span>
                 </DialogDescription>
               </DialogHeader>
               <div className="gap-4 py-4">

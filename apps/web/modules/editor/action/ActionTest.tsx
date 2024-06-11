@@ -61,9 +61,11 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
 
   return (
     <div className="max-h-full overflow-scroll">
-      <div className="pt-3 pl-1">
-        <Small>Generate sample sata</Small>
-      </div>
+      {testData?.output ? null : (
+        <div className="pt-3 pl-1">
+          <Small>Generate sample sata</Small>
+        </div>
+      )}
       {testData?.output ? (
         <>
           <div className="flex h-14 px-1 items-center justify-between gap-4">
