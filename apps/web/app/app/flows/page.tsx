@@ -4,6 +4,7 @@ import { FlowOperationType, FlowPopulated, FlowStatus, isCustomHttpExceptionAxio
 import { useToast } from '@linkerry/ui-components/client'
 import { H5 } from '@linkerry/ui-components/server'
 import { Row } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { getBrowserQueryCllient, useClientQuery } from '../../../libs/react-query'
 import { useReachLimitDialog } from '../../../modules/billing/useReachLimitDialog'
@@ -19,10 +20,10 @@ export default function Page() {
   const { toast } = useToast()
   const { showDialogBasedOnErrorCode } = useReachLimitDialog()
   const [runningOperation, setRunningOperation] = useState(false)
+  const { push } = useRouter()
 
   const onClickRowHndler = useCallback(async (row: Row<FlowPopulated>) => {
-    // console.debug('onClickRowHndler', row)
-    // await push(`/app/flows/editor/${row.original._id}`)
+    await push(`/app/flows/editor/${row.original._id}`)
   }, [])
 
   const onChangeFlowStatus = useCallback(async (flow: FlowPopulated) => {
@@ -90,6 +91,7 @@ export default function Page() {
         loading={status === 'pending'}
         data={data}
         columns={columns}
+        clickable
         onClickRow={onClickRowHndler}
         meta={{ onChangeFlowStatus, runningOperation }}
       />

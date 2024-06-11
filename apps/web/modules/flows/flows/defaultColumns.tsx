@@ -21,7 +21,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -44,6 +43,7 @@ import Link from 'next/link'
 import { useCallback, useState } from 'react'
 import { getBrowserQueryCllient } from '../../../libs/react-query'
 import { TableColumnHeader } from '../../../shared/components/Table/TableColumnHeader'
+import { stopPropagation, withStopPropagation } from '../../../shared/utils'
 import { FlowApi } from './api'
 
 export const columns: ColumnDef<FlowPopulated>[] = [
@@ -75,7 +75,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="font-medium max-w-[150px] truncate">
+              <div className="font-medium max-w-[150px] truncate" onClick={stopPropagation}>
                 <span className="pl-1 max-w-[10px] overflow-hidden">
                   {isEmptyFlow ? (
                     'Empty Trigger'
@@ -118,7 +118,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
               </div>
             </TooltipTrigger>
             {isEmptyFlow ? null : (
-              <TooltipContent>
+              <TooltipContent onClick={stopPropagation}>
                 {flowVersionChainMap[0].map((step) => (
                   <div key={step.name} className="flex flex-col ">
                     {!isTrigger(step) && <Icons.ArrowDown className="w-full" />}
@@ -132,78 +132,6 @@ export const columns: ColumnDef<FlowPopulated>[] = [
       )
     },
   },
-  // {
-  //   id: 'steps',
-  //   accessorFn: (row) => row.version.stepsCount,
-  //   header: ({ column }) => <TableColumnHeader column={column} title="Steps" sortable />,
-  //   cell: ({ row }) => {
-  //     const flowVersionChainMap = flowHelper.transformFlowVersionToChainMap(row.original.version)
-  //     const isEmptyFlow = flowVersionChainMap[0][0].type === TriggerType.EMPTY
-
-  //     return (
-  //       <TooltipProvider delayDuration={100}>
-  //         <Tooltip>
-  //           <TooltipTrigger asChild>
-  //             <div className="font-medium max-w-[150px] truncate">
-  //               {/* {`${row.original.version.stepsCount} ${flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}`} */}
-
-  //               <span className="text-primary font-bold">{row.original.version.stepsCount}:</span>
-  //               <span className="pl-1 max-w-[10px] overflow-hidden">
-  //                 {isEmptyFlow ? 'Empty Trigger' : flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}
-  //               </span>
-  //             </div>
-  //           </TooltipTrigger>
-  //           {isEmptyFlow ? null : (
-  //             <TooltipContent>
-  //               {flowVersionChainMap[0].map((step) => (
-  //                 <div key={step.name} className="flex flex-col ">
-  //                   {!isTrigger(step) && <Icons.ArrowDown className="w-full" />}
-  //                   <p>{`${isTrigger(step) ? 'Trigger' : 'Action'}: ${step.settings.connectorName} - ${step.displayName}`}</p>
-  //                 </div>
-  //               ))}
-  //             </TooltipContent>
-  //           )}
-  //         </Tooltip>
-  //       </TooltipProvider>
-  //     )
-  //   },
-  // },
-  // {
-  // 	id: 'steps',
-  // 	accessorFn: (row) => row.version.stepsCount,
-  // 	header: ({ column }) => <TableColumnHeader column={column} title="Steps" sortable />,
-  // 	cell: ({ row }) => {
-  // 		const flowVersionChainMap = flowHelper.transformFlowVersionToChainMap(row.original.version)
-  // 		const isEmptyFlow = flowVersionChainMap[0][0].type === TriggerType.EMPTY
-
-  // 		return (
-  // 			<TooltipProvider delayDuration={100}>
-  // 				<Tooltip>
-  // 					<TooltipTrigger asChild>
-  // 						<div className="font-medium max-w-[150px] truncate">
-  // 							{/* {`${row.original.version.stepsCount} ${flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}`} */}
-
-  // 							<span className="text-primary font-bold">{row.original.version.stepsCount}:</span>
-  // 							<span className="pl-1 max-w-[10px] overflow-hidden">
-  // 								{isEmptyFlow ? 'Empty Trigger' : flowVersionChainMap[0].map((step) => step.settings.connectorName).join(', ')}
-  // 							</span>
-  // 						</div>
-  // 					</TooltipTrigger>
-  // 					{isEmptyFlow ? null : (
-  // 						<TooltipContent>
-  // 							{flowVersionChainMap[0].map((step) => (
-  // 								<div key={step.name} className="flex flex-col ">
-  // 									{!isTrigger(step) && <Icons.ArrowDown className="w-full" />}
-  // 									<p>{`${isTrigger(step) ? 'Trigger' : 'Action'}: ${step.settings.connectorName} - ${step.displayName}`}</p>
-  // 								</div>
-  // 							))}
-  // 						</TooltipContent>
-  // 					)}
-  // 				</Tooltip>
-  // 			</TooltipProvider>
-  // 		)
-  // 	},
-  // },
   {
     id: 'createdAt',
     accessorKey: 'createdAt',
@@ -244,7 +172,7 @@ export const columns: ColumnDef<FlowPopulated>[] = [
       }
 
       return (
-        <div className="font-medium">
+        <div className="font-medium" onClick={stopPropagation}>
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -278,12 +206,6 @@ export const columns: ColumnDef<FlowPopulated>[] = [
       const [showActions, setShowActions] = useState(false)
       const [renameInput, setRenameInput] = useState(row.original.version.displayName)
       const [renameDialog, setRenameDialog] = useState(false)
-      const [flowToDelete, setFlowToDelete] = useState<FlowPopulated>()
-
-      const onDeleteFlow = useCallback((flow: FlowPopulated) => {
-        setConfirmDialog(true)
-        setFlowToDelete(flow)
-      }, [])
 
       const onClickRename = useCallback(async (newName: string) => {
         setRuningOperation(true)
@@ -329,15 +251,15 @@ export const columns: ColumnDef<FlowPopulated>[] = [
       }, [])
 
       const onConfirmDelete = useCallback(async () => {
-        // if (confirmDeleteInput !== 'DELETE')
-        // 	return toast({
-        // 		title: `Invalid confirmation input value: "${confirmDeleteInput}"`,
-        // 		variant: 'destructive',
-        // 	})
+        if (confirmDeleteInput !== 'DELETE')
+          return toast({
+            title: `Invalid confirmation input value: "${confirmDeleteInput}"`,
+            variant: 'destructive',
+          })
 
         try {
-          assertNotNullOrUndefined(flowToDelete, 'flowToDelete')
-          await FlowApi.delete(flowToDelete._id)
+          assertNotNullOrUndefined(row.original, 'flowToDelete')
+          await FlowApi.delete(row.original._id)
           toast({
             title: `Flow deleted`,
             variant: 'success',
@@ -347,11 +269,10 @@ export const columns: ColumnDef<FlowPopulated>[] = [
           const data = queryClient.getQueryData<FlowPopulated[]>(['flows'])
           queryClient.setQueryData(
             ['flows'],
-            data?.filter((flow) => flow._id !== flowToDelete._id),
+            data?.filter((flow) => flow._id !== row.original._id),
           )
           setConfirmDialog(false)
           setShowActions(false)
-          setFlowToDelete(undefined)
         } catch (error) {
           if (isCustomHttpExceptionAxios(error))
             return toast({
@@ -367,95 +288,96 @@ export const columns: ColumnDef<FlowPopulated>[] = [
             variant: 'destructive',
           })
         }
-      }, [confirmDeleteInput, flowToDelete])
+      }, [confirmDeleteInput])
 
       return (
-        <DropdownMenu open={showActions} onOpenChange={setShowActions} modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => setShowActions(true)}>
-              <span className="sr-only">Open menu</span>
-              <Icons.More className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <Link href={`/app/flows/editor/${row.original._id}`}>
-              <DropdownMenuItem disabled={runingOperation}>
-                Edit
+        <>
+          <DropdownMenu open={showActions} onOpenChange={setShowActions} modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0" onClick={withStopPropagation(() => setShowActions(true))}>
+                <span className="sr-only">Open menu</span>
+                <Icons.More className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" onClick={stopPropagation}>
+              <Link href={`/app/flows/editor/${row.original._id}`}>
+                <DropdownMenuItem disabled={runingOperation}>
+                  Edit
+                  <MenubarShortcut>
+                    <Icons.Edit />
+                  </MenubarShortcut>
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem disabled={runingOperation} onClick={() => setRenameDialog(true)}>
+                Rename
                 <MenubarShortcut>
-                  <Icons.Edit />
+                  <Icons.Typing />
                 </MenubarShortcut>
               </DropdownMenuItem>
-            </Link>
-            <Dialog open={renameDialog} onOpenChange={setRenameDialog}>
-              <DialogTrigger asChild>
-                <DropdownMenuItem disabled={runingOperation}>
-                  Rename
-                  <MenubarShortcut>
-                    <Icons.Typing />
-                  </MenubarShortcut>
-                </DropdownMenuItem>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Rename Flow</DialogTitle>
-                </DialogHeader>
-                <div className="gap-4 py-4">
-                  <Input id="rename" value={renameInput} onChange={(e) => setRenameInput(e.target.value)} className="w-full" />
-                </div>
-                <DialogFooter>
-                  <ButtonClient onClick={() => onClickRename(renameInput)} loading={runingOperation}>
-                    Confirm
-                  </ButtonClient>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
 
-            <DropdownMenuItem disabled={true}>Statistics</DropdownMenuItem>
-            <Dialog open={confirmDialog} onOpenChange={setConfirmDialog}>
-              <DialogTrigger asChild disabled={runingOperation}>
-                <DropdownMenuItem
-                  className="text-primary-foreground bg-negative/60 focus:bg-negative focus:text-negative-foreground group"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onDeleteFlow(row.original)
-                  }}
-                >
-                  Delete
-                  <MenubarShortcut>
-                    <Icons.Delete className="text-primary-foreground group-hover:text-negative-foreground" />
-                  </MenubarShortcut>
-                </DropdownMenuItem>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Confirm deletion</DialogTitle>
-                  <DialogDescription>
+              <DropdownMenuItem disabled={true}>Statistics</DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={runingOperation}
+                className="text-primary-foreground bg-negative/60 focus:bg-negative focus:text-negative-foreground group"
+                onClick={(e) => {
+                  setConfirmDialog(true)
+                }}
+              >
+                Delete
+                <MenubarShortcut>
+                  <Icons.Delete className="text-primary-foreground group-hover:text-negative-foreground" />
+                </MenubarShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Dialog open={renameDialog} onOpenChange={setRenameDialog}>
+            <DialogContent className="sm:max-w-[425px]" onClick={stopPropagation}>
+              <DialogHeader>
+                <DialogTitle>Rename Flow</DialogTitle>
+              </DialogHeader>
+              <div className="gap-4 py-4">
+                <Input id="rename" value={renameInput} onChange={(e) => setRenameInput(e.target.value)} className="w-full" />
+              </div>
+              <DialogFooter>
+                <ButtonClient onClick={() => onClickRename(renameInput)} loading={runingOperation}>
+                  Confirm
+                </ButtonClient>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={confirmDialog} onOpenChange={setConfirmDialog}>
+            <DialogContent className="sm:max-w-[425px]" onClick={stopPropagation}>
+              <DialogHeader>
+                <DialogTitle>Confirm deletion</DialogTitle>
+                <DialogDescription>
+                  <p>
                     Your data will be deleted from your main app views like this flow list. Data related to flow like flow runs, trigger events will
                     be pernament deleted. Flow strusture and flow versions will be archived.
-                  </DialogDescription>
-                  {/* <DialogDescription>
-										Type <span className="font-bold">DELETE</span> and press Confirm to process delete action
-									</DialogDescription> */}
-                </DialogHeader>
-                {/* <div className="gap-4 py-4">
-									<Input
-										id="delete"
-										value={confirmDeleteInput}
-										onChange={(e) => setConfirmDeleteInput(e.target.value)}
-										className="w-full"
-										placeholder="DELETE"
-									/>
-								</div> */}
-                <DialogFooter>
-                  <Button variant={'destructive'} onClick={onConfirmDelete}>
-                    Confirm
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </DropdownMenuContent>
-        </DropdownMenu>
+                  </p>
+                  <p className="mt-4">
+                    Type <span className="font-bold">DELETE</span> and press Confirm to process delete action
+                  </p>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="gap-4 py-4">
+                <Input
+                  id="delete"
+                  value={confirmDeleteInput}
+                  onChange={(e) => setConfirmDeleteInput(e.target.value)}
+                  className="w-full"
+                  placeholder="DELETE"
+                />
+              </div>
+              <DialogFooter>
+                <Button variant={'destructive'} onClick={onConfirmDelete}>
+                  Confirm
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
       )
     },
   },

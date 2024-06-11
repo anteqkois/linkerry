@@ -28,10 +28,12 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    onClickOverlay?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => any | void
+  }
+>(({ className, children, onClickOverlay = (e) => e.stopPropagation(), ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
+    <DialogOverlay onClick={onClickOverlay} />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
