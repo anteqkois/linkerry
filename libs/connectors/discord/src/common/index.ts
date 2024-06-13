@@ -13,7 +13,7 @@ export interface Member {
 export const discordCommon = {
   channel: Property.DynamicDropdown<true, string>({
     displayName: 'Channel',
-    description: 'List of channels',
+    description: 'Select a specific channel from your Discord server.',
     required: true,
     refreshers: [],
     options: async ({ auth }) => {
@@ -70,7 +70,7 @@ export const discordCommon = {
   }),
   roles: Property.DynamicDropdown<true, string>({
     displayName: 'Roles',
-    description: 'List of roles',
+    description: 'Select a role to assign from the available roles in the guild.',
     required: true,
     refreshers: ['guild_id'],
     options: async ({ auth, guild_id }) => {
@@ -125,7 +125,7 @@ export const discordCommon = {
   }),
   guilds: Property.DynamicDropdown<true, string>({
     displayName: 'Guilds',
-    description: 'List of guilds',
+    description: 'Select a guild from the list of your available guilds.',
     required: true,
     refreshers: [],
     options: async ({ auth }) => {
@@ -175,7 +175,7 @@ export const discordCommon = {
   }),
   webhook_url: Property.ShortText({
     displayName: 'Webhook URL',
-    description: '',
+    description: 'Enter the webhook URL for your Discord server.',
     required: true,
   }),
 }

@@ -6,12 +6,12 @@ import { discordCommon } from '../common'
 export const discordDeleteChannel = createAction({
   auth: discordAuth,
   name: 'delete_channel',
-  description: 'delete a channel',
+  description: 'Delete an existing Discord channel',
+  descriptionLong: 'Remove an existing text or voice channel from your Discord server. Useful for decluttering or reorganizing.',
   displayName: 'Delete channel',
   props: {
     channel_id: discordCommon.channel,
   },
-
   async run(configValue) {
     const request: HttpRequest = {
       method: HttpMethod.DELETE,

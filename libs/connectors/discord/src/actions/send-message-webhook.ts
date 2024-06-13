@@ -4,7 +4,8 @@ import { discordCommon } from '../common'
 
 export const discordSendMessageWebhook = createAction({
   name: 'send_message_webhook',
-  description: 'Send a discord message via webhook',
+  description: 'Send a message to Discord via webhook',
+  descriptionLong: 'Send a message to a Discord channel using a webhook. Customize username, avatar, and add embeds.',
   displayName: 'Send Message Webhook',
   requireAuth: false,
   props: {
@@ -17,6 +18,7 @@ export const discordSendMessageWebhook = createAction({
     }),
     content: Property.LongText({
       displayName: 'Message',
+      description: 'The content of the message to be sent via the webhook',
       required: true,
     }),
     avatar_url: Property.ShortText({
@@ -26,13 +28,13 @@ export const discordSendMessageWebhook = createAction({
     }),
     embeds: Property.Json({
       displayName: 'embeds',
-      description: 'Embeds to send along with the message',
+      description: 'JSON payload for embeds to send along with the message',
       required: false,
       defaultValue: [],
     }),
     tts: Property.Checkbox({
       displayName: 'Text to speech',
-      description: 'Robot reads the message',
+      description: 'Enable text-to-speech for the message',
       required: false,
     }),
   },

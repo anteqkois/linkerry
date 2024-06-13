@@ -6,7 +6,8 @@ import { discordCommon } from '../common'
 export const discordCreateChannel = createAction({
   auth: discordAuth,
   name: 'create_channel',
-  description: 'Create a channel',
+  description: 'Create a new Discord channel',
+  descriptionLong: 'Create a new text or voice channel in your Discord server. Perfect for organizing discussions.',
   displayName: 'Create channel',
   props: {
     guild_id: discordCommon.guilds,
@@ -16,7 +17,6 @@ export const discordCreateChannel = createAction({
       required: true,
     }),
   },
-
   async run(configValue) {
     const request: HttpRequest = {
       method: HttpMethod.POST,
