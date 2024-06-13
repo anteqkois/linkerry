@@ -58,15 +58,15 @@ const getLatestPublishedVersionPrivateRegistry = async (packageName: string, max
       console.info(`[getLatestPublishedVersion] packageName=${packageName}, latestVersion=${version}`)
       return version
     } catch (err: any) {
-      if (!err?.error?.includes('no such package available')) console.log(err);
+      if (err instanceof AxiosError && (err.response?.status === 404 || err.response.data?.error?.includes('no such package available'))) {
+        console.info(`[getLatestPublishedVersion] packageName=${packageName}, latestVersion=null`)
+        return null
+      }
+
+      console.dir(err, { depth: null })
 
       if (attempt === maxRetries) {
         throw err // If it's the last attempt, rethrow the error
-      }
-
-      if (err instanceof AxiosError && err.response?.status === 404) {
-        console.info(`[getLatestPublishedVersion] packageName=${packageName}, latestVersion=null`)
-        return null
       }
 
       console.warn(`[getLatestPublishedVersion] packageName=${packageName}, attempt=${attempt}, error=${err}`)

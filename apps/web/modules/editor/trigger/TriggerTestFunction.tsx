@@ -32,6 +32,7 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage, samp
   const [record, setRecord] = useState('')
   const [selectedTriggerEventId, setSelectedTriggerEventId] = useState<string>()
   const { relativeTime, setInitialTime } = useRelativeTime()
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const { data, status, refetch } = useClientQuery({
     queryKey: ['trigger-events', editedTrigger.name],
@@ -47,6 +48,8 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage, samp
   const onChangeTriggerEvent = useCallback(
     async (newTriggerEventId: Id) => {
       if (!data) return
+
+      setErrorMessage('')
       setSelectedTriggerEventId(newTriggerEventId)
       const triggerEvent = data.find((event) => event._id === newTriggerEventId)
       assertNotNullOrUndefined(triggerEvent, 'triggerEvent')
@@ -106,6 +109,8 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage, samp
   if (status === 'pending') return <Spinner />
 
   const onClickTest = async () => {
+    setErrorMessage('')
+
     try {
       const triggerEvents = await testPoolTrigger()
       const queryClient = getBrowserQueryCllient()
@@ -115,10 +120,12 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage, samp
       setInitialTime(dayjs().format())
     } catch (error) {
       console.error(error)
-      if (isCustomHttpExceptionAxios(error))
+      if (isCustomHttpExceptionAxios(error)) {
+        setErrorMessage(error.response.data.message)
+      } else
         toast({
           title: 'Loading trigger sample data failed',
-          description: error.response.data.message,
+          description: 'Can not retrive sample data. Make sure that your app have all necessary data and can it provide to linkerry',
           variant: 'destructive',
         })
     }
@@ -126,11 +133,6 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage, samp
 
   return (
     <div className="max-h-full overflow-scroll">
-      {data?.length ? null : (
-        <div className="pt-3 pl-1">
-          <Muted>The sample sata can be used in next steps</Muted>
-        </div>
-      )}
       {data?.length ? (
         <>
           {/* TODO handle error state */}
@@ -174,25 +176,34 @@ export const TriggerTestFunction = ({ panelSize, disabled, disabledMessage, samp
           </Select>
         </>
       ) : (
-        <div className="flex h-20 px-1 flex-center">
-          <GenerateTestDataButton
-            haveSampleData={!!sampleData}
-            onSelectSampleData={onSelectSampleData}
-            disabled={disabled}
-            disabledMessage={disabledMessage}
-            text="Generate Data"
-            onClick={onClickTest}
-            loading={!!flowOperationRunning}
-          />
-        </div>
+        <>
+          <div className="pt-3 pl-1">
+            <Muted>The sample sata can be used in next steps</Muted>
+          </div>
+          <div className="flex h-20 px-1 flex-center">
+            <GenerateTestDataButton
+              haveSampleData={!!sampleData}
+              onSelectSampleData={onSelectSampleData}
+              disabled={disabled}
+              disabledMessage={disabledMessage}
+              text="Generate Data"
+              onClick={onClickTest}
+              loading={!!flowOperationRunning}
+            />
+          </div>
+        </>
       )}
-      {record && (
-        <CodeEditor
-          value={record}
-          // heightVh={panelSize} substractPx={280}
-          title="Output"
-          className="mt-2"
-        />
+      {errorMessage.length ? (
+        <ErrorInfo message={errorMessage} className="m-2" />
+      ) : (
+        record && (
+          <CodeEditor
+            value={record}
+            // heightVh={panelSize} substractPx={280}
+            title="Output"
+            className="mt-2"
+          />
+        )
       )}
     </div>
   )

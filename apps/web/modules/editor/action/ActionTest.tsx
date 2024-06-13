@@ -92,7 +92,7 @@ export const ActionTest = ({ panelSize, disabled, disabledMessage }: ActionTestP
             />
           </div>
           {errorMessage.length ? (
-            <ErrorInfo message={errorMessage} className="mt-2" />
+            <ErrorInfo message={errorMessage} className="ma-2" />
           ) : (
             <CodeEditor
               value={prepareCodeMirrorValue(testData.output)}

@@ -18,6 +18,10 @@ export enum ErrorCodePayments {
   INVALID_BILLING = 'INVALID_BILLING',
 }
 
+export enum ErrorCodeConnectors {
+  FAILED_TEST = 'FAILED_TEST',
+}
+
 enum ErrorCodeDefault {
   INVALID_TYPE = 'INVALID_TYPE',
   APP_CONNECTION_NOT_FOUND = 'APP_CONNECTION_NOT_FOUND',
@@ -69,5 +73,5 @@ enum ErrorCodeDefault {
 }
 
 /* Merge Error enums */
-export const ErrorCode = { ...ErrorCodeDefault, ...ErrorCodeQuota, ...ErrorCodePayments }
+export const ErrorCode = { ...ErrorCodeDefault, ...ErrorCodeQuota, ...ErrorCodePayments, ...ErrorCodeConnectors }
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode]

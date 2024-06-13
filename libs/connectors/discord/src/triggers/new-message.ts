@@ -1,10 +1,10 @@
+import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
+import { DedupeStrategy, Polling, Property, createTrigger, pollingHelper } from '@linkerry/connectors-framework'
+import { CustomError, ErrorCodeConnectors, TriggerStrategy } from '@linkerry/shared'
 import dayjs from 'dayjs'
+import { discordAuth } from '..'
 import { discordCommon } from '../common'
 import { Message } from '../common/models'
-import { DedupeStrategy, Polling, Property, createTrigger, pollingHelper } from '@linkerry/connectors-framework'
-import { HttpMethod, HttpRequest, httpClient } from '@linkerry/connectors-common'
-import { TriggerStrategy } from '@linkerry/shared'
-import { discordAuth } from '..'
 
 const polling: Polling<string, { channel: string | undefined; limit: number }> = {
   strategy: DedupeStrategy.TIMEBASED,
@@ -76,7 +76,7 @@ export const newMessage = createTrigger({
     })
   },
   test: async (context) => {
-    return await pollingHelper.test(polling, {
+    const items = await pollingHelper.test(polling, {
       auth: context.auth,
       store: context.store,
       propsValue: {
@@ -84,5 +84,12 @@ export const newMessage = createTrigger({
         limit: context.propsValue.limit ?? 50,
       },
     })
+
+    if (!items.length)
+      throw new CustomError('Missing channel data', ErrorCodeConnectors.FAILED_TEST, {
+        userMessage: 'Can not retrive any messages from this channel. Make sure the channel has messages and is not empty',
+      })
+
+    return items
   },
 })

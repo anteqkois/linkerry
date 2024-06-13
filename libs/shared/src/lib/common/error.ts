@@ -82,10 +82,31 @@ export class CustomError extends Error {
     this.code = code
     Error.captureStackTrace(this, this.constructor)
   }
+
+  static fromSerializedError(error: CustomError) {
+    return new CustomError(error.message, error.code, error.metadata)
+  }
 }
 
 export const isCustomError = (object: unknown): object is CustomError => {
   if (object instanceof CustomError) return true
+  return false
+}
+
+export const isSerializedCustomErrorWithUserMessage = (
+  object: unknown,
+): object is CustomError & Omit<CustomErrorMetadata, 'userMessage'> & { userMessage: string } => {
+  if (
+    object &&
+    typeof object === 'object' &&
+    'name' in object &&
+    object.name === 'CustomError' &&
+    'metadata' in object &&
+    object.metadata &&
+    typeof object.metadata === 'object' &&
+    'userMessage' in object.metadata
+  )
+    return true
   return false
 }
 

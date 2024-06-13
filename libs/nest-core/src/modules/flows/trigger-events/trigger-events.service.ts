@@ -14,6 +14,8 @@ import {
   WatchTriggerEventsWSResponse,
   assertNotNullOrUndefined,
   flowHelper,
+  isSerializedCustomErrorWithUserMessage,
+  tryParseJson,
 } from '@linkerry/shared'
 import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { EngineService } from '../../engine/engine.service'
@@ -165,6 +167,12 @@ export class TriggerEventsService {
     })
 
     if (!result.success) {
+      // check if CustomError was throwed from connector
+      const serializedCustomError = tryParseJson(result.message)
+      if (isSerializedCustomErrorWithUserMessage(serializedCustomError)) {
+        throw CustomError.fromSerializedError(serializedCustomError)
+      }
+
       throw new CustomError(result?.message ?? 'Execute trigger failed', ErrorCode.TEST_TRIGGER_FAILED, {
         userMessage: 'Execute trigger failed',
       })

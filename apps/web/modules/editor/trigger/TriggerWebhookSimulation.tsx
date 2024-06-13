@@ -187,11 +187,6 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
 
   return (
     <div className="max-h-full overflow-scroll">
-      {data?.length ? null : (
-        <div className="pt-3 pl-1">
-          <Muted>The sample sata can be used in next steps</Muted>
-        </div>
-      )}
       {flowOperationRunning === FlowOperationRunnType.TEST_WEBHOOK ? (
         <WarningInfo className="my-2">
           <Small>
@@ -234,12 +229,17 @@ export const TriggerWebhookSimulation = ({ panelSize, disabled, disabledMessage,
           </Select>
         </>
       ) : (
-        <div className="flex h-14 px-1 flex-center">
-          <GenerateDataButton />
-        </div>
+        <>
+          <div className="pt-3 pl-1">
+            <Muted>The sample sata can be used in next steps</Muted>
+          </div>
+          <div className="flex h-14 px-1 flex-center">
+            <GenerateDataButton />
+          </div>
+        </>
       )}
 
-      {errorMessage.length ? <ErrorInfo message={errorMessage} className="mt-2" /> : null}
+      {errorMessage.length ? <ErrorInfo message={errorMessage} className="m-2" /> : null}
 
       {record && (
         <CodeEditor
