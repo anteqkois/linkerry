@@ -121,7 +121,7 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
         {avaibleFeatures.map((point, index) => (
           <div key={index} className="w-full flex space-y-1">
             <Icons.Check size={'md'} className="min-h-[22px] max-h-[22px] min-w-[22px] max-w-[22px] mr-2 mt-1.5" />
-            <p>{point.point}</p>
+            <p dangerouslySetInnerHTML={{ __html: point.point }} />
           </div>
         ))}
         {commingFeatures.length ? (
@@ -133,7 +133,7 @@ export const PlanCard = ({ price, product, className, config, onSelectPlan, pric
         {commingFeatures.map((point, index) => (
           <div key={index} className="w-full flex space-y-1">
             <Icons.Check size={'md'} className="min-h-[22px] max-h-[22px] min-w-[22px] max-w-[22px] mr-2 mt-1.5" />
-            <p>{point.point}</p>
+            <p dangerouslySetInnerHTML={{ __html: point.point }} />
           </div>
         ))}
         {/* <Muted >{config.disclaimer}</Muted> */}

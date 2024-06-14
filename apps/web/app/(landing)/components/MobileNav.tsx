@@ -10,9 +10,10 @@ import { MenuItem } from './MenuItem'
 
 interface MobileNavProps extends HTMLAttributes<HTMLDivElement> {
   items: MainNavItem[]
+  onItemSelect: () => void
 }
 
-export const MobileNav = forwardRef<ElementRef<'div'>, MobileNavProps>(({ items, className }, ref) => {
+export const MobileNav = forwardRef<ElementRef<'div'>, MobileNavProps>(({ items, className, onItemSelect }, ref) => {
   useLockBody()
   const [openSubMenu, setOpenSubMenu] = useState('Products')
 
@@ -34,6 +35,7 @@ export const MobileNav = forwardRef<ElementRef<'div'>, MobileNavProps>(({ items,
             <div key={index}>
               {item.href ? (
                 <Link
+                  onClick={onItemSelect}
                   className={cn(
                     'flex cursor-default select-none items-center rounded-sm p-3 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground ',
                     openSubMenu === item.title && 'bg-accent text-accent-foreground',
@@ -43,12 +45,13 @@ export const MobileNav = forwardRef<ElementRef<'div'>, MobileNavProps>(({ items,
                   {item.title}
                 </Link>
               ) : (
-                <MobileNavSubMenu item={item} handleOpenMenu={handleOpenMenu} openSubMenu={openSubMenu} />
+                <MobileNavSubMenu item={item} handleOpenMenu={handleOpenMenu} openSubMenu={openSubMenu} onItemSelect={onItemSelect} />
               )}
             </div>
           ))}
         </nav>
       ) : null}
+      <div className="inline-block w-screen h-screen bg-background -z-40 absolute top-0 left-0"></div>
     </div>
   )
 })
@@ -58,16 +61,17 @@ interface MobileNavSubMenuProps extends HTMLAttributes<HTMLDivElement> {
   item: MainNavItem
   openSubMenu: string
   handleOpenMenu: (newMenu: string) => void
+  onItemSelect?: () => void
 }
 
-function MobileNavSubMenu({ item, openSubMenu, handleOpenMenu }: MobileNavSubMenuProps) {
+function MobileNavSubMenu({ item, openSubMenu, handleOpenMenu, onItemSelect }: MobileNavSubMenuProps) {
   return (
     <>
       <div className="p-1" onClick={() => handleOpenMenu(item.title)}>
         <div
           className={cn(
             'flex cursor-default select-none items-center rounded-sm p-2 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground ',
-            openSubMenu === item.title && 'bg-accent text-accent-foreground',
+            openSubMenu === item.title && 'bg-accent/40 text-accent-foreground',
           )}
         >
           {item.title}
@@ -75,10 +79,11 @@ function MobileNavSubMenu({ item, openSubMenu, handleOpenMenu }: MobileNavSubMen
         </div>
       </div>
       {openSubMenu === item.title ? (
-        <ul className="grid grid-cols-1 gap-y-4 py-2">
+        <ul className="grid grid-cols-1 gap-y-4 py-2 pb-6">
           {item.children.map((childrenEntry, index) => (
             <li key={childrenEntry.title}>
               <MenuItem
+                onClick={onItemSelect}
                 className="gap-2 px-2"
                 key={childrenEntry.title}
                 title={childrenEntry.title}

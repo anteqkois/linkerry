@@ -94,9 +94,12 @@ export function MainNav({ items, children }: MainNavProps) {
         <Icons.HamburgerMenu />
       </Button>
       {showMobileMenu && items && (
-        <MobileNav ref={ref} items={items} className="fixed left-0 right-0 top-16 z-50 animate-in slide-in-from-bottom-80">
-          {children}
-        </MobileNav>
+        <MobileNav
+          ref={ref}
+          items={items}
+          className="fixed left-0 right-0 top-16 z-50 animate-in slide-in-from-bottom-80"
+          onItemSelect={() => setShowMobileMenu(false)}
+        />
       )}
     </>
   )

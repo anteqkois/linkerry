@@ -114,25 +114,26 @@ const plansConfig: Record<PlanName, PlanCardProps['config'] & { children?: React
   Basic: {
     buttonVariant: 'default',
     lowerPlan: 'Free',
-    disclaimer: "*Price will increase upon delivery of the 'Coming Soon Features'. Reduced rate now.",
+    disclaimer: "*Price can increase upon delivery of the 'Coming Soon Features'. Reduced rate now.",
     points: [
       { point: 'Pre Acceas to beta Connectors', unfinished: false },
       { point: 'Long Multi-steps flows', unfinished: false },
       { point: 'Minimum 2 minute pooling interval for Polling Triggers', unfinished: false },
+      { point: 'Reserving access to <b>$LRY</b> tokens', unfinished: false },
       { point: 'Ability to set auto-repeat flow in case of failure', unfinished: true },
     ],
   },
   Professional: {
     buttonVariant: 'default',
     lowerPlan: 'Basic',
-    disclaimer: "*Price will increase upon delivery of the 'Coming Soon Features'. Reduced rate now.",
+    disclaimer: "*Price can increase upon delivery of the 'Coming Soon Features'. Reduced rate now.",
     points: [
-      { point: 'Pre Access for AI helper & AI generator', unfinished: true },
+      { point: 'Pre Access for <b>AI helper</b> & <b>AI generator</b>', unfinished: true },
       // { point: 'AI Agents to create and perform the whole flow from input', unfinished: true },
-      { point: 'Linkerry AGI to create and perform the whole flow from input', unfinished: true },
+      { point: '<b>Linkerry AGI</b> to create and perform the whole flow from input', unfinished: true },
       { point: 'Voting system on the development order of connectors', unfinished: false },
       { point: 'Live notifications for Flow Runs and errors', unfinished: true },
-      { point: 'Access to a Premium closed group', unfinished: false },
+      { point: 'Access to a <b>Premium closed</b> group', unfinished: false },
       { point: 'Up to 25 000 tasks / monthly', unfinished: false },
     ],
     children: (
