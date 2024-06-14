@@ -101,7 +101,7 @@ export const EmailVerificationDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 flex-center flex-col">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-center flex-col">
             <FormField
               control={form.control}
               name="code"
@@ -112,7 +112,7 @@ export const EmailVerificationDialog = () => {
                     <InputOTP maxLength={6} {...field} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
                       <InputOTPGroup>
                         {new Array(6).fill(1).map((_, index) => (
-                          <InputOTPSlot key={index} index={index} className="h-16 w-16 text-3xl" />
+                          <InputOTPSlot key={index} index={index} className="h-12 w-12 text-xl md:h-16 md:w-16 md:text-3xl" />
                         ))}
                       </InputOTPGroup>
                     </InputOTP>

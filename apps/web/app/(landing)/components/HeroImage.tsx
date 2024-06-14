@@ -14,7 +14,7 @@ export const HeroImage = () => {
   }, [theme])
 
   return (
-    <MacOSWindow className="absolute top-0 left-0" >
+    <MacOSWindow>
       <Image
         objectFit="contain"
         key={key}

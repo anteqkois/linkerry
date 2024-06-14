@@ -11,7 +11,7 @@ export class EmailService {
 
     await this.mailerService.sendMail({
       to,
-      from: '"Welcome to the Linkerry" <linkerry@gmail.com>',
+      // from: '"Welcome to the Linkerry" <linkerry@gmail.com>',
       subject,
       text,
       html: emailHtml,

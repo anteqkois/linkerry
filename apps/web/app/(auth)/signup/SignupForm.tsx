@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Language } from '@linkerry/shared'
 import { ButtonClient, Input, Label } from '@linkerry/ui-components/client'
+import { Icons } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
@@ -29,6 +30,7 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
     resolver: zodResolver(userAuthSchema),
   })
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [showPassword, setShowPassword] = React.useState(false)
   // const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
 
   async function onSubmit(data: FormData) {
@@ -87,17 +89,25 @@ export function SignUpForm({ className, ...props }: UserAuthFormProps) {
             <Label className="sr-only" htmlFor="email">
               Password
             </Label>
-            <Input
-              id="password"
-              placeholder="*********"
-              type="password"
-              autoCapitalize="none"
-              autoComplete="password"
-              autoCorrect="off"
-              // disabled={isLoading || isGitHubLoading}
-              disabled={isLoading}
-              {...register('password')}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                placeholder="*********"
+                type={showPassword ? 'text' : 'password'}
+                autoCapitalize="none"
+                autoComplete="password"
+                autoCorrect="off"
+                // disabled={isLoading || isGitHubLoading}
+                disabled={isLoading}
+                className="pr-8"
+                {...register('password')}
+              />
+              {showPassword ? (
+                <Icons.Hide className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={() => setShowPassword(false)} />
+              ) : (
+                <Icons.Show className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={() => setShowPassword(true)} />
+              )}
+            </div>
             <div className="h-3">
               {errors?.password && <p className="px-1 text-xs text-red-600">{errors.password.message}</p>}
               {errors?.root && <p className="px-1 text-xs text-red-600">{errors.root.message}</p>}

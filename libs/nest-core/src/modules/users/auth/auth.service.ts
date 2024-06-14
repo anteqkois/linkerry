@@ -99,34 +99,41 @@ export class AuthService {
     const hashedPassword = await this.hashService.hash(body.password)
     body.password = hashedPassword
 
-    const user = await this.userModel.create({ ...body, roles: [UserRole.CUSTOMER] })
-    this.logger.debug(`New signUp: ${body.email}`)
+    try {
+      const user = await this.userModel.create({ ...body, roles: [UserRole.CUSTOMER] })
+      this.logger.debug(`New signUp: ${body.email}`)
 
-    /* create also default project for new user */
-    const newProject = await this.projectsService.create({
-      displayName: `${user.name}'s project`,
-      notifyStatus: NotificationStatus.ALWAYS,
-      ownerId: user.id,
-      userIds: [user.id],
-    })
+      /* create also default project for new user */
+      const newProject = await this.projectsService.create({
+        displayName: `${user.name}'s project`,
+        notifyStatus: NotificationStatus.ALWAYS,
+        ownerId: user.id,
+        userIds: [user.id],
+      })
 
-    /* create default subscription */
-    // await this.subscriptionsService.createDefault(newProject.id)
+      /* create default subscription */
+      // await this.subscriptionsService.createDefault(newProject.id)
 
-    await this._sendVerificationCode({
-      emailAdsress: user.email,
-      userId: user.id,
-    })
+      await this._sendVerificationCode({
+        emailAdsress: user.email,
+        userId: user.id,
+      })
 
-    return {
-      user,
-      access_token: this.jwtCustomService.generateToken({
-        payload: {
-          projectId: newProject.id,
-          sub: user.id,
-          type: JWTPrincipalType.CUSTOMER,
-        },
-      }),
+      return {
+        user,
+        access_token: this.jwtCustomService.generateToken({
+          payload: {
+            projectId: newProject.id,
+            sub: user.id,
+            type: JWTPrincipalType.CUSTOMER,
+          },
+        }),
+      }
+    } catch (error: any) {
+      if (error.name !== 'ValidationError') throw error
+      if (error.message.includes('email')) throw new CustomError('There exists other account with given email', ErrorCode.INVALID_CREDENTIALS)
+      if (error.message.includes('name')) throw new CustomError('There exists other account with given name', ErrorCode.INVALID_CREDENTIALS)
+      throw error
     }
   }
 

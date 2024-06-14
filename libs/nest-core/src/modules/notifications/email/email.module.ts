@@ -11,19 +11,21 @@ import { EmailService } from './email.service'
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         transport: {
-          host: configService.get('MAIL_HOST'),
+          host: configService.getOrThrow('SENDGRID_SMTP_HOST'),
           // For SSL and TLS connection
           secure: true,
-          port: 465,
+          port: configService.getOrThrow('SENDGRID_SMTP_PORT'),
+          // secure: false,
+          // port: 587,
           auth: {
             // Account gmail address
-            user: configService.get('MAIL_USER'),
-            pass: configService.get('MAIL_PASS'),
+            user: configService.getOrThrow('SENDGRID_SMTP_USER'),
+            pass: configService.getOrThrow('SENDGRID_API_KEY'),
           },
         },
         // transport: 'smtps://user@domain.com:pass@smtp.domain.com',
         defaults: {
-          from: '"Linkerry" <linkerry@linkerry.com>',
+          from: '"Linkerry" <noreply@linkerry.com>',
         },
       }),
     }),
