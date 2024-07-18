@@ -198,7 +198,9 @@ export class FlowRunsService {
   }
 
   async findMany(query: FlowRunsGetManyQuery, projectId: Id) {
-    const filter: FilterQuery<FlowRun> = {}
+    const filter: FilterQuery<FlowRun> = {
+      projectId,
+    }
 
     if (query.flowId) filter.flowId = query.flowId
 

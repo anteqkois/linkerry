@@ -35,7 +35,7 @@ export class AllExceptionsWebsocketFilter extends CustomBaseExceptionsFilter imp
       errorCode,
       message: humanMessage,
     })
-    const errorLog = this.getErrorLog(humanMessage, event, exception, (client.handshake as any)?.user.id)
+    const errorLog = this.getErrorLog(humanMessage, event, exception, (client.handshake as any)?.user?.id)
     this.logger.error(errorLog, metadata)
 
     client.emit(WEBSOCKET_EVENT.EXCEPTION, errorResponse)
