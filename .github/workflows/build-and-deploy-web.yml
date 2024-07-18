@@ -30,7 +30,7 @@ jobs:
             ~/.cache/Cypress # needed for the Cypress binary
           key: npm-dependencies-${{ hashFiles('package.json') }}
           # - name: Pull existing base image
-          #   run: docker pull registry.digitalocean.com/linkerry/base:latest || echo "No existing image to pull"
+          #   run: docker pull registry.digitalocean.com/maxdata/base:latest || echo "No existing image to pull"
       - name: Build base image
         run: npm run docker-base-linux
       - name: Install doctl
@@ -41,16 +41,16 @@ jobs:
         # 30min
         run: doctl registry login --expiry-seconds 1800
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/linkerry/base:latest
+        run: docker push registry.digitalocean.com/maxdata/base:latest
       - name: Build image for web
         env:
           NEXT_TELEMETRY_DISABLED: true
           NEXT_PUBLIC_API_HOST: https://api.linkerry.com
         run: docker build -t linkerry/web --build-arg NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST -f ./apps/web/Dockerfile . --platform=linux/amd64
       - name: Tag web image
-        run: docker tag linkerry/web registry.digitalocean.com/linkerry/web:latest
+        run: docker tag linkerry/web registry.digitalocean.com/maxdata/web:latest
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/linkerry/web:latest
+        run: docker push registry.digitalocean.com/maxdata/web:latest
   deploy:
     runs-on: ubuntu-latest
     name: Deploy web

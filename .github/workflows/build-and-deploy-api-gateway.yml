@@ -40,11 +40,11 @@ jobs:
         # 30min
         run: doctl registry login --expiry-seconds 1800
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/linkerry/base:latest
+        run: docker push registry.digitalocean.com/maxdata/base:latest
       - name: Build image for api-gateway
-        run: docker build -t registry.digitalocean.com/linkerry/api-gateway:latest -f ./apps/api-gateway/Dockerfile . --platform=linux/amd64
+        run: docker build -t registry.digitalocean.com/maxdata/api-gateway:latest -f ./apps/api-gateway/Dockerfile . --platform=linux/amd64
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/linkerry/api-gateway:latest
+        run: docker push registry.digitalocean.com/maxdata/api-gateway:latest
   deploy:
     runs-on: ubuntu-latest
     name: Deploy api

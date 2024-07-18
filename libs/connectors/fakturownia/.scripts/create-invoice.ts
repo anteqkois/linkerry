@@ -10,15 +10,23 @@ const main = async () => {
       invoice: {
         kind: 'vat',
         number: null,
-        sell_date: 'sell_date',
-        issue_date: 'issue_date',
-        payment_to: 'payment_to',
-        seller_name: 'propsValue.seller_name',
-        seller_tax_no: 'propsValue.seller_tax_no',
-        buyer_name: 'propsValue.buyer_name',
-        buyer_email: 'propsValue.buyer_email',
-        buyer_tax_no: 'propsValue.buyer_tax_no',
-        positions: 'propsValue.products',
+        sell_date: '2024-07-18',
+        issue_date: '2024-07-18',
+        payment_to: '2024-07-25',
+        // if seller not provided, the default from fakturowani setttings will be use4d
+        seller_name: undefined,
+        seller_tax_no: undefined,
+        buyer_name: 'Client1 TEST SA',
+        buyer_email: 'test@gmail.com',
+        buyer_tax_no: '6272616681', // can be also 'PL6272616681'
+        positions: [{ name: 'Szkolenie miesięczne - pakiet MAIN', tax: 23, total_price_gross: 738, quantity: 1 }],
+        // // not works now
+        // positions: [
+        //   {
+        //     product_id: 647823467823,
+        //     quantity: 2,
+        //   },
+        // ],
       },
     })
 

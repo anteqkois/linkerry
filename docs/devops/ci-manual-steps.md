@@ -25,7 +25,7 @@ Docker compose:
 version: '3.8'
 services:
   web:
-    image: registry.digitalocean.com/linkerry/web:latest
+    image: registry.digitalocean.com/maxdata/web:latest
     ports:
       - ${VIRTUAL_PORT}:${VIRTUAL_PORT}
     env_file:

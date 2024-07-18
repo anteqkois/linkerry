@@ -13,7 +13,7 @@ import {
   assertNotNullOrUndefined,
   isNil,
 } from '@linkerry/shared'
-import { Injectable, UnprocessableEntityException } from '@nestjs/common'
+import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, Model } from 'mongoose'
 import semVer from 'semver'
@@ -45,6 +45,8 @@ const increaseMajorVersion = (version: string): string => {
 
 @Injectable()
 export class ConnectorsMetadataService {
+  private readonly Logger = new Logger(ConnectorsMetadataService.name)
+
   constructor(@InjectModel(ConnectorsMetadataModel.name) private readonly connectorMetadataModel: Model<ConnectorsMetadataModel>) {}
 
   // TODO implement create for private connectors
@@ -108,6 +110,7 @@ export class ConnectorsMetadataService {
         {},
         {
           sort: {
+            // TODO should be sorted by version, but mongo sort don't work with semntic version
             _id: -1,
           },
         },
@@ -120,13 +123,24 @@ export class ConnectorsMetadataService {
   }
 
   async getTrigger(connectorName: string, triggerName: string) {
-    const connector = await this.connectorMetadataModel.findOne({
-      name: connectorName,
-    })
+    const connector = await this.connectorMetadataModel.findOne(
+      {
+        name: connectorName,
+      },
+      {},
+      {
+        sort: {
+          _id: -1,
+        },
+      },
+    )
     assertNotNullOrUndefined(connector, `connector connectorName=${connectorName}`)
 
+    console.log(connector.triggers)
     const trigger = Object.entries(connector.triggers).find(([name]) => name === triggerName)?.[1]
+    console.log(trigger)
     assertNotNullOrUndefined(trigger, 'trigger', {
+      connector,
       connectorName,
       triggerName,
     })
@@ -165,6 +179,10 @@ export class ConnectorsMetadataService {
       return version
     }
 
+    this.Logger.warn(`Can not get exact connector version`, {
+      name,
+      version,
+    })
     // TODO implement filter based on projectId like in ac /Users/anteqkois/Code/Projects/me/activepieces/packages/server/api/src/app/pieces/piece-metadata-service/db-piece-metadata-service.ts constructPieceFilters
 
     const pieceMetadata = await this.findOne(name, {

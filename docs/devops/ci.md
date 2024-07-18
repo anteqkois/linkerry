@@ -1,6 +1,6 @@
 # build base docker image
 
-`docker build . -t registry.digitalocean.com/linkerry/base:latest`
+`docker build . -t registry.digitalocean.com/maxdata/base:latest`
 
 # build and run server docker compose
 

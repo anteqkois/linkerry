@@ -17,5 +17,5 @@ docker build -t linkerry/api-gateway -f ./apps/api-gateway/Dockerfile . --platfo
 # Push docker image to container registry
 docker login -u "$CONTAINER_REGISTRY_USERNAME" -p "$CONTAINER_REGISTRY_PASSWORD" "$CONTAINER_REGISTRY_ADDRESS"
 
-docker tag linkerry/api-gateway registry.digitalocean.com/linkerry/api-gateway:latest
-docker push registry.digitalocean.com/linkerry/api-gateway:latest
+docker tag linkerry/api-gateway registry.digitalocean.com/maxdata/api-gateway:latest
+docker push registry.digitalocean.com/maxdata/api-gateway:latest

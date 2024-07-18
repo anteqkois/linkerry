@@ -5,6 +5,7 @@ import { stripeCreateInvoice } from './actions/create-invoice'
 import { stripeFindCustomerByEmail } from './actions/find-customer-by-email'
 import { stripeFindCustomerById } from './actions/find-customer-by-id'
 import { stripeAuth } from './common/auth'
+import { stripeInvoicePaid } from './trigger/invoice-paid'
 import { stripeNewCustomer } from './trigger/new-customer'
 import { stripeNewPayment } from './trigger/new-payment'
 import { stripeNewSubscription } from './trigger/new-subscription'
@@ -32,5 +33,5 @@ export const stripe = createConnector({
       }),
     }),
   ],
-  triggers: [stripeNewPayment, stripeNewCustomer, stripePaymentFailed, stripeNewSubscription],
+  triggers: [stripeInvoicePaid, stripeNewPayment, stripeNewCustomer, stripePaymentFailed, stripeNewSubscription],
 })

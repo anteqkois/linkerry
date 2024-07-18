@@ -1,7 +1,7 @@
 services:
   api-gateway:
     container_name: api-gateway
-    image: registry.digitalocean.com/linkerry/api-gateway:latest
+    image: registry.digitalocean.com/maxdata/api-gateway:latest
     ports:
       - ${PORT_API_GATEWAY}:${PORT_API_GATEWAY}
     environment:

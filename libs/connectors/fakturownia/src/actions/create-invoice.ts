@@ -4,6 +4,7 @@ import { faktorowniaAuth } from '../common/auth'
 import { fakturowniaCommons } from '../common/common'
 
 const products_description = `Now only one product can be added. In future connector versions, there will be option to add many products.`
+const seller_description = `If You don't provide \`Seller Name\` and \`Seller Tax No\` the default Company data from fakturowania settings will be used.`
 
 export const fakturowniaCreateInvoice = createAction({
   auth: faktorowniaAuth,
@@ -43,22 +44,25 @@ export const fakturowniaCreateInvoice = createAction({
       description: 'If not provided, date when action runs will be used',
       required: false,
     }),
-    // payment_to: '2013-01-23',
     payment_extension_days: Property.Number({
       displayName: 'Payment Extension Days',
       description: 'Number of days to add to the Issue Date. This date will be used as the Payment Due Date.',
       required: false,
       defaultValue: 30,
     }),
+    instructions_Seller: Property.MarkDown({
+      displayName: 'Seller Data',
+      description: seller_description,
+    }),
     seller_name: Property.ShortText({
       displayName: 'Seller Name',
-      description: 'Enter the name of the seller issuing the invoice.',
-      required: true,
+      description: 'Enter the name of the seller issuing the invoice. If not provided the default Company data will be used.',
+      required: false,
     }),
     seller_tax_no: Property.ShortText({
       displayName: 'Seller Tax No',
-      description: 'Provide the tax identification number for the seller.',
-      required: true,
+      description: 'Provide the tax identification number for the seller. If not provided the default Company data will be used.',
+      required: false,
     }),
     buyer_name: Property.ShortText({
       displayName: 'Buyer Name',
@@ -67,15 +71,15 @@ export const fakturowniaCreateInvoice = createAction({
     }),
     buyer_email: Property.ShortText({
       displayName: 'Buyer Email',
-      description: 'Enter the email address of the buyer to send the invoice.',
-      required: true,
+      description: 'Enter the email address of the buyer if you want to send the invoice.',
+      required: false,
     }),
     buyer_tax_no: Property.ShortText({
       displayName: 'Buyer Tax No',
       description: 'Provide the tax identification number for the buyer to ensure tax compliance.',
       required: true,
     }),
-    instructions_webhook_url: Property.MarkDown({
+    instructions_products_description: Property.MarkDown({
       displayName: 'Products',
       description: products_description,
     }),
@@ -99,6 +103,7 @@ export const fakturowniaCreateInvoice = createAction({
       displayName: 'Quantity',
       description: 'Specify the quantity of product sold or service provided, ensuring proper billing.',
       required: true,
+      defaultValue: 1,
     }),
     // products: Property.Array({
     //   displayName: 'Products',

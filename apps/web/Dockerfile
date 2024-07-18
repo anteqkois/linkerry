@@ -1,4 +1,4 @@
-FROM registry.digitalocean.com/linkerry/base:latest AS builder
+FROM registry.digitalocean.com/maxdata/base:latest AS builder
 
 ARG NODE_ENV
 ENV NEXT_TELEMETRY_DISABLED=true
