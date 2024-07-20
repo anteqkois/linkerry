@@ -8,9 +8,8 @@ Bezpłatna rozmowa
 
 Możesz zautomatyzować:
 - obsługe klienta
-- marketing
-- sprzedaż
-- administracje
+- marketing i sprzedaż
+- administracja
 - zarządzanie danymi
 - statystyki, raporty, zamówienia
 - przekazywanie danych
