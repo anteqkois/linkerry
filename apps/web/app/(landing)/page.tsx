@@ -1,20 +1,22 @@
-import { UserProvider } from '../../modules/user/useUser'
-import { ConnectorImages } from './components/ConnectorLogos'
-import { Connectors } from './components/Connectors'
-import { Hero } from './components/Hero'
-import { Pricing } from './components/Pricing'
-
-// import { env } from "@/env.mjs"
+import { Automations } from './components/Automations'
+import { AutomationWondering } from './components/AutomationWondering'
+import { HeroPL } from './components/HeroPL'
+import { LastAutomations } from './components/LastAutomations'
+import { QuestionsWondering } from './components/Questions'
 
 export default async function IndexPage() {
   return (
     <>
-      <Hero />
-      <ConnectorImages className='hidden md:block'/>
+      <HeroPL />
+      <Automations />
+      <LastAutomations />
+      <AutomationWondering />
+      <QuestionsWondering />
+      {/* <ConnectorImages className='hidden md:block'/>
       <Connectors />
       <UserProvider>
         <Pricing />
-      </UserProvider>
+      </UserProvider> */}
     </>
   )
 }

@@ -1,5 +1,3 @@
-export * from '../../app/(landing)/components/MianNav'
-export * from '../../app/(landing)/components/MobileNav'
 export * from './Code/CodeEditor'
 export * from './Drawer/Index'
 export * from './Drawer/types'

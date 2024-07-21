@@ -4,8 +4,8 @@ import { Separator } from '@linkerry/ui-components/client'
 import { Icons } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import Link from 'next/link'
-import { useLockBody } from '../../../shared/hooks/useLockBody'
-import { MainNavItem } from '../../../types'
+import { useLockBody } from '../../../../shared/hooks/useLockBody'
+import { MainNavItem } from '../../../../types'
 import { MenuItem } from './MenuItem'
 
 interface MobileNavProps extends HTMLAttributes<HTMLDivElement> {

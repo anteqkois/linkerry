@@ -7,7 +7,7 @@ import { buttonVariants } from '@linkerry/ui-components/client'
 import { Button } from '@linkerry/ui-components/server'
 import { cn } from '@linkerry/ui-components/utils'
 import { useEffect, useState } from 'react'
-import { useUser } from '../../../modules/user/useUser'
+import { useUser } from '../../../../modules/user/useUser'
 
 export function LandingNavButtons() {
   const { authStatus, logout } = useUser()

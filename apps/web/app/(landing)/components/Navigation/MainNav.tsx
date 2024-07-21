@@ -16,10 +16,10 @@ import {
 import { Button, Icons } from '@linkerry/ui-components/server'
 // import { useClickOutside } from '@react-hookz/web'
 import { useRef, useState } from 'react'
-import { MainNavItem } from '../../../types'
-import { LandingNavButtons } from './LandingNavButtons'
+import { MainNavItem } from '../../../../types'
 import { MenuItem } from './MenuItem'
 import { MobileNav } from './MobileNav'
+import { NavFreeConsult } from '../FreeConsult'
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -87,7 +87,7 @@ export function MainNav({ items, children }: MainNavProps) {
         </nav>
       ) : null}
       <nav className="flex gap-2 items-center">
-        <LandingNavButtons />
+        <NavFreeConsult />
         <ModeToggle />
       </nav>
       <Button className="md:hidden" size={'icon'} variant={'outline'} onClick={() => setShowMobileMenu((prev) => !prev)}>
