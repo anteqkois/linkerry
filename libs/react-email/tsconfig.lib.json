@@ -1,11 +1,11 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "jsx": "react",
-    "outDir": "../../dist/out-tsc",
-    "declaration": true,
-    "types": ["node"]
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"jsx": "react",
+		"outDir": "../../dist/out-tsc",
+		"declaration": true,
+		"types": ["node"]
+	},
+	"include": ["**/*.ts", "index.ts"],
+	"exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }
