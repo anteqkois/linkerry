@@ -14,14 +14,14 @@ export const Tools = () => {
         Wspierane narzędzia
           <Underscore />
         </Heading>
-        <ul>
+        {/* <ul>
           {automations.map((e) => (
             <li key={e} className="flex items-start gap-2 text-xl mt-4">
               <Icons.Power className="text-primary/90 pt-1" size={'md'} />
               <span dangerouslySetInnerHTML={{ __html: e }} />
             </li>
           ))}
-        </ul>
+        </ul> */}
         <div
           className="w-4/5 h-4/6 inline-block rotate-1 bg-primary/40 absolute bottom-[10%] left-[40%] -translate-x-1/2 blur-[120px] -z-10 shadow"
           style={{ animation: 'shadow-slide infinite 4s linear alternate' }}
