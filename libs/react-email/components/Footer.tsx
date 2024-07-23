@@ -15,6 +15,10 @@ export const Footer = () => {
           anteqkois@gmail.com
         </Link>
         <br />
+        <Link style={anchor} href="https://linkerry.com">
+          linkerry.com
+        </Link>
+        <br />
         <Link style={anchor} href="https://legal.maxdata.app/company.pdf">
           Maxdata App LTD
         </Link>

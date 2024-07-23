@@ -1,8 +1,6 @@
-import { Body, Head, Html } from '@react-email/components'
+import { Head, Html } from '@react-email/components'
 import React from 'react'
-import { Footer } from '../components/Footer'
 import { IS_EMAIL_PREVIEW } from '../constants/veriables'
-import { main } from '../styles'
 
 interface Props {
   companyName: string
@@ -46,7 +44,8 @@ Pozdrawiam i życzę miłego dnia,
 Antoni Kois
 
 {/* <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
-<p style="font-size:16px;line-height:24px;margin:6px 0;color:#525f7f;text-align:left">tel: +48 577 584 212<br />e-mail: <a style="color:#556cd6" href="mailto:anteqkois@gmail.com">anteqkois@gmail.com</a></p>
+<p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">tel: +48 577 584 212<br />e-mail:<a style="color:#556cd6" href="mailto:anteqkois@gmail.com">anteqkois@gmail.com</a><br /><a style="color:#556cd6" href="https://legal.maxdata.app/company.pdf">Maxdata App LTD</a></p>
+<p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">— Zespół Linkerry</p>
 <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" /> */}
 </Html>
 )
