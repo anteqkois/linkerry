@@ -1,8 +1,8 @@
-Temat: Prosta oszczędność czasu, pieniędzy oraz szybki rozwój
+Temat: Oszczędność czasu, pieniędzy i szybki rozwój
 
 Dzień dobry,
 
-Czy w [Nazwa Firmy] mieliście problem z efektywnością i czasem poświęcanym na powtarzalne procesy, takie jak:
+Czy w [Nazwa Firmy] macie problem z efektywnością i czasem poświęcanym na powtarzalne procesy, takie jak:
 - Obsługa klienta
 - Marketing i sprzedaż
 - Administracja

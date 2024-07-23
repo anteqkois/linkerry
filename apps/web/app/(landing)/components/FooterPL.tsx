@@ -5,71 +5,22 @@ export const FooterPL = () => {
     <footer id="footer">
       <hr className="w-11/12 mx-auto" />
 
-      <section className="container py-20 grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-x-2 gap-y-2 md:gap-x-12 md:gap-y-8">
-        <div className="col-span-full xl:col-span-2">
+      <section className="container py-20 grid grid-cols-2 gap-4 md:grid-cols-3 md:pl-40 md:gap-x-12 md:gap-y-8 xl:pl-60">
+        <div className="col-span-full md:col-span-1">
           <a rel="noreferrer noopener" target="_blank" href="/" className="font-bold text-xl flex gap-2 items-center">
             <Icons.Logo />
             Linkerry
           </a>
+          <a rel="noreferrer noopener" target="_blank" href="https://legal.maxdata.app/company.pdf" className="mt-3 underline underline-offset-3">
+            Maxdata App LTD
+          </a>
         </div>
-
-        {/* <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Follow US</h3>
-          <div>
-            <a rel="noreferrer noopener" target="_blank" href="https://x.com/linkerry_ai" className="opacity-60 hover:opacity-100">
-              Twitter
-            </a>
-          </div>
-        </div> */}
-
-        {/* <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Platforms</h3>
-          <div>
-            <a rel="noreferrer noopener" target="_blank" href="#" className="opacity-60 hover:opacity-100">
-              Web
-            </a>
-          </div>
-
-          <div>
-            <a rel="noreferrer noopener" target="_blank" href="#" className="opacity-60 hover:opacity-100">
-              Mobile
-            </a>
-          </div>
-
-          <div>
-            <a rel="noreferrer noopener" target="_blank" href="#" className="opacity-60 hover:opacity-100">
-              Desktop
-            </a>
-          </div>
-        </div> */}
 
         <div className="flex flex-col gap-2">
           <h3 className="font-bold text-lg">Dokumenty</h3>
-          {/* <div>
-            <a rel="noreferrer noopener" href="#connectors" className="opacity-60 hover:opacity-100">
-              Connectors
-            </a>
-          </div>
 
           <div>
-            <a rel="noreferrer noopener" href="#pricing" className="opacity-60 hover:opacity-100">
-              Pricing
-            </a>
-          </div>
-
-          <div>
-            <a rel="noreferrer noopener" target="_blank" href="/road-map" className="opacity-60 hover:opacity-100">
-              Road Map
-            </a>
-          </div> */}
-
-          <div>
-            <a
-              rel="noreferrer noopener"
-              target="_blank"
-              href="/docs/linkerry_regulamin_treści_cyfrowe.pdf"
-              className="opacity-60 hover:opacity-100"
-            >
+            <a rel="noreferrer noopener" target="_blank" href="/docs/linkerry_regulamin_treści_cyfrowe.pdf" className="opacity-60 hover:opacity-100">
               Regulamin
             </a>
           </div>
@@ -98,6 +49,11 @@ export const FooterPL = () => {
           <div>
             <a rel="noreferrer noopener" target="_blank" href="mailto:anteqkois@gmail.com" className="opacity-60 hover:opacity-100">
               E-mail
+            </a>
+          </div>
+          <div>
+            <a rel="noreferrer noopener" target="_blank" href="mailto:anteqkois@gmail.com" className="opacity-60 hover:opacity-100">
+              CEO
             </a>
           </div>
         </div>

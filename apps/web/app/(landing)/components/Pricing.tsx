@@ -1,17 +1,17 @@
 'use client'
 
 import {
-  AuthStatus,
-  ChangeSubscriptionResponseType,
-  CustomError,
-  ErrorCode,
-  Price,
-  Product,
-  ProductType,
-  SubscriptionPeriod,
-  SubscriptionStatus,
-  isCustomHttpExceptionAxios,
-  waitMs,
+    AuthStatus,
+    ChangeSubscriptionResponseType,
+    CustomError,
+    ErrorCode,
+    Price,
+    Product,
+    ProductType,
+    SubscriptionPeriod,
+    SubscriptionStatus,
+    isCustomHttpExceptionAxios,
+    waitMs,
 } from '@linkerry/shared'
 import { useToast } from '@linkerry/ui-components/client'
 import { useAsync } from '@react-hookz/web'
@@ -87,7 +87,7 @@ export const Pricing = () => {
       <div className="p-2 max-w-[100rem] relative">
         <Plans onSelectPlan={onSelectPlan} loading={loading} currentPlan={state.result} />
         <div
-          className="w-4/5 h-3/6 inline-block rotate-1 bg-primary/30 absolute bottom-[5%] right-[10%] blur-[120px] -z-10 shadow"
+          className="w-4/5 h-3/6 inline-block rotate-1 bg-primary/20 absolute bottom-[5%] right-[10%] blur-[120px] -z-10 shadow"
           style={{ animation: 'shadow-slide infinite 4s linear alternate' }}
         />
       </div>

@@ -1,0 +1,55 @@
+import { Body, Head, Html } from '@react-email/components'
+import React from 'react'
+import { Footer } from '../components/Footer'
+import { IS_EMAIL_PREVIEW } from '../constants/veriables'
+import { main } from '../styles'
+
+interface Props {
+  companyName: string
+  // firstName: string
+}
+const defaaultProps: Props = {
+  companyName: 'MY COMPANY',
+  // firstName: string
+}
+
+export const VerificationEmail = (props: Props) => {
+  const { companyName } = IS_EMAIL_PREVIEW ? defaaultProps : props
+
+  return (
+    <Html>
+      <Head />
+Dzień dobry,
+Czy w {companyName} macie <strong>problem z efektywnością i czasem poświęcanym na powtarzalne procesy</strong>, takie jak:
+
+- Obsługa klienta
+- Marketing i sprzedaż
+- Administracja
+- Zarządzanie danymi
+- Statystyki, raporty, zamówienia
+- Przekazywanie danych
+- Rekrutacja i HR
+
+Bądź przed szybkim rozwojem <strong>zablokowała Was potrzeba</strong> natychmiastowej rekrutacji nowych osób?
+<strong>Rozwiązaniem jest automatyzacja</strong> procesów, która <strong>raz wdrożona działa już zawsze i niezależne</strong>, pozwalając pracownikom zająć się bardziej kreatywnymi i satysfakcjonującymi zadaniami. <br />Nasz softwarehouse specjalizuje się w projektowaniu i wdrożeniu automatyzacji procesów biznesowych i codziennych działań.
+
+Ostatnie automatyzacje u klientów to między innymi:
+- Tworzenie i wysyłanie faktur po zakupie produktów (oszczędność ~8h/msc.)
+- Sortowanie, oznaczanie i automatyczne odpowiadanie na e-maile oraz dodatkowe powiadomienia dla e-maili wymagających szybkiej reakcji człowieka (oszczędność ~18h/msc.)
+- Przekazywanie informacji na wiele komunikatorów jednocześnie, takich jak Telegram, Discord, e-mail (oszczędność ~3h/msc.)
+- Tworzenie spersonalizowanych ofert (oszczędność ~34h/msc.)
+- Powiadomienia o niskim stanie magazynowym i automatyczne zamawianie produktów (oszczędność ~12h/msc.)
+
+Czy możemy umówić się na krótką rozmowę w dogodnym dla Państwa terminie?
+
+Pozdrawiam i życzę miłego dnia,
+Antoni Kois
+
+{/* <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
+<p style="font-size:16px;line-height:24px;margin:6px 0;color:#525f7f;text-align:left">tel: +48 577 584 212<br />e-mail: <a style="color:#556cd6" href="mailto:anteqkois@gmail.com">anteqkois@gmail.com</a></p>
+<hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" /> */}
+</Html>
+)
+}
+
+export default VerificationEmail

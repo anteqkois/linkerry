@@ -1,4 +1,4 @@
-import { Icons } from '@linkerry/ui-components/server'
+import { Card, CardDescription, CardTitle, Icons } from '@linkerry/ui-components/server'
 import { HTMLAttributes } from 'react'
 import { Heading } from './Heading'
 import { Underscore } from './Underscore'
@@ -46,7 +46,6 @@ export interface AutomationsProps extends HTMLAttributes<HTMLElement> {}
 //   }
 // }
 
-
 // // ---------------------------------
 // // Other properties for the demo, not related to
 // // the underlined text
@@ -74,34 +73,72 @@ export interface AutomationsProps extends HTMLAttributes<HTMLElement> {}
 // }
 
 const automations = [
-  'Obsługe klienta',
-  'Marketing i sprzedaż',
-  'Administracja',
-  'Zarządzanie danymi',
-  'Statystyki, raporty, zamówienia',
-  'Przekazywanie danych',
-  'Rektrutacje i HR',
-  'Oraz wiele więcej...',
+  {
+    title: 'Obsługe klienta',
+    description:
+      'Zautomatyzujemy procesy związane z obsługą klienta, takie jak odpowiadanie na zapytania, zarządzanie zgłoszeniami i monitorowanie satysfakcji klientów. Dzięki automatyzacji skrócisz czas reakcji i poprawisz jakość obsługi.',
+  },
+  {
+    title: 'Marketing i sprzedaż',
+    description:
+      'Automatyzacja kampanii marketingowych i procesów sprzedażowych pozwoli Ci skuteczniej docierać do klientów, personalizować komunikację oraz śledzić efektywność działań. Zwiększ sprzedaż i zaangażowanie klientów dzięki inteligentnym narzędziom.',
+  },
+  {
+    title: 'Administracja',
+    description:
+      'Uprościmy zarządzanie codziennymi zadaniami administracyjnymi, takimi jak fakturowanie, korespondencja i zarządzanie dokumentami. Automatyzacja tych procesów pozwoli zaoszczędzić czas i zredukować ryzyko błędów.',
+  },
+  {
+    title: 'Zarządzanie danymi',
+    description:
+      'Zautomatyzujemy gromadzenie, przetwarzanie i analizę danych, co pozwoli Ci podejmować lepsze decyzje biznesowe. Dzięki automatyzacji będziesz mieć zawsze aktualne i dokładne informacje na wyciągnięcie ręki.',
+  },
+  {
+    title: 'Statystyki, raporty, zamówienia',
+    description:
+      'Automatyzacja generowania raportów i analiz statystycznych ułatwi śledzenie kluczowych wskaźników wydajności. Zarządzanie zamówieniami stanie się prostsze i bardziej efektywne dzięki automatycznym powiadomieniom i aktualizacjom.',
+  },
+  {
+    title: 'Przekazywanie danych',
+    description:
+      'Umożliwimy automatyczne przekazywanie danych pomiędzy różnymi systemami i platformami, eliminując potrzebę ręcznego wprowadzania informacji. To rozwiązanie zapewni spójność i integralność danych w Twojej organizacji.',
+  },
+  {
+    title: 'Rektrutacje i HR',
+    description:
+      'Automatyzacja procesów rekrutacyjnych i zarządzania zasobami ludzkimi przyspieszy wyszukiwanie kandydatów, monitorowanie aplikacji i zarządzanie dokumentacją pracowniczą. Dzięki temu Twoja firma będzie mogła szybciej reagować na potrzeby kadrowe.',
+  },
+  {
+    title: 'Oraz wiele więcej...',
+    description:
+      'Nasze rozwiązania automatyzacyjne obejmują wiele innych obszarów działalności. Skontaktuj się z nami, aby dowiedzieć się, jak możemy zoptymalizować Twoje unikalne procesy i wyzwania biznesowe.',
+  },
 ]
 
 export const Automations = () => {
   return (
-    <section className="w-full flex pl-[15%] pb-10 xl:pb-32 md:pt-20 2xl:pt-36" id="automatyzacje">
+    <section className="w-full flex pb-10 xl:pb-16 md:pt-10 2xl:pt-20" id="automatyzacje">
       <div className="flex flex-col relative">
         <Heading className="pb-10">
-          Możesz zautomatyzować
+          {/* Możemy dla Ciebie zautomatyzować */}
+          Zautomatyzujemy dla Ciebie
           <Underscore />
         </Heading>
-        <ul>
+        <div className="grid grid-cols-12 gap-4">
           {automations.map((e) => (
-            <li key={e} className="flex items-start gap-2 text-xl mt-4">
-              <Icons.Power className="text-primary/90 pt-1" size={'md'} />
-              <span dangerouslySetInnerHTML={{ __html: e }} />
-            </li>
+            <Card key={e.title} className="col-span-6 md:col-span-3">
+              <CardTitle className='px-4 pt-5'>
+                <p className="flex items-start text-primary-text font-bold gap-2 text-xl lg:text-2xl">
+                  <Icons.Power className="pt-1" size={'md'} />
+                  <span dangerouslySetInnerHTML={{ __html: e.title }} />
+                </p>
+              </CardTitle>
+              <CardDescription className='text-sm md:text-base p-5 text-background-page'>{e.description}</CardDescription>
+            </Card>
           ))}
-        </ul>
+        </div>
         <div
-          className="w-4/5 h-4/6 inline-block rotate-1 bg-primary/40 absolute bottom-[10%] left-[40%] -translate-x-1/2 blur-[120px] -z-10 shadow"
+          className="w-full h-4/6 inline-block rotate-1 bg-primary/30 absolute bottom-[10%] left-[45%] -translate-x-1/2 blur-[120px] -z-10 shadow"
           style={{ animation: 'shadow-slide infinite 4s linear alternate' }}
         />
       </div>

@@ -17,9 +17,9 @@ import { Button, Icons } from '@linkerry/ui-components/server'
 // import { useClickOutside } from '@react-hookz/web'
 import { useRef, useState } from 'react'
 import { MainNavItem } from '../../../../types'
+import { NavFreeConsult } from '../FreeConsult'
 import { MenuItem } from './MenuItem'
 import { MobileNav } from './MobileNav'
-import { NavFreeConsult } from '../FreeConsult'
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -38,7 +38,7 @@ export function MainNav({ items, children }: MainNavProps) {
   return (
     <>
       <Link href="/" className="hidden items-center space-x-2 md:flex">
-        <Icons.LogoWhole className="w-40 h-full" />
+        <Icons.LogoWhole className="w-40 h-full text-muted-foreground" />
       </Link>
       <Link href="/" className="items-center space-x-2 md:hidden">
         <Icons.Logo size={'md'} />

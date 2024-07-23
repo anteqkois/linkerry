@@ -15,7 +15,7 @@ const points = [
 
 export const AutomationWondering = () => {
   return (
-    <section className="w-full flex pl-[15%] pb-10 xl:pb-32 md:pt-20 2xl:pt-24" id="automatyzacje">
+    <section className="w-full flex pb-10 xl:pb-16 md:pt-16 2xl:pt-12" id="automatyzacje">
       <div className="flex flex-col relative">
         <Heading className="pb-10">
           Czy automatyzacja jest dla Ciebie ?
@@ -24,14 +24,14 @@ export const AutomationWondering = () => {
         <div className="text-2xl mt-4">W niemal 100% jeśli:</div>
         <ul>
           {points.map((e) => (
-            <li key={e} className="flex items-start gap-2 text-xl mt-4">
+            <li key={e} className="flex items-start gap-2 text-sm md:text-xl mt-4">
               <Icons.Power className="text-primary/90 pt-1" size={'md'} />
               <span dangerouslySetInnerHTML={{ __html: e }} />
             </li>
           ))}
         </ul>
         <div
-          className="w-4/5 h-4/6 inline-block rotate-1 bg-primary/40 absolute bottom-[10%] left-[40%] -translate-x-1/2 blur-[120px] -z-10 shadow"
+          className="w-4/5 h-4/6 inline-block rotate-1 bg-primary/20 absolute bottom-[10%] left-[40%] -translate-x-1/2 blur-[120px] -z-10 shadow"
           style={{ animation: 'shadow-slide infinite 4s linear alternate' }}
         />
         <div className="text-1xl mt-12">

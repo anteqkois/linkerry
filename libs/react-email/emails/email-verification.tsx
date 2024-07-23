@@ -1,6 +1,7 @@
 import { Body, Button, Container, Head, Hr, Html, Link, Preview, Section, Text } from '@react-email/components'
 import React from 'react'
-import { IS_EMAIL_PREVIEW, colors, frontendUrl } from '../constants/veriables'
+import { IS_EMAIL_PREVIEW, frontendUrl } from '../constants/veriables'
+import { anchor, box, brandName, button, codeBox, confirmationCodeText, container, hr, main, paragraph } from '../styles'
 
 interface Props {
   verificationCode: string
@@ -58,76 +59,3 @@ export const VerificationEmail = (props: Props) => {
 }
 
 export default VerificationEmail
-
-const main = {
-  backgroundColor: '#f6f9fc',
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-}
-
-const container = {
-  backgroundColor: '#ffffff',
-  margin: '0 auto',
-  padding: '20px 0 48px',
-  marginBottom: '64px',
-}
-
-const box = {
-  padding: '0 48px',
-}
-
-const hr = {
-  borderColor: '#e6ebf1',
-  margin: '20px 0',
-}
-
-const paragraph = {
-  color: '#525f7f',
-
-  fontSize: '16px',
-  lineHeight: '24px',
-  textAlign: 'left' as const,
-}
-
-const brandName = {
-  color: colors.primary,
-  fontWeight: 'bolder',
-  fontSize: '48px',
-  lineHeight: '36px',
-  textAlign: 'left' as const,
-}
-
-const anchor = {
-  color: '#556cd6',
-}
-
-const button = {
-  backgroundColor: colors.primary,
-  borderRadius: '5px',
-  color: '#fff',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  textDecoration: 'none',
-  textAlign: 'center' as const,
-  display: 'block',
-  width: '100%',
-  padding: '10px',
-}
-
-const footer = {
-  color: '#8898aa',
-  fontSize: '12px',
-  lineHeight: '16px',
-}
-
-const codeBox = {
-  background: 'rgb(245, 244, 245)',
-  borderRadius: '10px',
-  marginBottom: '30px',
-  padding: '20px 10px',
-}
-
-const confirmationCodeText = {
-  fontSize: '30px',
-  textAlign: 'center' as const,
-  verticalAlign: 'middle',
-}

@@ -115,21 +115,23 @@ export const landingConfig: LandingConfig = {
           titleIcon: <Icons.Partnership className="w-9 h-9 text-orange-400" />,
           description:
             'Wzbogać swój zespół o wyszkolonych pracowników w temacie automatyzacji, którzy później zadbają a zwrot czasu, kosztów oraz wysoko skalowalny rozwój firmy.',
-          href: '/#konsultacje-i-szkolenia',
+          // href: '/#konsultacje-i-szkolenia',
+          href: 'mailto:anteqkois@gmail.com',
         },
-        {
-          title: 'No-code edytor automatyzacji Beta',
-          titleIcon: <Icons.Editor className="w-9 h-9 text-blue-400" />,
-          description: 'Dzięki naszemu narzędziu z intuicyjnym edytorem sam połącz aplikację i utwórz szybko potrzebne automatyzację.',
-          href: 'linkerry-edytor',
-        },
+        // {
+        //   title: 'No-code edytor automatyzacji - Beta',
+        //   titleIcon: <Icons.Editor className="w-9 h-9 text-blue-400" />,
+        //   description: 'Dzięki naszemu narzędziu z intuicyjnym edytorem sam połącz aplikację i utwórz szybko potrzebne automatyzację.',
+        //   href: 'linkerry-edytor',
+        // },
       ],
     },
     {
       title: 'Wykorzystanie w praktyce',
       disabled: false,
       children: [],
-      href: '/automatyzacje-w-praktyce',
+      href: '#automatyzacje-w-praktyce',
+      // href: '/automatyzacje-w-praktyce',
     },
     {
       title: 'Kontakt',
