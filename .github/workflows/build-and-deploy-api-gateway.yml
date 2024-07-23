@@ -70,5 +70,5 @@ jobs:
       - name: Log in to DO Container Registry
         # 30min
         run: doctl registry login --expiry-seconds 1800
-      - name: Clear DO container registry
-        run: doctl registry garbage-collection start --force linkerry
+      # - name: Clear DO container registry
+      #   run: doctl registry garbage-collection start --force linkerry
