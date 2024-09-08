@@ -28,4 +28,4 @@ publish-package:
 # 	NODE_ENV=production npx ts-node -T tools/scripts/package-manager/publish-nx-project.ts libs/connectors/common
 
 ssh:
-	ssh root@64.226.97.74
+	ssh root@104.248.246.166

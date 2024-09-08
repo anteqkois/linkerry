@@ -58,6 +58,7 @@ jobs:
           key: ${{ secrets.SSH_PASSPHRASE_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: 22
+          # TODO ADD COPING docker-compose file !!!
           script: |
             cd api.linkerry.com/
             docker compose pull
