@@ -37,7 +37,6 @@
     --negative-foreground: 0 85.7% 97.3%;
     --warning: 32 98% 43%;
     --warning-foreground: 30 90% 94%;
-
     --max-w-dialog: 40rem;
   }
 
@@ -71,6 +70,7 @@
     --warning: 32 98% 83%;
     --warning-foreground: 0 20% 14%;
   }
+  
 
   /* Purole from 08.08.2023 */
   /*
